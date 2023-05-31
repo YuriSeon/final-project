@@ -296,6 +296,7 @@
                                                                 <li><a href="#">#전북</a></li>
                                                                 <li><a href="#">#전남</a></li>
                                                                 <li><a href="#">#제주</a></li>
+                                                                <li><a href="#">#제주</a></li>
                                                             </ul>
                                                         </div>
                                                     </div>
