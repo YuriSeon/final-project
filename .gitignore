@@ -17,7 +17,7 @@ local.properties
 server.xml
 MANIFEST.MF
 pom.properties
-
+target/
 # External tool builders
 .externalToolBuilders/
 .project
