@@ -20,6 +20,7 @@
 	<!-- 2단계 : sql 명령어 실행 위해 설정파일 연결 및 도구 등록-->
 	<bean class="org.mybatis.spring.SqlSessionFactoryBean" name="sqlSessionFactory">
 		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath:mappers/*-mapper.xml"></property>
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	
