@@ -11,8 +11,5 @@
   		<typeAlias type="com.kh.finalProject.board.model.vo.Path" alias="path"/>
   		<typeAlias type="com.kh.finalProject.board.model.vo.Plan" alias="plan"/>
   	</typeAliases>
-  	<mappers>
-  		<mapper resource="mappers/attraction-mapper.xml"/>
-  		<mapper resource="mappers/schedule-mapper.xml"/>
-  	</mappers>
+  	
   </configuration>
