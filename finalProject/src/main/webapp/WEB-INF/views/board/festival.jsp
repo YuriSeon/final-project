@@ -3,6 +3,72 @@
 <!DOCTYPE html>
 <html lang="en">
 
+	<style>
+      /* .wrap>*{
+            width: 1110px;
+            background-color: antiquewhite;
+            margin: auto;
+          }
+          #detail-menubar{
+            height: 30px;
+            width: 1110px;
+            background-color: aqua;
+          }*/
+          
+		#title_menu{
+			font-size: 28px;
+			position: relative;
+			top: -15px;
+			left: 400px;
+		}
+		#title_menu>a{
+			font-size: 18px;
+            text-decoration: none;
+            color: rgb(138, 138, 138);
+            font-weight: 600;
+		}
+		#title_menu>a:hover{
+			color:black;
+		}
+		#topTitle{
+			font-size: 30px;
+          	font-weight: 600;
+          	height: 60px;
+          	line-height: 40px;
+		}
+		.titleType1 {
+			text-align: center;
+            position: relative;
+			/* background-color : green; */
+		}
+		.titleType1 .area_tag {
+            text-align: left;
+        }
+        .brandingIcon {
+            float: right;
+            text-align: center;
+        }
+        .btn_good{
+            border: none;
+            background-color: white;
+            position: relative;
+            left: -470px;
+        }
+        .num_view{
+        	position: relative;
+            left: -470px;
+        }
+        .btn_sharing{
+        	position: relative;
+            left: 450px;
+            background-color:green;
+            border-radius: 20px;
+            border:50px;
+            border-color:black;
+            border-width: medium;
+        }
+      </style>
+
   <head>
 
     <meta charset="utf-8">
@@ -12,7 +78,6 @@
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
 
     <title>축제</title>
-
 
     <!-- Additional CSS Files -->
     <link rel="stylesheet" type="text/css" href="/finalProject/resources/css/bootstrap.min.css">
@@ -32,42 +97,40 @@ https://www.tooplate.com/view/2125-artxibition
     </head>
     
     <body>
-    
-    <!-- ***** Preloader Start ***** -->
-    <div id="js-preloader" class="js-preloader">
-      <div class="preloader-inner">
-        <span class="dot"></span>
-        <div class="dots">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-    </div>
     <!-- ***** Preloader End ***** -->
     <%@include file="../common/menubar.jsp" %>
-    <!-- ***** Header Area End ***** -->
-	<script>
-		$(function(){
-			$(".nav>li>a").each(function(){
-				if($(this).text() == $("title").eq(0).text()){
-					$(this).addClass("active");
-				}
-			});
-		});
-	</script>
-    <!-- ***** About Us Page ***** -->
-    <div class="page-heading-shows-events">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h2>Tickets On Sale Now!</h2>
-                    <span>Check out upcoming and past shows & events and grab your ticket right now.</span>
-                </div>
-            </div>
+    
+  	<hr style="position: relative; top: -16px; height:10px; border:0; box-shadow:0 10px 10px -10px #bbb inset;">
+	
+	<div id="wrap">
+	
+		<div id="title_menu">
+			<a href=""><img src="resources/images/home.png" alt="" style="width:23px; height:23px; position: relative; top: -7px;"></a> > <a href="" style="position: relative; top: -3px; left: -3px;">축제</a>
+		</div>
+        
+        <div class="titleType1">
+			<h2 id="topTitle">죽미령 평화공원</h2>
+            <div class="area_address" id="topAddr" style="color: rgb(135, 135, 135); position: relative; top: -18px;">경기 오산시</div>
+    
+			<div class="post_area">
+		        	<button type="button" class="btn_good" onclick="setLike();">
+		            	<span class="ico"><img src="resources/images/heart.png" alt="" style="height: 21px; width: 21px;"></span>
+		           		<span class="num" id="conLike">8</span>
+		        	</button>
+		        <span class="num_view"><img src="resources/images/eye.png" alt="" style="height: 24px; width: 24px;">&nbsp;243</span>
+		        <span class="rline">
+		            <button type="button" class="btn_sharing" onclick="openShare();">
+		                	수정요청
+		            </button>
+		        </span>
+			</div>
         </div>
+        
     </div>
-
+    
+    
+    
+    
     <div class="tickets-page">
         <div class="container">
             <div class="row">
