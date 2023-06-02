@@ -169,7 +169,7 @@
 							<!-- 로그인 후 -->
 		                    <div class="text-button">
 		                    	${loginUser.nickname }님 환영합니다!&nbsp;&nbsp;&nbsp;
-		                        <button onclick="">마이페이지</button>
+		                        <button onclick="location.href='mypage.me'">마이페이지</button>
 		                        <button type="button" onclick="location.href='logout.me'">로그아웃</button>
 		                    </div>
 						</c:otherwise>

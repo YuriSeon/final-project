@@ -24,9 +24,15 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
+	@RequestMapping("/mypage.me")
+	public String goMypage() {
+		return "member/myPage/mypage";
+	}
 	@GetMapping("/surveyResult.me")
 	@ResponseBody
-	public String surveyResult(String result) {
+	public String surveyResult(String result, String userId) {
+		
+		System.out.println(userId);
 		
 		int countEI = 0;
 		int countSN = 0;
@@ -92,7 +98,30 @@ public class MemberController {
 			mbti+="P";
 		}
 		
-		return mbti;
+		switch(mbti) {
+			case "ENFJ" :  mbti += " INFP ISTP";break;
+			case "ENFP" : mbti += " INFJ ISTJ"; break;
+			case "ENTJ" : mbti += " INTP ISFP"; break;
+			case "ENTP" : mbti += " INTJ ISFJ"; break;
+			case "ESFJ" : mbti += " ISFP INTP"; break;
+			case "ESFP" : mbti += " ISFJ INTJ"; break;
+			case "ESTJ" : mbti += " ISTP INFP"; break;
+			case "ESTP" : mbti += " ISTJ INFJ"; break;
+			case "INFJ" : mbti += " ENFP ESTP"; break;
+			case "INFP" : mbti += " ENFJ ESFJ"; break;
+			case "INTJ" : mbti += " ENTP ESFP"; break;
+			case "INTP" : mbti += " ENTJ ESFJ"; break;
+			case "ISFJ" : mbti += " ESFP ENTP"; break;
+			case "ISFP" : mbti += " ESFJ ENTJ"; break;
+			case "ISTJ" : mbti += " ESTP ENFJ"; break;
+			case "ISTP" : mbti += " ENTJ ENFJ"; break;
+		}
+		
+		Member m = Member.builder().userId(userId).survey(mbti).build();
+		
+		memberService.updateSurvey(m);
+		
+		return mbti.split(" ")[0];
 	}
 	
 	//로그인 메소드

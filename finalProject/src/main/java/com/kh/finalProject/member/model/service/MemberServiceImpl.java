@@ -25,8 +25,12 @@ public class MemberServiceImpl implements MemberService{
 	//회원가입
 	@Override
 	public int insertMember(Member m) {
-		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public int updateSurvey(Member m) {
+		return memberDao.updateSurvey(sqlSession,m);
 	}
 	
 }
