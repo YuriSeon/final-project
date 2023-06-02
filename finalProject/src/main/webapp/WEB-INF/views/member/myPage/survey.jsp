@@ -394,7 +394,7 @@
     				 $("#wrap").append("<a href='main.bo' style='margin-top:20px;' class='btn btn-info'>메인으로</a>")
     			 },
     			 error : function(){
-    				 
+    				console.log("통신 오류");
     			 }
     		 });
     	 }
