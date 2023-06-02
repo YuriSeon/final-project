@@ -10,4 +10,6 @@ public interface MemberService {
 	//회원가입
 	int insertMember(Member m);
 		
+	//설문 결과 업데이트
+	int updateSurvey(Member m);
 }
