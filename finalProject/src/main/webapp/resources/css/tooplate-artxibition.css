@@ -1565,11 +1565,12 @@ Shows Events Page
 */
 
 .page-heading-shows-events {
-  background-image: url('../images/해바라기.jpg');
-  background-size: cover;
+  background-image: url('../images/해바라기2.jpg');
+  background-size: 2000px 330px;
   background-repeat: no-repeat;
   padding: 110px 0px;
   text-align: center;
+ 
 }
 
 .main-schedule {

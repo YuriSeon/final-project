@@ -37,13 +37,16 @@
  .col .nicname{background-color: white; width:500px; border:1px solid black;height: 35px;}
  .nicname>span{margin: 10px; font-weight: bold; }
  
- .category1{
+ #category1{
  	margin-top: 20px;
- 	 border: 2px solid black;
+ 	 border: 2px dotted black;
      padding: 10px 20px;
      border-radius: 10px;
-     height:100px;
+     height:120px;
      cursor: pointer;
+     z-index:10;
+     width: 170px;
+     margin-left: 10px;
  }
  .category1>svg{right: 0px;
             left: 0px;
@@ -201,7 +204,8 @@
 		left: -50px;	
     }
   .col-l{
-  		position:relative;
+/*   		border:1px solid black; */
+/*   		position:relative; */
     	width:100%;
     	padding-right:500px;
     	padding-left:400px;
@@ -219,17 +223,7 @@
     
     <body>
     
-    <!-- ***** Preloader Start ***** -->
-    <div id="js-preloader" class="js-preloader">
-      <div class="preloader-inner">
-        <span class="dot"></span>
-        <div class="dots">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-    </div>
+    
     <!-- ***** Preloader End ***** -->
     <%@include file="../common/menubar.jsp" %>
     <!-- ***** Header Area End ***** -->
@@ -243,7 +237,7 @@
 		});
 	</script>
     <!-- ***** About Us Page ***** -->
-    <div class="page-heading-shows-events">
+    <!-- <div class="page-heading-shows-events">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -252,7 +246,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div class="shows-events-tab">
         <div class="container">
@@ -295,18 +289,20 @@
                                                                 <li><a href="#">#경남</a></li>
                                                                 <li><a href="#">#전북</a></li>
                                                                 <li><a href="#">#전남</a></li>
-                                                                <li><a href="#">#제주</a></li>
-                                                                <li><a href="#">#제주</a></li>
+                                                                <li><a href="#">#제주</a></li>                                                           
                                                             </ul>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-12">
-                                                        <div class="category1">
-                                                           <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-															  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
-															</svg>
-                                                            
-                                                        </div>
+                                                       	
+                                                        	
+																<button type="button" id="category1" onclick="enrollerForm();">
+																	<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+																	  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+																	</svg>
+																</button>                                                       
+            
+                                                       
                                                     </div>
                                                   
                                                 </div>
@@ -401,6 +397,56 @@
 							                            </div>
 							                    </div>
 							                </div>
+							                
+							                      
+                                             <div class="col" >
+							                    <div class="ticket-item" style="width: 400px;">
+							                        <div class="thumb">
+							                            <img src="/finalProject/resources/images/ticket-01.jpg" alt="">
+							                        </div>
+							                            <div class="prices" style="width: 500px;">
+									                            <div class="price">
+									                                <span>1 ticket<br>from <em>$25</em></span>
+									                            </div>
+									                        <div class="down-content">
+									                            <span>There Are 150 Tickets Left For This Show</span>
+									                            <h4>Wonderful Festival</h4>
+									                            <ul>
+									                                <li><i class="fa fa-clock-o"></i> Thursday: 05:00 PM to 10:00 PM</li>
+									                                <li><i class="fa fa-map-marker"></i>908 Copacabana Beach, Rio de Janeiro</li>
+									                            </ul>
+									                            <div class="main-dark-button">
+									                                <a href="ticket-details.html">Purchase Tickets</a>
+									                            </div>
+									                        </div>
+							                            </div>
+							                    </div>
+							                </div>
+							                
+							                      
+                                             <div class="col" >
+							                    <div class="ticket-item" style="width: 400px;">
+							                        <div class="thumb">
+							                            <img src="/finalProject/resources/images/ticket-01.jpg" alt="">
+							                        </div>
+							                            <div class="prices" style="width: 500px;">
+									                            <div class="price">
+									                                <span>1 ticket<br>from <em>$25</em></span>
+									                            </div>
+									                        <div class="down-content">
+									                            <span>There Are 150 Tickets Left For This Show</span>
+									                            <h4>Wonderful Festival</h4>
+									                            <ul>
+									                                <li><i class="fa fa-clock-o"></i> Thursday: 05:00 PM to 10:00 PM</li>
+									                                <li><i class="fa fa-map-marker"></i>908 Copacabana Beach, Rio de Janeiro</li>
+									                            </ul>
+									                            <div class="main-dark-button">
+									                                <a href="ticket-details.html">Purchase Tickets</a>
+									                            </div>
+									                        </div>
+							                            </div>
+							                    </div>
+							                </div>
 
                                             </div>
                                         </div>
@@ -457,6 +503,11 @@
 	 $(".fixed-area").stop();
 	 $(".fixed-area").animate( { "top" : scrollTop });
  });
+ 
+ function enrollerForm(){
+	 console.log($(this));
+	 location.href="enroll.fo";
+ };
  </script>
 
 </html>
