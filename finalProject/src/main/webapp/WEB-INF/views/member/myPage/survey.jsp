@@ -80,6 +80,27 @@
 	#resultText{
 		font-weight:400;
 	}
+	#processivityView>div{
+		float:left;
+		height:40px;
+		width:66px;
+/* 		border : 1.5px solid blue; */
+		text-align:center;
+		color:white;
+		font-size:20px;
+		padding-top:5px;
+	}
+	#processivityText{
+		width:200px;
+		height:70px;
+		font-size:50px;
+		margin-bottom:10px;
+		display:none;
+	}
+	#questionCountText{
+		font-size:50px;
+		text-decoration:none;
+	}
 
 </style>
 <body>
@@ -87,10 +108,11 @@
 <br><br>
     <div id="outer" align="center">
         <div id="wrap">
+        	<div id="processivityText"><a id="questionCountText">1</a> /12</div>
             <div id="mbtiBanner">
                 <div id="banner_1"></div>
                 <div id="banner_2">
-                    <div id="bannerTitle"> 님의<br> 여행 스타일은 ?</div>
+                    <div id="bannerTitle"> ${loginUser.nickname }님의<br> 여행 스타일은 ?</div>
                     <img src="/finalProject/resources/images/survey-ticket.png" id="startBanner" alt="도착지" style="width: 555px; height:150px; margin-top: 35px;">
                     <img src="" id="resultImg" style='width: 555px; height:250px; margin-top:10px; display:none;'>
                    <div id="resultText" style="display:none;"></div>
@@ -99,15 +121,32 @@
                 </div>
                 <div id="banner_3"></div>
             </div>
+           <div id="processivityView" style="width:794px; height:40px;border-radius:20px; margin:10px 0px 10px 0px; display:none;">
+           		<div class="question1" style="border-radius:17px 0px 0px 17px; background-color:lightblue;"></div>
+				<div class="question2"></div>
+				<div class="question3"></div>
+				<div class="question4"></div>
+				<div class="question5"></div>
+				<div class="question6"></div>
+				<div class="question7"></div>
+				<div class="question8"></div>
+				<div class="question9"></div>
+				<div class="question10"></div>
+				<div class="question11"></div>
+				<div class="question12" style="border-radius:0px 17px 17px 0px;"></div>
+           </div>
             <div id="mbtiStartDiv"> 설문지 시작하기 !</div>
-            <br><br><br><br>
+            <br>
         </div>
     </div>
+    <br><br>
     <script>
 			var	questionCount = 1;
 			
     	 $("#mbtiStartDiv").click(function(){
 	    		$("#banner_2 button").css("display","block");
+	    		$("#processivityText").css("display","block");
+	    		$("#processivityView").css("display","block");
 	    		
 				$("#banner_2").children("#startBanner").remove();
 				$("#mbtiStartDiv").remove();
@@ -132,6 +171,8 @@
     		 console.log(questionCount);
     		 addQuestion(questionCount);
     		 }else{
+    			 $("#processivityText").remove();
+    			 $("#processivityView").remove();
     			 $("#bannerTitle").html("${loginUser.nickname}님의 결과는 ?");
     			 $("#btn1").remove();
     			 $("#btn2").remove();
@@ -142,6 +183,8 @@
     	 
     	 function addQuestion(questionCount){
     		 console.log(questionCount);
+    		 $("#questionCountText").html(questionCount);
+    		 $(".question"+questionCount).css("background-color","lightblue");
     		 switch(questionCount){
     		 	case 2 : 
     		 		$("#bannerTitle").html("Q2. 게스트하우스 내에서 다들 친해졌다. 모두가 모여서 대화를 하고 있을 때, 나는?");
@@ -205,7 +248,8 @@
     		 
     		 $.ajax({
     			 url : "surveyResult.me",
-    			 data : {result : result},
+    			 data : {result : result,
+    				 		userId : "${loginUser.userId}"},
     			 success : function(mbti){
     				 var str = "";
     				 
@@ -347,10 +391,10 @@
 	    					 $("#resultImg").css("display","block").prop("src","/finalProject/resources/images/mbtiResult/ISTJ.png"); break;
     				 }; 
     				 $("#resultText").css("display","block").html(str);
-    				 $("#banner_2").append("<a href='main.bo' style='margin-top:20px;' class='btn btn-info'>메인으로</a>")
+    				 $("#wrap").append("<a href='main.bo' style='margin-top:20px;' class='btn btn-info'>메인으로</a>")
     			 },
     			 error : function(){
-    				 
+    				console.log("통신 오류");
     			 }
     		 });
     	 }

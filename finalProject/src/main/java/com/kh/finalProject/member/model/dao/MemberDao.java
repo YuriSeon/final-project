@@ -13,4 +13,8 @@ public class MemberDao {
 			return sqlSession.selectOne("memberMapper.loginMember", m);
 		}
 
+		public int updateSurvey(SqlSessionTemplate sqlSession, Member m) {
+			return sqlSession.update("memberMapper.updateSurvey", m);
+		}
+
 }

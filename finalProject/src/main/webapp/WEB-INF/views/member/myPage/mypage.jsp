@@ -54,7 +54,7 @@
 			                            	<img src="resources/images/person.png" alt="" width="100px" id="profileImg">
 			                        	</div>
 			                        	<p>반가워요!</p>
-			                        	<strong class="userName">J*****E 님</strong>
+			                        	<strong class="userName">${loginUser.nickname}님</strong>
 				                        <div class="btn">
 				                        	<input type="file" id="fileUp" name="fileUp" accept="image/*" onchange="fileChange(this)" style="display:none;">
 				                            <a href="javascript:;" id="profileUpdate">프로필 이미지 설정&gt;</a>
@@ -93,7 +93,7 @@
                                     <span>동행 인증</span>
                                 </li>
                                 <li>
-                                    <a href="/mypage/tourist_info_list.do" class="icon6"><img src="resources/images/check.png" alt="" width="50px" height="50px"></a>
+                                    <a href="survey.me" class="icon6"><img src="resources/images/check.png" alt="" width="50px" height="50px"></a>
                                     <span>설문지</span>
                                 </li>
                                 <li>

@@ -3,12 +3,14 @@ package com.kh.finalProject.member.model.vo;
 import java.sql.Date;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Member {
 
 	private int userNo;			//	USER_NO	NUMBER
@@ -21,7 +23,7 @@ public class Member {
 	private String email;		//	EMAIL	VARCHAR2(30 BYTE)
 	private String phone;		//	PHONE	VARCHAR2(12 BYTE)
 	private String MBTI;		//	MBTI	VARCHAR2(4 BYTE)	-> 회원가입때 받은 MBTI
-	private String surbey;		//	SURVEY	VARCHAR2(4 BYTE)	-> 설문지 결과 MBTI
+	private String survey;		//	SURVEY	VARCHAR2(4 BYTE)	-> 설문지 결과 MBTI
 	private String style;		//	STYLE	VARCHAR2(100 BYTE)	-> 여행 스타일
 	private int report;			//	REPORT	NUMBER				-> 신고 누적 횟수
 	private int warning;		//	WARNING	NUMBER				-> 경고횟수
