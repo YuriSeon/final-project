@@ -1,0 +1,286 @@
+#contents{
+    width: 1400px;
+    margin-left: 400px;
+    
+}
+.tit_my{
+    margin-top: 50px;
+    margin-bottom: 0px;
+}
+.pabox{
+	position: relative;
+	top: -50px;
+    height: 600px;
+}
+
+.pabox .profile_box{
+    width: 350px;
+    height: 100%;
+    float: left;
+    position: relative;
+    top: 100px;
+}
+.pabox .subscribe_box{
+    width: 700px;
+    /* border: 1px solid black; */
+    height: 500px;
+    float: left;
+    position: relative;
+    top: 120px;
+    left: 30px;
+}
+/* 프로필박스 */
+
+.profile_box{
+    position: absolute;
+}
+.profile_box .tit_cont{
+    text-align: right;
+    
+}
+#menubtn{
+    color: #fff;
+    font-size: 24px;
+    position: relative;
+    left: -20px;
+    top: 10px;
+    cursor: pointer;
+}
+#menubtn:hover+.pop_subMenu,#menubtn:hover+.pop_subMenu ul{
+	display: block;
+}
+
+.active h3{
+	position: relative;
+	top: -20px;
+}
+.pop_subMenu {
+    /* display: none; */
+    position: absolute;
+    top: 35px;
+    right: 0;
+    width: 120px;
+    height: 90px;
+    
+    /* border: 1px solid #767676; */
+    padding: 0;
+    background: #fff;
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+    display: none;
+    line-height: 30px;
+    border-radius: 3px;
+}
+.pop_subMenu:hover {
+    display: block;
+}
+.pop_subMenu ul{
+    position: relative;
+    display: none;
+    top: 0px;
+    left: 0px;
+    box-sizing: border-box;
+}
+.pop_subMenu ul:hover{
+	display: block;
+	border-radius: 3px;
+}
+.pop_subMenu ul li{
+	text-align: center;
+}
+.pop_subMenu ul li *{
+    text-decoration: none;
+    color: black;
+}
+.pop_subMenu ul li:hover{
+	box-sizing: border-box;
+    background-color: rgb(228, 229, 231);
+    font-weight: bold;
+    border-radius: 3px;
+}
+
+.mapage_subscribe .profile_box .fix_wrap .box {
+    width: 340px;
+    height: 450px;
+    background: #022c6c;
+    position: absolute;
+    text-align: center;
+    border-radius: 5px;
+}
+.mapage_subscribe .profile_box .profile {
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    border-radius: 70%;
+    overflow: hidden;
+    margin-top: 122px;
+}
+#profileImg{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.mapage_subscribe .profile_box p {
+    padding: 27px 0 10px;
+    font-size: 20px;
+    font-weight: 300;
+    color: #fff;
+    line-height: 22px;
+    letter-spacing: -0.8px;
+}
+.mapage_subscribe .profile_box strong {
+    display: block;
+    font-weight: 800;
+    font-size: 30px;
+    color: #fff;
+    letter-spacing: -1.5px;
+    line-height: 33px;
+}
+.mapage_subscribe .profile_box .btn a {
+    display: inline-block;
+    color: #fff;
+    font-size: 18px;
+    letter-spacing: -0.6px;
+    line-height: 20px;
+}
+#profileUpdate{
+    text-decoration: none;
+    position: relative;
+    top: 60px;
+}
+/* 나의활동 */
+.subscribe_box{
+    /* border: 1px solid; */
+    margin-left: 0;
+}
+.mapage_subscribe .moslide .swiper-wrapper {
+    display: block;
+}
+
+.mapage_subscribe .active ul {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 10px;
+}
+.mapage_subscribe .active ul li {
+    width: 25%;
+    text-align: center;
+    height: 150px;
+    position: relative;
+    left: 0px;
+    top: 20px;
+}
+.mapage_subscribe .active ul li span:hover{
+    cursor: pointer;
+}
+.mapage_subscribe .active ul li a {
+    display: inline-block;
+    position: relative;
+    width: 65px;
+}
+.mapage_subscribe .active ul li span {
+    display: block;
+    font-size: 18px;
+    letter-spacing: -0.8px;
+    line-height: 22px;
+    color: #333;
+}
+dl, ul, ol, menu, li {
+    list-style: none;
+}
+ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+}
+.swiper-container {
+    margin: 0 auto;
+    position: relative;
+    left: 0px;
+    overflow: hidden;
+    list-style: none;
+    padding: 0;
+    z-index: 0;
+    width: 700px;
+    height: 400px;
+    /* border: 1px solid; */
+}
+.swiper-container h3{
+    font-size: 25px;
+    margin: 0;
+}
+.mapage_subscribe .active .inr {
+    padding: 40px 0 0;
+    margin: 0 0 38px;
+    background: #fff;
+    box-shadow: 0px 0px 24px 0px rgba(170, 173, 176, 0.2);
+    border-radius: 10px;
+}
+
+/* 최근 본 컨텐츠 */
+.lately_cont{
+    /* border: 1px solid; */
+    height: 500px;
+    position: relative;  
+    left: 20px;
+}
+.swiper-container button{
+    position: absolute;
+    top: 100px;
+    left: -50px;
+}
+.lately_cont h3{
+    padding: 0 0 20px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 24px;
+    color: #000;
+    position: relative;
+    left: 340px;
+    display: inline;
+}
+.lately_cont button{
+    margin: 0;
+    margin-left: 10px;
+    padding: 0;
+    float: right;
+    position: relative;
+    top: -15px;
+    left: -20px;
+    
+}
+#recentSwiper{
+    position: relative;
+    top: 0px;
+    float: left;
+    display: flex;
+    left: 13px;
+    height: 300px;
+}
+
+.swiper-slide p{
+    width: 200px;
+}
+  
+.swiper-button-next,
+.swiper-button-prev {
+	background-color: white;
+    border: none;
+    outline: none;
+}
+
+.swiper-button-next:focus,
+.swiper-button-prev:focus {
+    border: none;
+    outline: none;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    display: none;
+}
