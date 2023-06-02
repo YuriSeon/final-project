@@ -24,6 +24,10 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
+	@RequestMapping("/mypage.me")
+	public String goMypage() {
+		return "member/myPage/mypage";
+	}
 	@GetMapping("/surveyResult.me")
 	@ResponseBody
 	public String surveyResult(String result, String userId) {
