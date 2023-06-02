@@ -34,15 +34,15 @@
     <link rel="stylesheet" href="resources/css/tooplate-artxibition.css">
 
 	<style>
-    	button{
+    	.col-sm-6 button{
     		font-size : 14px;
     		border : 0px;
     	}
-    	button:focus{
+    	.col-sm-6 button:focus{
     		border : none;
     		outline : none;
     	}
-    	button:hover{
+    	.col-sm-6 button:hover{
     		font-weight : 600;
     	}
     	.modal-header{
@@ -91,7 +91,7 @@
           height: 50%;
           margin: auto;
         }
-        input{
+        .modal-body input{
           border: 0px; /*보더 라인 색깔...*/
           border-radius: 5px;
           width: 100%;
@@ -162,7 +162,7 @@
                 			<!-- 로그인 전 -->
 		                    <div class="text-button">
 		                        <button type="button" data-toggle="modal" data-target="#loginModal">로그인</button>&nbsp;/
-		                        <button>회원가입</button>
+		                        <button type="button" onclick="location.href='enrollForm.me'">회원가입</button>
 		                    </div>
                 		</c:when>
 						<c:otherwise>
