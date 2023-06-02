@@ -20,7 +20,7 @@
 </head>
 <body>
 
- 	<%@include file="../common/menubar.jsp" %>
+ 	<%@include file="../../common/menubar.jsp" %>
  	
  	<hr style="position: relative; top: -16px; height:10px; border:0; box-shadow:0 10px 10px -10px #bbb inset;">
  	
@@ -191,6 +191,6 @@
 
     </script>
     
-    <%@include file="../common/footer.jsp" %>
+    <%@include file="../../common/footer.jsp" %>
 </body>
 </html>
