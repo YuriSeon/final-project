@@ -173,6 +173,9 @@
     .slider input[type=radio]:nth-child(4):checked~.bullets>label:nth-child(4){
         background-color: #fff;
     }
+     .slider input[type=radio]:nth-child(5):checked~.bullets>label:nth-child(5){
+        background-color: #fff;
+    }
     .slider input[type=radio]:nth-child(1):checked~ul.imgs>li:nth-child(1){
         left: 0;
         transition: 0.5s;
@@ -189,6 +192,11 @@
         z-index:1;
     }
     .slider input[type=radio]:nth-child(4):checked~ul.imgs>li:nth-child(4){
+        left: 0;
+        transition: 0.5s;
+        z-index:1;
+    }
+    .slider input[type=radio]:nth-child(5):checked~ul.imgs>li:nth-child(5){
         left: 0;
         transition: 0.5s;
         z-index:1;
@@ -334,18 +342,21 @@
 												            <input type="radio" name="slide" id="slide2">
 												            <input type="radio" name="slide" id="slide3">
 												            <input type="radio" name="slide" id="slide4">
+												            <input type="radio" name="slide" id="slide5">
 												            <ul id="imgholder" class="imgs">
 												                <li><img src="resources/images/Like-after.png"></li>
 												                <li><img src="resources/images/3442323_s7l.jpg"></li>
-												                <li><img src="resources/images/2.jpg"></li>
-												                <li><img src="./img/slide4.jpg"></li>
+												                <li><img src=""></li>
+												                <li><img src=""></li>
+												                <li><img src=""></li>
 												            </ul>
-												            <div class="bullets">
+												           <div class="bullets">
 												                <label for="slide1">&nbsp;</label>
 												                <label for="slide2">&nbsp;</label>
 												                <label for="slide3">&nbsp;</label>
 												                <label for="slide4">&nbsp;</label>
-												            </div>
+												                <label for="slide5">&nbsp;</label>
+												            </div> 
 												        </div>
         						                   
 							                        </div>
@@ -508,6 +519,7 @@
 	 console.log($(this));
 	 location.href="enroll.fo";
  };
+ 
  </script>
 
 </html>
