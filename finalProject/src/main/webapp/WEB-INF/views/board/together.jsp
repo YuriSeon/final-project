@@ -128,9 +128,10 @@ https://www.tooplate.com/view/2125-artxibition
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="heading">
-                        <h2>당신을 기다리는 사람들</h2>
-                    </div>
+                <br><br>
+<!--                     <div class="heading"> -->
+<!--                         <h2>당신을 기다리는 사람들</h2> -->
+<!--                     </div> -->
                 </div>
                 <div class="col-lg-4">
                     <div class="ticket-item">
