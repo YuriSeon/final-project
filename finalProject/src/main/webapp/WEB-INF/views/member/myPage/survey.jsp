@@ -61,7 +61,7 @@
         cursor: pointer;
     }
     #bannerTitle{
-        font-size: 50px;
+        font-size: 45px;
         margin-top: 20px;
     }
 	.answerBtn{
@@ -164,7 +164,7 @@
     			 
     		 result+= $(this).val();
     		 console.log(result);
-    		 $("#bannerTitle").html("").css("font-size",50);
+    		 $("#bannerTitle").html("").css("font-size",45);
     		 $("#btn2").css("height","150px");
     		 
     		 questionCount ++;
