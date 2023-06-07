@@ -124,6 +124,12 @@ public class MemberController {
 		return mbti.split(" ")[0];
 	}
 	
+	//회원가입 폼 이동
+	@RequestMapping("enrollForm.me")
+	public String joinMember() {
+		return "member/memberEnrollForm";
+	}
+	
 	//로그인 메소드
 	@RequestMapping("login.me")
 	public String loginMember(String saveId, Member m, HttpSession session, HttpServletResponse response) {
