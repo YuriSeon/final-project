@@ -36,6 +36,13 @@
 		<result column="FILE_LEVEL" property="fileLevel"/>
 		<result column="STATUS" property="status"/>
 	</resultMap>
+	
+	<insert id="insertMember" parameterType="member">
+		INSERT INTO MEMBER (USER_NO, USER_ID, NICKNAME, USER_PWD, USER_NAME, GENDER, AGE,
+							EMAIL, PHONE, MBTI, SURVEY, STYLE, CERTIFICATION, INTEREST)
+					VALUES(SEQ_UNO.NEXTVAL,#{userId},#{nickname},#{userPwd},#{userName},#{gender},#{age},
+							#{email},#{phone},#{MBTI},#{survey},#{style},#{certification},#{interest})
+	</insert>
 
 	<select id="loginMember" parameterType="member" resultMap="memberResultSet">
 		SELECT USER_NO,USER_ID,NICKNAME,USER_PWD,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,M.ENROLL_DATE,CERTIFICATION,M.STATUS,INTEREST, FILE_PATH||CHANGE_NAME "PROFILEIMG"

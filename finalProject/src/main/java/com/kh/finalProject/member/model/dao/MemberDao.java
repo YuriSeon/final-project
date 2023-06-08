@@ -18,7 +18,12 @@ public class MemberDao {
 		public int updateSurvey(SqlSessionTemplate sqlSession, Member m) {
 			return sqlSession.update("memberMapper.updateSurvey", m);
 		}
-
+		
+		//회원가입
+		public int insertMember(SqlSessionTemplate sqlSession, Member m) {
+			return sqlSession.insert("memberMapper.insertMember", m);
+		}
+		
 		//첨부파일 프로필사진 조회
 		public Attachment selectAttachment(SqlSessionTemplate sqlSession, Attachment a) {
 			return sqlSession.selectOne("memberMapper.selectAttachment", a);

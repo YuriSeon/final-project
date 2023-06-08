@@ -23,16 +23,16 @@ public class MemberServiceImpl implements MemberService{
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 
+	//회원가입
+	@Override
+	public int insertMember(Member m) {
+		return memberDao.insertMember(sqlSession, m);
+	}
+
 	//로그인
 	@Override
 	public Member loginMember(Member m) {
 		return memberDao.loginMember(sqlSession, m);
-	}
-	
-	//회원가입
-	@Override
-	public int insertMember(Member m) {
-		return 0;
 	}
 
 	@Override
