@@ -15,7 +15,7 @@ public class Board {
 //	BOARD_NO	NUMBER
 //	ZONE_NO	NUMBER
 //	INFO_NO	NUMBER
-//	USER_NO	NUMBER
+//  BOARD_WRITER VARCHAR2(30)
 //	CATEGORY	NUMBER
 //	BOARD_TITLE	VARCHAR2(60 BYTE)
 //	BOARD_CONTENT	VARCHAR2(4000 BYTE)
@@ -29,7 +29,7 @@ public class Board {
 	private int boardNo;
 	private int zoneNo;
 	private int infoNo;
-	private int userNo;
+	private String boardWriter;
 	private int category;
 	private String boardTitle;
 	private String boardContent;

@@ -18,11 +18,14 @@
 	.price{
 	 	margin : 0px 0px 120px 140px;
 	}
+	#optionIcons>li>img{
+		width: 12px;
+		height:14px;
+		margin-right:10px;
+	}
 	</style>
     <title>함께 가치</title>
 
-
-    <!-- Additional CSS Files -->
     <link rel="stylesheet" type="text/css" href="/finalProject/resources/css/bootstrap.min.css">
 
     <link rel="stylesheet" type="text/css" href="/finalProject/resources/css/font-awesome.css">
@@ -30,13 +33,6 @@
     <link rel="stylesheet" type="text/css" href="/finalProject/resources/css/owl-carousel.css">
 
     <link rel="stylesheet" href="/finalProject/resources/css/tooplate-artxibition.css">
-<!--
-
-Tooplate 2125 ArtXibition
-
-https://www.tooplate.com/view/2125-artxibition
-
--->
     </head>
     
     <body>
@@ -85,40 +81,66 @@ https://www.tooplate.com/view/2125-artxibition
                             <div class="row">
                                 <div class="col-lg-5">
                                     <div class="search-heading">
-                                        <h4>원하는 조건을 입력 해보세요 : </h4>
+                                        <h4>원하는 조건을 입력 해보세요  </h4>
                                     </div>
                                 </div>
                                 <div class="col-lg-7">
                                     <div class="row">
                                         <div class="col-lg-3">
                                             <select value="month">
-                                                <option value="month">월</option>
-                                                <option name="June" id="June">June</option>
-                                                <option name="July" id="July">July</option>
-                                                <option name="August" id="August">August</option>
-                                                <option name="September" id="September">September</option>
+                                            			<option value="">월</option>
+                                                        <option value="0">전체</option>
+												        <option value="1">1월</option>
+												        <option value="2">2월</option>
+												        <option value="3">3월</option>
+												        <option value="4">4월</option>
+												        <option value="5">5월</option>
+												        <option value="6">6월</option>
+												        <option value="7">7월</option>
+												        <option value="8">8월</option>
+												        <option value="9">9월</option>
+												        <option value="10">10월</option>
+												        <option value="11">11월</option>
+												        <option value="12">12월</option>
                                             </select>
                                         </div>
                                         <div class="col-lg-3">
                                             <select value="location">
-                                                <option value="location">지역</option>
-                                                <option name="Brazil" id="Brazil">Brazil</option>
-                                                <option name="Europe" id="Europe">Europe</option>
-                                                <option name="US" id="US">US</option>
-                                                <option name="Asia" id="Asia">Asia</option>
+                                                <option value="">지역</option>
+					                            <option value='0'>전체</option>
+					                            <option value='서울'>서울특별시</option>
+					                            <option value='부산'>부산광역시</option>
+					                            <option value='대구'>대구광역시</option>
+					                            <option value='인천'>인천광역시</option>
+					                            <option value='광주'>광주광역시</option>
+					                            <option value='대전'>대전광역시</option>
+					                            <option value='울산'>울산광역시</option>
+					                            <option value='경기'>경기도</option>
+					                            <option value='강원'>강원도</option>
+					                            <option value='충북'>충청북도</option>
+					                            <option value='충남'>충청남도</option>
+					                            <option value='전북'>전라북도</option>
+					                            <option value='전남'>전라남도</option>
+					                            <option value='경북'>경상북도</option>
+					                            <option value='경남'>경상남도</option>
+					                            <option value='제주'>제주도</option>
                                             </select>
                                         </div>
                                         <div class="col-lg-3">
-                                            <select value="month">
-                                                <option value="month">경비</option>
-                                                <option name="min" id="min">$0 - $50</option>
-                                                <option name="standard" id="standard">$50 - $100</option>
-                                                <option name="hight" id="hight">$100 - $200</option>
+                                            <select value="pay">
+                                                <option value="">경비</option>
+                                                <option value="0">전체</option>
+                                                <option value="1">100,000원 이하</option>
+                                                <option value="2">200,000원 이하</option>
+                                                <option value="3">300,000원 이하</option>
+                                                <option value="4">400,000원 이하</option>
+                                                <option value="5">500,000원 이하</option>
+                                                <option value="10">1,000,000원 이하</option>
                                             </select>
                                         </div>
                                         <div class="col-lg-3">
                                             <fieldset>
-                                            <button type="submit" id="form-submit" class="main-dark-button">검색 !</button>
+                                            <button type="submit" id="form-submit" class="main-dark-button">검색 </button>
                                             </fieldset>
                                         </div>
                                     </div>
@@ -129,25 +151,22 @@ https://www.tooplate.com/view/2125-artxibition
                 </div>
                 <div class="col-lg-12">
                 <br><br>
-<!--                     <div class="heading"> -->
-<!--                         <h2>당신을 기다리는 사람들</h2> -->
-<!--                     </div> -->
                 </div>
                 <div class="col-lg-4">
                     <div class="ticket-item">
                         <div class="thumb">
-<!--                             <img src="/finalProject/resources/images/ticket-01.jpg" alt=""> -->
                             <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzAyMjVfMTk4%2FMDAxNjc3Mjk1MzM0Mjg2.4g-sSUBKDNcayJnnmB3qWmL2p9PBPhgdMm_kt9yOfrgg.cG7DhCRsaUznj729jA2Qs1EMWi-aQsYUEt-j-ao5I5Ug.JPEG.hamso99%2F1677295333608.jpg&type=a340" alt="">
                             <div class="price">
                                 <span>2박 3일<br>경주<em>테마 여행</em></span>
                             </div>
                         </div>
                         <div class="down-content">
-<!--                             <span></span> -->
                             <h4>&lt;2박 3일 경주 테마여행&gt; <br> 동행 2분 모십니다!</h4>
-                            <ul>
+                            <ul id="optionIcons">
                                 <li><i class="fa fa-clock-o"></i>2023/05/25 ~ 2023/05/27</li>
                                 <li><i class="fa fa-map-marker"></i>경상북도 경주시</li>
+                                <li><img src="/finalProject/resources/images/together_won.png">200,000 이하</li>
+                                <li><img src="/finalProject/resources/images/기본프로필.png"> <a id="nicknameHover" onclick="whoareyou();">진주초이</a></li>
                             </ul>
                             <div class="main-dark-button">
                                 <a href="ticket-details.html">참여하기 1/2</a>
@@ -155,6 +174,7 @@ https://www.tooplate.com/view/2125-artxibition
                         </div>
                     </div>
                 </div>
+                
                 <div class="col-lg-4">
                     <div class="ticket-item">
                         <div class="thumb">
@@ -177,6 +197,7 @@ https://www.tooplate.com/view/2125-artxibition
                         </div>
                     </div>
                 </div>
+                
                 <div class="col-lg-4">
                     <div class="ticket-item">
                         <div class="thumb">
@@ -198,69 +219,7 @@ https://www.tooplate.com/view/2125-artxibition
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="ticket-item">
-                        <div class="thumb">
-                            <img src="/finalProject/resources/images/ticket-04.jpg" alt="">
-                            <div class="price">
-                                <span>1 ticket<br>from <em>$20</em></span>
-                            </div>
-                        </div>
-                        <div class="down-content">
-                            <span>There Are 340 Tickets Left For This Show</span>
-                            <h4>Tiger Festival</h4>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> Thursday: 06:40 PM to 11:40 PM</li>
-                                <li><i class="fa fa-map-marker"></i>123 Copacabana Beach, Rio de Janeiro</li>
-                            </ul>
-                            <div class="main-dark-button">
-                                <a href="ticket-details.html">Purchase Tickets</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="ticket-item">
-                        <div class="thumb">
-                            <img src="/finalProject/resources/images/ticket-05.jpg" alt="">
-                            <div class="price">
-                                <span>1 ticket<br>from <em>$30</em></span>
-                            </div>
-                        </div>
-                        <div class="down-content">
-                            <span>There Are 420 Tickets Left For This Show</span>
-                            <h4>Woodland Festival</h4>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> Wednesday: 06:00 PM to 09:00 PM</li>
-                                <li><i class="fa fa-map-marker"></i>1122 Copacabana Beach, Rio de Janeiro</li>
-                            </ul>
-                            <div class="main-dark-button">
-                                <a href="ticket-details.html">Purchase Tickets</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="ticket-item">
-                        <div class="thumb">
-                            <img src="/finalProject/resources/images/ticket-06.jpg" alt="">
-                            <div class="price">
-                                <span>1 ticket<br>from <em>$40</em></span>
-                            </div>
-                        </div>
-                        <div class="down-content">
-                            <span>There Are 520 Tickets Left For This Show</span>
-                            <h4>Winter Festival</h4>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> Saturday: 06:00 PM to 09:00 PM</li>
-                                <li><i class="fa fa-map-marker"></i>220 Copacabana Beach, Rio de Janeiro</li>
-                            </ul>
-                            <div class="main-dark-button">
-                                <a href="ticket-details.html">Purchase Tickets</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
                 <div class="col-lg-12">
                     <div class="pagination">
                         <ul>
@@ -271,6 +230,11 @@ https://www.tooplate.com/view/2125-artxibition
                             <li><a href="#">Next</a></li>
                         </ul>
                     </div>
+                    <c:if test="${not empty loginUser }">
+	                   <div align="right">
+							<a href="togetherEnroll.bo?nickname=${loginUser.nickname}" class="btn btn-secondary">글 쓰기</a>	                   
+	                   </div>
+                    </c:if>
                 </div>
             </div>
         </div>

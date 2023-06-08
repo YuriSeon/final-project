@@ -21,4 +21,5 @@ private String filePath;//	FILE_PATH
 private Date uploadDate;//	UPLOAD_DATE
 private int fileLevel;//	FILE_LEVEL
 private String status;//	STATUS
+private String writer;
 }

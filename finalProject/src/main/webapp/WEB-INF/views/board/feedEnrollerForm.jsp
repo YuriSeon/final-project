@@ -50,7 +50,7 @@
 	
 	.slide{ /**이만큼의 크기로 보이겠다는 의미**/
 	  width:350px; height:333px;/**사진보다 크면 다음 사진까지 표시되어 img와 slide크기를 맞춘다.**/
-	  overflow: hidden;/**이미지는 내장이라 overflow:hidden을 사용해 넘친 사진들을 안보이게 한다.**/
+ 	//  overflow: hidden;/**이미지는 내장이라 overflow:hidden을 사용해 넘친 사진들을 안보이게 한다.**/ 
 	 border:1px solid black;
 	  position: relative;
 	  left: 250px;
@@ -62,7 +62,6 @@
 	tranform속성에 0.5초의 듀레이션(동작의 시작해서 끝나는 시간)을 준다.**/
 	}
 	img{
-		
 	  width:300px; height:333px;/**slide 크기에 맞춘다.**/
 	}
 	
@@ -121,10 +120,10 @@
 						<td>
 							 <div class="slide" align="center"> <!--배치된 img들을 하나의 img만 보이게 가리기 위한 태그-->
 			                    <div class="images"> <!--img들을 좌우배치할 태그-->
-			                        <img id="contentImg1">
-			                        <img id="contentImg2">
-			                        <img id="contentImg3">
-			                        <img id="contentImg4">
+			                        <img id="contentImg1" src="/finalProject/resources/images/check.png">
+			                        <img id="contentImg2" src="/finalProject/resources/images/compass.png">
+			                        <img id="contentImg3" src="/finalProject/resources/images/edit.png">
+			                        <img id="contentImg4" src="/finalProject/resources/images/eye.png">
 			                    </div>
 			                </div>
 			                  <button class="back">❮</button>
@@ -161,21 +160,21 @@
 </body>
 
 <script>
-	$(function(){
-		$("#file-area").hide();
-		$("#contentImg1").click(function(){
-			$("#file1").click();
-		});
-		$("#contentImg2").click(function(){
-			$("#file2").click();
-		});
-		$("#contentImg3").click(function(){
-			$("#file3").click();
-		});
-		$("#contentImg3").click(function(){
-			$("#file4").click();
-		});
-	});
+// 	$(function(){
+// 		$("#file-area").hide();
+// 		$("#contentImg1").click(function(){
+// 			$("#file1").click();
+// 		});
+// 		$("#contentImg2").click(function(){
+// 			$("#file2").click();
+// 		});
+// 		$("#contentImg3").click(function(){
+// 			$("#file3").click();
+// 		});
+// 		$("#contentImg3").click(function(){
+// 			$("#file4").click();
+// 		});
+// 	});
 	
 	
 	
@@ -188,15 +187,16 @@
 	const nextBtn = document.querySelector(".next")
 	const images = document.querySelector(".images")
 	
+	
 	function next() {
-	  if (pages< 2) {
+	  if (pages< 3) {
 	    backBtn.removeAttribute('disabled')//뒤로 이동해 더이상 disabled가 아니여서 속성을 삭제한다.
 	    positionValue -= IMAGE_WIDTH;//IMAGE_WIDTH의 증감을 positionValue에 저장한다.
-	    images.style.transform = `translateX(${positionValue}px)`;
+	    images.style.transform = `translateX(250px)`;
 			//x축으로 positionValue만큼의 px을 이동한다.
 	    pages += 1; //다음 페이지로 이동해서 pages를 1증가 시킨다.
 	  }
-	  if (pages === 2) { //
+	  if (pages === 3) { //
 	    nextBtn.setAttribute('disabled', 'true')//마지막 장일 때 next버튼이 disabled된다.
 	  }
 	}
@@ -205,7 +205,7 @@
 	  if (pages > 0) {
 	    nextBtn.removeAttribute('disabled')
 	    positionValue += IMAGE_WIDTH;
-	    images.style.transform = `translateX(${positionValue}px)`;
+	    images.style.transform = `translateX(-250px)`;
 	    pages -= 1; //이전 페이지로 이동해서 pages를 1감소 시킨다.
 	  }
 	  if (pages === 0) {

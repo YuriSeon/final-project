@@ -16,7 +16,7 @@
   	</typeAliases>
   	
   	<mappers>
-  		
+  		<mapper resource="/mappers/together-mapper.xml"/>
   	</mappers>
   	
   </configuration>

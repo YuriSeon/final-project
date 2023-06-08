@@ -120,6 +120,25 @@
         	cursor : default;
         	font-size : 14.3px;
         }
+        .modal-dialog{
+      		overflow-y: initial !important
+      	}
+      	
+      	.modal-body {
+      		max-height: calc(100vh-200px);
+      		overflow-y: auto;
+      	}
+        #p_img {
+        	width: 100%;
+        	height: 180px;
+      	}
+
+      	#p_img>img {
+        	width: 180px;
+        	height: 180px;
+        	margin: 0 143px;
+        	border-radius: 50%;
+      	}  
     </style>
 
 </head>
@@ -268,9 +287,61 @@
   			}
   			
   			var che = $("input[name=userId]").is(':checked');
-  			console.log(che);
   		});
   	</script>
+  	
+  	<div class="modal" id="profile" role="dialog">
+		<div class="modal-dialog ">
+			<div class="modal-content">
+
+				<div class="modal-header" style="border-bottom: 0;">
+					<button type="button" class="close" data-dismiss="modal" id="closeModal"
+						style="height: 100%;">&times;</button>
+				</div>
+
+                <div class="modal-body" style="box-sizing: border-box;">
+                    <div style="border-bottom: 0.5px solid lightgray; width: 100%; height: 100%;">
+                        <div id="p_img">
+                            <!--프로필 없으면-->
+                            <img src="resources/기본프로필.png" alt="프로필사진">
+                            <!--프로필 있으면-->
+                            <!-- <img src="설정 프로필 사진 링크" alt="프로필사진"> -->
+                        </div>
+                        <br>
+                        <div id="p_nickname" align="center">
+                            <p style="font-size: 33px; font-weight: 580;">진주초이</p>
+                        </div>
+                        <div id="p_age" align="center">
+                            <p style="font-size: 20px; font-weight: 540;">30대</p>
+                        </div>
+                        <div id="p_address" align="center">
+                            <p style="font-size: 20px; font-weight: 540;">주소 비공개 회원입니다.</p>
+                        </div>
+                        <div id="p_style" align="center">
+                            <p style="font-size: 20px; font-weight: 540;">계획 여행 / 효율적 여행</p>
+                        </div>
+                        <br>
+                    </div>
+            
+                    <div align="center">
+                        <br>
+                        <div class="modal_btns">
+                            <button type="button" class="btn btn-success">채팅하기</button>
+                            <button type="button" class="btn btn-info">쓴글보기</button>
+                            <button type="button" class="btn btn-danger">신고하기</button>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
+
+    <script>
+        function whoareyou() {
+				$("#profile").modal('show');
+    	};
+    </script>
     
 </body>
 </html>
