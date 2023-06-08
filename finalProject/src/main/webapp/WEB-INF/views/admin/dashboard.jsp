@@ -19,7 +19,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="resources/css/dashboard_admin.css">
-    <title>Document</title>
+    <title>대시보드</title>
 </head>
 <body>
     <!-- Header - Start  -->
@@ -44,7 +44,7 @@
     <div class="main-menu">
         <ul class='main-menu'>
             <li class="link-active">
-                <a href="#">
+                <a href="admin.ad">
                     <span class='glyphicon glyphicon-home'></span> 대시보드
                 </a>
             </li>
@@ -56,7 +56,7 @@
                 <!-- submenu start -->
                 <ul id="submenu" >
                     <li>
-                        <a href="#">
+                        <a href="adTheme.ad">
                             <span class='glyphicon glyphicon-list-alt'></span> 테마
                         </a>
                     </li>
