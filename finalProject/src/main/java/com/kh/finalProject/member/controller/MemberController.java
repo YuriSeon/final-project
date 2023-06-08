@@ -1,5 +1,11 @@
 package com.kh.finalProject.member.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -8,9 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.member.model.service.MemberService;
 import com.kh.finalProject.member.model.vo.Member;
 
@@ -20,14 +30,91 @@ public class MemberController {
 	@Autowired
 	public MemberService memberService;
 	
+	@Autowired
+	private ServletContext ServletContext;
+	
 	//비밀번호 암호화
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
-
+	
+	//마이페이지 이동
 	@RequestMapping("/mypage.me")
 	public String goMypage() {
 		return "member/myPage/mypage";
 	}
+
+	//프로필 사진 업데이트
+	@PostMapping("/updateImg.me")
+	public ModelAndView updateImg(Attachment a
+								 ,ModelAndView mv
+			   					 ,MultipartFile upfile
+	   							 ,HttpSession session) {
+		
+		System.out.println(a);
+		
+		if(!upfile.getOriginalFilename().equals("")) {
+			
+			String originName= upfile.getOriginalFilename();
+			String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+			int ranNum = (int)(Math.random()*90000+10000);//5자리 랜덤값
+			String ext = originName.substring(originName.lastIndexOf("."));
+			String changeName = currentTime+ranNum+ext;
+			String savePath = session.getServletContext().getRealPath("/resources/images/profile/");
+			
+			try {
+				upfile.transferTo(new File(savePath+changeName));
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			a.setWriter(a.getWriter());
+			a.setOriginName(upfile.getOriginalFilename());
+			a.setChangeName(changeName);
+			a.setFilePath("resources/images/profile/");
+		}
+		
+		Member loginUser = memberService.loginMemberNick(a.getWriter());
+		loginUser.setProfileImg(a.getFilePath()+a.getChangeName());
+
+		int result = memberService.updateImg(a);
+		
+		if(result>0) {
+			session.setAttribute("loginUser", loginUser);
+			session.setAttribute("alertMsg","프로필 변경 완료");
+			mv.setViewName("redirect:mypage.me");
+		}else {
+			mv.addObject("errorMsg","프로필 변경 실패").setViewName("common/errorPage");
+		}
+		
+		return mv;
+	}
+	
+	//프로필 사진 삭제
+	@PostMapping("/deleteImg.me")
+	@ResponseBody
+	public String deleteImg(String nickname
+						   ,ModelAndView mv
+				   		   ,HttpSession session) {
+		
+		String profileImg = ((Member)(session.getAttribute("loginUser"))).getProfileImg();
+		new File(session.getServletContext().getRealPath(profileImg)).delete();
+		
+		int result = memberService.deleteImg(nickname);
+		Member m = memberService.loginMemberNick(nickname);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","프로필 삭제 완료");
+			session.setAttribute("loginUser", m);
+		}else {
+			session.setAttribute("alertMsg","프로필 삭제 실패");
+		}
+		
+		return "";
+	}
+	
+	
 	@GetMapping("/surveyResult.me")
 	@ResponseBody
 	public String surveyResult(String result, String userId) {
@@ -165,4 +252,5 @@ public class MemberController {
 		session.removeAttribute("loginUser");
 		return "redirect:/";
 	}
+	
 }

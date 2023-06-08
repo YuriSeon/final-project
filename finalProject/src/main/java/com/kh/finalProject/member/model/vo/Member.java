@@ -30,4 +30,5 @@ public class Member {
 	private String enrollDate;	//	ENROLL_DATE	DATE
 	private int certification;	//	CERTIFICATION	NUMBER		-> 인증여부
 	private String status;		//	STATUS	VARCHAR2(1 BYTE)
+	private String profileImg; // 프로필이미지 경로+바뀐이름
 }
