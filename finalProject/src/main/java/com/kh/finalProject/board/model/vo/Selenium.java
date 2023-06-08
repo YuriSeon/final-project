@@ -14,7 +14,7 @@ public class Selenium {
 	
 	private WebDriver wd;
 	public static String WEB_DRIVER_ID = "webdriver.chrome.driver"; // Properties 설정(정해져있는 키값)
-	public static String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver.exe"; 
+	public static String WEB_DRIVER_PATH = "/dev/Selenium/chromedriver.exe"; 
 	// WebDriver경로(지금은 나의 노트북의 경로로 설정 추후 프로젝트 내로 변경 가능하면 이동시키기)
 	
 	// 기본생성자

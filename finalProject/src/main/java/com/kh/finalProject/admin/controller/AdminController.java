@@ -11,4 +11,9 @@ public class AdminController {
 	public String goAdmin() {
 		return "admin/dashboard";
 	}
+	
+	@RequestMapping("/adTheme.ad")
+	public String goAdminTheme() {
+		return "admin/adTheme";
+	}
 }
