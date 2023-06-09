@@ -121,86 +121,6 @@
  	
  }
  
- 
-  .slider{
-        width: 500px;
-        height: 400px;
-        position: relative;
-        margin: 0 auto;
-        overflow: hidden; /* 현재 슬라이드 오른쪽에 위치한 나머지 슬라이드 들이 보이지 않도록 가림 */
-    }
-    .slider input[type=radio]{
-        display: none;
-        
-    }
-    ul.imgs{
-        padding: 0;
-        margin: 0;
-        list-style: none;    
-    }
-    ul.imgs li{
-        position: absolute;
-        left: 640px;
-        transition-delay: 1s; /* 새 슬라이드가 이동해 오는 동안 이전 슬라이드 이미지가 배경이 보이도록 지연 */   
-        padding: 0;
-        margin: 0;
-    }
-    .bullets{
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        margin-top: 370px;
-        z-index: 2;
-    }
-    .bullets label{
-        display: inline-block;
-        border-radius: 50%;
-        background-color: rgba(0,0,0,0.55);
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-    }
-    /* 현재 선택된 불릿 배경 흰색으로 구분 표시 */
-    .slider input[type=radio]:nth-child(1):checked~.bullets>label:nth-child(1){
-        background-color: #fff;
-    }
-    .slider input[type=radio]:nth-child(2):checked~.bullets>label:nth-child(2){
-        background-color: #fff;
-    }
-    .slider input[type=radio]:nth-child(3):checked~.bullets>label:nth-child(3){
-        background-color: #fff;
-    }
-    .slider input[type=radio]:nth-child(4):checked~.bullets>label:nth-child(4){
-        background-color: #fff;
-    }
-     .slider input[type=radio]:nth-child(5):checked~.bullets>label:nth-child(5){
-        background-color: #fff;
-    }
-    .slider input[type=radio]:nth-child(1):checked~ul.imgs>li:nth-child(1){
-        left: 0;
-        transition: 0.5s;
-        z-index:1;
-    }
-    .slider input[type=radio]:nth-child(2):checked~ul.imgs>li:nth-child(2){
-        left: 0;
-        transition: 0.5s;
-        z-index:1;
-    }
-    .slider input[type=radio]:nth-child(3):checked~ul.imgs>li:nth-child(3){
-        left: 0;
-        transition: 0.5s;
-        z-index:1;
-    }
-    .slider input[type=radio]:nth-child(4):checked~ul.imgs>li:nth-child(4){
-        left: 0;
-        transition: 0.5s;
-        z-index:1;
-    }
-    .slider input[type=radio]:nth-child(5):checked~ul.imgs>li:nth-child(5){
-        left: 0;
-        transition: 0.5s;
-        z-index:1;
-    }
     .fixed-area{
     	position:absolute;
     	width:100%;
@@ -221,6 +141,88 @@
     	flex:0 0 75%;
     	max-width:50%
   }
+ 
+ /* 이미지슬라이드 css */
+ 
+ /* 첫 번째 슬라이드 가운데에 정렬하기위해
+첫번째 슬라이드만 margin-left조정 */
+.slides li:first-child{
+  margin-left: px;
+}
+ /* 보여줄 구간의 높이와 넓이 설정 */
+#slideShow{
+  width: 500px;
+  height: 300px;
+  position: relative;
+  margin: auto;
+  overflow: hidden;   
+  /*리스트 형식으로 이미지를 일렬로 
+  정렬할 것이기 때문에, 500px 밖으로 튀어 나간 이미지들은
+  hidden으로 숨겨줘야됨*/
+}
+
+.slides{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2500px; /* 슬라이드할 사진과 마진 총 넓이 */
+  transition: left 0.5s ease-out; 
+  /*ease-out: 처음에는 느렸다가 점점 빨라짐*/
+ 
+}
+
+/* 슬라이드들 옆으로 정렬 */
+.slides li:not(:last-child){
+  float: left;
+  margin-right: 100px;
+}
+
+.slides li{
+  float: left;
+  list-style-type: none;
+}
+.slides li>img{
+  width: 500px;
+  height: 300px;
+  border: 1px solid black;
+}
+
+.controller span{
+  position:absolute;
+  background-color: rgba(255, 255, 255, 0.637);
+  color: black;
+  text-align: center;
+  border-radius:50%;
+  padding: 5px 10px;
+  top: 50%;
+  font-size: 1.3em;
+  cursor: pointer;
+}
+
+/* 이전, 다음 화살표에 마우스 커서가 올라가 있을때 */
+.controller span:hover{
+  background-color: rgba(255, 255, 255, 0.637);
+}
+
+.prev{
+  left: 0px;
+}
+
+/* 이전 화살표에 마우스 커서가 올라가 있을때 
+이전 화살표가 살짝 왼쪽으로 이동하는 효과*/
+.prev:hover{
+  transform: translateX(-5px);
+}
+
+.next{
+  right: 0px;
+}
+
+/* 다음 화살표에 마우스 커서가 올라가 있을때 
+이전 화살표가 살짝 오른쪽으로 이동하는 효과*/
+.next:hover{
+  transform: translateX(5px);
+}
  
  
 </style>
@@ -319,11 +321,14 @@
                                         <div class="col-l">
                                             <div class="row">
                                             
+							                						                        		
                                              <div class="col" >
 							                    <div class="ticket-item" style="width: 400px;">
+							                        	<c:forEach var="f" items="${list}">
 							                        <div class="thumb">
-							                        	<div class="nicname">							                        		
-							                        			<span>[닉네임]꼭 싸움을 잘해야지</span>							                        			
+							                        	<div class="nicname">
+							                        			<input type="hidden" value="${f.boardNo }">						                        			
+							                        			<span> <a id="nicknameHover" onclick="whoareyou();">${f.boardWriter }</a></span>
 																<div id="up">
 																	<ul>
 																		<li>
@@ -335,29 +340,23 @@
 																		</li>												
 																	</ul>
 																</div>	
+																
 							                        	</div>
 							                     
-							                             <div class="slider">
-												            <input type="radio" name="slide" id="slide1" checked>
-												            <input type="radio" name="slide" id="slide2">
-												            <input type="radio" name="slide" id="slide3">
-												            <input type="radio" name="slide" id="slide4">
-												            <input type="radio" name="slide" id="slide5">
-												            <ul id="imgholder" class="imgs">
-												                <li><img src="resources/images/Like-after.png"></li>
-												                <li><img src="resources/images/3442323_s7l.jpg"></li>
-												                <li><img src=""></li>
-												                <li><img src=""></li>
-												                <li><img src=""></li>
-												            </ul>
-												           <div class="bullets">
-												                <label for="slide1">&nbsp;</label>
-												                <label for="slide2">&nbsp;</label>
-												                <label for="slide3">&nbsp;</label>
-												                <label for="slide4">&nbsp;</label>
-												                <label for="slide5">&nbsp;</label>
-												            </div> 
-												        </div>
+							                             
+							                              <div id="slideShow">
+														    <ul class="slides" id="slides${f.boardNo}">
+														    	
+														    </ul>
+														    <p class="controller">
+														      
+														      <!-- &lang: 왼쪽 방향 화살표
+														      &rang: 오른쪽 방향 화살표 -->
+														      <span class="prev">&lang;</span>  
+														      <span class="next">&rang;</span>
+														    </p>
+														  </div>
+														    
         						                   
 							                        </div>
 							                            <div class="prices" style="width: 500px;">
@@ -372,15 +371,21 @@
 									                              
 									                            </div>
 									                        <div class="down-content">
-									                           
-									                            <h5>내용</h5>
+									                          
+									                            <h5>${f.boardContent }</h5>
+									                            
 									                            <br>
 									                            <ul>					                                
-									                                <li><i class="fa fa-map-marker"></i>서울</li>
+									                                <li>${f.createDate }</li>
 									                            </ul>
 									                           
 									                        </div>
 							                            </div>
+							                            <br><br><br><br><br>
+							                         </c:forEach> 
+							                         <script>
+							                         	
+							                         </script>
 							                    </div>
 							                </div>
                                             
@@ -470,7 +475,35 @@
                 </div>
             </div>
         </div>
+        
+        <div id="pagingArea" align="center">
+                <ul class="pagination">
+                	<c:choose>
+                		<c:when test="${pi.currentPage eq 1}">
+                   			 <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                		</c:when>
+                		<c:otherwise>
+                			 <li class="page-item"><a class="page-link" href="list.bo?currentPage=${pi.currentPage - 1 }">Previous</a></li>
+                		</c:otherwise>
+                	</c:choose>
+                	
+                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
+	                    <li class="page-item"><a class="page-link" href="list.bo?currentPage=${p}">${p}</a></li>
+                    </c:forEach>
+                    
+                    <c:choose>
+                    	<c:when test="${pi.currentPage eq pi.maxPage}">
+		                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+                    	</c:when>
+                    	<c:otherwise>
+                    		<li class="page-item"><a class="page-link" href="list.bo?currentPage=${pi.currentPage + 1}">Next</a></li>
+                    	</c:otherwise>
+                    </c:choose>
+                </ul>
+            </div> 
+        
     </div>
+    
 
 
     <!-- *** Subscribe *** -->
@@ -504,6 +537,21 @@
  
   </body>
  <script >
+ 
+ $(function(){
+	 
+	 var size = ${size};
+	 var alist = ${alist};
+	 
+	 console.log(alist);
+	 
+	 for(var i=0; i<size; i++){
+		 if(alist[i].boardNo == alist[i+1].boardNo){
+			 $("#slides"+alist[i].boardNo).append("<li><img src='"+alist[i].filePath+"' alt=''></li>");
+		 }
+	 }
+ });
+ 
  $(window).scroll(function(){
 	 var scrollTop = $(document).scrollTop();
 	 if (scrollTop < 50) {
@@ -515,11 +563,55 @@
 	 $(".fixed-area").animate( { "top" : scrollTop });
  });
  
- function enrollerForm(){
-	 console.log($(this));
-	 location.href="enroll.fo";
- };
+function enrollerForm(){
+//console.log($(this));
+ <c:choose>
+		<c:when test="${loginUser != null}">
+		 	location.href="enroll.fo";
+	 </c:when>
+	 <c:otherwise>
+	 	alert("로그인 후 이용가능합니다.");
+	 </c:otherwise>
+</c:choose>
+ }; 
  
+ 
+ 
+ 
+ const slides = document.querySelector('.slides'); //전체 슬라이드 컨테이너
+ const slideImg = document.querySelectorAll('.slides li'); //모든 슬라이드들
+ let currentIdx = 0; //현재 슬라이드 index
+ const slideCount = slideImg.length; // 슬라이드 개수
+ const prev = document.querySelector('.prev'); //이전 버튼
+ const next = document.querySelector('.next'); //다음 버튼
+ const slideWidth = 500; //한개의 슬라이드 넓이
+
+ //전체 슬라이드 컨테이너 넓이 설정
+ slides.style.width = slideWidth * slideCount + 'px';
+
+ function moveSlide(num) {
+   slides.style.left = -num * 600 + 'px';
+   currentIdx = num;
+ }
+
+ prev.addEventListener('click', function () {
+   /*첫 번째 슬라이드로 표시 됐을때는 
+   이전 버튼 눌러도 아무런 반응 없게 하기 위해 
+   currentIdx !==0일때만 moveSlide 함수 불러옴 */
+
+   if (currentIdx !== 0) moveSlide(currentIdx - 1);
+ });
+
+ next.addEventListener('click', function () {
+   /* 마지막 슬라이드로 표시 됐을때는 
+   다음 버튼 눌러도 아무런 반응 없게 하기 위해
+   currentIdx !==slideCount - 1 일때만 
+   moveSlide 함수 불러옴 */
+   if (currentIdx !== slideCount - 1) {
+     moveSlide(currentIdx + 1);
+   }
+ });
+    
  </script>
 
 </html>
