@@ -15,6 +15,9 @@
 	<link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+	
 	<!-- JavaScript -->
 	<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 	
@@ -34,15 +37,15 @@
     <link rel="stylesheet" href="resources/css/tooplate-artxibition.css">
 
 	<style>
-    	button{
+    	.col-sm-6 button{
     		font-size : 14px;
     		border : 0px;
     	}
-    	button:focus{
+    	.col-sm-6 button:focus{
     		border : none;
     		outline : none;
     	}
-    	button:hover{
+    	.col-sm-6 button:hover{
     		font-weight : 600;
     	}
     	.modal-header{
@@ -91,7 +94,7 @@
           height: 50%;
           margin: auto;
         }
-        input{
+        .modal-body input{
           border: 0px; /*보더 라인 색깔...*/
           border-radius: 5px;
           width: 100%;
@@ -162,7 +165,7 @@
                 			<!-- 로그인 전 -->
 		                    <div class="text-button">
 		                        <button type="button" data-toggle="modal" data-target="#loginModal">로그인</button>&nbsp;/
-		                        <button>회원가입</button>
+		                        <button type="button" onclick="location.href='enrollForm.me'">회원가입</button>
 		                    </div>
                 		</c:when>
 						<c:otherwise>
@@ -268,7 +271,7 @@
   			}
   			
   			var che = $("input[name=userId]").is(':checked');
-  			console.log(che);
+  			//console.log(che);
   		});
   	</script>
     

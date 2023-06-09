@@ -25,9 +25,11 @@ public class Member {
 	private String MBTI;		//	MBTI	VARCHAR2(4 BYTE)	-> 회원가입때 받은 MBTI
 	private String survey;		//	SURVEY	VARCHAR2(4 BYTE)	-> 설문지 결과 MBTI
 	private String style;		//	STYLE	VARCHAR2(100 BYTE)	-> 여행 스타일
+	private String interest;	//	INTEREST NUMBER				-> 메인 페이지 출력 관련
 	private int report;			//	REPORT	NUMBER				-> 신고 누적 횟수
 	private int warning;		//	WARNING	NUMBER				-> 경고횟수
-	private Date enrollDate;	//	ENROLL_DATE	DATE
+	private String enrollDate;	//	ENROLL_DATE	DATE
 	private int certification;	//	CERTIFICATION	NUMBER		-> 인증여부
 	private String status;		//	STATUS	VARCHAR2(1 BYTE)
+	private String profileImg; // 프로필이미지 경로+바뀐이름
 }

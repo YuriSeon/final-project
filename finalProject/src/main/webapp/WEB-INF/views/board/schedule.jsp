@@ -38,7 +38,7 @@
                                             <div class="heading">
                                                 <b style="font-size: 30px; color: gray;">일정 자랑</b>
                                                 <div class="main-dark-button" style="float: right; margin-bottom: 15px;">
-                                                    <a href="">게시물 등록</a>
+                                                    <a href="insert.sc">게시물 등록</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -52,9 +52,9 @@
                                                     </div>
                                                     <!-- check시 style="color: dimgray;" 적용되도록 설정하기 기본은 최신순-->
                                                     <div class="col-lg-12"><br>
-                                                        <a href="">Recently</a><br>
-                                                        <a href="">Recommend</a><br>
-                                                        <a href="">Views</a><br>
+                                                        <a href="schedule.bo?sort=recently">Recently</a><br>
+                                                        <a href="schedule.bo?sort=recommend">Recommend</a><br>
+                                                        <a href="schedule.bo?sort=views">Views</a><br>
                                                     </div>  
                                                 </div>
                                             </div>
