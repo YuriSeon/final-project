@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.google.gson.Gson;
+import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.service.AttrarctionService;
+import com.kh.finalProject.board.service.FeedService;
 import com.kh.finalProject.board.service.ScheduleService;
 import com.kh.finalProject.common.model.vo.PageInfo;
+import com.kh.finalProject.common.template.Pagination;
 
 @Controller
 public class BoardController {
@@ -22,6 +26,9 @@ public class BoardController {
 	
 	@Autowired
 	private ScheduleService scService;
+	
+	@Autowired
+	private FeedService feedService;
 	
 	@RequestMapping("main.bo")
 	public String goMain() {
@@ -60,7 +67,26 @@ public class BoardController {
 	}
 	
 	@RequestMapping("feed.bo")
-	public String goFeed() {
+	public String goFeed(@RequestParam(value="currentPage", defaultValue="1") int currentPage,Model model) {
+
+		ArrayList<Attachment> alist = feedService.selectAttachmentList();
+		int listCount = feedService.selectListCount();
+		int pageLimit = 5;
+		int boardLimit = 5;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Board> list = feedService.selectBoardList(pi);
+//		for(int i=0; i<list.size(); i++) {
+//
+//			alist.add(feedService.selectAttachmentList(list.get(i).getBoardNo()));
+//		}
+//		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("alist", new Gson().toJson(alist));
+		model.addAttribute("size", alist.size());
+		
+		
 		return "board/feed";
 	}
 	
