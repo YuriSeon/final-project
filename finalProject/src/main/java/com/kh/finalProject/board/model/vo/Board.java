@@ -29,16 +29,18 @@ public class Board {
 	private int boardNo;
 	private int zoneNo;
 	private int infoNo;
-	private int userNo;
+	private String boardWriter;
 	private int category;
 	private String boardTitle;
 	private String boardContent;
-	private Date createDate;
-	private Date modifyDate;
+	private String createDate;
+	private String modifyDate;
 	private int good;
 	private int report;
 	private int count;
 	private String status;
+	private String changeName;//	CHANGE_NAME
+	private String filePath;//
 	
 	
 }	

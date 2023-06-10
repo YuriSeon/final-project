@@ -12,7 +12,6 @@
   		<typeAlias type="com.kh.finalProject.board.model.vo.Plan" alias="plan"/>
   		<typeAlias type="com.kh.finalProject.board.model.vo.Attachment" alias="attachment"/>
   		<typeAlias type="com.kh.finalProject.member.model.vo.Member" alias="member"/>
-  		
   	</typeAliases>
   	
   	<mappers>
