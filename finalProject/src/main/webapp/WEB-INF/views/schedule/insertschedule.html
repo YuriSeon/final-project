@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+        .insert-sc{
+            border: 1px solid gray;
+            width: 75%;
+            margin: auto;
+        }
         .insert-sc *{
             margin: auto;
             text-align: center;
@@ -13,7 +18,7 @@
             margin-bottom: 1%;
         }
         .insert-sc #title-type{
-            width: 75%;
+            width: 90%;
             padding: 1%;
         }
         .insert-sc #title-type>label{
@@ -125,9 +130,7 @@
                 </fieldset>
             </div>
             <div id="btn-area">
-                <span>동행을 구하시겠습니까?</span>&nbsp;
-                <input type="checkbox" name="together-check" id="together-yes"><label for="together-yes">예</label> &nbsp;
-                <input type="checkbox" name="together-check" id="together-no"><label for="together-no">아니오</label>
+                
                 <!-- 예 클릭시 버튼 보이도록 조건 설정 -->
                 <button type="button">바로 동행 게시판 글 작성하기</button><br>
                 <button type="button" onclick="history.back();">돌아가기</button>
