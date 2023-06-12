@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .marcker-area{
+            position: relative;
+        }
+        .marcker{
+            width: 100px;
+        }
+        .color{
+            width: 9%;
+            height: 47%;
+            border-radius: 50%;
+            /* border: 5px solid pink; */
+            position: absolute;
+            top:17%;
+            left: 4.5%;
+        }
+        #bell{
+            width: 100px;
+        }
+    </style>
+    
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+   
+    <div class="marcker-area">
+        <img class="marcker" src="../../../resources/images/marker2.png">
+        <div class="color"></div>
+    </div>
+    <div class="marcker-area">
+        <img class="marcker" src="../../../resources/images/marker2.png">
+        <div class="color"></div>
+    </div>
+    <div class="marcker-area">
+        <img class="marcker" src="../../../resources/images/marker2.png">
+        <div class="color"></div>
+    </div>
+    <div class="marcker-area">
+        <img class="marcker" src="../../../resources/images/marker2.png">
+        <div class="color"></div>
+    </div>
+    <div class="marcker-area">
+        <img class="marcker" src="../../../resources/images/marker2.png">
+        <div class="color"></div>
+    </div>
+
+    <img id="bell" src="../../../resources/images/bell-before.png">
+    <script>
+        $(function(){
+            var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'skyblue'];
+            var circle = document.querySelectorAll('.color');
+            for(var i=0; i < circle.length; i++){
+                var list = circle[i];
+                $(list).css("background-color", colors[i]);
+            }
+        });
+       
+    </script>
+
+</body>
+</html>
