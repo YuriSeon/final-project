@@ -152,9 +152,13 @@
                 <div class="col-lg-12">
                 <br><br>
                 </div>
+                <jsp:useBean id="now" class="java.util.Date" />
+                <fmt:parseNumber value="${now.time / (1000*60*60*24)}" integerOnly="true" var="today" scope="request"/>
                 <c:choose>
                 	<c:when test="${not empty list }">
 			                <c:forEach var="i" items="${list }">
+			                	<fmt:parseDate value="${i.endDate }" pattern="yy/MM/dd" var="end" scope="request"/>
+			                	<fmt:parseNumber value="${end.time / (1000*60*60*24)}" integerOnly="true" var="endDate" scope="request"/>
 					                <div class="col-lg-4">
 					                <input type="hidden" name="boardNo"  class="togetherBoardNo" value="${i.boardNo }">
 					                    <div class="ticket-item">
@@ -168,10 +172,24 @@
 					                                <li><i class="fa fa-clock-o"></i>${i.startDate} ~ ${i.endDate }</li>
 					                                <li><i class="fa fa-map-marker"></i>${i.zoneName }</li>
 					                                <li><img src="/finalProject/resources/images/together_won.png">${i.totalPay } 이하</li>
-			                               		    <li><img src="/finalProject/${i.profilePath }" style="border-radius:50%;"> <a id="nicknameHover" onclick="whoareyou();">${i.boardWriter }</a></li>
+					                                <c:choose>
+					                                <c:when test="${not empty i.profilePath }">
+				                               		    <li><img src="/finalProject/${i.profilePath }" style="border-radius:50%;"> <a id="nicknameHover" onclick="whoareyou();">${i.boardWriter }</a></li>
+					                                </c:when>
+					                                <c:otherwise>
+					                                	<li><img src="/finalProject/resources/images/기본프로필.png" style="border-radius:50%;"> <a id="nicknameHover" onclick="whoareyou();">${i.boardWriter }</a></li>
+					                                </c:otherwise>
+					                                </c:choose>
 					                            </ul>
-					                            <div class="main-dark-button">
-					                                <a href="ticket-details.html">참여하기 0/${i.together }</a>
+					                            <div class="main-dark-button" id="applyBtn">
+					                            <c:choose>
+					                            <c:when test="${endDate-today >0 and i.together - i.togetherCount != 0 }">
+					                            	    <a href="#">참여하기 ${i.togetherCount}/${i.together }</a>
+					                            </c:when>
+					                            <c:otherwise>
+					                            		<a  style="background-color:lightgray;" disabled>마감되었습니다.</a>
+					                            </c:otherwise>
+					                            </c:choose>
 					                            </div>
 					                        </div>
 					                    </div>
@@ -184,16 +202,39 @@
                 </c:choose>
                 
                 <div class="col-lg-12">
-                    <div class="pagination">
-                        <ul>
-                            <li><a href="#">Prev</a></li>
-                            <li><a href="#">1</a></li>
-                            <li class="active"><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">Next</a></li>
-                        </ul>
+                    <div class="pagination" align="center">
+						<ul>
+							<c:if test="${pi.currentPage != 1 }">
+								<li class="page-item"><a class="page-link"
+									href="together.bo?currentPage=${pi.currentPage -1 }">Previous</a></li>
+							</c:if>
+							<c:forEach var="i" begin="${pi.startPage }" end="${pi.endPage }">
+								<c:choose>
+									<c:when test="${i != pi.currentPage }">
+										<li class="page-item"><a class="page-link"
+											href="together.bo?currentPage=${i}">${i }</a></li>
+									</c:when>
+									<c:otherwise>
+										<li class="page-item disabled"><a class="page-link"
+											href="together.bo?currentPage=${i}">${i }</a></li>
+										<script>
+											$(function() {
+												$(".disabled").children("a").css(
+														"background-color",
+														"lightgray");
+											});
+										</script>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+							<c:if test="${pi.currentPage != pi.endPage }">
+								<li class="page-item"><a class="page-link"
+									href="together.bo?currentPage=${pi.currentPage +1 }">Next</a></li>
+							</c:if>
+						</ul>
                     </div>
-                    <c:if test="${not empty loginUser }">
+                    
+					<c:if test="${not empty loginUser }">
 	                   <div align="right">
 							<a href="togetherEnroll.bo?nickname=${loginUser.nickname}" class="btn btn-secondary">글 쓰기</a>	                   
 	                   </div>

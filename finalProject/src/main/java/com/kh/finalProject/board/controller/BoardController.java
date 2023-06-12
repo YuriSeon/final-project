@@ -126,7 +126,7 @@ public class BoardController {
 		
 		int boardLimit = 6;
 		
-		PageInfo pi = PageInfo.builder().listCount(listCount).pageLimit(pageLimit).boardLimit(boardLimit).currentPage(currentPage).build();
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		
 		ArrayList<TogetherVO> list = togetherService.selectTogetherList(pi);
 		

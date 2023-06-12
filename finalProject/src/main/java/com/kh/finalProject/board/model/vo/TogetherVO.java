@@ -18,6 +18,7 @@ public class TogetherVO {
 	private String boardWriter;
 	private String filePath;
 	private int together;
+	private int togetherCount;
 	private String concept;
 	private String startDate;
 	private String endDate;

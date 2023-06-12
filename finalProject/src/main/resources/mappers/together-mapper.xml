@@ -25,16 +25,17 @@
   		</select>
   		
   		<select id="selectTogetherList" resultMap="togetherResultSet">
-				SELECT B.BOARD_NO,ZONE_NAME,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,(FILE_PATH || CHANGE_NAME) FILE_PATH,TOGETHER,CONCEPT,TO_CHAR(START_DATE,'YY/MM/DD') START_DATE,TO_CHAR(END_DATE,'YY/MM/DD') END_DATE,TOTAL_DATE,TOTAL_PAY
+				SELECT B.BOARD_NO,ZONE_NAME,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,(FILE_PATH || CHANGE_NAME) FILE_PATH,TOGETHER,TOGETHER_COUNT,CONCEPT,TO_CHAR(START_DATE,'YY/MM/DD') START_DATE,TO_CHAR(END_DATE,'YY/MM/DD') END_DATE,TOTAL_DATE,TOTAL_PAY
 								,(SELECT (FILE_PATH || CHANGE_NAME)
 								    FROM ATTACHMENT
 								    WHERE WRITER = BOARD_WRITER) PROFILE_PATH
 				FROM BOARD B
 				JOIN ZONE USING (ZONE_NO)
 				JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
-				JOIN PLAN P ON (B.BOARD_WRITER = P.WRITER)
+				JOIN PLAN P ON (B.BOARD_NO = P.BOARD_NO)
 				WHERE B.CATEGORY = 5
 				AND B.STATUS = 'Y'
+				ORDER BY B.CREATE_DATE DESC
   		</select>
   		
   		<resultMap type="together" id="togetherResultSet">
@@ -45,6 +46,7 @@
   				<result column="BOARD_WRITER" property="boardWriter"/>
   				<result column="FILE_PATH" property="filePath"/>
   				<result column="TOGETHER" property="together"/>
+  				<result column="TOGETHER_COUNT" property="togetherCount"/>
   				<result column="CONCEPT" property="concept"/>
   				<result column="START_DATE" property="startDate"/>
   				<result column="END_DATE" property="endDate"/>

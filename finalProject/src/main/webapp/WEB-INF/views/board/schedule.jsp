@@ -61,44 +61,54 @@
                                         </div>
                                         <div class="col-lg-9">
                                             <div class="row">
-                                                <div class="col-lg-12">
-                                                    <div class="event-item">
-                                                        <div class="row">
-                                                            <div class="col-lg-4">
-                                                            	<!-- example. 데이터 출력시 해당 위치에 값 출력하기 동행버튼은 동행 구할시에만 나타나게 설정 -->
-                                                                <div class="left-content">
-                                                                    <h4>강릉으로 같이 놀러가요</h4>
-                                                                    <p>여행 컨셉 : 힐링 맛집탐방</p>
-                                                                    <div class="main-dark-button"><a href="event-details.html">동행하러가기</a></div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4"><br>
-                                                                <div class="thumb">
-                                                                    <img src="assets/re/강릉.jpeg" alt="강릉사진">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4">
-                                                                <div class="right-content">
-                                                                    <ul>
-                                                                        <li>
-                                                                            <i class="fa fa-clock-o"></i>
-                                                                            <h6>2023-07-08 <br>~ 2023-07-10<br> (3days)</h6>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i class="fa fa-map-marker"></i>
-                                                                            <h6>강원도 강릉시</h6>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i class="fa fa-users"></i>
-                                                                            <h6>3-4인</h6>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
+                                            	<c:forEach var="p" items="list">
+	                                                <div class="col-lg-12" onclick="detailView();">
+	                                                    <div class="event-item">
+	                                                        <div class="row">
+	                                                            <div class="col-lg-4">
+	                                                                <div class="left-content">
+	                                                                	<input type="hidden" name="boardNo" value="${p.boardNo}">
+	                                                                    <h4>${p.boardTitle}</h4>
+	                                                                    <p>여행 컨셉 : ${p.concept}</p>
+	                                                                    <c:if test="${p.together not eq 0 }">
+	                                                                    	<div class="main-dark-button"><a href="">동행하러가기</a></div>
+	                                                                    </c:if>
+	                                                                </div>
+	                                                            </div>
+	                                                            <div class="col-lg-4"><br>
+	                                                                <div class="thumb">
+	                                                                	<!-- 게시글 대표 이미지 넣을 부분 -->
+	                                                                </div>
+	                                                            </div>
+	                                                            <div class="col-lg-4">
+	                                                                <div class="right-content">
+	                                                                    <ul>
+	                                                                        <li>
+	                                                                            <i class="fa fa-clock-o"></i>
+	                                                                            <h6>${p.startDate }<br>~ ${p.endDate }<br> (${p.totalDate }days)</h6>
+	                                                                        </li>
+	                                                                        <li>
+	                                                                            <i class="fa fa-map-marker"></i>
+	                                                                            <h6>${p.infoName }</h6>
+	                                                                        </li>
+	                                                                        <li>
+	                                                                            <i class="fa fa-users"></i>
+	                                                                            <c:choose>
+		                                                                            <c:when test="${p.together not eq 0 }">
+		                                                                            	<h6>${p.together }명</h6>
+		                                                                            </c:when>
+		                                                                            <c:otherwise>
+		                                                                            	<h6>${p.togetherCount }명</h6>
+		                                                                            </c:otherwise>
+	                                                                            </c:choose>
+	                                                                        </li>
+	                                                                    </ul>
+	                                                                </div>
+	                                                            </div>
+	                                                        </div>
+	                                                    </div>
+	                                                </div>
+                                                </c:forEach>
                                                 <div class="col-lg-12">
                                                     <div class="pagination">
                                                         <ul>
@@ -119,9 +129,18 @@
             </div>
         </div>
     </div>
-	
 	<%@include file="../common/footer.jsp" %>
-	
+	<script>
+        /*
+            ajax로 페이지로드된 후 나온 bno로 조회해와서 img태그 append로 넣기 !
+        */
+		/* 여기 페이지는 여기 작성하는거랑 페이징처리만 하면 끝! */
+		/* 이미지 넣을건데 저 div에 해당하는 boardNo 어떻게 찾을지 생각해보기 */
+		
+		/* 게시물 클릭시 상세페이지로 이동 */
+		function detailView(){
+		}
+	</script>
   </body>
 
 </html>

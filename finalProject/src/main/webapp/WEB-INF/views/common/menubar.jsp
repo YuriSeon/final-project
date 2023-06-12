@@ -139,7 +139,7 @@
       	#p_img>img {
         	width: 180px;
         	height: 180px;
-        	margin: 0 143px;
+        	margin-left: 90px;
         	border-radius: 50%;
       	}  
     </style>
@@ -187,8 +187,8 @@
 		                        <button type="button" onclick="location.href='enrollForm.me'">회원가입</button>
 		                    </div>
                 		</c:when>
-						<c:otherwise>
-							<!-- 로그인 후 -->
+                		<c:when test="${not empty loginUser and loginUser.status eq 'Y' }">
+                			<!-- 일반 회원 로그인 후 -->
 		                    <div class="text-button">
 							 <c:choose>
 	                                        		<c:when test="${not empty loginUser.profileImg}">
@@ -202,6 +202,13 @@
 	                         </c:choose>
 		                    	${loginUser.nickname }님 환영합니다!&nbsp;&nbsp;&nbsp;
 		                        <button onclick="location.href='mypage.me'">마이페이지</button>
+		                        <button type="button" onclick="location.href='logout.me'">로그아웃</button>
+		                    </div>
+                		</c:when>
+						<c:otherwise>
+							<!-- 관리자 로그인 후 -->
+		                    <div class="text-button">
+		                        <button onclick="location.href='mypage.me'">관리자페이지</button>
 		                        <button type="button" onclick="location.href='logout.me'">로그아웃</button>
 		                    </div>
 						</c:otherwise>
@@ -257,10 +264,10 @@
 	          <div class="modal-body">
 	            <div id="id-pwd">
 	              <div id="id-input">
-	                <input type="text" name="userId" placeholder="아이디" style="color: black;">
+	                <input type="text" id="userId" name="userId" placeholder="아이디" style="color: black;">
 	              </div>
 	              <div id="pwd-input">
-	                <input type="password" name="userPwd" placeholder="비밀번호" style="color: black;">
+	                <input type="password" id="userPwd" name="userPwd" placeholder="비밀번호" style="color: black;">
 	              </div>
 	            </div>
 	            <div id="cookie-ck">
@@ -272,7 +279,7 @@
 	              		&nbsp;&nbsp;입력하신 내용을 다시 확인해주세요. -->
 	            </div>
 	            <div>
-	              <button type="submit" id="login-button">로그인</button>
+	              <button type="button" id="login-button" onclick="return loginGo();">로그인</button>
 	            </div>
 	          </div>
 	          
@@ -301,6 +308,24 @@
   			
   			var che = $("input[name=userId]").is(':checked');
   		});
+  		
+  		//로그인 회원인지 조희
+  		function loginGo(){
+  			$.ajax({
+  				url : "login.me",
+  				data : {userId : $("#userId").val(),
+  						userPwd : $("#userPwd").val()},
+  				success : function(result){
+  					if(result == "NNNNN"){//로그인 유저 없을시
+  						console.log("dd");
+  						$("#login-fales").html("*아이디 또는 비밀번호를 잘못 입력했습니다.<br>입력하신 내용을 다시 확인해주세요.");
+  					}else{//로그인 유저 있을시 전 페이지로 돌려주기
+  						location.href = result;
+  					}
+  				}
+  			});
+  			return false;
+  		}
   	</script>
   	
   	<div class="modal" id="profile" role="dialog">
@@ -315,10 +340,7 @@
                 <div class="modal-body" style="box-sizing: border-box;">
                     <div style="border-bottom: 0.5px solid lightgray; width: 100%; height: 100%;">
                         <div id="p_img">
-                            <!--프로필 없으면-->
-                            <img src="resources/기본프로필.png" alt="프로필사진">
-                            <!--프로필 있으면-->
-                            <!-- <img src="설정 프로필 사진 링크" alt="프로필사진"> -->
+                            <img src="/finalProject/resources/images/기본프로필.png" alt="프로필사진">
                         </div>
                         <br>
                         <div id="p_nickname" align="center">
@@ -327,10 +349,10 @@
                         <div id="p_age" align="center">
                             <p style="font-size: 20px; font-weight: 540;"></p>
                         </div>
-                        <div id="p_address" align="center">
+                        <div id="p_style" align="center">
                             <p style="font-size: 20px; font-weight: 540;"></p>
                         </div>
-                        <div id="p_style" align="center">
+                        <div id="p_report" align="center">
                             <p style="font-size: 20px; font-weight: 540;"></p>
                         </div>
                         <br>
@@ -359,10 +381,21 @@
         			data : {nickname : nickname},
         			success : function(result){
         				
+        				var gender = "";
+        				if(result.gender == 'M'){
+        					gender = "남자";
+        				}else{
+        					gender = "여자";
+        				}
+        				$("#p_img>img").attr("src",result.profileImg);
+        				$("#p_nickname>p").html(result.nickname);
+        				$("#p_age>p").html(result.age+"대 "+gender);
+        				$("#p_style>p").html("여행 스타일 : "+result.style);
+        				$("#p_report>p").html("신고 누적 횟수 : "+result.report);
         				
         			},
         			error : function(){
-        				
+        				console.log("프로필 로딩 실패 !");
         			}
         			
         		});

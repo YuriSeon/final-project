@@ -8,7 +8,10 @@ import java.time.Period;
 import java.util.Date;
 
 import javax.servlet.ServletContext;
+import java.time.LocalDate;
+import java.time.Period;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -248,20 +251,19 @@ public class MemberController {
 		
 		//만나이 연령대별로 나누기
 		if(10<=manAge && manAge<20) {
-			m.setAge(1);
+			m.setAge(10);
 		}else if(20<=manAge && manAge<30) {
-			m.setAge(2);
+			m.setAge(20);
 		}else if(30<=manAge && manAge<40) {
-			m.setAge(3);
+			m.setAge(30);
 		}else if(40<=manAge && manAge<50) {
-			m.setAge(4);
+			m.setAge(40);
 		}else {
-			m.setAge(5);
+			m.setAge(50);
 		}
 		
-		
 		int result = memberService.insertMember(m);
-		
+
 		if(result>0) {
 			session.setAttribute("alertMsg", "회원가입을 성공하였습니다.");
 			mv.setViewName("redirect:/");
@@ -273,9 +275,10 @@ public class MemberController {
 	}
 	
 	//로그인 메소드
+	@ResponseBody
 	@RequestMapping("login.me")
-	public String loginMember(String saveId, Member m, HttpSession session, HttpServletResponse response) {
-			
+	public String loginMember(String saveId, Member m, HttpSession session,HttpServletRequest request, HttpServletResponse response) throws IOException {
+
 		//아이디 저장
 		Cookie cookie = null;
 			
@@ -295,9 +298,31 @@ public class MemberController {
 		if(loginUser!=null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {//로그인 유저 있으면 -> 유저 정보 담기
 			session.setAttribute("loginUser", loginUser);
 			session.setAttribute("alertMsg", "로그인이 완료되었습니다.");
+			//로그인 성공시 전 페이지로 돌려주기
+			return request.getHeader("referer");
+		}else {//로그인 실패시
+			return "NNNNN";
 		}
-
-		return "redirect:/";
+	}
+	
+	//아이디 중복 확인
+	@ResponseBody
+	@RequestMapping("idCheck.me")
+	public String idCheck(String checkId) {
+		
+		int count = memberService.idCheck(checkId);
+		
+		return (count>0)?"NNNNN":"NNNNY";
+	}
+	
+	//닉네임 중복 확인
+	@ResponseBody
+	@RequestMapping("nickCheck.me")
+	public String nickCheck(String checkNick) {
+		
+		int count = memberService.nickCheck(checkNick);
+		
+		return (count>0)?"NNNNN":"NNNNY";
 	}
 		
 	//로그아웃

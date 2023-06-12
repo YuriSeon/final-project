@@ -40,6 +40,18 @@ public class MemberServiceImpl implements MemberService{
 		return memberDao.updateSurvey(sqlSession,m);
 	}
 
+	//아이디 중복 확인
+	@Override
+	public int idCheck(String checkId) {
+		return memberDao.idCheck(sqlSession,checkId);
+	}
+
+	//닉네임 중복 확인
+	@Override
+	public int nickCheck(String checkNick) {
+		return memberDao.nickCheck(sqlSession,checkNick);
+	}
+	
 	//프로필 사진 업데이트
 	@Override
 	public int updateImg(Attachment a) {
@@ -79,6 +91,5 @@ public class MemberServiceImpl implements MemberService{
 	public Member loadProfile(String nickname) {
 		return memberDao.loadProfile(sqlSession,nickname);
 	}
-
 	
 }
