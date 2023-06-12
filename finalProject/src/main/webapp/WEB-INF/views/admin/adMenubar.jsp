@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,10 +19,24 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="resources/css/dashboard_admin.css?v=1">
+    <link rel="stylesheet" type="text/css" href="resources/css/dashboard_admin.css?v=2">
+    <!-- Alertify JavaScript -->
+	<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+	<!-- Alertify CSS -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+	<!-- Alertify Bootstrap theme -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
     <title>대시보드</title>
 </head>
 <body>
+	<!-- 알림창 -->
+	<c:if test="${not empty alertMsg }">
+		<script>
+			alertify.message('${alertMsg}');
+		</script>
+		<c:remove var="alertMsg" scope="session"/>
+	</c:if>
+	
     <!-- Header - Start  -->
 <header id="header">
     <div class="menu-button">
@@ -34,7 +49,6 @@
     </div>
     <div id="top-bar">
         <span>ADMINISTRATOR</span>
-        <button class="btn btn-primary">관리자</button>
         <button class="btn btn-primary" onclick="location.href='custom.ad'">사용자</button>
     </div>
 </header>
@@ -56,7 +70,7 @@
                 <!-- submenu start -->
                 <ul id="submenu" >
                     <li>
-                        <a href="adTheme.ad">
+                        <a href="theme.ad">
                             <span class='glyphicon glyphicon-list-alt'></span> 테마
                         </a>
                     </li>
@@ -90,7 +104,7 @@
             </li>
             
             <li>
-                <a href="adMember.ad">
+                <a href="member.ad">
                     <span class='glyphicon glyphicon-user'></span> 회원관리
                 </a>
             </li>
@@ -106,7 +120,7 @@
                 <!-- submenu start -->
                 <ul id="submenu" >
                     <li>
-                        <a href="#">
+                        <a href="notice.ad">
                             <span class='glyphicon glyphicon-list-alt'></span> 공지사항
                         </a>
                     </li>

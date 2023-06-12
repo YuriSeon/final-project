@@ -162,7 +162,7 @@
     $(function () {
 		$(".member-table>tbody>tr>td>button").click(function () {
 			var bno = $(this).text();
-			location.href = 'adMemberUpdate.ad';
+			location.href = 'memberUpdate.ad';
 		});
 	});
     

@@ -179,7 +179,7 @@
 						<c:otherwise>
 							<!-- 관리자 로그인 후 -->
 		                    <div class="text-button">
-		                        <button onclick="location.href='mypage.me'">관리자페이지</button>
+		                        <button onclick="location.href='admin.ad'">관리자페이지</button>
 		                        <button type="button" onclick="location.href='logout.me'">로그아웃</button>
 		                    </div>
 						</c:otherwise>
