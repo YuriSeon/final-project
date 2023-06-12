@@ -86,4 +86,10 @@ public class MemberServiceImpl implements MemberService{
 	public int deleteImg(String nickname) {
 		return memberDao.deleteImg(sqlSession, nickname);
 	}
+
+	@Override
+	public Member loadProfile(String nickname) {
+		return memberDao.loadProfile(sqlSession,nickname);
+	}
+	
 }

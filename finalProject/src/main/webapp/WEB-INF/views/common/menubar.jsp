@@ -123,6 +123,25 @@
         	cursor : default;
         	font-size : 14.3px;
         }
+        .modal-dialog{
+      		overflow-y: initial !important
+      	}
+      	
+      	.modal-body {
+      		max-height: calc(100vh-200px);
+      		overflow-y: auto;
+      	}
+        #p_img {
+        	width: 100%;
+        	height: 180px;
+      	}
+
+      	#p_img>img {
+        	width: 180px;
+        	height: 180px;
+        	margin-left: 90px;
+        	border-radius: 50%;
+      	}  
     </style>
 
 </head>
@@ -171,6 +190,16 @@
                 		<c:when test="${not empty loginUser and loginUser.status eq 'Y' }">
                 			<!-- 일반 회원 로그인 후 -->
 		                    <div class="text-button">
+							 <c:choose>
+	                                        		<c:when test="${not empty loginUser.profileImg}">
+			                                            <!--프로필 있으면-->
+			                                            <img src="${loginUser.profileImg}" alt="프로필사진" style="width:25px; height:25px; border-radius:50%; margin-right:5px;">
+	                                        		</c:when>
+	                                        		<c:otherwise>
+			                                            <!--프로필 없으면-->
+			                                            <img src="resources/images/profile/person.png" alt="프로필사진" style="width:25px; height:25px; border-radius:50%; margin-right:5px;">
+	                                        		</c:otherwise>
+	                         </c:choose>
 		                    	${loginUser.nickname }님 환영합니다!&nbsp;&nbsp;&nbsp;
 		                        <button onclick="location.href='mypage.me'">마이페이지</button>
 		                        <button type="button" onclick="location.href='logout.me'">로그아웃</button>
@@ -298,6 +327,82 @@
   			return false;
   		}
   	</script>
+  	
+  	<div class="modal" id="profile" role="dialog">
+		<div class="modal-dialog ">
+			<div class="modal-content">
+
+				<div class="modal-header" style="border-bottom: 0;">
+					<button type="button" class="close" data-dismiss="modal" id="closeModal"
+						style="height: 100%;">&times;</button>
+				</div>
+
+                <div class="modal-body" style="box-sizing: border-box;">
+                    <div style="border-bottom: 0.5px solid lightgray; width: 100%; height: 100%;">
+                        <div id="p_img">
+                            <img src="/finalProject/resources/images/기본프로필.png" alt="프로필사진">
+                        </div>
+                        <br>
+                        <div id="p_nickname" align="center">
+                            <p style="font-size: 33px; font-weight: 580;"></p>
+                        </div>
+                        <div id="p_age" align="center">
+                            <p style="font-size: 20px; font-weight: 540;"></p>
+                        </div>
+                        <div id="p_style" align="center">
+                            <p style="font-size: 20px; font-weight: 540;"></p>
+                        </div>
+                        <div id="p_report" align="center">
+                            <p style="font-size: 20px; font-weight: 540;"></p>
+                        </div>
+                        <br>
+                    </div>
+            
+                    <div align="center">
+                        <br>
+                        <div class="modal_btns">
+                            <button type="button" class="btn btn-success">채팅하기</button>
+                            <button type="button" class="btn btn-info">쓴글보기</button>
+                            <button type="button" class="btn btn-danger">신고하기</button>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
+
+    <script>
+        function whoareyou() {
+        		var nickname = event.target.text;
+        		
+        		$.ajax({
+        			url : "loadProfile.me",
+        			data : {nickname : nickname},
+        			success : function(result){
+        				
+        				var gender = "";
+        				if(result.gender == 'M'){
+        					gender = "남자";
+        				}else{
+        					gender = "여자";
+        				}
+        				$("#p_img>img").attr("src",result.profileImg);
+        				$("#p_nickname>p").html(result.nickname);
+        				$("#p_age>p").html(result.age+"대 "+gender);
+        				$("#p_style>p").html("여행 스타일 : "+result.style);
+        				$("#p_report>p").html("신고 누적 횟수 : "+result.report);
+        				
+        			},
+        			error : function(){
+        				console.log("프로필 로딩 실패 !");
+        			}
+        			
+        		});
+        		
+				$("#profile").modal('show');
+    	};
+    </script>
     
 </body>
 </html>

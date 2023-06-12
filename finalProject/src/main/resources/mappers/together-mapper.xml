@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="togetherMapper">
+  		<insert id="insertBoard" parameterType="board">
+  				INSERT INTO BOARD(BOARD_NO,ZONE_NO,CATEGORY,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER)
+  				VALUES(SEQ_BNO.NEXTVAL,(SELECT ZONE_NO FROM ZONE WHERE ZONE_NAME=#{address}),5,#{boardTitle},#{boardContent},#{boardWriter})
+  		</insert>
+  		
+  		<insert id="insertAttachment">
+  				INSERT INTO ATTACHMENT VALUES(SEQ_FNO.NEXTVAL,SEQ_BNO.CURRVAL,#{originName},#{changeName},#{filePath},SYSDATE,#{fileLevel},'Y',NULL)
+  		</insert>
+  		
+  		<insert id="insertPlan">
+  				INSERT INTO PLAN(BOARD_NO,TOGETHER,CONCEPT,START_DATE,END_DATE,TOTAL_DATE,TOTAL_PAY,WRITER)
+  				VALUES(SEQ_BNO.CURRVAL,#{together},#{concept},#{startDate},#{endDate},#{totalDate},#{totalPay},#{writer})
+  		</insert>
+  		
+  		<select id="selectListCount" resultType="_int">
+  				SELECT COUNT(*)
+				FROM BOARD 
+				WHERE CATEGORY = 5
+				AND STATUS = 'Y'
+  		</select>
+  		
+  		<select id="selectTogetherList" resultMap="togetherResultSet">
+				SELECT B.BOARD_NO,ZONE_NAME,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,(FILE_PATH || CHANGE_NAME) FILE_PATH,TOGETHER,TOGETHER_COUNT,CONCEPT,TO_CHAR(START_DATE,'YY/MM/DD') START_DATE,TO_CHAR(END_DATE,'YY/MM/DD') END_DATE,TOTAL_DATE,TOTAL_PAY
+								,(SELECT (FILE_PATH || CHANGE_NAME)
+								    FROM ATTACHMENT
+								    WHERE WRITER = BOARD_WRITER) PROFILE_PATH
+				FROM BOARD B
+				JOIN ZONE USING (ZONE_NO)
+				JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
+				JOIN PLAN P ON (B.BOARD_NO = P.BOARD_NO)
+				WHERE B.CATEGORY = 5
+				AND B.STATUS = 'Y'
+				ORDER BY B.CREATE_DATE DESC
+  		</select>
+  		
+  		<resultMap type="together" id="togetherResultSet">
+  				<result column="BOARD_NO" property="boardNo"/>
+  				<result column="ZONE_NAME" property="zoneName"/>
+  				<result column="BOARD_TITLE" property="boardTitle"/>
+  				<result column="BOARD_CONTENT" property="boardContent"/>
+  				<result column="BOARD_WRITER" property="boardWriter"/>
+  				<result column="FILE_PATH" property="filePath"/>
+  				<result column="TOGETHER" property="together"/>
+  				<result column="TOGETHER_COUNT" property="togetherCount"/>
+  				<result column="CONCEPT" property="concept"/>
+  				<result column="START_DATE" property="startDate"/>
+  				<result column="END_DATE" property="endDate"/>
+  				<result column="TOTAL_DATE" property="totalDate"/>
+  				<result column="TOTAL_PAY" property="totalPay"/>
+  				<result column="PROFILE_PATH" property="profilePath"/>
+  		</resultMap>
+  </mapper>

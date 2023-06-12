@@ -3,6 +3,7 @@ package com.kh.finalProject.admin.controller;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.http.HttpSession;
@@ -10,12 +11,16 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.finalProject.admin.model.service.AdminService;
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.board.model.vo.TogetherVO;
+import com.kh.finalProject.common.model.vo.PageInfo;
+import com.kh.finalProject.common.template.Pagination;
 
 
 
@@ -57,8 +62,25 @@ public class AdminController {
 	
 	//공지사항 관리 페이지로 이동
 	@RequestMapping("/notice.ad")
-	public String goAdminNotice() {
-		return "admin/adNotice";
+	public ModelAndView goAdminNotice(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
+		
+		int listCount = adminService.noticeListCount();
+		
+		int pageLimit = 5;
+		
+		int boardLimit = 6;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		
+		ArrayList<Notice> list = adminService.selectNoticeList(pi);
+		
+		mv.addObject("list",list);
+		
+		mv.addObject("pi",pi);
+		
+		mv.setViewName("admin/adNotice");
+		
+		return mv;
 	}
 	
 	//공지사항 등록 페이지로 이동
