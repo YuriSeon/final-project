@@ -10,13 +10,16 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="resources/css/mypage.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/mypage.css?after">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <title>Document</title>
+    <title>마이페이지</title>
+    <style type="text/css">
+
+    </style>
 </head>
 <body>
 
@@ -44,24 +47,71 @@
 										<div class="pop_subMenu pop_myPage" tabindex="0">
 											<ul id="profileMenu">
 												<li class="btn_info01"><a href="#">개인정보 변경</a></li>
-												<li class="btn_logout"><a href="javascript:showLogin(1);">로그아웃</a></li>
+												<li class="btn_logout"><a href="logout.me">로그아웃</a></li>
 												<li class="btn_out"><a href="javascript:memberLeave();">회원탈퇴</a></li>
 											</ul>
 										</div>
 									</div>
 									<form name="pform" id="pform">
-			                        	<div class="profile">
-			                            	<img src="resources/images/person.png" alt="" width="100px" id="profileImg">
-			                        	</div>
-			                        	<p>반가워요!</p>
-			                        	<strong class="userName">${loginUser.nickname}님</strong>
-				                        <div class="btn">
-				                        	<input type="file" id="fileUp" name="fileUp" accept="image/*" onchange="fileChange(this)" style="display:none;">
-				                            <a href="javascript:;" id="profileUpdate">프로필 이미지 설정&gt;</a>
-				                            <a href="javascript:profileUpload();" id="profileSave" style="display:none;">변경 완료</a>
-				                            <label for="fileUp" class="btn_fileUp"></label>
+			                        	<div style="width: 100%; height: 100%;">
+	                                        <div id="p_img">
+	                                        	<c:choose>
+	                                        		<c:when test="${not empty loginUser.profileImg}">
+			                                            <!--프로필 있으면-->
+			                                            <img src="${loginUser.profileImg}" alt="프로필사진">
+	                                        		</c:when>
+	                                        		<c:otherwise>
+			                                            <!--프로필 없으면-->
+			                                            <img src="resources/images/profile/person.png" alt="프로필사진">
+	                                        		</c:otherwise>
+	                                        	</c:choose>
+	                                        </div>
+	                                        <div id="p_nickname" align="center">
+	                                            <span style="font-size: 30px; font-weight: 580;">${loginUser.nickname}</span>
+	                                        </div>
+	                                        <div id="p_age" align="center">
+	                                            <span style="font-size: 20px; font-weight: 540;">${loginUser.age}대</span>
+	                                        </div>
+	                                        <div id="p_style" align="center">
+	                                            <span style="font-size: 20px; font-weight: 540;">계획 여행 / 효율적 여행</span>
+	                                        </div>
+                                    	</div>
+				                        <div class="profile-update">
+				                            <a href="javascript:void(0)" id="profileUpdate">프로필 이미지 설정&gt;</a>
 				                        </div>
 		                        	</form>
+		                        	<!--프로필사진 바꾸기 모달-->
+                                	<div class="modal fade" id="followModal" role="dialog"> 
+                                    	<div class="modal-dialog">
+	                                      	<!-- Modal content-->   
+	                                      	<div class="modal-content">
+	                                        	<div class="modal-header2">
+	                                          		<h4 class="modal-title"></h4>
+	                                          		<button type="button" class="close" data-dismiss="modal">×</button>
+	                                        	</div>
+	                                        	<div class="modal-body2">
+	                                        		<div id="p_img" style="position: relative; left: -5px;">
+		                                            	<c:choose>
+			                                        		<c:when test="${not empty loginUser.profileImg}">
+					                                            <!--프로필 있으면-->
+					                                            <img src="${loginUser.profileImg}" alt="프로필사진">
+			                                        		</c:when>
+			                                        		<c:otherwise>
+					                                            <!--프로필 없으면-->
+					                                            <img src="resources/images/profile/person.png" alt="프로필사진">
+			                                        		</c:otherwise>
+		                                        		</c:choose>
+	                                        		</div>
+	                                               	<form action="updateImg.me" method="post" enctype="multipart/form-data">
+		                                                <input type="file" class="form-control-file border" name="upfile">
+		                                                <input type="hidden" name="writer" id="nickname" value="${loginUser.nickname}">
+		                                                <button type="submit" class="btn btn-primary">사진변경</button>
+		                                                <button type="button" class="btn btn-danger" onclick="deleteImg()">사진삭제</button>
+                                              		</form>
+                                        		</div>
+                                      		</div>
+                                    	</div>
+                                  	</div>
 							</div>
 						</div>
                     </div>
@@ -120,7 +170,7 @@
 	                    <div class="swiper-wrapper" id="recentSwiper" >
 	                    	<div class="swiper-slide swiper-slide-active" style="margin-right: 20px;">
 	                        	<a href="">
-	                            	<img src="background/forest.jpg" alt="" width="200px" height="200px"><br>
+	                            	<img src="" alt="" width="200px" height="200px"><br>
 		                            <p>
 		                            	<strong>신당동 떡볶이 골목</strong>
 		                            </p>
@@ -128,7 +178,7 @@
 	                        </div>
 	                        <div class="swiper-slide swiper-slide-next" style="margin-right: 20px;">
 	                            <a href="">
-	                                <img src="background/forest.jpg" alt="" width="200px" height="200px"><br>
+	                                <img src="" alt="" width="200px" height="200px"><br>
 	                                <p>
 	                                	<strong>[서울둘레길 4코스] 대모·우면산코스</strong>
 	                                </p>
@@ -136,7 +186,7 @@
 	                        </div>
 	                        <div class="swiper-slide" style="margin-right: 20px;">
 	                            <a href="">
-	                                <img src="background/forest.jpg" alt="" width="200px" height="200px"><br>
+	                                <img src="" alt="" width="200px" height="200px"><br>
 	                                <p>
 	                               		<strong>강강술래 당산점</strong>
 	                                </p>
@@ -144,7 +194,7 @@
 	                        </div>
 	                        <div class="swiper-slide" style="margin-right: 20px;">
 	                            <a href="">
-	                                <img src="background/forest.jpg" alt="" width="200px" height="200px"><br>
+	                                <img src="" alt="" width="200px" height="200px"><br>
 	                                <p>
 	                                	<strong>초막골생태공원느티나무야영장</strong>
 	                                </p>
@@ -152,7 +202,7 @@
 	                        </div>
 	                        <div class="swiper-slide" style="margin-right: 20px;">
 	                            <a href="">
-	                                <img src="background/forest.jpg" alt="" width="200px" height="200px"><br>
+	                                <img src="" alt="" width="200px" height="200px"><br>
 	                                <p>
 	                                	<strong>가온오토캠핑장</strong>
 	                                </p>
@@ -188,6 +238,29 @@
             $("#followquick").stop();
             $("#followquick").animate( { "top" : scrollTop });
         });
+        
+      	//프로필 변경 모달
+        $('#profileUpdate').click(function(){
+            $('#followModal').modal(); //id가 "followModal"인 모달창을 열어준다. 
+            $('.modal-title').text("프로필 사진 변경"); //modal 의 header 부분에 값을 넣어준다.
+            $('.modal-title').css("font-size","30px");
+        });
+
+        //프로필 사진 삭제
+        function deleteImg() {
+        	var nickname = $("#nickname").val();
+            
+            $.ajax({
+                url: "deleteImg.me",
+                type: "POST",
+                data: { nickname : nickname },
+                success: function() {
+                	location.reload();
+                },
+                error: function() {
+                }
+            });
+		}
 
     </script>
     

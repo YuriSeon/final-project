@@ -30,14 +30,16 @@ public class FeedController {
 	}
 	
 	@RequestMapping("insert.fo")
-	public ModelAndView insertFeed(Board b,ModelAndView mv,HttpSession session,Attachment at,MultipartFile upfile) {
-		
+	public ModelAndView insertFeed(Board b,ModelAndView mv,HttpSession session,ArrayList<MultipartFile> upfile) {
+
 		ArrayList<Attachment> list = new ArrayList<>();
 		
-		if(!upfile.getOriginalFilename().equals("")) {
+		for(MultipartFile file : upfile) {
+	
+		if(!file.getOriginalFilename().equals("")) {
 			
 			//1.원본 파일명 뽑기 
-			String originName = upfile.getOriginalFilename(); 
+			String originName = file.getOriginalFilename(); 
 			
 			//2.시간형식 문자열로 뽑아내기
 			//202305163033
@@ -53,13 +55,14 @@ public class FeedController {
 			String changeName = currentTime+ranNum+ext;
 			
 			//6.업로드하고자 하는 물리적인 경로 알아내기
-			String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");
+			String filePath = session.getServletContext().getRealPath("/resources/feed/");
+		
 			
 			//7.경로와 수정파일명을 합쳐 파일 업로드 하기
 			
 			try {
 				//파일업로드 구문
-				upfile.transferTo(new File(savePath+changeName));
+				file.transferTo(new File(filePath+changeName));
 			} catch (IllegalStateException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -68,14 +71,19 @@ public class FeedController {
 				e.printStackTrace();
 			}
 			
+			//Attachment에 originName,changeName,Level,boardNo세팅하기
+			Attachment at = new Attachment();
 			at.setOriginName(originName);
-			at.setChangeName("resources/feedFile/"+changeName);
+			at.setChangeName(changeName);
 			at.setFileLevel(2);
+			at.setFilePath("resources/feed/"+changeName);
+			at.setBoardNo(b.getBoardNo());
 			list.add(at);
 			
 		}
+		}
+
 		int result = feedService.insertFeed(b,list);
-		
 		if(result>0) {
 			mv.addObject("alertMsg","피드게시물 작성완료").setViewName("redirect:feed.bo");
 		}else {

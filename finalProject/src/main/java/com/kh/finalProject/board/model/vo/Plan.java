@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Plan {
 //	BOARD_NO	NUMBER
-//	INFO_NO	NUMBER
+//	INFO_NO	NUMBER // 지역이름 또는 장소이름으로 보여줘야할거같아서 String으로 쓸게요
 //	USER_NO	NUMBER // 회원번호말고 회원아이디로 출력할거라서 String writer로 써놓을게요
 //	TOGETHER	NUMBER
 //	TOGETHER_COUNT	NUMBER
@@ -27,7 +27,7 @@ public class Plan {
 //	COMPLETE	VARCHAR2(1 BYTE)
 	
 	private int boardNo;
-	private int infoNo;
+	private String infoName;
 	private String writer;
 	private int together;
 	private int togetherCount;

@@ -22,6 +22,19 @@
 		<result column="ENROLL_DATE" property="enrollDate"/>
 		<result column="CERTIFICATION" property="certification"/>
 		<result column="STATUS" property="status"/>
+		<result column="PROFILEIMG" property="profileImg"/>
+	</resultMap>
+	<!-- 프로필 사진 ResultSet -->
+	<resultMap type="attachment" id="attachmentResultSet">
+		<result column="FILE_NO" property="fileNo"/>
+		<result column="BOARD_NO" property="boardNo"/>
+		<result column="USER_NO" property="userNo"/>
+		<result column="ORIGIN_NAME" property="originName"/>
+		<result column="CHANGE_NAME" property="changeName"/>
+		<result column="FILE_PATH" property="filePath"/>
+		<result column="UPLOAD_DATE" property="uploadDate"/>
+		<result column="FILE_LEVEL" property="fileLevel"/>
+		<result column="STATUS" property="status"/>
 	</resultMap>
 	
 	<!-- 회원가입 -->
@@ -34,10 +47,19 @@
 
 	<!-- 로그인 -->
 	<select id="loginMember" parameterType="member" resultMap="memberResultSet">
+		SELECT USER_NO,USER_ID,NICKNAME,USER_PWD,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,M.ENROLL_DATE,CERTIFICATION,M.STATUS,INTEREST, FILE_PATH||CHANGE_NAME "PROFILEIMG"
+		FROM MEMBER M
+		LEFT JOIN ATTACHMENT A ON (NICKNAME=WRITER)
+		WHERE USER_ID = #{userId}
+		AND M.STATUS IN ('Y','A')
+	</select>
+	
+	<!-- 프로필용 조회 -->
+	<select id="loginMemberNo" parameterType="member" resultMap="memberResultSet">
 		SELECT *
 		FROM MEMBER
-		WHERE USER_ID = #{userId}
-		AND STATUS IN ('Y','A')
+		WHERE NICKNAME = #{nickname}
+		AND STATUS = 'Y'
 	</select>
 	
 	<update id="updateSurvey">
@@ -58,4 +80,32 @@
 		WHERE NICKNAME = #{checkNick}
 	</select>
 
+	<!-- 프로필 사진 유저 조회 -->
+	<select id="selectAttachment" resultMap="attachmentResultSet">
+		SELECT *
+		FROM ATTACHMENT
+		WHERE WRITER = #{writer}
+		AND STATUS = 'Y'
+	</select>
+	
+	<!-- 프로필 사진 추가 -->
+	<insert id="insertImg">
+		INSERT INTO ATTACHMENT(FILE_NO,WRITER,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,FILE_LEVEL)
+					VALUES(SEQ_FNO.NEXTVAL,#{writer},#{originName},#{changeName},#{filePath},1)
+	</insert>
+	
+	<!-- 프로필 사진 업데이트 -->
+	<update id="updateImg">
+		UPDATE ATTACHMENT
+		SET ORIGIN_NAME = #{originName},
+			CHANGE_NAME = #{changeName},
+			FILE_PATH = #{filePath}
+		WHERE WRITER = #{writer}
+	</update>
+	
+	<!-- 프로필 사진 삭제-->
+	<delete id="deleteImg">
+		DELETE FROM ATTACHMENT
+		WHERE WRITER = #{writer}
+	</delete>
 </mapper>

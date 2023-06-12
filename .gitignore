@@ -18,6 +18,7 @@ server.xml
 MANIFEST.MF
 pom.properties
 target/
+lib/
 
 # External tool builders
 .externalToolBuilders/
