@@ -21,6 +21,16 @@ public class MemberDao {
 	public int updateSurvey(SqlSessionTemplate sqlSession, Member m) {
 		return sqlSession.update("memberMapper.updateSurvey", m);
 	}
+
+	//아이디 중복 확인
+	public int idCheck(SqlSessionTemplate sqlSession, String checkId) {
+		return sqlSession.selectOne("memberMapper.idCheck", checkId);
+	}
+
+	//닉네임 중복 확인
+	public int nickCheck(SqlSessionTemplate sqlSession, String checkNick) {
+		return sqlSession.selectOne("memberMapper.nickCheck", checkNick);
+	}
 		
 
 }

@@ -32,5 +32,17 @@ public class MemberServiceImpl implements MemberService{
 	public int updateSurvey(Member m) {
 		return memberDao.updateSurvey(sqlSession,m);
 	}
+
+	//아이디 중복 확인
+	@Override
+	public int idCheck(String checkId) {
+		return memberDao.idCheck(sqlSession,checkId);
+	}
+
+	//닉네임 중복 확인
+	@Override
+	public int nickCheck(String checkNick) {
+		return memberDao.nickCheck(sqlSession,checkNick);
+	}
 	
 }

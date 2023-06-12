@@ -168,11 +168,18 @@
 		                        <button type="button" onclick="location.href='enrollForm.me'">회원가입</button>
 		                    </div>
                 		</c:when>
-						<c:otherwise>
-							<!-- 로그인 후 -->
+                		<c:when test="${not empty loginUser and loginUser.status eq 'Y' }">
+                			<!-- 일반 회원 로그인 후 -->
 		                    <div class="text-button">
 		                    	${loginUser.nickname }님 환영합니다!&nbsp;&nbsp;&nbsp;
 		                        <button onclick="location.href='mypage.me'">마이페이지</button>
+		                        <button type="button" onclick="location.href='logout.me'">로그아웃</button>
+		                    </div>
+                		</c:when>
+						<c:otherwise>
+							<!-- 관리자 로그인 후 -->
+		                    <div class="text-button">
+		                        <button onclick="location.href='mypage.me'">관리자페이지</button>
 		                        <button type="button" onclick="location.href='logout.me'">로그아웃</button>
 		                    </div>
 						</c:otherwise>
@@ -228,10 +235,10 @@
 	          <div class="modal-body">
 	            <div id="id-pwd">
 	              <div id="id-input">
-	                <input type="text" name="userId" placeholder="아이디" style="color: black;">
+	                <input type="text" id="userId" name="userId" placeholder="아이디" style="color: black;">
 	              </div>
 	              <div id="pwd-input">
-	                <input type="password" name="userPwd" placeholder="비밀번호" style="color: black;">
+	                <input type="password" id="userPwd" name="userPwd" placeholder="비밀번호" style="color: black;">
 	              </div>
 	            </div>
 	            <div id="cookie-ck">
@@ -243,7 +250,7 @@
 	              		&nbsp;&nbsp;입력하신 내용을 다시 확인해주세요. -->
 	            </div>
 	            <div>
-	              <button type="submit" id="login-button">로그인</button>
+	              <button type="button" id="login-button" onclick="return loginGo();">로그인</button>
 	            </div>
 	          </div>
 	          
@@ -273,6 +280,24 @@
   			var che = $("input[name=userId]").is(':checked');
   			//console.log(che);
   		});
+  		
+  		//로그인 회원인지 조희
+  		function loginGo(){
+  			$.ajax({
+  				url : "login.me",
+  				data : {userId : $("#userId").val(),
+  						userPwd : $("#userPwd").val()},
+  				success : function(result){
+  					if(result == "NNNNN"){//로그인 유저 없을시
+  						console.log("dd");
+  						$("#login-fales").html("*아이디 또는 비밀번호를 잘못 입력했습니다.<br>입력하신 내용을 다시 확인해주세요.");
+  					}else{//로그인 유저 있을시 전 페이지로 돌려주기
+  						location.href = result;
+  					}
+  				}
+  			});
+  			return false;
+  		}
   	</script>
     
 </body>
