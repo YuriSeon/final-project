@@ -22,8 +22,8 @@ import com.kh.finalProject.board.service.TogetherService;
 @Controller
 public class TogetherController {
 	
-//	@Autowired
-//	private TogetherService togetherService;
+	@Autowired
+	private TogetherService togetherService;
 
 	@RequestMapping("togetherEnroll.bo")
 	public ModelAndView togetherEnroll(ModelAndView mv, String nickname) { 
@@ -37,22 +37,20 @@ public class TogetherController {
 	public ModelAndView insertBoard(String boardTitle, String dateIn, String dateOut, String city, String country,int pay, int togetherCount,String concept,String boardContent,String nickname, ModelAndView mv, MultipartFile upfile, HttpSession session) {
 		
 		if(!upfile.getOriginalFilename().equals(" ")) {
-			String changeName = saveFile(upfile,session);
-			Board b = Board.builder().boardTitle(boardTitle).boardContent(boardContent).boardWriter(nickname).build();
-			Attachment at = Attachment.builder().originName(upfile.getOriginalFilename()).changeName(changeName).filePath("/resources/togetherFiles/").fileLevel(1).writer(nickname).build();
-			Plan p = Plan.builder().startDate(dateIn).endDate(dateOut).togetherCount(togetherCount).concept(concept).totalPay(pay).build();
-			Info i = Info.builder().infoAddress(city+" "+country).build();
+			Board b = Board.builder().boardTitle(boardTitle).boardContent(boardContent).boardWriter(nickname).address(city+" "+country).build();
+			Attachment at = Attachment.builder().originName(upfile.getOriginalFilename()).changeName(saveFile(upfile,session)).filePath("/resources/togetherFiles/").fileLevel(1).writer(nickname).build();
+			Plan p = Plan.builder().startDate(dateIn).endDate(dateOut).together(togetherCount).concept(concept).totalPay(pay).writer(nickname).build();
 			
-		}
-		
-//		int result = togetherService.insertBoard();
-//		if(result>0) {
-//			mv.addObject("alertMsg", "게시글 작성에 성공하였습니다.");
-//			mv.setViewName("redirect:list.bo");
-//		}else {
-//			mv.addObject("errorMsg", "게시글 작성에 실패하였습니다.");
-//			mv.setViewName("common/errorPage");
-//		}
+			int result = togetherService.insertBoard(b,at,p);
+			if(result>0) {
+				mv.addObject("alertMsg", "게시글 작성에 성공하였습니다.");
+				mv.setViewName("redirect:together.bo");
+			}else {
+				mv.addObject("errorMsg", "게시글 작성에 실패하였습니다.");
+				mv.setViewName("common/errorPage");
+			}
+			
+		}		
 		
 		return mv;
 	}

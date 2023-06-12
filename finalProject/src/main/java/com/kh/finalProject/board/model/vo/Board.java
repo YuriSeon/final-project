@@ -39,6 +39,6 @@ public class Board {
 	private int report;
 	private int count;
 	private String status;
-	
+	private String address; // 쿼리문 쓸 때 ZONE_NO 서브쿼리로 검색하기 위한 한글 주소 저장용 
 	
 }	

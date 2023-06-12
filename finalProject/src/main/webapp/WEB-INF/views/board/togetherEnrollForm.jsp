@@ -43,6 +43,9 @@
 		height:14px;
 		margin-right:10px;
 	}
+	#optionIcons>li{
+		margin-bottom:5px;
+	}
 	#writeTitle{
 		border-bottom : 1px solid black;
 		width: 70%;
@@ -80,10 +83,10 @@
 	                            <h4 id="dateConcept"></h4>
 	                           	<h4 id="previewTitle"></h4> <br>
 	                            <ul id="optionIcons">
-	                                <li id="previewDate"><i class="fa fa-clock-o"></i><i id="previewDateIn"></i> ~ <i id="previewDateOut"></i></li><br>
-	                                <li><i class="fa fa-map-marker"></i><i id="previewLocation"></i></li><br>
-	                                <li><img src="/finalProject/resources/images/together_won.png"><i id="previewPay"></i></li> <br>
-	                                <li><img src="/finalProject/resources/images/기본프로필.png"> ${nickname }</li> <br>
+	                                <li id="previewDate"><i class="fa fa-clock-o"></i><i id="previewDateIn"></i> ~ <i id="previewDateOut"></i></li>
+	                                <li><i class="fa fa-map-marker"></i><i id="previewLocation"></i></li>
+	                                <li><img src="/finalProject/resources/images/together_won.png"><i id="previewPay"></i></li> 
+	                                <li><img src="${loginUser.profileImg}" style="border-radius:50%;"> ${nickname }</li> 
 	                            </ul>
 	                            <div class="main-dark-button">
 	                                <a href="#" id="previewBtn" disabled>참여하기 0 / <i id="previewBtn1"></i></a>
@@ -213,7 +216,7 @@
 	            <script>
 	            
 	            	$("#boardTitle").keyup(function(){
-	            		$("#previewTitle").html($(this).val());
+	            		$("#previewTitle").html("<"+$(this).val()+">");
 	            	});
 	            	
 	            	$("#dateIn").on("change",function(){

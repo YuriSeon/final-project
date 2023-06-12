@@ -1,9 +1,32 @@
 package com.kh.finalProject.board.service;
 
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-//@Service
+import com.kh.finalProject.board.dao.TogetherDao;
+import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Plan;
+
+@Service
 public class TogetherServiceImpl  implements TogetherService{
+	
+	@Autowired
+	private SqlSession sqlSession;
+	
+//	@Autowired
+//	private TogetherDao togetherDao;
+
+	@Override
+	@Transactional
+	public int insertBoard(Board b, Attachment at, Plan p) {
+		int result1 = sqlSession.insert("togetherMapper.insertBoard",b);
+		int result2 = sqlSession.insert("togetherMapper.insertAttachment",at);
+		int result3 = sqlSession.insert("togetherMapper.insertPlan",p);
+		return result1*result2*result3;
+	}
 
 	
 }

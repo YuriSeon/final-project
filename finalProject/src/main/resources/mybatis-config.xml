@@ -10,13 +10,14 @@
   		<typeAlias type="com.kh.finalProject.board.model.vo.Board" alias="board"/>
   		<typeAlias type="com.kh.finalProject.board.model.vo.Path" alias="path"/>
   		<typeAlias type="com.kh.finalProject.board.model.vo.Plan" alias="plan"/>
-  		<typeAlias type="com.kh.finalProject.board.model.vo.Attachment" alias="Attachment"/>
+  		<typeAlias type="com.kh.finalProject.board.model.vo.Attachment" alias="attachment"/>
+  		<typeAlias type="com.kh.finalProject.board.model.vo.Info" alias="info"/>
   		<typeAlias type="com.kh.finalProject.member.model.vo.Member" alias="member"/>
   		
   	</typeAliases>
   	
   	<mappers>
-  		<mapper resource="/mappers/together-mapper.xml"/>
+  		
   	</mappers>
   	
   </configuration>

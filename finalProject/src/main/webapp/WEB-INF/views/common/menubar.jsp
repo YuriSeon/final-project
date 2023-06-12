@@ -15,6 +15,9 @@
 	<link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+	
 	<!-- JavaScript -->
 	<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 	
@@ -187,6 +190,16 @@
 						<c:otherwise>
 							<!-- 로그인 후 -->
 		                    <div class="text-button">
+							 <c:choose>
+	                                        		<c:when test="${not empty loginUser.profileImg}">
+			                                            <!--프로필 있으면-->
+			                                            <img src="${loginUser.profileImg}" alt="프로필사진" style="width:25px; height:25px; border-radius:50%; margin-right:5px;">
+	                                        		</c:when>
+	                                        		<c:otherwise>
+			                                            <!--프로필 없으면-->
+			                                            <img src="resources/images/profile/person.png" alt="프로필사진" style="width:25px; height:25px; border-radius:50%; margin-right:5px;">
+	                                        		</c:otherwise>
+	                         </c:choose>
 		                    	${loginUser.nickname }님 환영합니다!&nbsp;&nbsp;&nbsp;
 		                        <button onclick="location.href='mypage.me'">마이페이지</button>
 		                        <button type="button" onclick="location.href='logout.me'">로그아웃</button>

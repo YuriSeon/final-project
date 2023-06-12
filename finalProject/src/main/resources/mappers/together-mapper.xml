@@ -3,5 +3,17 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="togetherMapper">
-  
+  		<insert id="insertBoard" parameterType="board">
+  				INSERT INTO BOARD(BOARD_NO,ZONE_NO,CATEGORY,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER)
+  				VALUES(SEQ_BNO.NEXTVAL,(SELECT ZONE_NO FROM ZONE WHERE ZONE_NAME=#{address}),5,#{boardTitle},#{boardContent},#{boardWriter})
+  		</insert>
+  		
+  		<insert id="insertAttachment">
+  				INSERT INTO ATTACHMENT VALUES(SEQ_FNO.NEXTVAL,SEQ_BNO.CURRVAL,#{originName},#{changeName},#{filePath},SYSDATE,#{fileLevel},'Y',NULL)
+  		</insert>
+  		
+  		<insert id="insertPlan">
+  				INSERT INTO PLAN(BOARD_NO,TOGETHER,CONCEPT,START_DATE,END_DATE,TOTAL_PAY,WRITER)
+  				VALUES(SEQ_BNO.CURRVAL,#{together},#{concept},#{startDate},#{endDate},#{totalPay},#{writer})
+  		</insert>
   </mapper>
