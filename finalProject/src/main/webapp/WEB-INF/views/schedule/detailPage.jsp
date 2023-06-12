@@ -4,10 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="resources/css/schedule.css?after">
 <title>Insert title here</title>
+<style type="text/css">
+
+</style>
 </head>
 <body>
-<!-- 사진이랑 지도만 추가로 넣고 나중에 대댓글 넣는거 하기 -->
+<!-- 사진이랑 지도, 마커 반복문 추가, 마커 클릭시 데일리 일정 나오도록하고 그 후에... 지도 마커 클릭시 info 보여주기 나중에 대댓글 넣는거 하기 -->
 	<%@ include file="../common/menubar.jsp" %>
 	<div class="main-schedule">
       <div class="container">
@@ -149,7 +153,9 @@
     	/* 좋아요 찜 신고 이미지 클릭시 변경 이벤트 */
     	$(function(){
     		$("#btn-type").children().click(function(){
-    			var btnType = this.class;
+    			/* 클래스명 잘 가져오는지 확인하기 둥 중 하나 사용하기*/
+    			var btnType = $(this).attr("class");
+				this.class;
     			$.ajax({
     				url:"btnType",
     				data:{
@@ -220,17 +226,18 @@
                     
                     var div = $("<div>");
                     var replyDiv = div.prop("id","content-pack").append(div.prop("class","reply"));
+                    
                     for(var i=0; i<list.length;i++){
-                    /* 
-                    매개변수2개로 나눠져서 잘 넘어오는지 확인. 아니면 키값으로 프로필 사진 찾아오기
-                   	m이 arraylist를 가져온거면 그냥 순서대로 꺼내도 됨
-                    */
-                    var proDiv = div.prop("class", "pro").append("${m[i]. 프로필사진}");
-                    var conDiv = div.prop("class", "con").append("${list[i].replyContent}");
-                    /* prop아니면 attr로 수정 */
-                    var nic = $("<a>").prop("id", "nicknameHover").prop("onclick", "whoareyou();").text("${list[i].replyWriter}");
-                    var dateDiv = div.prop("class", "date").append(nic).text("${list[i].createDate}");
-                    replyDiv.append(proDiv, conDiv, dateDiv);
+	                    /* 
+	                    매개변수2개로 나눠져서 잘 넘어오는지 확인. 아니면 키값으로 프로필 사진 찾아오기
+	                   	m이 arraylist를 가져온거면 그냥 순서대로 꺼내도 됨
+	                    */
+	                    var proDiv = div.prop("class", "pro").append("${m[i]. 프로필사진}");
+	                    var conDiv = div.prop("class", "con").append("${list[i].replyContent}");
+	                    /* prop아니면 attr로 수정 */
+	                    var nic = $("<a>").prop("id", "nicknameHover").prop("onclick", "whoareyou();").text("${list[i].replyWriter}");
+	                    var dateDiv = div.prop("class", "date").append(nic).text("${list[i].createDate}");
+	                    replyDiv.append(proDiv, conDiv, dateDiv);
                     }
                     $("#reply-content").append(replyDiv); // 일단 댓글까지 출력함(대댓글 나중에!)
     			},
