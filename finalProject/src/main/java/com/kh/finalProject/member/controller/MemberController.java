@@ -55,8 +55,6 @@ public class MemberController {
 			   					 ,MultipartFile upfile
 	   							 ,HttpSession session) {
 		
-		System.out.println(a);
-		
 		if(!upfile.getOriginalFilename().equals("")) {
 			
 			String originName= upfile.getOriginalFilename();

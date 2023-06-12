@@ -271,7 +271,6 @@
   			}
   			
   			var che = $("input[name=userId]").is(':checked');
-  			//console.log(che);
   		});
   	</script>
     
