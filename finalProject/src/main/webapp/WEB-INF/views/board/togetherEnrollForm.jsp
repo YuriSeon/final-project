@@ -99,6 +99,7 @@
 	             <div id="enrollFormDiv">
 						<form id="enrollForm" method="post" action="togetherInsert.bo" enctype="multipart/form-data">
 							<input type="hidden" name="nickname" value="${loginUser.nickname }">
+							<input type="hidden" name="totalDate" id="totalDate">
 									<table id="enrollTable" border="1" align="center">
 											<tr>
 													<td style="width:100px;">제목 </td>
@@ -248,6 +249,7 @@
 							$("#checkBox").children("input").attr("disabled",true); 
 							$(this).attr("disabled",false);
 							let totalDate = (new Date($("#dateOut").val()).getTime() - new Date($("#dateIn").val()).getTime()) / (1000 * 60 * 60 * 24);
+							$("#totalDate").val(totalDate);
 							$("#dateConcept").html("<"+totalDate+"박 "+(totalDate+1)+"일 "+$("#country").val()+" "+$(this).val()+" 여행>");
 	            		}else{
 	            			$("#checkBox").children("input").attr("disabled",false);

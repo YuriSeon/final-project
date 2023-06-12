@@ -92,4 +92,13 @@
 		DELETE FROM ATTACHMENT
 		WHERE WRITER = #{writer}
 	</delete>
+	
+	<!-- 프로필 정보 조회 -->
+	<select id="loadProfile" resultMap="memberResultSet">
+		SELECT NICKNAME,GENDER,AGE,NVL(STYLE,'미선택') STYLE,NVL(REPORT,0) REPORT,CERTIFICATION,(FILE_PATH || CHANGE_NAME) PROFILEIMG
+		FROM MEMBER M
+		LEFT JOIN ATTACHMENT A ON(NICKNAME = WRITER)
+		WHERE M.STATUS = 'Y'
+		AND NICKNAME = #{nickname}
+	</select>
 </mapper>

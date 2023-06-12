@@ -22,4 +22,7 @@ public interface MemberService {
 
 	//프로필 사진 삭제
 	int deleteImg(String nickname);
+
+	//프로필 조회
+	Member loadProfile(String nickname);
 }

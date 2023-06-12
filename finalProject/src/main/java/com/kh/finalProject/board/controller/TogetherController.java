@@ -34,12 +34,12 @@ public class TogetherController {
 	}
 	
 	@RequestMapping("togetherInsert.bo")
-	public ModelAndView insertBoard(String boardTitle, String dateIn, String dateOut, String city, String country,int pay, int togetherCount,String concept,String boardContent,String nickname, ModelAndView mv, MultipartFile upfile, HttpSession session) {
+	public ModelAndView insertBoard(String boardTitle, String dateIn, String dateOut, int totalDate, String city, String country,int pay, int togetherCount,String concept,String boardContent,String nickname, ModelAndView mv, MultipartFile upfile, HttpSession session) {
 		
 		if(!upfile.getOriginalFilename().equals(" ")) {
 			Board b = Board.builder().boardTitle(boardTitle).boardContent(boardContent).boardWriter(nickname).address(city+" "+country).build();
 			Attachment at = Attachment.builder().originName(upfile.getOriginalFilename()).changeName(saveFile(upfile,session)).filePath("/resources/togetherFiles/").fileLevel(1).writer(nickname).build();
-			Plan p = Plan.builder().startDate(dateIn).endDate(dateOut).together(togetherCount).concept(concept).totalPay(pay).writer(nickname).build();
+			Plan p = Plan.builder().startDate(dateIn).endDate(dateOut).totalDate(totalDate).together(togetherCount).concept(concept).totalPay(pay).writer(nickname).build();
 			
 			int result = togetherService.insertBoard(b,at,p);
 			if(result>0) {

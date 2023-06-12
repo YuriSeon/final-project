@@ -3,13 +3,11 @@ package com.kh.finalProject.member.controller;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 
 import javax.servlet.ServletContext;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.Calendar;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -20,11 +18,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.member.model.service.MemberService;
 import com.kh.finalProject.member.model.vo.Member;
@@ -310,4 +308,13 @@ public class MemberController {
 		return "redirect:/";
 	}
 	
+	//프로필 정보 조회
+	@ResponseBody
+	@GetMapping(value="loadProfile.me",produces = "application/json; charset=utf-8")
+	public String loadProfile(String nickname) {
+		
+		Member m = memberService.loadProfile(nickname);
+		
+		return new Gson().toJson(m);
+	}
 }

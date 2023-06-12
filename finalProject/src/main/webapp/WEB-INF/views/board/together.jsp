@@ -152,73 +152,36 @@
                 <div class="col-lg-12">
                 <br><br>
                 </div>
-                <div class="col-lg-4">
-                    <div class="ticket-item">
-                        <div class="thumb">
-                            <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzAyMjVfMTk4%2FMDAxNjc3Mjk1MzM0Mjg2.4g-sSUBKDNcayJnnmB3qWmL2p9PBPhgdMm_kt9yOfrgg.cG7DhCRsaUznj729jA2Qs1EMWi-aQsYUEt-j-ao5I5Ug.JPEG.hamso99%2F1677295333608.jpg&type=a340" alt="">
-                            <div class="price">
-                                <span>2박 3일<br>경주<em>테마 여행</em></span>
-                            </div>
-                        </div>
-                        <div class="down-content">
-                            <h4>&lt;2박 3일 경주 테마여행&gt; <br> 동행 2분 모십니다!</h4>
-                            <ul id="optionIcons">
-                                <li><i class="fa fa-clock-o"></i>2023/05/25 ~ 2023/05/27</li>
-                                <li><i class="fa fa-map-marker"></i>경상북도 경주시</li>
-                                <li><img src="/finalProject/resources/images/together_won.png">200,000 이하</li>
-                                <li><img src="/finalProject/resources/images/기본프로필.png"> <a id="nicknameHover" onclick="whoareyou();">진주초이</a></li>
-                            </ul>
-                            <div class="main-dark-button">
-                                <a href="ticket-details.html">참여하기 1/2</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4">
-                    <div class="ticket-item">
-                        <div class="thumb">
-<!--                             <img src="/finalProject/resources/images/ticket-02.jpg" alt=""> -->
-                            <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA0MjRfMjY2%2FMDAxNjgyMjYzNTQ5MDA1.CeCrIUCEuS7m98fvn9IxcVSpzBEv_qYjZTHLRjLwZK0g.SqfDwsp5gzFbSenip01VPBp7wYV3_ptAGMThaml0P2Qg.JPEG.buildream_%2FIMG_9331.jpg&type=a340" alt="">
-                            <div class="price">
-                                <span>4박 5일<br>부산<em>자유 여행</em></span>
-                            </div>
-                        </div>
-                        <div class="down-content">
-<!--                             <span>There Are 200 Tickets Left For This Show</span> -->
-                            <h4>&lt;4박 5일 부산 자유 여행&gt; <br> 동행 4분~ 같이 가실분~</h4>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i>2023/06/01 ~ 2023/06/05</li>
-                                <li><i class="fa fa-map-marker"></i>부산 광역시</li>
-                            </ul>
-                            <div class="main-dark-button">
-                                <a href="ticket-details.html">참여하기 1/4</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4">
-                    <div class="ticket-item">
-                        <div class="thumb">
-                            <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzAyMjFfMTEz%2FMDAxNjc2OTg1NzUxNDg3.UOYixAX0Hnybah6wyQzyJqQNSMbwqvb7H7RsPG5Bv4Ig.DsbJw6fRvmV-1xvXpM4vMmdxIFdhHKeNd1735C24AuYg.JPEG.wlsydcjstk%2FIMG_0884.jpg&type=a340" alt="">
-                            <div class="price">
-                                <span>1박 2일<br>여수<em>밤바다</em></span>
-                            </div>
-                        </div>
-                        <div class="down-content">
-<!--                             <span>There Are 260 Tickets Left For This Show</span> -->
-                            <h4>&lt;여수 밤바다&gt;<br>동행 1분~</h4>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i>2023/05/22 ~ 2023/05/23</li>
-                                <li><i class="fa fa-map-marker"></i>전라남도 여수시</li>
-                            </ul>
-                            <div class="main-dark-button">
-                                <a href="ticket-details.html" disabled style="background-color:lightgray;">마감 되었습니다.</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <c:choose>
+                	<c:when test="${not empty list }">
+			                <c:forEach var="i" items="${list }">
+					                <div class="col-lg-4">
+					                <input type="hidden" name="boardNo"  class="togetherBoardNo" value="${i.boardNo }">
+					                    <div class="ticket-item">
+					                        <div class="thumb">
+					                            <img src="/finalProject${i.filePath}" alt="">
+					                        </div>
+					                        <div class="down-content">
+					                        	<h5>[${i.totalDate}박 ${ i.totalDate +1}일]</h3>
+					                            <h4>&lt;${i.zoneName } ${i.concept } 여행&gt; <br> ${i.boardTitle }</h4>
+					                            <ul id="optionIcons">
+					                                <li><i class="fa fa-clock-o"></i>${i.startDate} ~ ${i.endDate }</li>
+					                                <li><i class="fa fa-map-marker"></i>${i.zoneName }</li>
+					                                <li><img src="/finalProject/resources/images/together_won.png">${i.totalPay } 이하</li>
+			                               		    <li><img src="/finalProject/${i.profilePath }" style="border-radius:50%;"> <a id="nicknameHover" onclick="whoareyou();">${i.boardWriter }</a></li>
+					                            </ul>
+					                            <div class="main-dark-button">
+					                                <a href="ticket-details.html">참여하기 0/${i.together }</a>
+					                            </div>
+					                        </div>
+					                    </div>
+					                </div>
+			                </c:forEach>
+                    </c:when>
+                	<c:otherwise>
+                			<div>조회된 게시물이 없습니다. </div>
+                	</c:otherwise>
+                </c:choose>
                 
                 <div class="col-lg-12">
                     <div class="pagination">

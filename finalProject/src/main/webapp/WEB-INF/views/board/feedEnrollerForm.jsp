@@ -31,6 +31,9 @@
 		float :left;
 		box-sizing:border-box;
 		margin-left: 30px;
+		color: black;
+		border: 1px solid black;
+		width: 300px;
 	}
 	#enroll-form textarea{
 		
@@ -47,49 +50,93 @@
 		border-top: 1px dotted black;
 		border-bottom: 1px dotted black;  
 	}
-	
-	.slide{ /**이만큼의 크기로 보이겠다는 의미**/
-	  width:350px; height:333px;/**사진보다 크면 다음 사진까지 표시되어 img와 slide크기를 맞춘다.**/
- 	//  overflow: hidden;/**이미지는 내장이라 overflow:hidden을 사용해 넘친 사진들을 안보이게 한다.**/ 
-	 border:1px solid black;
-	  position: relative;
-	  left: 250px;
-	}
-	.images{
-	  height:333px; /**slide와 images의 높이가 다르면 부자연스럽게 표시돼 slide의 높이에 맞게 높이를 바꾼다.**/
-	  transition: transform 0.5s; 
-	/**어떤 속성에 대해 애니메이션 효과를 주는 속성이다. 
-	tranform속성에 0.5초의 듀레이션(동작의 시작해서 끝나는 시간)을 준다.**/
-	}
-	img{
-	  width:300px; height:333px;/**slide 크기에 맞춘다.**/
-	}
-	
-	/**버튼위치**/
-	.back{
-	  position:relative;
-	  left:-200px;
-	  bottom: 170px; right: 0px;
-	}
-	.next{
-	  position:relative;
-	  
-	  bottom: 170px; left: 220px;
-	}
-	
-	/**버튼디자인**/
-	#tr1 button{		
-	  width: 30px; height: 30px;
-	  color: rgb(19, 1, 1);
-	  background: white;
-	
-	}
-	button:active{/**버튼을 클릭하는 동안 색을 바꾼다.**/
-	  background:#3e3e3e;
-	}
-	button:disabled{/**버튼 속성이 disabled되면 색을 바꾼다.**/
-	  background: #cbcaca;
-	}
+	.slider{
+        width: 500px;
+        height: 400px;
+        position: relative;
+        margin: 0 auto;
+        
+         overflow: hidden; /*현재 슬라이드 오른쪽에 위치한 나머지 슬라이드 들이 보이지 않도록 가림 */
+    }
+    .slider input[type=radio]{
+        display: none;
+        
+    }
+    ul.imgs{
+        padding: 0;
+        margin: 0;
+        list-style: none;    
+    }
+    ul.imgs li{
+        position: absolute;
+        left: 640px;
+        transition-delay: 1s; /* 새 슬라이드가 이동해 오는 동안 이전 슬라이드 이미지가 배경이 보이도록 지연 */   
+        padding: 0;
+        margin: 0;
+    }
+    .bullets{
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 370px;
+        z-index: 2;
+    }
+    .bullets label{
+        display: inline-block;
+        border-radius: 50%;
+        background-color: rgba(0,0,0,0.55);
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+    /* 현재 선택된 불릿 배경 흰색으로 구분 표시 */
+    .slider input[type=radio]:nth-child(1):checked~.bullets>label:nth-child(1){
+        background-color: #f0b8b8;
+    }
+    .slider input[type=radio]:nth-child(2):checked~.bullets>label:nth-child(2){
+        background-color: #f0b8b8;
+    }
+    .slider input[type=radio]:nth-child(3):checked~.bullets>label:nth-child(3){
+        background-color: #f0b8b8;
+    }
+    .slider input[type=radio]:nth-child(4):checked~.bullets>label:nth-child(4){
+        background-color: #f0b8b8;
+    }
+     .slider input[type=radio]:nth-child(5):checked~.bullets>label:nth-child(5){
+        background-color: #f0b8b8;
+    }
+    .slider input[type=radio]:nth-child(1):checked~ul.imgs>li:nth-child(1){
+        left: 0;
+        transition: 0.5s;
+        z-index:1;
+    }
+    .slider input[type=radio]:nth-child(2):checked~ul.imgs>li:nth-child(2){
+        left: 0;
+        transition: 0.5s;
+        z-index:1;
+    }
+    .slider input[type=radio]:nth-child(3):checked~ul.imgs>li:nth-child(3){
+        left: 0;
+        transition: 0.5s;
+        z-index:1;
+    }
+    .slider input[type=radio]:nth-child(4):checked~ul.imgs>li:nth-child(4){
+        left: 0;
+        transition: 0.5s;
+        z-index:1;
+    }
+    .slider input[type=radio]:nth-child(5):checked~ul.imgs>li:nth-child(5){
+        left: 0;
+        transition: 0.5s;
+        z-index:1;
+    }
+    #imgholder img{
+    	border:1px solid black;
+    }
+    #zone{
+    	float :left;
+    	margin-left: 30px;
+    } 
 	
 </style>
 </head>
@@ -99,35 +146,69 @@
 	<br><br>
 	
 	<div class="suel" align="center">
-		<form action="insert.fo" method="post" id="enroll-form" enctype="multipart/form-data">
+		<form action="insert.fo" method="post" id="enroll-form" enctype="multipart/form-data" onsubmit="return imgcheck()">
+		<input type="hidden" name="boardWriter" value="${loginUser.nickname }">
 			<table>
 				<thead>
 					<tr height="20"> </tr>
 					<tr>
 						<th>닉네임</th>
-						<td>꼭 싸움을 잘해야지</td>
+						<td><b><input value="${loginUser.nickname }" readonly></b> </td>
 					</tr>
 					<tr height="10"></tr>
 					<tr>
 						<th>지역태그</th>
 						<td>	
-							<input type="text" placeholder="ex) 서울,부산,인천">					
+							 <select name='zoneNo' onchange="change(this.selectedIndex);"  class=input id="zone">
+		                       <option value='00'>전체</option>
+		                       <option value='11'>서울특별시</option>
+		                       <option value='21'>부산광역시</option>
+		                       <option value='22'>대구광역시</option>
+		                       <option value='23'>인천광역시</option>
+		                       <option value='24'>광주광역시</option>
+		                       <option value='25'>대전광역시</option>
+		                       <option value='26'>울산광역시</option>
+		                       <option value='31'>경기도</option>
+		                       <option value='32'>강원도</option>
+		                       <option value='33'>충청북도</option>
+		                       <option value='34'>충청남도</option>
+		                       <option value='35'>전라북도</option>
+		                       <option value='36'>전라남도</option>
+		                       <option value='37'>경상북도</option>
+		                       <option value='38'>경상남도</option>
+		                       <option value='39'>제주도</option>
+		                    </select>  
+		                    
+		                     <select name='country'  class=select id="country">
+		                       <option value=''>전체</option>
+		                    </select>                                                					
 						</td>
 					</tr>
 					<tr height="20"></tr>
 					<tr id="tr1">
-						<th rowspan="2">상세이미지 넣기</th>
+						<th>상세이미지 넣기</th>
 						<td>
-							 <div class="slide" align="center"> <!--배치된 img들을 하나의 img만 보이게 가리기 위한 태그-->
-			                    <div class="images"> <!--img들을 좌우배치할 태그-->
-			                        <img id="contentImg1" src="/finalProject/resources/images/check.png">
-			                        <img id="contentImg2" src="/finalProject/resources/images/compass.png">
-			                        <img id="contentImg3" src="/finalProject/resources/images/edit.png">
-			                        <img id="contentImg4" src="/finalProject/resources/images/eye.png">
-			                    </div>
-			                </div>
-			                  <button class="back">❮</button>
-			                  <button class="next">❯</button>
+							 <div class="slider">
+                                <input type="radio" name="slide" id="slide1" checked>
+                                <input type="radio" name="slide" id="slide2">
+                                <input type="radio" name="slide" id="slide3">
+                                <input type="radio" name="slide" id="slide4">
+                               
+                                <ul id="imgholder" class="imgs">
+                                    <li><img id="contentImg1" width="500" height="350"></li>
+                                    <li><img id="contentImg2" width="500" height="350"></li>
+                                    <li><img id="contentImg3" width="500" height="350"></li>
+                                    <li><img id="contentImg4" width="500" height="350"></li>
+                                   
+                                </ul>
+                               <div class="bullets">
+                                    <label for="slide1">&nbsp;</label>
+                                    <label for="slide2">&nbsp;</label>
+                                    <label for="slide3">&nbsp;</label>
+                                    <label for="slide4">&nbsp;</label>
+                                    
+                                </div> 
+                            </div>
 						</td>						
 					</tr>
 					
@@ -135,7 +216,7 @@
 					<tr>
 						<th>내용</th>
 						<td colspan="2">
-							<textarea rows="10" cols="90" ></textarea>
+							<textarea rows="10" cols="90" name="boardContent"></textarea>
 						</td>
 					</tr>
 					<tr height="20"></tr>
@@ -145,79 +226,119 @@
 			</table>
 			<!-- 파일 첨부 영역 -->
 			<div id="file-area" align="center">
-				<input type="file" id="file1" name="file1" onchange="loadImg(this,1);" required> <!-- 대표이미지 -->
-				<input type="file" id="file2" name="file2" onchange="loadImg(this,2);"> <br>
-				<input type="file" id="file3" name="file3" onchange="loadImg(this,3);"><br>
-				<input type="file" id="file4" name="file4" onchange="loadImg(this,4);"><br>
+				<input type="file" id="file1" name="upfile" onchange="loadImg(this,1);"> <!-- 대표이미지 -->
+				<input type="file" id="file2" name="upfile" onchange="loadImg(this,2);"> <br>
+				<input type="file" id="file3" name="upfile" onchange="loadImg(this,3);"><br>
+				<input type="file" id="file4" name="upfile" onchange="loadImg(this,4);"><br>
 				
 			</div>
 			<div align="center">
-				<button type="submit">작성하기</button>
-				<button type="">뒤로가기</button>
+				<button type="submit" class="btn btn-warning">작성하기</button>
+				<button type="" class="btn btn-danger">뒤로가기</button>
 			</div>
 		</form>
 	</div>
 </body>
 
 <script>
-// 	$(function(){
-// 		$("#file-area").hide();
-// 		$("#contentImg1").click(function(){
-// 			$("#file1").click();
-// 		});
-// 		$("#contentImg2").click(function(){
-// 			$("#file2").click();
-// 		});
-// 		$("#contentImg3").click(function(){
-// 			$("#file3").click();
-// 		});
-// 		$("#contentImg3").click(function(){
-// 			$("#file4").click();
-// 		});
-// 	});
+	$(function(){
+		$("#file-area").hide();
+		$("#contentImg1").click(function(){
+			$("#file1").click();
+		});
+		$("#contentImg2").click(function(){
+			$("#file2").click();
+		});
+		$("#contentImg3").click(function(){
+			$("#file3").click();
+		});
+		$("#contentImg4").click(function(){
+			$("#file4").click();
+		});
+	});
+	
+	//이미지 미리보기
+	function loadImg(inputFile,num){
+				//inputFile : 현재 변화가 생긴 요소객체
+				//console.log(inputFile.files);
+				//inputFile.files : 업로드된 파일의 정보를 배열의 형태로 반환하는 속성
+				//파일 선택시 iength가 1이 반환된다. 취소하면 파일정보가 없어지니 length가 0이 된다.
+				if(inputFile.files.length ==1){
+					//선택한 파일이 존재한다면
+					//해당 파일을 읽어서 영역에 미리보기 시켜주기
+					//파일 읽어줄 객체 FileReader
+					var reader = new FileReader();
+					//파일을 읽어줄 메소드 : readAsDataURL(파일)
+					//-파일을 읽어들이는 순간 고유한 url을 부여한다.
+					//-부여된 url을 src에 추가하면 해당 이미지를 띄어줄수 있음.
+					
+					reader.readAsDataURL(inputFile.files[0]);
+					
+					//파일 읽기가 완료된 시점에 img src속성에 해당 결과 url을 담아주는 작업하기
+					reader.onload = function(e){//e:이벤트 객체
+						
+						//console.log(e);
+						//console.log(e.target);
+						//console.log(e.target.result);
+						//부여된 url은 target에 result속성에 들어있다 해당 result를
+						//img src속성에 부여하면 미리보기 가능
+						
+						switch(num){
+						case 1: $("#contentImg1").attr("src",e.target.result); break;
+						case 2: $("#contentImg2").attr("src",e.target.result); break;
+						case 3: $("#contentImg3").attr("src",e.target.result); break;
+						case 4: $("#contentImg4").attr("src",e.target.result); break;
+								
+						}
+						
+					}
+				}else{
+					switch(num){
+					case 1: $("#contentImg1").attr("src",null); break;
+					case 2: $("#contentImg2").attr("src",null); break;
+					case 3: $("#contentImg3").attr("src",null); break;
+					case 4: $("#contentImg4").attr("src",null); break;
+							
+					}
+				}
+			}
+	
+	/*이미지 없을시*/
+    function imgcheck(){
+		var fileCheck = document.getElementById("file1").value;
+    	if(!fileCheck){
+    		alert("이미지를 넣어해주세요");
+    		return false;
+    	}
+    	}
+	
+    var cnt = new Array();
+    cnt[0] = new Array('전체');
+    cnt[1] = new Array('전체','강남구','강동구','강북구','강서구','관악구','광진구','구로구','금천구','노원구','도봉구','동대문구','동작구','마포구','서대문구','서초구','성동구','성북구','송파구','양천구','영등포구','용산구','은평구','종로구','중구','중랑구');
+    cnt[2] = new Array('전체','강서구','금정구','남구','동구','동래구','부산진구','북구','사상구','사하구','서구','수영구','연제구','영도구','중구','해운대구','기장군');
+    cnt[3] = new Array('전체','남구','달서구','동구','북구','서구','수성구','중구','달성군');
+    cnt[4] = new Array('전체','계양구','남구','남동구','동구','부평구','서구','연수구','중구','강화군','옹진군');
+    cnt[5] = new Array('전체','광산구','남구','동구','북구','서구');
+    cnt[6] = new Array('전체','대덕구','동구','서구','유성구','중구');
+    cnt[7] = new Array('전체','남구','동구','북구','중구','울주군');
+    cnt[8] = new Array('전체','고양시','과천시','광명시','구리시','군포시','남양주시','동두천시','부천시','성남시','수원시','시흥시','안산시','안양시','오산시','의왕시','의정부시','평택시','하남시','가평군','광주시','김포시','안성시','양주군','양평군','여주군','연천군','용인시','이천군','파주시','포천시','화성시');
+    cnt[9] = new Array('전체','강릉시','동해시','삼척시','속초시','원주시','춘천시','태백시','고성군','양구군','양양군','영월군','인제군','정선군','철원군','평창군','홍천군','화천군','황성군');
+    cnt[10] = new Array('전체','제천시','청주시','충주시','괴산군','단양군','보은군','영동군','옥천군','음성군','진천군','청원군');
+    cnt[11] = new Array('전체','공주시','보령시','서산시','아산시','천안시','금산군','논산군','당진군','부여군','서천군','연기군','예산군','청양군','태안군','홍성군');
+    cnt[12] = new Array('전체','군산시','김제시','남원시','익산시','전주시','정읍시','고창군','무주군','부안군','순창군','완주군','임실군','장수군','진안군');
+    cnt[13] = new Array('전체','광양시','나주시','목포시','순천시','여수시','여천시','강진군','고흥군','곡성군','구례군','담양군','무안군','보성군','신안군','여천군','영광군','영암군','완도군','장성군','장흥군','진도군','함평군','해남군','화순군');
+    cnt[14] = new Array('전체','경산시','경주시','구미시','김천시','문겅시','상주시','안동시','영주시','영천시','포항시','고령군','군위군','봉화군','성주군','영덕군','영양군','예천군','울릉군','울진군','의성군','청도군','청송군','칠곡군');
+    cnt[15] = new Array('전체','거제시','김해시','마산시','밀양시','사천시','울산시','진주시','진해시','창원시','통영시','거창군','고성군','남해군','산청군','양산시','의령군','창녕군','하동군','함안군','함양군','합천군');
+    cnt[16] = new Array('전체','서귀포시','제주시','남제주군','북제주군');
+    function change(add) {
+      /* 옵션메뉴삭제 */
+      $("#country").children().remove();
+      /* 옵션박스추가 */
+      for (i=0; i < cnt[add].length;i++){                     
+           $("#country").append("<option>"+cnt[add][i]+"</option>");
+        }         
+    }
 	
 	
-	
-	
-	let pages = 0;//현재 인덱스 번호
-	let positionValue = 0;//images 위치값
-	const IMAGE_WIDTH = 250;//한번 이동 시 IMAGE_WIDTH만큼 이동한다.
-	//DOM
-	const backBtn = document.querySelector(".back")
-	const nextBtn = document.querySelector(".next")
-	const images = document.querySelector(".images")
-	
-	
-	function next() {
-	  if (pages< 3) {
-	    backBtn.removeAttribute('disabled')//뒤로 이동해 더이상 disabled가 아니여서 속성을 삭제한다.
-	    positionValue -= IMAGE_WIDTH;//IMAGE_WIDTH의 증감을 positionValue에 저장한다.
-	    images.style.transform = `translateX(250px)`;
-			//x축으로 positionValue만큼의 px을 이동한다.
-	    pages += 1; //다음 페이지로 이동해서 pages를 1증가 시킨다.
-	  }
-	  if (pages === 3) { //
-	    nextBtn.setAttribute('disabled', 'true')//마지막 장일 때 next버튼이 disabled된다.
-	  }
-	}
-	
-	function back() {
-	  if (pages > 0) {
-	    nextBtn.removeAttribute('disabled')
-	    positionValue += IMAGE_WIDTH;
-	    images.style.transform = `translateX(-250px)`;
-	    pages -= 1; //이전 페이지로 이동해서 pages를 1감소 시킨다.
-	  }
-	  if (pages === 0) {
-	    backBtn.setAttribute('disabled', 'true')//마지막 장일 때 back버튼이 disabled된다.
-	  }
-	}
-	
-	function init() {  //초기 화면 상태
-	  backBtn.setAttribute('disabled', 'true'); //속성이 disabled가 된다.
-	  backBtn.addEventListener("click", back); //클릭시 다음으로 이동한다.
-	  nextBtn.addEventListener("click", next);//클릭시 이전으로 이동한다.
-	}
-	init();
 </script>
 </html>

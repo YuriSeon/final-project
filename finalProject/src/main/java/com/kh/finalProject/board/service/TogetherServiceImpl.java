@@ -1,5 +1,7 @@
 package com.kh.finalProject.board.service;
 
+import java.util.ArrayList;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,8 @@ import com.kh.finalProject.board.dao.TogetherDao;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Plan;
+import com.kh.finalProject.board.model.vo.TogetherVO;
+import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Service
 public class TogetherServiceImpl  implements TogetherService{
@@ -16,8 +20,8 @@ public class TogetherServiceImpl  implements TogetherService{
 	@Autowired
 	private SqlSession sqlSession;
 	
-//	@Autowired
-//	private TogetherDao togetherDao;
+	@Autowired
+	private TogetherDao togetherDao;
 
 	@Override
 	@Transactional
@@ -26,6 +30,16 @@ public class TogetherServiceImpl  implements TogetherService{
 		int result2 = sqlSession.insert("togetherMapper.insertAttachment",at);
 		int result3 = sqlSession.insert("togetherMapper.insertPlan",p);
 		return result1*result2*result3;
+	}
+
+	@Override
+	public int selectListCount() {
+		return togetherDao.selectListCount(sqlSession);
+	}
+
+	@Override
+	public ArrayList<TogetherVO> selectTogetherList(PageInfo pi) {
+		return togetherDao.selectTogetherList(sqlSession,pi);
 	}
 
 	

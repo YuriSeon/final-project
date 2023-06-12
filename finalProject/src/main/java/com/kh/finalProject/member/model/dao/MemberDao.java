@@ -49,4 +49,8 @@ public class MemberDao {
 			return sqlSession.delete("memberMapper.deleteImg", nickname);
 		}
 
+		public Member loadProfile(SqlSessionTemplate sqlSession, String nickname) {
+			return (Member)sqlSession.selectOne("memberMapper.loadProfile",nickname);
+		}
+
 }

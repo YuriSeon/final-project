@@ -2759,7 +2759,7 @@ schedule
 	width: 90%;
 	height: 70%;
 }
-
+/* 여기 나중에 확인해서 수정 필요함  */
 .schedule-detail .reply .date, .btn-type {
 	width: 90%;
 	height: 15%;
@@ -2771,4 +2771,21 @@ schedule
 
 .schedule-detail #btn button {
 	margin-left: 2%;
+}
+.schedule-detail .marcker-area{
+    position: relative;
+}
+
+.schedule-detail .marcker {
+	/* 사이즈 조정필요 아래 color도 사이즈 변경 해야함 */
+	width: 100px;
+}
+
+.schedule-detail .color {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	position: absolute;
+	top: 14px;
+	left: 23px;
 }

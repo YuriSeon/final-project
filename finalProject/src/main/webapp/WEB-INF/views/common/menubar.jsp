@@ -322,16 +322,16 @@
                         </div>
                         <br>
                         <div id="p_nickname" align="center">
-                            <p style="font-size: 33px; font-weight: 580;">진주초이</p>
+                            <p style="font-size: 33px; font-weight: 580;"></p>
                         </div>
                         <div id="p_age" align="center">
-                            <p style="font-size: 20px; font-weight: 540;">30대</p>
+                            <p style="font-size: 20px; font-weight: 540;"></p>
                         </div>
                         <div id="p_address" align="center">
-                            <p style="font-size: 20px; font-weight: 540;">주소 비공개 회원입니다.</p>
+                            <p style="font-size: 20px; font-weight: 540;"></p>
                         </div>
                         <div id="p_style" align="center">
-                            <p style="font-size: 20px; font-weight: 540;">계획 여행 / 효율적 여행</p>
+                            <p style="font-size: 20px; font-weight: 540;"></p>
                         </div>
                         <br>
                     </div>
@@ -352,6 +352,21 @@
 
     <script>
         function whoareyou() {
+        		var nickname = event.target.text;
+        		
+        		$.ajax({
+        			url : "loadProfile.me",
+        			data : {nickname : nickname},
+        			success : function(result){
+        				
+        				
+        			},
+        			error : function(){
+        				
+        			}
+        			
+        		});
+        		
 				$("#profile").modal('show');
     	};
     </script>
