@@ -492,9 +492,8 @@
 <body>
 	<%@include file="../common/menubar.jsp" %>
 	
-	<form action="insert.me">
+	<form action="insert.me" method="post" id="insertForm">
 	<hr style="position:relative; top:-10px;">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 
 		<div class="container_1" style="box-shadow: 0px 0px 10px 10px rgb(199, 199, 199); height:730px;">
 			<div style="color:#598c93; font-size:14px; position:relative; top:-30px;">*필수 입력사항입니다.<br>(추후 입력사항과 인증정보가 다를시 게시판 이용이 제한될 수 있습니다.)</div>
@@ -821,18 +820,23 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 	
 	$(function(){
 		/* 아이디 중복 및 유효성 검사 */
-		$("#userId").keyup(function(){
-			if($("#userId").val().trim().length>=5){
+		
+		var $userId = $("#insertForm input[name=userId]");
+		//console.log($userId.val());
+		
+		$userId.keyup(function(){
+			if($userId.val().trim().length>=5){
 				//console.log($idInput.val().trim().length);
 				$("#id_check").show();
-				
+				//console.log($userId.val().trim().length);
 				$.ajax({
 					url : "idCheck.me",
-					data : {checkId : $("#userId").val()},
+					data : {checkId : $userId.val()},
 					success : function(result){
 						if(result=="NNNNN"){//중복 존재						
 							$("#id_check").css({"color":"red","font-size":"12px"}).text("중복된 아이디가 존재합니다. 다시 입력해주세요.");
 							idResult = result;
+							//console.log(result);
 						}else{//아이디 중복 없을때
 							$("#id_check").css({"color":"green","font-size":"12px"}).text("사용 가능한 아이디 입니다.");
 							idResult = result;
@@ -840,7 +844,7 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 							//아이디 유효성 검사
 							var regExp = /^[a-zA-Z0-9]+$/;
 							//console.log($idInput.val());
-							if(!(regExp.test($("#userId").val()))){
+							if(!(regExp.test($userId.val()))){
 								$("#id_check").css({"color":"red","font-size":"12px"}).text("아이디 형식이 올바르지 않습니다.");
 							}
 						}
@@ -884,15 +888,16 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		});
 		
 		//비밀번호 유효성 검사
-		$("#userPwd").keyup(function(){
+		var $userPwd = $("#insertForm input[name=userPwd]");
+		$userPwd.keyup(function(){
 			
-			if($("#userPwd").val().trim().length>=1){//비밀번호 입력시 1자리보다 크면 유효성 검사 진행
+			if($userPwd.val().trim().length>=1){//비밀번호 입력시 1자리보다 크면 유효성 검사 진행
 				//console.log($inputPwd.val().trim().length);
 				$("#pwd_check").show();
 				
 				var regExp = /^[a-zA-Z0-9!.,~]+$/;
 				
-				if(!(regExp.test($("#userPwd").val()))){ //조건에 맞지 않으면
+				if(!(regExp.test($userPwd.val()))){ //조건에 맞지 않으면
 					$("#pwd_check").css({"color":"red","font-size":"12px"}).text("비밀번호 형식이 올바르지 않습니다.");
 				}else{//조건에 맞으면
 					$("#pwd_check").hide();
@@ -952,7 +957,7 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 	
 	/* 비밀번호 확인(onblur이벤트로 포커스 해지시 발동... 비번,비번확인 일치하는지 ck) */
 	function pwdChEvent(){
-		if($("#userPwd").val()!=$("#checkPwd").val()){
+		if($("#insertForm input[name=userPwd]").val()!=$("#checkPwd").val()){
 			$("#pwdCk_check").show();
 			$("#pwdCk_check").css({"color":"red","font-size":"12px"}).text("비밀번호가 일치하지 않습니다.");
 		}
@@ -1007,7 +1012,7 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 	}
 	
 	//버튼 클릭시 회원가입 진행
-	function joinChk(){
+	function joinChk(){	
 		
 		//약관 동의
 		if(!$("#agree").is(":checked")){//동의버튼 클릭 안되어있으면
@@ -1016,22 +1021,23 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		};
 		
 		//아이디
+		var $userId = $("#insertForm input[name=userId]");
 		//중복 검사 포커스
 		if(idResult == "NNNNN"){//중복 아이디 있으면 포커스 맞춤
-			$("#userId").focus();
+			$userId.focus();
 			return false;
 		};
 		//유효성 검사 포커스
 		var regExp = /^[a-zA-Z0-9]+$/;
-		if(!(regExp.test($("#userId").val()))){
-			$("#userId").focus();
+		if(!(regExp.test($userId.val()))){
+			$userId.focus();
 			return false;
 		}
 		//5글자 아래시 포커스 맞춰주기
-		if($("#userId").val().trim().length<5){
+		if($userId.val().trim().length<5){
 			$("#id_check").css({"color":"red","font-size":"12px"}).text("5글자 이상 입력해주세요.");
 			$("#id_check").show();
-			$("#userId").focus();
+			$userId.focus();
 			return false;
 		}
 		
@@ -1056,22 +1062,23 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		}
 		
 		//비밀번호
+		var $userPwd = $("#insertForm input[name=userPwd]");
 		//유효성 검사 포커스
 		var regExp = /^[a-zA-Z0-9!.,~]+$/;
-		if(!(regExp.test($("#userPwd").val()))){
-			$("#userPwd").focus();
+		if(!(regExp.test($userPwd.val()))){
+			$userPwd.focus();
 			return false;
 		}
 		//8자리 아래시 포커스 맞춰주기
-		if($("#userPwd").val().trim().length<8){
+		if($userPwd.val().trim().length<8){
 			$("#pwd_check").css({"color":"red","font-size":"12px"}).text("8글자 이상 입력해주세요.");
 			$("#pwd_check").show();
-			$("#userPwd").focus();
+			$userPwd.focus();
 			return false;
 		}
 		
 		//비밀번호 확인 != 비밀번호시
-		if($("#userPwd").val()!=$("#checkPwd").val()){
+		if($userPwd.val()!=$("#checkPwd").val()){
 			$("#pwdCk_check").css({"color":"red","font-size":"12px"}).text("비밀번호와 일치하지 않습니다.");
 			$("#pwdCk_check").show();
 			$("#checkPwd").focus();
@@ -1332,6 +1339,8 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 
 	$('.select-field').fancySelect();
 	</script>
+	
+	<jsp:include page="../common/footer.jsp"/>
 	
 </body>
 </html>
