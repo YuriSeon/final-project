@@ -14,6 +14,7 @@
   		<typeAlias type="com.kh.finalProject.board.model.vo.Info" alias="info"/>
   		<typeAlias type="com.kh.finalProject.board.model.vo.TogetherVO" alias="together"/>
   		<typeAlias type="com.kh.finalProject.member.model.vo.Member" alias="member"/>
+  		<typeAlias type="com.kh.finalProject.admin.model.vo.Notice" alias="notice"/>
   	</typeAliases>
   	
   	<mappers>

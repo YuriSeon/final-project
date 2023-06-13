@@ -59,7 +59,7 @@
 		SELECT *
 		FROM MEMBER
 		WHERE NICKNAME = #{nickname}
-		AND STATUS = 'Y'
+		AND STATUS IN ('Y','A')
 	</select>
 	
 	<update id="updateSurvey">
@@ -85,7 +85,7 @@
 		SELECT *
 		FROM ATTACHMENT
 		WHERE WRITER = #{writer}
-		AND STATUS = 'Y'
+		AND STATUS IN ('Y','A')
 	</select>
 	
 	<!-- 프로필 사진 추가 -->

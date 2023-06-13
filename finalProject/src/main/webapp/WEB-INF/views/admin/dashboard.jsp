@@ -18,138 +18,16 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="resources/css/dashboard_admin.css">
+<!--     <link rel="stylesheet" type="text/css" href="resources/css/dashboard_admin.css?after"> -->
     <title>대시보드</title>
 </head>
 <body>
-    <!-- Header - Start  -->
-<header id="header">
-    <div class="menu-button">
-        <div id="nav-icon3">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-    <div id="top-bar">
-        <span>ADMINISTRATOR</span>
-        <button class="btn btn-primary">관리자</button>
-        <button class="btn btn-primary">사용자</button>
-    </div>
-</header>
-<!-- Header - End  -->
-<!-- Navigation - Start  -->
-<nav id="sidemenu">
-    <div class="main-menu">
-        <ul class='main-menu'>
-            <li class="link-active">
-                <a href="admin.ad">
-                    <span class='glyphicon glyphicon-home'></span> 대시보드
-                </a>
-            </li>
-      
-            <li id="board-manage">
-                <a style="color: white;">
-                    <span class='glyphicon glyphicon-list-alt'></span> 게시글관리
-                </a>
-                <!-- submenu start -->
-                <ul id="submenu" >
-                    <li>
-                        <a href="adTheme.ad">
-                            <span class='glyphicon glyphicon-list-alt'></span> 테마
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class='glyphicon glyphicon-list-alt'></span> 축제
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class='glyphicon glyphicon-list-alt'></span> 명소
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class='glyphicon glyphicon-list-alt'></span> 피드
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class='glyphicon glyphicon-list-alt'></span> 일정자랑
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class='glyphicon glyphicon-list-alt'></span> 함께가치
-                        </a>
-                    </li>
-                </ul>
-                <!-- submenu end -->
-            </li>
-            
-            <li>
-                <a href="#">
-                    <span class='glyphicon glyphicon-user'></span> 회원관리
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <span class='glyphicon glyphicon-comment'></span> 쪽지관리
-                </a>
-            </li>
-            <li id="notice-manage">
-                <a style="color: white;">
-                    <span class='glyphicon glyphicon-question-sign'></span> 문의관리
-                </a>
-                <!-- submenu start -->
-                <ul id="submenu" >
-                    <li>
-                        <a href="#">
-                            <span class='glyphicon glyphicon-list-alt'></span> 공지사항
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class='glyphicon glyphicon-list-alt'></span> FAQ
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class='glyphicon glyphicon-list-alt'></span> Q&A
-                        </a>
-                    </li>
-                </ul>
-                <!-- submenu end -->
-            </li>
-            <li>
-                <a href="#">
-                    <span class='glyphicon glyphicon-exclamation-sign'></span> 신고관리
-                </a>
-            </li>
-        </ul>
-        <ul class='main-menu bottom'>
-            <li>
-                <a href="#">
-                    <span class='glyphicon glyphicon-user'></span> 프로필
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <span class='glyphicon glyphicon-cog'></span> 환경설정
-                </a>
-            </li>
-        </ul>
-    </div>
-    <p class="copyright">&copy; 2023</p>
-</nav>
-<!-- Navigation - End  -->
+<%@include file="adMenubar.jsp" %>
 <!-- Content - Start  -->
 <div id="content-wrapper" style="background-color: #EEEEEE;">
     <div class="container-fluid">
         <div class="dash-title">
-        <h1>대시보드</h1>
+        <h1>&nbsp;대시보드</h1>
         </div>
         <!-- visitors start -->
         <div class="visit-section">
@@ -373,43 +251,6 @@
 </div>
    
    <script>
-    //사이드바 열고 닫기
-    $("#header>.menu-button").click(function() {
-        $("#sidemenu").toggleClass("open");
-        $(".copyright").toggleClass("show");
-    });
-    $("#board-manage, #notice-manage").click(function() {
-        $("#sidemenu").addClass("open");
-        $(".copyright").addClass("show");
-    });
-
-    // 게시판 서브메뉴 
-    $(function(){
-        // $("#board-manage>a").next("ul").slideUp();
-        // menu 클래스 바로 하위에 있는 a 태그를 클릭했을때
-        $("#board-manage>a, #notice-manage>a").click(function(){
-            console.log("클릭")
-            var submenu = $(this).next("ul");
-            var submenu2 = $(this).next("ul");
-            // submenu 가 화면상에 보일때는 위로 아니면 아래로 펼치기
-            if( submenu.is(":visible") ){
-                submenu.slideUp();
-                submenu2.slideUp();
-            }else{
-                submenu.slideDown();
-                submenu2.slideDown();
-            }
-        });
-        $("#header>.menu-button").click(function(){
-            var submenu = $("#board-manage>a").next("ul");
-            var submenu2 = $("#notice-manage>a").next("ul");
-            // submenu 가 화면상에 보일때는 위로 아니면 아래로 펼치기
-            if( submenu.is(":visible") || submenu2.is(":visible") ){
-                submenu.slideUp();
-                submenu2.slideUp();
-            }
-        });
-    });
     
     //조회수 그래프
     var ctx = $('#myChart');
