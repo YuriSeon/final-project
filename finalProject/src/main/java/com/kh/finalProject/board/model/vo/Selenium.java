@@ -13,9 +13,7 @@ public class Selenium {
 	
 	private WebDriver wd;
 	public static String WEB_DRIVER_ID = "webdriver.chrome.driver"; // Properties 설정(정해져있는 키값)
-	public static String WEB_DRIVER_PATH = "/WEB-INF/lib/chromedriver.exe"; 
-
-	// WebDriver경로(지금은 나의 노트북의 경로로 설정 추후 프로젝트 내로 변경 가능하면 이동시키기)
+	public static String WEB_DRIVER_PATH = "/WEB-INF/lib/chromedriver.exe";  // 프로젝트내 경로로 작성
 	
 	// 기본생성자
 	public Selenium() {
@@ -37,7 +35,7 @@ public class Selenium {
 		options.setCapability("ignoreProtectedModeSettings", true); // protectedMode 설정 무시하고 실행 설정
 		
 		wd = new ChromeDriver(options); // 설정한 option으로  webDriver생성
-		wd.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS); //페이지로드가 완료 될 때까지 기다리는 시간 설정
+		wd.manage().timeouts().pageLoadTimeout(300, TimeUnit.SECONDS); //페이지로드가 완료 될 때까지 기다리는 시간 설정
 	}
 	
 	// driver 사용
