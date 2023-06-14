@@ -7,29 +7,35 @@
 <link rel="stylesheet" type="text/css" href="resources/css/schedule.css?after">
 <link rel="stylesheet" type="text/css" href="resources/css/map.css?after">
 <title>schedule enroll form</title>
-<style type="text/css"></style>
+<style type="text/css">
+	#together-yes, #together-no, #trans *{
+		width: 10%;
+		height : 20%;
+		font-size: 17px;
+		margin:0;
+		margin-right: 1%;
+	}
+	select[name="togetherCount"]{
+		width: 20%;
+		height: 30px;
+		text-align: center;
+		font-size: 16px;
+	}
+</style>
 </head>
 <body>
-<!-- 동행구하는거 바로 작성하러갈지 아니면 작성하기 끝난 후에 연결할지 고민, iframe 클릭이벤트 잘되는지 확인하기-->
-	<%@ include file="../common/menubar.jsp" %>
-	<div class="main-schedule">
-      <div class="container">
-          <div class="row">
-              <div class="col-lg-12">
-                </div>
-            </div>
-        </div>
-    </div>
-	<div class="enroll-sc">
-		<form action="insert.sc">
-	        <div class="content">
+<!-- 동행구하는거 바로 작성하러갈지 아니면 작성하기 끝난 후에 연결할지 고민, 클릭후 목록 증식하는것만 잡기-->
+	<div class="enroll-sc" >
+		<form action="insert.sc" method="post" id="insertForm">
+	        <div>
 	            <h1><center>일정 공유하기</center></h1>
 	        </div>
 	        <div class="enroll">
 	        <div class="timeline">
 	            <div class="container left">
 	            <div class="content">
-	                <input type="text" name="board-title" class="write" style="width: 80%; height: 40px; font-size: 18px; font-weight: 400;" placeholder="일정 이름을 작성해주세요">
+	            	<p>제목</p>
+	                <input type="text" name="boardTitle" class="write" style="width: 80%; height: 40px; font-size: 18px; font-weight: 400;" placeholder="일정 이름을 작성해주세요">
 	            </div>
 	            </div>
 	            <div class="container right">
@@ -52,28 +58,58 @@
 	            <div class="container left">
 	            <div class="content">
 	                <p>동행을 구하시겠습니까?</p>
-	                <input type="checkbox" name="together-check" id="together-yes"><label for="together-yes">예</label> &nbsp;
-	                <input type="checkbox" name="together-check" id="together-no"><label for="together-no">아니오</label> <br>
-	                <c:if test="$('#together-yes').is('checked')">
+	                <input type="radio" name="together" id="together-yes"><label for="together-yes">예</label> &nbsp;
+	                <input type="radio" name="together" id="together-no" value="0"><label for="together-no">아니오</label> <br>
+	                <c:if test="${together  }">
 	                    <button type="button" onclick="">바로 작성하러 가기</button> 
 	                </c:if>
 	            </div>
 	            </div>
 	            <div class="container right">
 	                <div class="content">
-	                    <label for="start-date" class="date">시작일 </label> <input type="date" name="start-date" id="start-date" onchange="total();"><br>
-	                    <label for="end-date" class="date">마지막일</label> <input type="date" name="end-date" id="end-date" onchange="total();">
+	                	<p>현재 일정의 예상 인원수?</p>
+						<select name="togetherCount">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+						</select>
+	                </div>
+	            </div>
+	            <div class="container left">
+		            <div class="content">
+		                <p>이동수단</p>
+		                <div id="trans">
+			                <input type="radio" name="transport" id="none" value="0"><label for="none">미정</label>
+			                <input type="radio" name="transport" id="trans" value="1"><label for="trans">대중교통</label>
+			                <input type="radio" name="transport" id="car" value="2"><label for="car">자가용</label>
+		                </div>
+		            </div>
+	            </div>
+	            <div class="container right">
+	                <div class="content">
+	                	<p>여행 기간</p>
+	                    <label for="start-date" class="date">시작일 </label> <input type="date" name="startDate" id="start-date" onchange="total();"><br>
+	                    <label for="end-date" class="date">마지막일</label> <input type="date" name="endDate" id="end-date" onchange="total();">
 	                </div>
 	            </div>
 	        </div>
 	        </div>
 	        <div class="block"></div>
 	        <div class="enroll" id="plan-area"></div>
+	        <input type="hidden" name="totalDate">
+			<input type="hidden" name="totalPay">
 	        <div class="btn-area">
 	            <button type="button" onclick="history.back();">돌아가기</button>
-	            <button type="submit">작성완료</button>
+	            <button type="button" onclick="insertForm();">작성완료</button>
 	        </div>
-        </form>
+		</form>
     </div>
     <div class="modal">
         <div id="title">
@@ -102,14 +138,19 @@
     
     <!-- 작성해둔 함수 넣은 파일 불러와서 사용 -->
     <script type="text/javascript" src="resources/js/function.js"></script> 
+    <script type="text/javascript" src="resources/js/map.js"></script> 
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3f6edea42e65caf1e4e0b7f49028f282&libraries=services"></script>
     <script>
+    $(function(){
+    	$(".container").css("style","float:left");
+    })
         // 달력에 날짜 체크시 일정추가하는 영역 생기는 함수
         function total(){
             var plan = $("#plan-area *").remove(); // 함수 재실행시 기존 생성된 영역 지워주기
                 plan = $("#plan-area"); // 일정 넣을 영역 변수처리
-            var totalDate =(new Date($("#end-date").val()) - new Date($("#start-date").val()))/86400000; 
+            var totalDate =(new Date($("#end-date").val()) - new Date($("#start-date").val()))/86400000;
             /* date로 변환 후 millisecond단위로 나오기 때문에 나누기 해야 일 수 나옴 */
+            $("input[name=totalDate]").prop("value", totalDate+1); // 계산한 여행일정 input에 담아주기
             
             if(totalDate!=0 && !isNaN(totalDate)){// 당일여행아니면 일정 영역 양쪽으로 나누는 태그 추가
                 plan = plan.append(makeTag("div","class", "timeline line"));
@@ -137,7 +178,7 @@
         $(function(){
             $(".modal").hide(); // 클릭전까지 모달 숨기기
             $(document).on("click",".plus", function(){
-                var daily = $(this).attr("class").slice(-1); // 클릭이벤트 대상의 class name 마지막 번호 추출(N일차)
+                daily = $(this).attr("class").slice(-1); // 클릭이벤트 대상의 class name 마지막 번호 추출(N일차)
                 
                 // 모달 생성 후 지도 띄워주기
                 $(document).ready(function(){
@@ -154,17 +195,20 @@
                     var infoAddress = infoFind(this, "div", 1);
                     $(".modal").css("display","none"); // 선택시 모달 닫기
                     // 지도에서 가져온 장소이름, 주소 태그생성해서 각 일정영역에 맞춰서 추가 
-                    var name = makeTag("pre","name", "infoName").text(infoName);
-                    var address = makeTag("pre","name","infoAddress").text(infoAddress);
-                    var input = makeTag("input", "type","text", "name","pay");
-                    try{Number(daily); // daily가 숫자일때
+                    if(Number(daily)){ // daily가 숫자일때
                     	// 여기 수정하기 여러개 나오는것만!
-                    	var obj = $($(".plus"+daily)[3]);
-                    	obj.append(makeTag("div", "name", daily).append(name,address,input));
-                    }catch(e){ // daily가 숫자가 아닐때(당일일정)
-                    	var addObj =$($(".plus0")[1])
-                    	addObj.append(makeTag("div", "name", "1").append(name,address,input));
+                    	console.log(daily);
+                    	var obj = "";
+                    	obj = $($(".plus"+daily)[3]);
+                    	obj.after(makeTag("div", "name", daily)
+                    			.append(makeTag("pre","name", "infoName").text(infoName),makeTag("pre","name","infoAddress").text(infoAddress),makeTag("input", "type","number", "name","pay")));
+                    } else { // daily가 숫자가 아닐때(당일일정)
+                    	var addObj ="";
+                    	addObj = $(".plan");
+                    	addObj.append(makeTag("div", "name", "1")
+                    			.append(makeTag("pre","name", "infoName").text(infoName),makeTag("pre","name","infoAddress").text(infoAddress),makeTag("input", "type","number", "name","pay")));
                     }
+                    daily = ""; // 추가하고 나면 변수 비워줘야 다시 호출되었을때 누적이 안됨
                  });
             });
         });
@@ -173,6 +217,17 @@
 	    $(document).on("click", "#close", function() {
 	       $(".modal").css("display","none");
 	    });
+	    
+	    // 제출하기 이벤트
+	   	function insertForm(){
+	    	var totalPay = Number(0); // 계산한 값 담을 변수 및 number type으로 초기화
+	    	var pay = $("input[name=pay]");
+	    	for(var i = 0; i < pay.length; i++) { 
+	    		totalPay += Number($(pay[i]).val());
+	    	}
+	    	$("input[name=totalPay]").prop("value",totalPay); // 반복문으로 계산한 값 넣어줌
+	    	$("#insertForm").submit();
+	    }	
 	    
 	    /* 지도 */
 	   var markers = []; // 마커를 담을 배열입니다
@@ -349,6 +404,7 @@
 				el.removeChild(el.lastChild);
 			}
 		}
+		
     </script>
 </body>
 </html>

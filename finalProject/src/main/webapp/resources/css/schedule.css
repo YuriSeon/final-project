@@ -12,7 +12,6 @@ schedule
 	left: 0;
 	right: 0;
 }
-
 .schedule-detail #title-area {
 	width: 85%;
 	height: 200px;
@@ -204,6 +203,44 @@ schedule
 	margin-right: 65%;
 	width: 100%;
 	height: 100%;
+}
+
+/* 슬라이드 영역 크기 확인 후 수정*/
+.schedule-detail #wrapSlide {
+	position: absolute;
+	left: 27%;
+	width:100%;
+	height:100%;
+}
+
+.schedule-detail #slideArea, .schedule-detail #slideImage  {
+	width: 100%;
+	height: 100%;
+}
+
+.schedule-detail #prev {
+	position: relative;
+	/*         bottom: 370px; */
+	margin: auto;
+	opacity: 0.3;
+}
+
+.schedule-detail #next {
+	position: relative;
+	/*         bottom: 370px; */
+	opacity: 0.3;
+}
+
+.schedule-detail #dotArea {
+	position: relative;
+	left: 370px;
+	width: 120px;
+	height: 30px;
+	margin-top: 5px;
+}
+
+.schedule-detail #dotArea * {
+	margin-right: 5px;
 }
 
 .enroll-sc .enroll * {
@@ -429,4 +466,7 @@ schedule
 	width: 100%;
 	height: 100%;
 	box-sizing: border-box;
+}
+.enroll-sc.content {
+	float:left; 
 }

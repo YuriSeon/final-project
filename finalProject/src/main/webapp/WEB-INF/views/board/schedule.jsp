@@ -61,6 +61,7 @@
                                         </div>
                                         <div class="col-lg-9">
                                             <div class="row">
+                                            	<%-- <c:if test="${! list.isEmpty()}">
                                             	<c:forEach var="p" items="list">
 	                                                <div class="col-lg-12" onclick="detailView();">
 	                                                    <div class="event-item">
@@ -109,6 +110,7 @@
 	                                                    </div>
 	                                                </div>
                                                 </c:forEach>
+                                                </c:if> --%>
                                                 <div class="col-lg-12">
                                                     <div class="pagination">
                                                         <ul>
