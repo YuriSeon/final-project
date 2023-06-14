@@ -108,7 +108,8 @@
         function total(){
             var plan = $("#plan-area *").remove(); // 함수 재실행시 기존 생성된 영역 지워주기
                 plan = $("#plan-area"); // 일정 넣을 영역 변수처리
-            var totalDate =(new Date($("#end-date").val()) - new Date($("#start-date").val()))/86400000; /* date로 변환 후 millisecond단위로 나오기 때문에 나누기 해야 일 수 나옴 */
+            var totalDate =(new Date($("#end-date").val()) - new Date($("#start-date").val()))/86400000; 
+            /* date로 변환 후 millisecond단위로 나오기 때문에 나누기 해야 일 수 나옴 */
             
             if(totalDate!=0 && !isNaN(totalDate)){// 당일여행아니면 일정 영역 양쪽으로 나누는 태그 추가
                 plan = plan.append(makeTag("div","class", "timeline line"));
@@ -153,14 +154,16 @@
                     var infoAddress = infoFind(this, "div", 1);
                     $(".modal").css("display","none"); // 선택시 모달 닫기
                     // 지도에서 가져온 장소이름, 주소 태그생성해서 각 일정영역에 맞춰서 추가 
-                    var name = makeTag("span","name", "infoName").text(infoName);
-		            var address = makeTag("span","name","infoAddress").text(infoAddress);
+                    var name = makeTag("pre","name", "infoName").text(infoName);
+                    var address = makeTag("pre","name","infoAddress").text(infoAddress);
+                    var input = makeTag("input", "type","text", "name","pay");
                     try{Number(daily); // daily가 숫자일때
-                    	$($(".plus"+daily)[3]).push(makeTag("div", "name", daily).children().append("p","name", "infoName").text(infoName)
-                        					.append("p","name","infoAddress").text(infoAddress).append("input","type","text","name","pay"));
-                    }catch(e){ // daily가 숫자가 아닐때(당일여행)
-                    	$($(".plus0")[1]).push(makeTag("div", "name", daily).children().append("p","name", "infoName").text(infoName)
-                        				.append("p","name","infoAddress").text(infoAddress).append("input","type","text","name","pay"));
+                    	// 여기 수정하기 여러개 나오는것만!
+                    	var obj = $($(".plus"+daily)[3]);
+                    	obj.append(makeTag("div", "name", daily).append(name,address,input));
+                    }catch(e){ // daily가 숫자가 아닐때(당일일정)
+                    	var addObj =$($(".plus0")[1])
+                    	addObj.append(makeTag("div", "name", "1").append(name,address,input));
                     }
                  });
             });

@@ -177,7 +177,16 @@
     color: white;
     position: relative;
     top: -40px;
+    left: -10px;
 }
+.modal-body2 button{
+	margin-bottom: 10px;
+}
+#imgChange{
+	position: relative;
+	left: -5px;
+}
+
 
 /* 나의활동 */
 .subscribe_box{

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="resources/css/mypage.css?after">
+    <link rel="stylesheet" type="text/css" href="resources/css/mypage.css">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -73,7 +73,7 @@
 	                                            <span style="font-size: 20px; font-weight: 540;">${loginUser.age}대</span>
 	                                        </div>
 	                                        <div id="p_style" align="center">
-	                                            <span style="font-size: 20px; font-weight: 540;">계획 여행 / 효율적 여행</span>
+	                                            <span style="font-size: 20px; font-weight: 540;">여행스타일 넣을곳</span>
 	                                        </div>
                                     	</div>
 				                        <div class="profile-update">
@@ -90,22 +90,22 @@
 	                                          		<button type="button" class="close" data-dismiss="modal">×</button>
 	                                        	</div>
 	                                        	<div class="modal-body2">
-	                                        		<div id="p_img" style="position: relative; left: -5px;">
+	                                        		<div class="profile-image" id="p_img" style="position: relative; left: -5px;">
 		                                            	<c:choose>
 			                                        		<c:when test="${not empty loginUser.profileImg}">
 					                                            <!--프로필 있으면-->
-					                                            <img src="${loginUser.profileImg}" alt="프로필사진">
+					                                            <img id="profileImg" src="${loginUser.profileImg}" alt="프로필사진">
 			                                        		</c:when>
 			                                        		<c:otherwise>
 					                                            <!--프로필 없으면-->
-					                                            <img src="resources/images/profile/person.png" alt="프로필사진">
+					                                            <img id="profileImg" src="resources/images/profile/person.png" alt="프로필사진">
 			                                        		</c:otherwise>
 		                                        		</c:choose>
 	                                        		</div>
-	                                               	<form action="updateImg.me" method="post" enctype="multipart/form-data">
-		                                                <input type="file" class="form-control-file border" name="upfile">
+	                                               	<form action="updateImg.me" method="post" enctype="multipart/form-data" id="imgForm">
+		                                                <input type="file" class="form-control-file border" name="upfile" onchange="loadImg(this,1);" required="required">
 		                                                <input type="hidden" name="writer" id="nickname" value="${loginUser.nickname}">
-		                                                <button type="submit" class="btn btn-primary">사진변경</button>
+		                                                <button type="submit" class="btn btn-primary" id="imgChange">사진변경</button>
 		                                                <button type="button" class="btn btn-danger" onclick="deleteImg()">사진삭제</button>
                                               		</form>
                                         		</div>
@@ -216,6 +216,8 @@
     </div><!-- #contents -->
     
     <script>
+    	
+    	//슬라이드
         const mySwiper = new Swiper('.swiper-container',{
             loop: false,
             speed: 500,
@@ -244,22 +246,62 @@
             $('#followModal').modal(); //id가 "followModal"인 모달창을 열어준다. 
             $('.modal-title').text("프로필 사진 변경"); //modal 의 header 부분에 값을 넣어준다.
             $('.modal-title').css("font-size","30px");
+            $("#profileImg").attr("src","resources/images/profile/person.png");
         });
-
+      	
+      	//파일인풋 숨기기
+        $(function() {
+			$("input[name=upfile]").hide();
+			$(".profile-image").click(function() {
+				$("input[name=upfile]").click();
+			});
+		});
+      	
+      	//프로필 사진 미리보기
+      	function loadImg(inputFile,num) {
+			if(inputFile.files.length == 1){
+				var reader = new FileReader();
+				
+				reader.readAsDataURL(inputFile.files[0]);
+				
+				reader.onload = function(e) {//e:이벤트 객체
+					$("#profileImg").attr("src",e.target.result);
+				}
+			}else{
+				$("#profileImg").attr("src","resources/images/profile/person.png");
+			}
+		}
+		
+      	//사진 안고르면 경고
+        $(function() {
+       		$('#imgChange').click(function(event) {
+	       	    event.preventDefault(); // 폼 서브밋을 막음
+	       	    var input = $('input[name=upfile]');
+	       	    if (input[0].checkValidity()) {
+	       	      $('#imgForm').submit(); // 폼 서브밋
+	       	    } else {
+	       	      alert("사진을 골라주세요.");
+	       	    }
+	       	  });
+		});
+      	
         //프로필 사진 삭제
         function deleteImg() {
         	var nickname = $("#nickname").val();
             
-            $.ajax({
-                url: "deleteImg.me",
-                type: "POST",
-                data: { nickname : nickname },
-                success: function() {
-                	location.reload();
-                },
-                error: function() {
-                }
-            });
+        	if (confirm("사진을 삭제하시겠습니까?")) {
+				
+	            $.ajax({
+	                url: "deleteImg.me",
+	                type: "POST",
+	                data: { nickname : nickname },
+	                success: function() {
+	                	location.reload();
+	                },
+	                error: function() {
+	                }
+	            });
+			}
 		}
 
     </script>

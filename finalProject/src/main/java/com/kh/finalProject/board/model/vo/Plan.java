@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 public class Plan extends Board{
 //	BOARD_NO	NUMBER
 //	INFO_NO	NUMBER // 지역이름 또는 장소이름으로 보여줘야할거같아서 String으로 쓸게요
