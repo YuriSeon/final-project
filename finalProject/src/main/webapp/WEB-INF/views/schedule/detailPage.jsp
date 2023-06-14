@@ -90,12 +90,12 @@
                     <div id="pay">total : ${plan.totalPay }</div>
                     <!-- 데일리 일정 묶음 -->
                     <div id="path">
-                    	<c:forEach varStatus="i" begin="1" end="${plan.totalDate }">
+                    	<!-- <c:forEach varStatus="i" begin="1" end="${plan.totalDate }">
                     		<div class="marcker-area">
                     			<img class="marcker" src="resources/images/marker2.png">
                     			<div class="color"></div>
                     		</div>
-                    	</c:forEach>
+                    	</c:forEach> -->
                     </div>
                 </div>
             </div>
@@ -128,13 +128,28 @@
             </div>
         </div>
       </div>
+    <!-- 작성해둔 함수 넣은 파일 불러와서 사용 -->
+    <script type="text/javascript" src="resources/js/function.js"></script> 
     <script>
+		/* 데일리 일정 표시하는 마커 출력 */
+		$(function(){
+            var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'skyblue']; // 일정 수 증가시 컬러만 추가해서 사용하도록 설정
+            var circle = document.querySelectorAll('.color');
+            
+            for(var i=0; i < circle.length; i++){
+                var list = circle[i];
+                $("#path").append(makeTag("div", "class", "marcker-area"+(i+1)));
+               	$(".marcker-area"+(i+1).append(makeTag("img","class","marcker"+(i+1),"src","resources/images/marker2.png")).append(makeTag("div","class","color").append("span","text",i+1));
+                $(list).css("background-color", colors[i]);
+            }
+        });
+
     	var confirm = confirm("게시물을 정말로 삭제하시겠습니까?");
     	
     	/* 동행, 수정, 삭제 이벤트 연결 */
     	function form(num){
     		var formTeg = $("<form>"); 
-    		var bno = $("<input>").prop("type", "hidden").prop("name", "boardNo").prop("value", "${board.boardNo}"); 
+    		var bno = makeTag("input","type", "hidden", "name", "boardNo").prop("value", "${board.boardNo}"); 
     		var obj = formTeg.append(bno); // form 태그내 bno hidden으로 넣어줌
     		
     		if(num==1){ // 수정
@@ -149,13 +164,10 @@
     			obj.attr("action", "").attr("method", "get");
     		}
     	}
-    		
     	/* 좋아요 찜 신고 이미지 클릭시 변경 이벤트 */
     	$(function(){
     		$("#btn-type").children().click(function(){
-    			/* 클래스명 잘 가져오는지 확인하기 둥 중 하나 사용하기*/
     			var btnType = $(this).attr("class");
-				this.class;
     			$.ajax({
     				url:"btnType",
     				data:{
