@@ -12,17 +12,17 @@ schedule
 	left: 0;
 	right: 0;
 }
-
 .schedule-detail #title-area {
 	width: 85%;
 	height: 200px;
-	border : 2px solid gray;
+	border: 2px solid gray;
 }
+
 .schedule-detail #title-area {
-	width : 100%;
+	width: 100%;
 	border: 0;
-    height: 3px;
-    background: gray;
+	height: 3px;
+	background: gray;
 }
 
 .schedule-detail #title-area div {
@@ -171,20 +171,302 @@ schedule
 .schedule-detail #btn button {
 	margin-left: 2%;
 }
-.schedule-detail .marcker-area{
-    position: relative;
+
+.schedule-detail .marcker-area {
+	position: relative;
+	width: 45px;
 }
 
 .schedule-detail .marcker {
-	/* 사이즈 조정필요 아래 color도 사이즈 변경 해야함 */
-	width: 100px;
+	width: 100%;
 }
 
 .schedule-detail .color {
-	width: 50px;
-	height: 50px;
+	width: 50%;
+	height: 50%;
 	border-radius: 50%;
+	/* border: 5px solid pink; */
 	position: absolute;
-	top: 14px;
-	left: 23px;
+	margin: auto;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 11px;
+}
+
+.schedule-detail .color span {
+	font-size: 20px;
+	font-weight: 800;
+	margin-top: 60%;
+	margin-bottom: 40%;
+	margin-left: 35%;
+	margin-right: 65%;
+	width: 100%;
+	height: 100%;
+}
+
+/* 슬라이드 영역 크기 확인 후 수정*/
+.schedule-detail #wrapSlide {
+	position: absolute;
+	left: 27%;
+	width:100%;
+	height:100%;
+}
+
+.schedule-detail #slideArea, .schedule-detail #slideImage  {
+	width: 100%;
+	height: 100%;
+}
+
+.schedule-detail #prev {
+	position: relative;
+	/*         bottom: 370px; */
+	margin: auto;
+	opacity: 0.3;
+}
+
+.schedule-detail #next {
+	position: relative;
+	/*         bottom: 370px; */
+	opacity: 0.3;
+}
+
+.schedule-detail #dotArea {
+	position: relative;
+	left: 370px;
+	width: 120px;
+	height: 30px;
+	margin-top: 5px;
+}
+
+.schedule-detail #dotArea * {
+	margin-right: 5px;
+}
+
+.enroll-sc .enroll * {
+	box-sizing: border-box;
+}
+
+.enroll-sc .enroll {
+	background-color: rgb(222, 242, 249);
+	font-family: Helvetica, sans-serif;
+	width: 80%;
+	margin: auto;
+	text-align: center;
+	border-radius: 1%;
+}
+
+.enroll-sc .timeline {
+	position: relative;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.enroll-sc .timeline::after {
+	content: '';
+	position: absolute;
+	width: 6px;
+	background-color: white;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	margin-left: -3px;
+}
+
+.enroll-sc .container {
+	padding: 10px 50px;
+	position: relative;
+	background-color: inherit;
+	width: 50%;
+}
+
+.enroll-sc .container::after {
+	content: '';
+	position: absolute;
+	width: 25px;
+	height: 25px;
+	right: -17px;
+	background-color: #93b7ff;
+	border: 4px solid #f7faff;
+	top: 15px;
+	border-radius: 50%;
+	z-index: 1;
+}
+
+.enroll-sc .left {
+	left: 0;
+}
+
+.enroll-sc .right {
+	left: 50%;
+}
+
+.enroll-sc .left::before {
+	content: " ";
+	height: 0;
+	position: absolute;
+	top: 22px;
+	width: 0;
+	z-index: 1;
+	right: 30px;
+	border: medium solid white;
+	border-width: 10px 0 10px 10px;
+	border-color: transparent transparent transparent white;
+}
+
+.enroll-sc .right::before {
+	content: " ";
+	height: 0;
+	position: absolute;
+	top: 22px;
+	width: 0;
+	z-index: 1;
+	left: 30px;
+	border: medium solid white;
+	border-width: 10px 10px 10px 0;
+	border-color: transparent white transparent transparent;
+}
+
+.enroll-sc .right::after {
+	left: -16px;
+}
+
+.enroll-sc .content {
+	padding: 20px 30px;
+	background-color: white;
+	position: relative;
+	border-radius: 6px;
+}
+
+.enroll-sc #center {
+	width: 70%;
+	padding: 10px 50px;
+	position: relative;
+	margin: auto;
+	margin-top: 3%;
+}
+
+@media screen and (max-width: 600px) {
+	.enroll-sc .timeline::after {
+		left: 31px;
+	}
+	.enroll-sc .container {
+		width: 100%;
+		padding-left: 70px;
+		padding-right: 25px;
+	}
+	.enroll-sc .container::before {
+		left: 60px;
+		border: medium solid white;
+		border-width: 10px 10px 10px 0;
+		border-color: transparent white transparent transparent;
+	}
+	.enroll-sc .left::after, .right::after {
+		left: 15px;
+	}
+	.enroll-sc .right {
+		left: 0%;
+	}
+}
+
+.enroll-sc textarea, input {
+	outline: none;
+	border: 0;
+	border-bottom: 1px solid #cecece;
+	height: 40px;
+	width: 50%;
+}
+
+.enroll-sc .date {
+	margin-right: 5%;
+}
+
+.enroll-sc input[type=checkbox] {
+	width: 18px;
+	vertical-align: -100%;
+}
+
+.enroll-sc .content p {
+	font-size: 23px;
+	font-weight: 650;
+}
+
+.enroll-sc button {
+	width: 13%;
+	height: 35px;
+	margin: 3%;
+	font-size: 17px;
+}
+
+.enroll-sc .content button {
+	width: 48%;
+	height: 30px;
+	font-size: 14px;
+	margin-top: 5%;
+}
+
+.enroll-sc .btn-area {
+	background-color: white;
+	text-align: center;
+}
+
+.enroll-sc .block {
+	width: 100%;
+	height: 50px;
+}
+
+.enroll-sc .plus {
+	width: 15px;
+	height: 15px;
+}
+
+.enroll-sc .modal {
+	backgrund-color: lightgray;
+	text-align: center;
+	width: 60%;
+	height: 450px;
+	margin: auto;
+	position: fixed;
+	z-index: 3;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.enroll-sc .modal #title {
+	font-size: 22px;
+	width: 100%;
+	height: 10%;
+	line-height: 2.8;
+	margin-bottom: 2%;
+}
+
+.enroll-sc .modal #close {
+	border: none;
+	background-color: lightgray;
+	font-size: 30px;
+	font-weight: bold;
+	color: white;
+	float: right;
+	margin-right: 5%;
+	margin-top: 1%;
+}
+
+.enroll-sc .modal #map {
+	width: 95%;
+	height: 85%;
+	background-color: white;
+	margin: auto;
+	top: 0;
+	bottom: 0;
+}
+
+.enroll-sc .modal iframe {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+.enroll-sc.content {
+	float:left; 
 }

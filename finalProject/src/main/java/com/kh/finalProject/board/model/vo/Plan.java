@@ -1,17 +1,17 @@
 package com.kh.finalProject.board.model.vo;
 
-import java.sql.Date;
-
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Plan {
+@SuperBuilder
+public class Plan extends Board{
 //	BOARD_NO	NUMBER
 //	INFO_NO	NUMBER // 지역이름 또는 장소이름으로 보여줘야할거같아서 String으로 쓸게요
 //	USER_NO	NUMBER // 회원번호말고 회원아이디로 출력할거라서 String writer로 써놓을게요
@@ -40,6 +40,4 @@ public class Plan {
 	private int totalPay;
 	private String complete;
 	
-	// 조회시 사용할 게시물 제목 필드추가
-	private String boardTitle;
 }

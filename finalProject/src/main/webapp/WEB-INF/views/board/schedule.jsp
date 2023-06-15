@@ -61,6 +61,7 @@
                                         </div>
                                         <div class="col-lg-9">
                                             <div class="row">
+                                            	<%-- <c:if test="${! list.isEmpty()}">
                                             	<c:forEach var="p" items="list">
 	                                                <div class="col-lg-12" onclick="detailView();">
 	                                                    <div class="event-item">
@@ -109,6 +110,7 @@
 	                                                    </div>
 	                                                </div>
                                                 </c:forEach>
+                                                </c:if> --%>
                                                 <div class="col-lg-12">
                                                     <div class="pagination">
                                                         <ul>
@@ -135,7 +137,6 @@
             ajax로 페이지로드된 후 나온 bno로 조회해와서 img태그 append로 넣기 !
         */
 		/* 여기 페이지는 여기 작성하는거랑 페이징처리만 하면 끝! */
-		/* 이미지 넣을건데 저 div에 해당하는 boardNo 어떻게 찾을지 생각해보기 */
 		
 		/* 게시물 클릭시 상세페이지로 이동 */
 		function detailView(){
