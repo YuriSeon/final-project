@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -24,6 +25,7 @@
 </style>
 </head>
 <body>
+<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 <!-- 동행구하는거 바로 작성하러갈지 아니면 작성하기 끝난 후에 연결할지 고민, 클릭후 목록 증식하는것만 잡기-->
 	<div class="enroll-sc" >
 		<form action="insert.sc" method="post" id="insertForm">
@@ -59,10 +61,8 @@
 	            <div class="content">
 	                <p>동행을 구하시겠습니까?</p>
 	                <input type="radio" name="together" id="together-yes"><label for="together-yes">예</label> &nbsp;
-	                <input type="radio" name="together" id="together-no" value="0"><label for="together-no">아니오</label> <br>
-	                <c:if test="${together  }">
-	                    <button type="button" onclick="">바로 작성하러 가기</button> 
-	                </c:if>
+	                <input type="radio" name="together" id="together-no" value="0" checked><label for="together-no">아니오</label> <br>
+	                <button type="button" id="with" onclick="">바로 작성하러 가기</button> 
 	            </div>
 	            </div>
 	            <div class="container right">
@@ -86,7 +86,7 @@
 		            <div class="content">
 		                <p>이동수단</p>
 		                <div id="trans">
-			                <input type="radio" name="transport" id="none" value="0"><label for="none">미정</label>
+			                <input type="radio" name="transport" id="none" value="0" checked><label for="none">미정</label>
 			                <input type="radio" name="transport" id="trans" value="1"><label for="trans">대중교통</label>
 			                <input type="radio" name="transport" id="car" value="2"><label for="car">자가용</label>
 		                </div>
@@ -141,9 +141,12 @@
     <script type="text/javascript" src="resources/js/map.js"></script> 
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3f6edea42e65caf1e4e0b7f49028f282&libraries=services"></script>
     <script>
-    $(function(){
-    	$(".container").css("style","float:left");
-    })
+    	$(function(){
+    		if($("input[name=together]").val()==0){
+    			$("#with").css("style","display:none");
+    		}
+    	});
+    
         // 달력에 날짜 체크시 일정추가하는 영역 생기는 함수
         function total(){
             var plan = $("#plan-area *").remove(); // 함수 재실행시 기존 생성된 영역 지워주기
