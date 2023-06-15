@@ -10,27 +10,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Info {
-//	INFO_NO	NUMBER
-//	BOARD_NO	NUMBER
-//	ZONE_NO	NUMBER
-//	INFO_ADDRESS	VARCHAR2(100 BYTE)
-//	INFO_TIME	VARCHAR2(50 BYTE)
-//	INFO_MONEY	NUMBER
-//	INFO_HOMEPAGE	VARCHAR2(500 BYTE)
-//	INFO_CALL	VARCHAR2(30 BYTE)
-//	PARKING	VARCHAR2(1 BYTE)
-//	INFO_NAME	VARCHAR2(50 BYTE)
-//	INFO_TYPE	NUMBER
 	
-	private int infoNo;
-	private int boardNo;
-	private int zoneNo;
-	private String infoAddress;
-	private String infoTime;
-	private int infoMoney;
-	private String infoHompage;
-	private String infoCall;
-	private String parking;
-	private String infoName;
-	private int infoType;
+	private int infoNo; //INFO_NO	NUMBER
+	private int boardNo; //BOARD_NO	NUMBER
+	private int zoneNo; //ZONE_NO	NUMBER
+	private String infoAddress; //INFO_ADDRESS	VARCHAR2(100 BYTE)
+	private String infoTime; //INFO_TIME	VARCHAR2(50 BYTE)
+	private int infoMoney; // INFO_MONEY	NUMBER
+	private String infoHomepage; //INFO_HOMEPAGE	VARCHAR2(500 BYTE)
+	private String infoCall; //INFO_CALL	VARCHAR2(30 BYTE)
+	private String parking; //PARKING	VARCHAR2(1 BYTE)
+	private String infoName; //INFO_NAME	VARCHAR2(50 BYTE)
+	private int infoType; //INFO_TYPE	NUMBER
+
 }

@@ -4,10 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="resources/css/schedule.css?after">
 <title>Insert title here</title>
+<style type="text/css">
+
+</style>
 </head>
 <body>
-<!-- 사진이랑 지도만 추가로 넣고 나중에 대댓글 넣는거 하기 -->
+<!-- 지도, 마커 반복문 추가, 마커 클릭시 데일리 일정 나오도록하고 그 후에... 지도 마커 클릭시 info 보여주기 나중에 대댓글 넣는거 하기 -->
 	<%@ include file="../common/menubar.jsp" %>
 	<div class="main-schedule">
       <div class="container">
@@ -79,19 +83,27 @@
             <div id="img-path">
             	<!-- info에 저장된 여행지 사진들 -->
                 <div id="img-area">
-                	사진영역 슬라이드로
+                	<div id="wrapSlide">
+				        <div id="slideArea" onmouseover="opacityIn(this)" onmouseout="opacityOut(this)">
+				            <img id="slideImage" />
+				        </div>
+				        <div id="dotArea"></div>
+				
+				        <img src="resources/img/left.png" id="prev" onclick="prev()">
+				        <img src="resources/img/right.png" id="next" onclick="next()">
+				    </div>
                 </div>
                 <div id="path-area">
                 	<!-- 전체 예상 비용 -->
                     <div id="pay">total : ${plan.totalPay }</div>
                     <!-- 데일리 일정 묶음 -->
                     <div id="path">
-                    	<c:forEach varStatus="i" begin="1" end="${plan.totalDate }">
+                    	<!-- <c:forEach varStatus="i" begin="1" end="${plan.totalDate }">
                     		<div class="marcker-area">
                     			<img class="marcker" src="resources/images/marker2.png">
                     			<div class="color"></div>
                     		</div>
-                    	</c:forEach>
+                    	</c:forEach> -->
                     </div>
                 </div>
             </div>
@@ -124,13 +136,28 @@
             </div>
         </div>
       </div>
+    <!-- 작성해둔 함수 넣은 파일 불러와서 사용 -->
+    <script type="text/javascript" src="resources/js/function.js"></script> 
     <script>
+		/* 데일리 일정 표시하는 마커 출력 */
+		$(function(){
+            var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'skyblue']; // 일정 수 증가시 컬러만 추가해서 사용하도록 설정
+            var circle = document.querySelectorAll('.color');
+            
+            for(var i=0; i < circle.length; i++){
+                var list = circle[i];
+                $("#path").append(makeTag("div", "class", "marcker-area"+(i+1)));
+               	$(".marcker-area"+(i+1)).append(makeTag("img","class","marcker"+(i+1),"src","resources/images/marker2.png")).append(makeTag("div","class","color").append("span","text",i+1));
+                $(list).css("background-color", colors[i]);
+            }
+        });
+
     	var confirm = confirm("게시물을 정말로 삭제하시겠습니까?");
     	
     	/* 동행, 수정, 삭제 이벤트 연결 */
     	function form(num){
     		var formTeg = $("<form>"); 
-    		var bno = $("<input>").prop("type", "hidden").prop("name", "boardNo").prop("value", "${board.boardNo}"); 
+    		var bno = makeTag("input","type", "hidden", "name", "boardNo").prop("value", "${board.boardNo}"); 
     		var obj = formTeg.append(bno); // form 태그내 bno hidden으로 넣어줌
     		
     		if(num==1){ // 수정
@@ -145,11 +172,10 @@
     			obj.attr("action", "").attr("method", "get");
     		}
     	}
-    		
     	/* 좋아요 찜 신고 이미지 클릭시 변경 이벤트 */
     	$(function(){
     		$("#btn-type").children().click(function(){
-    			var btnType = this.class;
+    			var btnType = $(this).attr("class");
     			$.ajax({
     				url:"btnType",
     				data:{
@@ -220,17 +246,18 @@
                     
                     var div = $("<div>");
                     var replyDiv = div.prop("id","content-pack").append(div.prop("class","reply"));
+                    
                     for(var i=0; i<list.length;i++){
-                    /* 
-                    매개변수2개로 나눠져서 잘 넘어오는지 확인. 아니면 키값으로 프로필 사진 찾아오기
-                   	m이 arraylist를 가져온거면 그냥 순서대로 꺼내도 됨
-                    */
-                    var proDiv = div.prop("class", "pro").append("${m[i]. 프로필사진}");
-                    var conDiv = div.prop("class", "con").append("${list[i].replyContent}");
-                    /* prop아니면 attr로 수정 */
-                    var nic = $("<a>").prop("id", "nicknameHover").prop("onclick", "whoareyou();").text("${list[i].replyWriter}");
-                    var dateDiv = div.prop("class", "date").append(nic).text("${list[i].createDate}");
-                    replyDiv.append(proDiv, conDiv, dateDiv);
+	                    /* 
+	                    매개변수2개로 나눠져서 잘 넘어오는지 확인. 아니면 키값으로 프로필 사진 찾아오기
+	                   	m이 arraylist를 가져온거면 그냥 순서대로 꺼내도 됨
+	                    */
+	                    var proDiv = div.prop("class", "pro").append("${m[i]. 프로필사진}");
+	                    var conDiv = div.prop("class", "con").append("${list[i].replyContent}");
+	                    /* prop아니면 attr로 수정 */
+	                    var nic = $("<a>").prop("id", "nicknameHover").prop("onclick", "whoareyou();").text("${list[i].replyWriter}");
+	                    var dateDiv = div.prop("class", "date").append(nic).text("${list[i].createDate}");
+	                    replyDiv.append(proDiv, conDiv, dateDiv);
                     }
                     $("#reply-content").append(replyDiv); // 일단 댓글까지 출력함(대댓글 나중에!)
     			},
@@ -243,6 +270,77 @@
     		});
     	});
     	
+    	/* 사진 슬라이더 */
+    	const slideIndex = ['image1.png', 'image2.png', 'image3.png', 'image4.png', 'image5.png'];
+	    let currentIndex = slideIndex[0];
+	    const imagePath = 'resources/images/';
+	    const dotPath = 'resources/images/dot.png';
+	    
+	    $(function(){
+	        $("#slideImage").prop("src", imagePath + slideIndex[0]);
+
+	        slideIndex.forEach(function(item, index, array){
+	            let img = document.createElement("img");
+	            img.setAttribute("src", dotPath);
+	            img.setAttribute("width", "15px");
+	            img.setAttribute("height", "15px");
+	            img.setAttribute("id", "dotImage" + index);
+	            img.setAttribute("class", "dotImage");
+	            img.setAttribute("onclick", "dotClickEvent(" + index + ")");
+
+	            document.querySelector("#dotArea").appendChild(img);
+	        });
+	    });
+	    function prev(){
+	        slideIndex.some(function(item, index, array){
+	            if(index != 0){
+	                if(item == currentIndex){
+	                    $("#slideImage").prop("src", imagePath + slideIndex[index - 1]);
+	                    currentIndex = slideIndex[index - 1];
+	                    return true;
+	                }
+	            }else{
+	                if(item == currentIndex){
+	                    $("#slideImage").prop("src", imagePath + slideIndex[slideIndex.length - 1]);
+	                    currentIndex = slideIndex[slideIndex.length - 1];
+	                    return true;
+	                }
+	            }
+	        });
+	    }
+	    function next(){
+	        slideIndex.some(function(item, index, array){
+	            if(index != slideIndex.length - 1){
+	                if(item == currentIndex){
+	                    $("#slideImage").prop("src", imagePath + slideIndex[index + 1]);
+	                    currentIndex = slideIndex[index + 1];
+	                    return true;
+	                }
+	            }else{
+	                if(item == currentIndex){
+	                    $("#slideImage").prop("src", imagePath + slideIndex[0]);
+	                    currentIndex = slideIndex[0];
+	                    return true;
+	                }
+	            }
+	        });
+	    }
+	    function opacityIn(obj){
+	        obj.style.opacity = "0.5";
+	        $("#prev").css("opacity", 0.7);
+	        $("#next").css("opacity", 0.7);
+	    }
+
+	    function opacityOut(obj){
+	        obj.style.opacity = "1";
+	        $("#prev").css("opacity", 0.3);
+	        $("#next").css("opacity", 0.3);
+	    }
+
+	    function dotClickEvent(index){
+	        $("#slideImage").prop("src", imagePath + slideIndex[index]);
+	        currentIndex = slideIndex[index];
+	    }
     </script>
 </body>
 </html>

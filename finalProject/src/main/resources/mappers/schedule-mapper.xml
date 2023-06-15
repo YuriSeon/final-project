@@ -10,7 +10,7 @@
   		<result column="PATH_NO" property="pathNo"/>
   		<result column="PAY" property="pay"/>
   	</resultMap>
-  	<resultMap type="plan" id="planResultSet">
+  	<resultMap type="plan" id="planResultSet" extends="">
   		<result column="BOARD_NO" property="boardNo"/>
   		<result column="INFO_NO" property="infoNo"/>
   		<result column="USER_NO" property="writer"/>
@@ -24,13 +24,7 @@
   		<result column="TOTAL_DATE" property="totalDate"/>
   		<result column="TOTAL_PAY" property="totalPay"/>
   		<result column="COMPLETE" property="complete"/>
-  		<result column="BOARDTITLE" property="boardTitle"/>
   	</resultMap>
   	
-  	<select id="selectListCount">
-  		SELECT COUNT(*)
-  		FROM PLAN
-  		JOIN ZONE USING(ZONE_NO)
-  		WHERE 
-  	</select>
+  	
   </mapper>
