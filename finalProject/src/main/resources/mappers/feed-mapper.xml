@@ -24,9 +24,10 @@
   		SELECT COUNT(*)
   		FROM BOARD
   		WHERE STATUS = 'Y'
+  		AND CATEGORY = 4
   	</select>
   	<select id="selectBoardList" resultMap="feedResultSet">
-  		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE"
+  		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",GOOD
 		FROM BOARD B
 		WHERE STATUS = 'Y'
         AND CATEGORY = 4
@@ -38,18 +39,71 @@
   		<result column="BOARD_WRITER" property="boardWriter"/>
   		<result column="BOARD_CONTENT" property="boardContent"/>
   		<result column="CREATE_DATE" property="createDate"/>
-  		
+  		<result column="GOOD" property="good"/>
   	</resultMap>
+  	
   	<select id="selectAttachmentList" resultMap="attaResultSet">
   		SELECT BOARD_NO,FILE_PATH
         FROM ATTACHMENT 
         WHERE STATUS = 'Y'
         ORDER BY BOARD_NO DESC
   	</select>
+  	
   	<resultMap type="Attachment" id="attaResultSet">
   		<result column="BOARD_NO" property="boardNo"/>
   		<result column="FILE_PATH" property="filePath"/>
   	</resultMap>
   	
+  	<delete id="deleteBoard" parameterType="int">
+  	  DELETE FROM BOARD
+  	  WHERE BOARD_NO = #{boardNo}
+      AND STATUS = 'Y'
+  	</delete>
   	
+  	<delete id="deleteAttachment">
+  		DELETE FROM ATTACHMENT
+  		WHERE BOARD_NO = #{boardNo}
+    	AND STATUS = 'Y'
+  	</delete>
+  	
+  	<select id="ckHeart" resultType="_int">
+  		SELECT COUNT(*) FROM GOOD
+        WHERE BOARD_NO = #{boardNo} 
+        AND WRITER = #{writer}
+  	</select>
+  	
+  	<delete id="deleteHeart">
+  		DELETE FROM GOOD
+  		WHERE BOARD_NO = #{boardNo}
+  		AND WRITER = #{writer}
+  	</delete>
+  	
+  	<update id="updateDelete">
+  		UPDATE BOARD
+		SET GOOD = GOOD-1
+		WHERE BOARD_NO = #{boardNo}
+		AND STATUS = 'Y'
+		AND CATEGORY = 4	
+  	</update>
+  	
+  	<insert id="insertHeart">
+  		INSERT INTO GOOD
+  		VALUES(#{boardNo},#{writer})
+  	</insert>
+  	
+  	<update id="updateInsert">
+  		UPDATE BOARD
+  		SET GOOD = GOOD+1
+  		WHERE BOARD_NO = #{boardNo}
+		AND STATUS = 'Y'
+		AND CATEGORY = 4	
+  	</update>
+  	<select id="selectGood" resultMap="goodResultMap">
+  		SELECT BOARD_NO,WRITER
+  		FROM GOOD
+  	</select>
+  	<resultMap type="good" id="goodResultMap">
+  		<result column="BOARD_NO" property="boardNo"/>
+  		<result column="WRITER" property="writer"/>
+  	</resultMap>
   </mapper>

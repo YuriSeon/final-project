@@ -4,6 +4,47 @@
 <html lang="en">
 
 	<style>
+	/* 사진 슬라이드 부트스트랩 */
+	.slider-section {
+  		position: relative;
+  		overflow: hidden;
+	}
+	.slider-section__slider-containter {
+  		position: absolute;
+  		display: flex;
+  		min-width: 400%;
+  		left: 0;
+  		top: 0;
+  		transition: left 1s ease-in-out;
+	}
+	.slider-section__height-keeper--image {
+  		display: block;
+  		width: 100%;
+  		opacity: 0;
+	}
+	.slider-section__button {
+  		position: absolute;
+  		top: 50%;
+  		height: 50px;
+  		width: 50px;
+  		background-color: rgba(0, 0, 0, 0);
+  		border: none;
+  		font-size: 40px;
+  		color: #bfc3cf;
+  		cursor: pointer;
+	}
+	.slider-section__button--left {
+  		left: 20px;
+	}
+	.slider-section__button--right {
+  		right: 20px;
+	}
+
+	.photo-slide-container__photo {
+  		display: block;
+  		width: 100%;
+	}
+	
       /* .wrap>*{
             width: 1110px;
             background-color: antiquewhite;
@@ -17,9 +58,11 @@
           
 		#title_menu{
 			font-size: 28px;
-			position: relative;
-			top: -15px;
-			left: 400px;
+			/* position: relative; */
+			/* top: -15px; */
+			/* left: 21%; */
+			padding: 0px 0px 0px 400px;
+			width:1000px;
 		}
 		#title_menu>a{
 			font-size: 18px;
@@ -67,7 +110,133 @@
             border-color:black;
             border-width: medium;
         }
-      </style>
+    /* 축제 정보 */
+	#fes-infor{
+		margin-top: 10px;
+	    margin-bottom: 30px;
+	}
+	#map-infor{
+		margin-top: 30px;
+		margin-bottom: -10px;
+	}
+	#fes-infor dl, #map-infor dl{
+		position: relative;
+	    padding: 0px 0px 0px 200px;
+	   /*  text-align: left; */
+	    /* margin: 0; */
+	    
+	    /* display: block; */
+	    margin-block-start: 1em;
+	    /* margin-inline-start: 0px; */
+	    /* margin-inline-end: 0px; */
+	}
+	#fes-infor dt, #map-infor dt{
+		position: absolute;
+	    left: 0px;
+	    /* top: 10px; */
+	    /* z-index: 1; */
+	    /* width: 200px; */
+	    font-size: 18px;
+	    /* color: #222; */
+	    /* font-weight: 700; */
+	    
+	    /* margin: 0; */
+	    /* padding: 0; */
+	    
+	    /* display: block; */
+	}
+	#fes-infor dd, #map-infor dd{
+	   	/* margin: 0; */
+	    /* padding: 0; */
+	    
+	    /* display: block; */
+	}
+	/* 지도 */
+	#map-wrap{
+		margin-top: 40px;
+		margin-bottom: 50px;
+	}
+	#map{
+		width: 800px;
+		height: 400px;
+		margin: auto;
+	}
+	
+	/* 명소 css */
+	#M-container {
+  margin: 0 auto;
+  padding-right: .8em;
+  padding-left: .8em;
+  width: 100%;
+  height: auto;
+  max-width: 1260px;
+  background: #fff;
+  margin-bottom: -50px;
+ }
+#M-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: -10px;
+}
+#M-name {
+  text-transform:uppercase;
+  font-weight: 800;
+  font-size: 2em;
+  line-height: 1;
+  margin: 0 0 1.5em;
+}
+#M-list-wrap img {
+   max-width: 100%;
+}
+#photo-list {
+  border: 1px solid rgb(200, 200, 200);
+  margin-bottom: 3em;
+  text-align: center;
+  margin-left: .8em;    /* these margins depend on the .photo-container width in @media */
+  margin-right: .8em;
+}
+
+#photo-list h2 {
+  text-transform:uppercase;
+  font-size: 1.5em;
+  line-height: .4;
+  font-weight: 550;
+  color: rgb(76, 76, 76);
+  margin-top: 25px;
+}
+#photo-list p {
+  font-size: .9375em;
+  margin: 0 0 1.5em;
+  line-height: 1.4;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+
+#M-list-wrap img {
+  transition: transform .5s cubic-bezier(.7,-0.39,.31,1.38);
+}
+#M-list-wrap img:hover {
+  transform: rotate(-5deg) scale(1.1);
+}
+
+@media (min-width: 1024px) {
+#M-list-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+}
+@media (min-width: 1600px) {
+#photo-list {
+  margin-bottom: 4em;
+  width: 30%;
+}
+}
+	</style>
 
   <head>
 
@@ -103,9 +272,10 @@ https://www.tooplate.com/view/2125-artxibition
   	<hr style="position: relative; top: -16px; height:10px; border:0; box-shadow:0 10px 10px -10px #bbb inset;">
 	
 	<div id="wrap">
-	
-		<div id="title_menu">
-			<a href=""><img src="resources/images/home.png" alt="" style="width:23px; height:23px; position: relative; top: -7px;"></a> > <a href="" style="position: relative; top: -3px; left: -3px;">축제</a>
+		<div>
+			<div id="title_menu" >
+				<a href=""><img src="resources/images/home.png" alt="" style="width:23px; height:23px; position: relative; top: -7px;"></a> > <a href="" style="position: relative; top: -3px; left: -3px;">축제</a>
+			</div>
 		</div>
         
         <div class="titleType1">
@@ -126,315 +296,164 @@ https://www.tooplate.com/view/2125-artxibition
 			</div>
         </div>
         
+        <hr style="width:1110px;">
+        
+		<div id="fes_body" style="/* background-color:blue; */ width: 1110px; margin:auto;">  
+        
+			<div id="fes_body_photo" style="background-color:red; margin:30px 30px 30px 30px;">
+				<section class="slider-section">
+
+					<div class="slider-section__slider-containter"> 
+						<div class="slider-section__slider-containter--slide photo-slide-container">
+							<img class="photo-slide-container__photo" src="https://picsum.photos/1800/800?random=1" alt="">
+      					</div>
+
+					    <div class="slider-section__slider-containter--slide photo-slide-container">
+					       	<img class="photo-slide-container__photo" src="https://picsum.photos/1800/800?random=2" alt="">
+					    </div> 
+	
+					    <div class="slider-section__slider-containter--slide photo-slide-container">
+					        <img class="photo-slide-container__photo" src="https://picsum.photos/1800/800?random=3" alt="">
+					    </div>
+	
+					    <div class="slider-section__slider-containter--slide photo-slide-container">
+					        <img class="photo-slide-container__photo" src="https://picsum.photos/1800/800?random=4" alt="">
+					    </div>
+    				</div>
+
+				    <div class="slider-section__height-keeper">
+				        <img class="slider-section__height-keeper--image" src="https://picsum.photos/1800/800?random=4" alt="">
+				    </div>
+
+				    <button class="slider-section__button slider-section__button--left">&#10094;</button>
+				    <button class="slider-section__button slider-section__button--right">&#10095;</button>
+
+  				</section>
+        	</div>
+        	
+        	<div id="fes_detail_text">
+        		<pre width="1110px;" style="white-space: pre-wrap; word-wrap: break-word;">
+1200여년 전 시작되어 오늘날까지 이어지고 있는 전통축제. 연등행렬에는 자신이 직접 만든 등을 만들어 참여하는데, 이 등에는 자신과 가족을 위한 기원과 이웃과 사회를 위한 마음의 기원을 담아 불을 밝힌다.
+
+연등회 축제 정보
+- 함성과 감동의 한마당 '어울림마당' (5/20 16:30 - 18:00 / 동국대학교 운동장)
+- 아름다운 10만 등불이 서울 도심을 밝히는 '연등행렬' (5/20 오후 19:00 - 21:30 / 종로거리(흥인지문 → 조계사))
+- 연등행렬의 감동을 다시 한 번 축제로 '대동한마당' (5/20 21:30 - 23:00 / 종각사거리)
+- 보고, 먹고, 만들고, 즐기는 전통 체험의 장 '전통문화마당' (5/21 12:00 - 18:00 / 조계사 앞길)
+        		</pre>
+        	</div>
+        	
+        	<div id="fes-infor">
+        		<dl>
+		        	<dt>행사 기간</dt>
+		        	<dd>2023.05.19 ~ 2023.05.21</dd>
+		      	</dl>
+		      	<dl>
+		        	<dt>전화번호</dt>
+		        	<dd>02-2011-1744~1747</dd>
+		      	</dl>
+		      	<dl>
+		        	<dt>웹사이트</dt>
+		        	<dd><a href="http://www.llf.or.kr/" target="_blank" title="새창열림">웹사이트 보기<span class="ion-ios-arrow-thin-right"></span></a></dd>
+		      	</dl>
+		      	<dl>
+		        	<dt>홈페이지 언어</dt>
+		        	<dd>한국어,영어,일어,중국어(간체),프랑스어, 독일어, 스페인어</dd>
+		      	</dl>
+		      	<dl>
+		        	<dt>이용시간</dt>
+		        	<dd>행사별 상이</dd>
+		      	</dl>
+		      	<dl>
+		        	<dt>이용요금</dt>
+		        	<dd>무료</dd>
+		      	</dl>
+    		</div>
+    		
+    		<hr style="width:1110px;">
+    		
+			<div id="map-wrap" style="width:1110px;">
+				<div id="detail-map" style=" width:1110px;">
+					<div id="map" style="background-color:yellow;">
+			      		<img src="resources/images/ex.map.png" alt="" style="width: 100%; height: 100%;">
+			      	</div>
+			    </div>
+			        
+			    <div id="map-infor">
+			      	<dl>
+			        	<dt>주소</dt>
+			        	<dd>03144&nbsp;&nbsp;서울 종로구 우정국로 55 (견지동, 조계사)&nbsp;&nbsp;</dd>
+			      	</dl>
+			      	<dl>
+			        	<dt>주차 정보</dt>
+			        	<dd>03144&nbsp;&nbsp;서울 종로구 우정국로 55 (견지동, 조계사)&nbsp;&nbsp;</dd>
+			      	</dl>
+			    </div>
+		  	</div>
+		  	
+		  	<hr style="width:1110px;">
+		  	
+		  	<div id="M-container">
+				<header id="M-header">
+				  <h1 id="M-name">주변 추천 명소</h1>
+				</header>
+				
+				<div id="M-list-wrap">
+				  <div id="photo-list">
+				    <img src="https://res.cloudinary.com/olti/image/upload/v1463520654/1_xdyhpf.jpg" alt="Big Sur">
+				    <h2>알파카 월드</h2>
+				    <p>1200여년 전 시작되어 오늘날까지 이어지고 있는 전통축제. 연등행렬에는 자신이 직접 만든 등을 만들어 참여하는데, 이 등에는 자신과 가족</p>
+				  </div>
+				
+				  <div id="photo-list">
+				    <img src="https://res.cloudinary.com/olti/image/upload/v1463520653/2_keuljm.jpg" alt="Turquoise waters">
+				    <h2>서울숲</h2>
+				    <p>1200여년 전 시작되어 오늘날까지 이어지고 있는 전통축제. 연등행렬에는 자신이 직접 만든 등을 만들어 참여하는데, 이 등에는 자신과 가족</p>
+				  </div>
+				
+				  <div id="photo-list">
+				    <img src="https://res.cloudinary.com/olti/image/upload/v1463520654/3_yn1nie.jpg" alt="The retro van">
+				    <h2>대천 해수욕장</h2>
+				    <p>1200여년 전 시작되어 오늘날까지 이어지고 있는 전통축제. 연등행렬에는 자신이 직접 만든 등을 만들어 참여하는데, 이 등에는 자신과 가족</p>
+				  </div> 
+				</div>
+			</div>
+        	
+        </div>
+        
     </div>
     
     
     
     
-    <div class="tickets-page">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="search-box">
-                        <form id="subscribe" action="" method="get">
-                            <div class="row">
-                                <div class="col-lg-5">
-                                    <div class="search-heading">
-                                        <h4>Sort The Upcoming Shows & Events By:</h4>
-                                    </div>
-                                </div>
-                                <div class="col-lg-7">
-                                    <div class="row">
-                                        <div class="col-lg-3">
-                                            <select value="month">
-                                                <option value="month">Month</option>
-                                                <option name="June" id="June">June</option>
-                                                <option name="July" id="July">July</option>
-                                                <option name="August" id="August">August</option>
-                                                <option name="September" id="September">September</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <select value="location">
-                                                <option value="location">Location</option>
-                                                <option name="Brazil" id="Brazil">Brazil</option>
-                                                <option name="Europe" id="Europe">Europe</option>
-                                                <option name="US" id="US">US</option>
-                                                <option name="Asia" id="Asia">Asia</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <select value="month">
-                                                <option value="month">Price</option>
-                                                <option name="min" id="min">$0 - $50</option>
-                                                <option name="standard" id="standard">$50 - $100</option>
-                                                <option name="hight" id="hight">$100 - $200</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <fieldset>
-                                            <button type="submit" id="form-submit" class="main-dark-button">Submit</button>
-                                            </fieldset>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="heading">
-                        <h2>Tickets Page</h2>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="ticket-item">
-                        <div class="thumb">
-                            <img src="/finalProject/resources/images/ticket-01.jpg" alt="">
-                            <div class="price">
-                                <span>1 ticket<br>from <em>$25</em></span>
-                            </div>
-                        </div>
-                        <div class="down-content">
-                            <span>There Are 150 Tickets Left For This Show</span>
-                            <h4>Wonderful Festival</h4>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> Thursday: 05:00 PM to 10:00 PM</li>
-                                <li><i class="fa fa-map-marker"></i>908 Copacabana Beach, Rio de Janeiro</li>
-                            </ul>
-                            <div class="main-dark-button">
-                                <a href="ticket-details.html">Purchase Tickets</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="ticket-item">
-                        <div class="thumb">
-                            <img src="/finalProject/resources/images/ticket-02.jpg" alt="">
-                            <div class="price">
-                                <span>1 ticket<br>from <em>$45</em></span>
-                            </div>
-                        </div>
-                        <div class="down-content">
-                            <span>There Are 200 Tickets Left For This Show</span>
-                            <h4>Golden Festival</h4>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> Sunday: 06:00 PM to 09:00 PM</li>
-                                <li><i class="fa fa-map-marker"></i>789 Copacabana Beach, Rio de Janeiro</li>
-                            </ul>
-                            <div class="main-dark-button">
-                                <a href="ticket-details.html">Purchase Tickets</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="ticket-item">
-                        <div class="thumb">
-                            <img src="/finalProject/resources/images/ticket-03.jpg" alt="">
-                            <div class="price">
-                                <span>1 ticket<br>from <em>$65</em></span>
-                            </div>
-                        </div>
-                        <div class="down-content">
-                            <span>There Are 260 Tickets Left For This Show</span>
-                            <h4>Water Splash Festival</h4>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> Tuesday: 07:00 PM to 11:00 PM</li>
-                                <li><i class="fa fa-map-marker"></i>456 Copacabana Beach, Rio de Janeiro</li>
-                            </ul>
-                            <div class="main-dark-button">
-                                <a href="ticket-details.html">Purchase Tickets</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="ticket-item">
-                        <div class="thumb">
-                            <img src="/finalProject/resources/images/ticket-04.jpg" alt="">
-                            <div class="price">
-                                <span>1 ticket<br>from <em>$20</em></span>
-                            </div>
-                        </div>
-                        <div class="down-content">
-                            <span>There Are 340 Tickets Left For This Show</span>
-                            <h4>Tiger Festival</h4>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> Thursday: 06:40 PM to 11:40 PM</li>
-                                <li><i class="fa fa-map-marker"></i>123 Copacabana Beach, Rio de Janeiro</li>
-                            </ul>
-                            <div class="main-dark-button">
-                                <a href="ticket-details.html">Purchase Tickets</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="ticket-item">
-                        <div class="thumb">
-                            <img src="/finalProject/resources/images/ticket-05.jpg" alt="">
-                            <div class="price">
-                                <span>1 ticket<br>from <em>$30</em></span>
-                            </div>
-                        </div>
-                        <div class="down-content">
-                            <span>There Are 420 Tickets Left For This Show</span>
-                            <h4>Woodland Festival</h4>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> Wednesday: 06:00 PM to 09:00 PM</li>
-                                <li><i class="fa fa-map-marker"></i>1122 Copacabana Beach, Rio de Janeiro</li>
-                            </ul>
-                            <div class="main-dark-button">
-                                <a href="ticket-details.html">Purchase Tickets</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="ticket-item">
-                        <div class="thumb">
-                            <img src="/finalProject/resources/images/ticket-06.jpg" alt="">
-                            <div class="price">
-                                <span>1 ticket<br>from <em>$40</em></span>
-                            </div>
-                        </div>
-                        <div class="down-content">
-                            <span>There Are 520 Tickets Left For This Show</span>
-                            <h4>Winter Festival</h4>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> Saturday: 06:00 PM to 09:00 PM</li>
-                                <li><i class="fa fa-map-marker"></i>220 Copacabana Beach, Rio de Janeiro</li>
-                            </ul>
-                            <div class="main-dark-button">
-                                <a href="ticket-details.html">Purchase Tickets</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="pagination">
-                        <ul>
-                            <li><a href="#">Prev</a></li>
-                            <li><a href="#">1</a></li>
-                            <li class="active"><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">Next</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
 
-    <!-- *** Subscribe *** -->
-    <div class="subscribe">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <h4>Subscribe Our Newsletter:</h4>
-                </div>
-                <div class="col-lg-8">
-                    <form id="subscribe" action="" method="get">
-                        <div class="row">
-                          <div class="col-lg-9">
-                            <fieldset>
-                              <input name="email" type="text" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your Email Address" required="">
-                            </fieldset>
-                          </div>
-                          <div class="col-lg-3">
-                            <fieldset>
-                              <button type="submit" id="form-submit" class="main-dark-button">Submit</button>
-                            </fieldset>
-                          </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+   
 
-    <!-- *** Footer *** -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="address">
-                        <h4>Sunny Hill Festival Address</h4>
-                        <span>5 College St NW, <br>Norcross, GA 30071<br>United States</span>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="links">
-                        <h4>Useful Links</h4>
-                        <ul>
-                            <li><a href="#">Info</a></li>
-                            <li><a href="#">Venues</a></li>
-                            <li><a href="#">Guides</a></li>
-                            <li><a href="#">Videos</a></li>
-                            <li><a href="#">Outreach</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="hours">
-                        <h4>Open Hours</h4>
-                        <ul>
-                            <li>Mon to Fri: 10:00 AM to 8:00 PM</li>
-                            <li>Sat - Sun: 11:00 AM to 4:00 PM</li>
-                            <li>Holidays: Closed</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="under-footer">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <p>São Conrado, Rio de Janeiro</p>
-                            </div>
-                            <div class="col-lg-6">
-                                <p class="copyright">Copyright 2021 ArtXibition Company 
-                    
-                    			<br>Design: <a rel="nofollow" href="https://www.tooplate.com" target="_parent">Tooplate</a></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="sub-footer">
-                        <div class="row">
-                            <div class="col-lg-3">
-                                <div class="logo"><span>Art<em>Xibition</em></span></div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="menu">
-                                    <ul>
-                                        <li><a href="index.html" class="active">Home</a></li>
-                                        <li><a href="about.html">About Us</a></li>
-                                        <li><a href="rent-venue.html">Rent Venue</a></li>
-                                        <li><a href="shows-events.html">Shows & Events</a></li> 
-                                        <li><a href="tickets.html">Tickets</a></li> 
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="social-links">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-behance"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+   <jsp:include page="../common/footer.jsp"/>
+   
+   <script>
+   const leftButton = document.querySelector('.slider-section__button--left');
+   const rightButton = document.querySelector('.slider-section__button--right');
+   const sliderContainer = document.querySelector('.slider-section__slider-containter');
+
+   const positions = ["left: 0", "left: -100%", "left: -200%", "left: -300%"];
+
+   var sliderPosition = 0;
+
+   leftButton.addEventListener('click', function() {
+     sliderPosition -= 1;
+     if (sliderPosition < 0 ) { sliderPosition = 3}
+     sliderContainer.style = `${positions[sliderPosition]}`
+   });
+
+   rightButton.addEventListener('click', function() {
+     sliderPosition += 1;
+     if (sliderPosition > 3 ) { sliderPosition = 0}
+     sliderContainer.style = `${positions[sliderPosition]}`
+   });
+   </script>
 
     <!-- jQuery -->
     <script src="/finalProject/resources/js/jquery-2.1.0.min.js"></script>
