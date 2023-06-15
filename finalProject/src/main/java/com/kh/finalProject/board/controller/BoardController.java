@@ -100,20 +100,6 @@ public class BoardController {
 	public String goSchedule(@RequestParam(value="sort", defaultValue="recently") String sort
 								,@RequestParam(value="currentPage", defaultValue="1") int currentPage, Model model) {
 		
-		int listCount = scService.selectListCount(sort);
-		
-		int pageLimit = 5;
-		
-		int boardLimit = 5;
-		
-		PageInfo pi = new PageInfo(listCount, pageLimit, boardLimit, currentPage);
-		
-		ArrayList<Board> list = scService.selectBoardList(pi, sort);
-		
-		model.addAttribute("list", list);
-		
-		model.addAttribute("pi", pi);
-		
 		return "board/schedule";
 	}
 	
