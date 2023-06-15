@@ -2,6 +2,8 @@ package com.kh.finalProject.board.controller;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Good;
 import com.kh.finalProject.board.model.vo.TogetherVO;
 import com.kh.finalProject.board.service.AttrarctionService;
 import com.kh.finalProject.board.service.FeedService;
@@ -20,6 +23,7 @@ import com.kh.finalProject.board.service.ScheduleService;
 import com.kh.finalProject.board.service.TogetherService;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
+import com.kh.finalProject.member.model.vo.Member;
 
 @Controller
 public class BoardController {
@@ -73,8 +77,10 @@ public class BoardController {
 	}
 	
 	@RequestMapping("feed.bo")
-	public String goFeed(@RequestParam(value="currentPage", defaultValue="1") int currentPage,Model model) {
+	public String goFeed(@RequestParam(value="currentPage", defaultValue="1") int currentPage,Model model,HttpServletRequest request) {
 
+		
+		ArrayList<Good> glist = feedService.selectGood();
 		ArrayList<Attachment> alist = feedService.selectAttachmentList();
 		int listCount = feedService.selectListCount();
 		int pageLimit = 5;
@@ -82,17 +88,15 @@ public class BoardController {
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		ArrayList<Board> list = feedService.selectBoardList(pi);
-//		for(int i=0; i<list.size(); i++) {
-//
-//			alist.add(feedService.selectAttachmentList(list.get(i).getBoardNo()));
-//		}
-//		
+		
 		model.addAttribute("list", list);
+		model.addAttribute("blist", new Gson().toJson(list));
+		model.addAttribute("bsize",list.size());
 		model.addAttribute("pi", pi);
 		model.addAttribute("alist", new Gson().toJson(alist));
 		model.addAttribute("size", alist.size());
-		
-		
+		model.addAttribute("glist",new Gson().toJson(glist));
+
 		return "board/feed";
 	}
 	
