@@ -62,9 +62,7 @@ public class MemberServiceImpl implements MemberService{
 		
 		if (att != null) {
 			nicknameCheck = att.getWriter();
-			String filePath = ServletContext.getRealPath("/"+att.getFilePath()+att.getChangeName());
-			File file = new File(filePath);
-			file.delete();
+			new File(ServletContext.getRealPath("/"+att.getFilePath()+att.getChangeName())).delete();
 		}
 		
 		if (a.getWriter() == nicknameCheck) {

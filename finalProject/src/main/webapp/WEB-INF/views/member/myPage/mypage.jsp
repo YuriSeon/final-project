@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="resources/css/mypage.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/mypage.css?after">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -90,7 +90,7 @@
 	                                          		<button type="button" class="close" data-dismiss="modal">×</button>
 	                                        	</div>
 	                                        	<div class="modal-body2">
-	                                        		<div class="profile-image" id="p_img" style="position: relative; left: -5px;">
+	                                        		<div class="profile-image" id="p_img" style="position: relative; left: 0px;">
 		                                            	<c:choose>
 			                                        		<c:when test="${not empty loginUser.profileImg}">
 					                                            <!--프로필 있으면-->

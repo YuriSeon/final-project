@@ -23,7 +23,7 @@
 <body>
 <%@include file="adMenubar.jsp" %>
 <!-- Content - Start  -->
-<div id="content-wrapper" style="background-color: #EEEEEE;">
+<div id="content-wrapper">
     <div class="container-fluid">
         <div class="dash-title">
             <h1>&nbsp;게시글 관리 - 테마</h1>

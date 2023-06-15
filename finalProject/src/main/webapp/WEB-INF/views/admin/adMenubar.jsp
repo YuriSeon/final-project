@@ -19,7 +19,7 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="resources/css/dashboard_admin.css?v=2">
+    <link rel="stylesheet" type="text/css" href="resources/css/dashboard_admin.css?v=1">
     <!-- Alertify JavaScript -->
 	<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 	<!-- Alertify CSS -->
