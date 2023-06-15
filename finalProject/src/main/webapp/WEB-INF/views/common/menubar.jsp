@@ -185,7 +185,7 @@
                 			<!-- 로그인 전 -->
 		                    <div class="text-button">
 		                        <button type="button" data-toggle="modal" data-target="#loginModal">로그인</button>&nbsp;/
-		                        <button type="button" onclick="location.href='enrollForm.me'">회원가입</button>
+		                        <button type="button" onclick="location.href='enrollListForm.me'">회원가입</button>
 		                    </div>
                 		</c:when>
                 		<c:when test="${not empty loginUser and loginUser.status eq 'Y' }">

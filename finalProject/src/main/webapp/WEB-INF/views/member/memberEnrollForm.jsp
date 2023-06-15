@@ -698,7 +698,7 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		</div>
 		
 		<!-- 추가 입력사항 -->
-		<div class="container_3" style="box-shadow: 0px 0px 10px 10px rgb(199, 199, 199); height:490px;">
+		<div class="container_3" style="box-shadow: 0px 0px 10px 10px rgb(199, 199, 199); height:420px;">
 			<div style="color:#598c93; font-size:14px; position:relative; top:-30px;">※선택 입력사항입니다.<br>(마이페이지에서 추가로 작성 하실 수 있습니다.)</div>
 			<!-- 관심사 -->
 			<div class="field-wrapper" style="position:relative; top: -15px;">
@@ -802,25 +802,21 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		    	<input type="text" name="email"  placeholder="MBTI 테스트를 진행해주세요!" class="float-field" style="position:relative; left:170px; top:8px; width: 365px;" readonly/>
 		    	<label for="email" class="float-label" style="position:relative; top:-48px;">여행 MBTI<img src="resources/images/question.png" alt="" style="height:11px; width:11px; position:relative; left:2px; top:-1px; background-color:rgb(239, 239, 239);"></label>
 		    	<!-- <div class="field-bar"></div> -->
-		  		<button type="" style="position:relative; left:-75px; top:-20px; font-size: 9px;">여행 MBTI 테스트</button>
-		  	</div>
-	  		<!-- 인증 -->
-		  	<div class="field-wrapper">
-		    	<label for="email" class="float-label" style="position:relative; top:-27px;">인증 (택1)<img src="resources/images/question.png" alt="" style="height:11px; width:11px; position:relative; left:2px; top:-1px; background-color:rgb(239, 239, 239);"></label>
-		  		<button type="" style="position:relative; left:-70px; font-size: 9px; background-color:#09aa5c">네이버 인증</button>
-		  		<button type="" style="position:relative; left:-70px; font-size: 9px; background-color:#fae100">카카오 인증</button>
+		  		<button type="" style="position:relative; left:-75px; top:-20px; font-size: 9px;">여행 MBTI</button>
 		  	</div>
 			<button type="submit" id="insertGo2" style="position:relative; top:-25px; width:530px;" onclick="return joinChk();">회원가입</button>
+			<!-- 카카오인증 후 탈퇴시 필요한 카카오 정보 -->
+			<input type="hidden" name="kakaoId" id="kakaoId" value="0">
+			<input type="hidden" name="access_token" id="access_token" value="0">
 		</div>
 	</form>
-	
 	<script>
 	var idResult = ""; //아이디 중복 검사 값 담을 변수
 	var nickResult = ""; //닉네임 중복 검사 값 담을 변수
 	
 	$(function(){
-		/* 아이디 중복 및 유효성 검사 */
 		
+		/* 아이디 중복 및 유효성 검사 */
 		var $userId = $("#insertForm input[name=userId]");
 		//console.log($userId.val());
 		
@@ -942,10 +938,8 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 				
 				if(!(regExp.test($("#phone").val()))){ //조건에 맞지 않으면
 					$("#phone_check").css({"color":"red","font-size":"12px"}).text("번호만 입력해 주십시오. (-제외)");
-					console.log("여기");
 				}else{//조건에 맞으면
 					$("#phone_check").hide();
-					console.log("조기");
 				}
 			}
 			if($("#phone").val().trim().length>=12){
@@ -953,6 +947,16 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 				$("#phone_check").show();
 			}
 		});
+		
+		//console.log($("#kakaoId").val());
+		//console.log($("#access_token").val());
+		//카카오 회원번호 넘어오면 정보 담아주기
+		$("#kakaoId").val('${kakaoInfo.id}');
+		$("#access_token").val('${kakaoInfo.access_token}');
+		//console.log('${kakaoInfo.id}');
+		//console.log('${kakaoInfo.access_token}');
+		console.log($("#kakaoId").val());
+		console.log($("#access_token").val());
 	});
 	
 	/* 비밀번호 확인(onblur이벤트로 포커스 해지시 발동... 비번,비번확인 일치하는지 ck) */
@@ -1013,12 +1017,6 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 	
 	//버튼 클릭시 회원가입 진행
 	function joinChk(){	
-		
-		//약관 동의
-		if(!$("#agree").is(":checked")){//동의버튼 클릭 안되어있으면
-			alert("이용약관 동의 버튼을 눌러주세요.");
-			return false;
-		};
 		
 		//아이디
 		var $userId = $("#insertForm input[name=userId]");
@@ -1097,7 +1095,6 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		//숫자외 다른 글씨 눌렀을때
 		var regExp = /^[0-9]+$/;
 		if(!(regExp.test($("#phone").val()))){
-			console.log("dd");
 			$("#phone").focus();
 			return false;
 		}
@@ -1106,6 +1103,28 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 			$("#phone").focus();
 			return false;
 		}
+		
+		//인증시 인증값과 같은지 확인...
+		//카카오(성별,생일,나이대 알 수 있음)
+		//성별 확인
+		if('${kakaoInfo.gender}'!=$('input[name=gender]:checked').val()){
+			alert("인증하신 정보와 성별이 일치하지 않습니다.");
+			$("input[name=gender]").focus();
+			return false;
+		}
+		//생일 확인
+		var birthDay = $('input[name=birthDay]').val().substring(4,8);
+		if('${kakaoInfo.birthday}'!=birthDay){
+			alert("인증하신 정보와 생년월일이 일치하지 않습니다.");
+			$('input[name=birthDay]').focus();
+			return false;
+		}
+		
+		//약관 동의
+		if(!$("#agree").is(":checked")){//동의버튼 클릭 안되어있으면
+			alert("이용약관 동의 버튼을 눌러주세요.");
+			return false;
+		};
 	};
 	
 	/* 부트스트랩 */
