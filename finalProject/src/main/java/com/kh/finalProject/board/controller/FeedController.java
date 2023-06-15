@@ -1,22 +1,33 @@
 package com.kh.finalProject.board.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.service.FeedService;
+import com.kh.finalProject.member.model.vo.Member;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 public class FeedController {
@@ -94,6 +105,48 @@ public class FeedController {
 		return mv;
 	}
 	
-	
+		//삭제 구문
+		@RequestMapping(value = "delete.fo", method = RequestMethod.POST)
+		public ModelAndView deleteFeed(@RequestParam("boardNo") int boardNo, ModelAndView mv,HttpSession session,@RequestParam("filePath") String filePath) {
+			
+			 int result = feedService.deleteFeed(boardNo);
+			 System.out.println(result);
+			
+			if (result > 0) {
+	            if (!filePath.isEmpty()) {
+	            	String[] filePathList = filePath.split(",");
+	                for (String path : filePathList) {
+	                    new File(session.getServletContext().getRealPath("/"+path)).delete();
+	                }
+	                session.setAttribute("alertMsg", "게시글 삭제 완료");
+	                mv.setViewName("redirect:feed.bo");
+	            } else {
+	                mv.addObject("errorMsg", "게시글 삭제 실패").setViewName("common/errorPage");
+	            }
+	        }else {
+	        	mv.addObject("errorMsg", "게시글 삭제 실패").setViewName("common/errorPage");
+	        }
+	   
+	    return mv;
+        
+		}
+		
+		@RequestMapping(value="heart.bo", method = RequestMethod.POST)
+		@ResponseBody
+		public void insertHeart(@RequestParam("boardNo") int boardNo,@RequestParam("writer") String writer,ModelAndView mv,HttpServletRequest request,HttpServletResponse response ) throws IOException {
+			
+
+			int result = feedService.ckHeart(boardNo,writer);
+
+			if(result>0) {
+				result = feedService.deleteHeart(boardNo,writer)-1;
+				
+			}else {
+				result = feedService.insertHeart(boardNo,writer);
+				
+			}
+			response.setContentType("application/json; charset=UTF-8");
+		    response.getWriter().print(result);
+		}
 	
 }

@@ -96,25 +96,6 @@
  	
  }
  
- #up a{
- 	 color: black;
- 	 text-align: center;
-  	 width: 100px; 
-  	 width: 100%; 
-      height: 100%; 
-     display:block;
- 	 transform : scale(1);
- }
- #up a:hover{ 
- 	font-size: 20px;
- 	font-weight:bold;
- 	width: 100%;
- 	display: block;
-	height: 100%;
- 	background-color: rgb(190, 190, 194);
- 	 transform : scale(1);
- }
-
  
  .heading-sidebar>ul button{
  	float: left;	
@@ -155,7 +136,7 @@
   height: 300px;
   position: relative;
   margin: auto;
-  overflow: hidden;   
+ overflow: hidden;    
   /*리스트 형식으로 이미지를 일렬로 
   정렬할 것이기 때문에, 500px 밖으로 튀어 나간 이미지들은
   hidden으로 숨겨줘야됨*/
@@ -165,9 +146,10 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 2500px; /* 슬라이드할 사진과 마진 총 넓이 */
+  width: 100%; /* 슬라이드할 사진과 마진 총 넓이 */
   transition: left 0.5s ease-out; 
   /*ease-out: 처음에는 느렸다가 점점 빨라짐*/
+  border: 1px solid black;
  
 }
 
@@ -176,11 +158,13 @@
   float: left;
   margin-right: 100px;
 }
-
 .slides li{
   float: left;
   list-style-type: none;
+
 }
+
+
 .slides li>img{
   width: 500px;
   height: 300px;
@@ -224,7 +208,26 @@
   transform: translateX(5px);
 }
  
- 
+ #sild li>button {
+  border: none;
+  background-color: transparent;
+  color: black;
+  transition: background-color 0.3s, color 0.3s;
+   white-space: normal; /* 줄 바꿈을 허용 */
+   width: 100%;
+   height: 100%;
+}
+
+#sild li button:hover {
+  background-color: lightgray;
+  color: white;
+  font-size: 17px;
+}
+#update{transform: translateY(-100%);}
+#heart-area{cursor: pointer;}
+ #reply{margin: 15px; width: 400px; }
+ #reply-text{padding: 10px; border-bottom: 1px solid; margin: 10px;}
+ #reply-text>b{font-size: 14px; color: blue;}
 </style>
 
   <head>
@@ -323,37 +326,41 @@
                                             
 							                						                        		
                                              <div class="col" >
-							                    <div class="ticket-item" style="width: 400px;">
 							                        	<c:forEach var="f" items="${list}">
+							                    <div class="ticket-item" style="width: 400px;">
 							                        <div class="thumb">
-							                        	<div class="nicname">
-							                        			<input type="hidden" value="${f.boardNo }">						                        			
+							                        	<div class="nicname">					                        								                        			
 							                        			<span> <a id="nicknameHover" onclick="whoareyou();">${f.boardWriter }</a></span>
-																<div id="up">
+																<div id="up" class="up">
 																	<ul>
 																		<li>
+										                        			<input type="hidden" value="${f.boardNo }" class="boardNo" name="boardNo">
 										                        			<i class="bi bi-justify"></i>
 																			<ul id="sild">
-																				<li><a href="" >수정</a></li>
-																				<li><a href="">삭제</a></li>
+																				<li><button class="custom-button" id="update" onclick="update(this);">수정</button></li>
+																				<li><button class="custom-button" id="de" onclick="deletef(this);">삭제</button></li>
 																			</ul>
 																		</li>												
 																	</ul>
 																</div>	
 																
 							                        	</div>
-							                     
+							                        	
 							                             
 							                              <div id="slideShow">
-														    <ul class="slides" id="slides${f.boardNo}">
-														    	
+														    <ul class="slides" id="slides${f.boardNo}" style="width: 2400px">
+														    	<li></li>
+														    	<li></li>
+														    	<li></li>
+														    	<li></li>  														    
 														    </ul>
-														    <p class="controller">
+														   
+														    <p class="controller" id="controller">
 														      
 														      <!-- &lang: 왼쪽 방향 화살표
 														      &rang: 오른쪽 방향 화살표 -->
-														      <span class="prev">&lang;</span>  
-														      <span class="next">&rang;</span>
+															    <span class="prev" id="prev${f.boardNo }">&lang;</span>  
+																<span class="next" id="next${f.boardNo }">&rang;</span>
 														    </p>
 														  </div>
 														    
@@ -361,8 +368,11 @@
 							                        </div>
 							                            <div class="prices" style="width: 500px;">
 									                            <div class="price">
-									                                <span>좋아요 40개</span>
-									                                <div><img src="resources/images/하트.png" alt="">	</div>
+									                                <span>좋아요 ${f.good }개</span>
+									                                <div  id="heart-area">
+									                                
+									                               		 <img src="resources/images/하트.png" alt="" id="heart">
+									                                </div>
 																	<div>			
 																		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-right" viewBox="0 0 16 16">
 																			  <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1H2zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z"/>
@@ -380,89 +390,41 @@
 									                            </ul>
 									                           
 									                        </div>
-							                            </div>
-							                            <br><br><br><br><br>
-							                         </c:forEach> 
-							                         <script>
-							                         	
-							                         </script>
-							                    </div>
-							                </div>
-                                            
-                                                 
-                                             <div class="col" >
-							                    <div class="ticket-item" style="width: 400px;">
-							                        <div class="thumb">
-							                            <img src="/finalProject/resources/images/ticket-01.jpg" alt="">
-							                        </div>
-							                            <div class="prices" style="width: 500px;">
-									                            <div class="price">
-									                                <span>1 ticket<br>from <em>$25</em></span>
-									                            </div>
-									                        <div class="down-content">
-									                            <span>There Are 150 Tickets Left For This Show</span>
-									                            <h4>Wonderful Festival</h4>
-									                            <ul>
-									                                <li><i class="fa fa-clock-o"></i> Thursday: 05:00 PM to 10:00 PM</li>
-									                                <li><i class="fa fa-map-marker"></i>908 Copacabana Beach, Rio de Janeiro</li>
-									                            </ul>
-									                            <div class="main-dark-button">
-									                                <a href="ticket-details.html">Purchase Tickets</a>
-									                            </div>
+									                        <hr>
+									                        <div class="">
+									                        	<input type="text" id="reply">
+									                        	<button>댓글</button>
+									                        	
+									                        	<div id="reply-text">
+									                        		<b>르네</b>
+									                        		<p>회원가입을 하지 않아도 모든 기능을 사용 할 수 있으나
+
+																		회원가입을 하고 진행한다면 자신의 발전 모습을 확인 할 수 있습니다.
+																		[출처] [한컴타자연습] 방탄소년단-봄날.txt / 긴글불러오기 방법|작성자 알쓸신컴</p>
+									                        	</div>
+									                        	<div id="reply-text">
+									                        		<b>르네</b>
+									                        		<p>회원가입을 하지 않아도 모든 기능을 사용 할 수 있으나
+
+																		회원가입을 하고 진행한다면 자신의 발전 모습을 확인 할 수 있습니다.
+																		</p>
+									                        	</div>
+									                        	<div id="reply-text">
+									                        		<b>르네</b>
+									                        		<p>회원가입을 하지 않아도 모든 기능을 사용 할 수 있으나
+
+																		회원가입을 하고 진행한다면 자신의 발전 모습을 확인 할 수 있습니다.
+																		[출처] [한컴타자연습] 방탄소년단-봄날.txt / 긴글불러오기 방법|작성자 알쓸신컴</p>
+									                        	</div>
+									                        	
 									                        </div>
 							                            </div>
-							                    </div>
+							                            							                      
+							                    	</div>
+							                    	<br><br><br><br><br>
+							                      </c:forEach> 
 							                </div>
-							                
-							                      
-                                             <div class="col" >
-							                    <div class="ticket-item" style="width: 400px;">
-							                        <div class="thumb">
-							                            <img src="/finalProject/resources/images/ticket-01.jpg" alt="">
-							                        </div>
-							                            <div class="prices" style="width: 500px;">
-									                            <div class="price">
-									                                <span>1 ticket<br>from <em>$25</em></span>
-									                            </div>
-									                        <div class="down-content">
-									                            <span>There Are 150 Tickets Left For This Show</span>
-									                            <h4>Wonderful Festival</h4>
-									                            <ul>
-									                                <li><i class="fa fa-clock-o"></i> Thursday: 05:00 PM to 10:00 PM</li>
-									                                <li><i class="fa fa-map-marker"></i>908 Copacabana Beach, Rio de Janeiro</li>
-									                            </ul>
-									                            <div class="main-dark-button">
-									                                <a href="ticket-details.html">Purchase Tickets</a>
-									                            </div>
-									                        </div>
-							                            </div>
-							                    </div>
-							                </div>
-							                
-							                      
-                                             <div class="col" >
-							                    <div class="ticket-item" style="width: 400px;">
-							                        <div class="thumb">
-							                            <img src="/finalProject/resources/images/ticket-01.jpg" alt="">
-							                        </div>
-							                            <div class="prices" style="width: 500px;">
-									                            <div class="price">
-									                                <span>1 ticket<br>from <em>$25</em></span>
-									                            </div>
-									                        <div class="down-content">
-									                            <span>There Are 150 Tickets Left For This Show</span>
-									                            <h4>Wonderful Festival</h4>
-									                            <ul>
-									                                <li><i class="fa fa-clock-o"></i> Thursday: 05:00 PM to 10:00 PM</li>
-									                                <li><i class="fa fa-map-marker"></i>908 Copacabana Beach, Rio de Janeiro</li>
-									                            </ul>
-									                            <div class="main-dark-button">
-									                                <a href="ticket-details.html">Purchase Tickets</a>
-									                            </div>
-									                        </div>
-							                            </div>
-							                    </div>
-							                </div>
+
 
                                             </div>
                                         </div>
@@ -483,12 +445,12 @@
                    			 <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
                 		</c:when>
                 		<c:otherwise>
-                			 <li class="page-item"><a class="page-link" href="list.bo?currentPage=${pi.currentPage - 1 }">Previous</a></li>
+                			 <li class="page-item"><a class="page-link" href="feed.bo?currentPage=${pi.currentPage - 1 }">Previous</a></li>
                 		</c:otherwise>
                 	</c:choose>
                 	
                     <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
-	                    <li class="page-item"><a class="page-link" href="list.bo?currentPage=${p}">${p}</a></li>
+	                    <li class="page-item"><a class="page-link" href="feed.bo?currentPage=${p}">${p}</a></li>
                     </c:forEach>
                     
                     <c:choose>
@@ -496,7 +458,7 @@
 		                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
                     	</c:when>
                     	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="list.bo?currentPage=${pi.currentPage + 1}">Next</a></li>
+                    		<li class="page-item"><a class="page-link" href="feed.bo?currentPage=${pi.currentPage + 1}">Next</a></li>
                     	</c:otherwise>
                     </c:choose>
                 </ul>
@@ -538,20 +500,68 @@
   </body>
  <script >
  
- $(function(){
-	 
+    var slides = document.querySelector('.slides'); //전체 슬라이드 컨테이너
+   var slideImg = document.querySelectorAll('.slides>li'); //모든 슬라이드들
+   let currentIdx = 0; //현재 슬라이드 index
+   const slideCount = slideImg.length; // 슬라이드 개수
+   const slideWidth = 500; //한개의 슬라이드 넓이
+
+   //전체 슬라이드 컨테이너 넓이 설정
+   slides.style.width = slideWidth * slideCount + 'px';
+
+  
+$(function(){
+	
 	 var size = ${size};
 	 var alist = ${alist};
+	var blist = ${blist};
+	var bsize = ${bsize};
 	 
-	 console.log(alist);
-	 
-	 for(var i=0; i<size; i++){
-		 if(alist[i].boardNo == alist[i+1].boardNo){
-			 $("#slides"+alist[i].boardNo).append("<li><img src='"+alist[i].filePath+"' alt=''></li>");
+	 for(var i=0; i<bsize; i++){
+		 for(var j=0; j<size; j++){
+			 
+			 if(alist[j].boardNo == blist[i].boardNo){
+				 $("#slides"+alist[j].boardNo).append("<li><img src='"+alist[j].filePath+"' alt=''></li>");
+				
+			 }
 		 }
 	 }
+	 
+	   
+
+			$(document).on("click",".controller .next",function(){		
+				  
+				var slideContainer = $(this).parents("#slideShow").children("ul");
+				  var currentLeft = parseInt(slideContainer.css('left'));
+				  /* var newLeft = currentLeft - 600; */
+				  var images = $(this).parents(".thumb").children().eq(1).children().eq(0).children().children("img"); //이미지 위치
+				  var imageCount = images.length;
+				  var slideWidth = 600; // Assuming each slide has a fixed width of 600 pixels
+				  var newLeft = currentLeft - slideWidth;
+	
+				    if (newLeft > -slideWidth * (imageCount-1)) {
+				        slideContainer.css('left', newLeft + 'px');
+				    } else {
+				        slideContainer.css('left', -slideWidth * (imageCount-1) + 'px');
+				    }			
+			})
+				    
+			$(document).on("click",".controller .prev",function(){
+				
+				 var slideContainer = $(this).parents("#slideShow").children("ul");
+				  var currentLeft = parseInt(slideContainer.css('left'));
+				  var newLeft = currentLeft + 600;
+				  
+				  if (newLeft < 0) {
+				    slideContainer.css('left', newLeft + 'px');
+				  } else {
+				    slideContainer.css('left', '0px');
+				  }
+			})
+			
+
  });
- 
+
  $(window).scroll(function(){
 	 var scrollTop = $(document).scrollTop();
 	 if (scrollTop < 50) {
@@ -564,54 +574,130 @@
  });
  
 function enrollerForm(){
-//console.log($(this));
- <c:choose>
-		<c:when test="${loginUser != null}">
-		 	location.href="enroll.fo";
-	 </c:when>
-	 <c:otherwise>
-	 	alert("로그인 후 이용가능합니다.");
-	 </c:otherwise>
-</c:choose>
+//console.log($(this));\
+var loginUser =  "${loginUser}";
+
+
+	 if(loginUser != ""){
+		location.href="enroll.fo";
+	}else{
+		alert("로그인 후 이용가능합니다.");
+	}
  }; 
- 
- 
- 
- 
- const slides = document.querySelector('.slides'); //전체 슬라이드 컨테이너
- const slideImg = document.querySelectorAll('.slides li'); //모든 슬라이드들
- let currentIdx = 0; //현재 슬라이드 index
- const slideCount = slideImg.length; // 슬라이드 개수
- const prev = document.querySelector('.prev'); //이전 버튼
- const next = document.querySelector('.next'); //다음 버튼
- const slideWidth = 500; //한개의 슬라이드 넓이
 
- //전체 슬라이드 컨테이너 넓이 설정
- slides.style.width = slideWidth * slideCount + 'px';
+ // slideShow
+ // thumb
+ /* $("#de").on("click",function(){
+	 console.log($(this));
+ 	 console.log($(this).parents(".thumb").children().eq(1).children().eq(0).children().children("img"));
 
- function moveSlide(num) {
-   slides.style.left = -num * 600 + 'px';
-   currentIdx = num;
- }
+ }) */
+ function deletef(e){
+		$btn = e;
+		var boardNo = $($btn).closest("#up").find(".boardNo").val(); //보드번호
+		var writer = $($btn).closest(".nicname").find("#nicknameHover").text(); // 보드닉네임
+		var isCurrentUser = "<c:out value='${loginUser.nickname}' />" === writer; // 본인인지 구별하기 위해
+		var images = $($btn).parents(".thumb").children().eq(1).children().eq(0).children().children("img"); //이미지 위치
+		var filePath = "";//이미지의 src를 담을 리스트
+		console.log(boardNo);
+		
+		images.each(function(index) {
+			var currentImg = $(this);
+	        var src = currentImg.attr("src");
+	        filePath += src + ",";
+		  
+		  });
 
- prev.addEventListener('click', function () {
-   /*첫 번째 슬라이드로 표시 됐을때는 
-   이전 버튼 눌러도 아무런 반응 없게 하기 위해 
-   currentIdx !==0일때만 moveSlide 함수 불러옴 */
+		console.log(filePath);
+		    if (isCurrentUser) {
+		   	
+			   $.ajax({
+		            url: "delete.fo",
+		            type: "POST",
+		            data: {
+		                boardNo: boardNo,
+		                filePath: filePath
+		            },
+		            success: function(result) {
 
-   if (currentIdx !== 0) moveSlide(currentIdx - 1);
+		            	location.reload();
+		            },
+		            error: function() {
+		                // Handle the error response if needed
+		                console.log("error");
+		            }
+		        });
+			   
+		  } else {
+		    alert("본인만 이용가능합니다.");
+		  }   
+		  
+	}
+ 
+
+ 
+ $(".col > .ticket-item").on("click", "#heart-area", function () {
+
+	 var heartImage = $(this).closest(".ticket-item").find("#heart");	 
+	  var boardNo = $(this).closest(".ticket-item").find("#up").find(".boardNo").val(); 
+	  /* console.log(boardNo);  */
+	 var writer =  "${loginUser.nickname}";
+		 
+	      if (writer !== ""){ 
+		 
+	 	$.ajax({
+	 		url: "heart.bo",
+	 		type: "POST",
+	 		data:{boardNo : boardNo,writer : writer},
+	 		success: function(result){
+	 			
+	 			if (result > 0) {
+	 				heartImage.attr("src", "resources/images/free-icon-heart-833472좋아요후.png");
+	 				location.reload();
+                } else {
+                	heartImage.attr("src", "resources/images/하트.png");
+                	location.reload();
+                }
+                 
+	 		},	 			 				 		
+	 		error : function(){
+	 			console.log("error");
+	 		}
+	 	});
+	 	
+	  } else {
+		    alert("로그인시 이용가능합니다.");
+	  }        
+	 	
  });
+ 
+	 
 
- next.addEventListener('click', function () {
-   /* 마지막 슬라이드로 표시 됐을때는 
-   다음 버튼 눌러도 아무런 반응 없게 하기 위해
-   currentIdx !==slideCount - 1 일때만 
-   moveSlide 함수 불러옴 */
-   if (currentIdx !== slideCount - 1) {
-     moveSlide(currentIdx + 1);
-   }
- });
-    
+	 $(".col > .ticket-item").each(function () {
+		    var boardNo = $(this).find("#up .boardNo").val();
+		    boardNo = parseInt(boardNo);
+		    /* console.log(typeof boardNo); */
+		    var heartImage = $(this).find("#heart");
+		    /* console.log(heartImage); */
+		    var writer = "${loginUser.nickname}";
+		    var isLiked = false; 
+		    var glist = ${glist};
+		    for (var i = 0; i < glist.length; i++){
+		    	 var g = glist[i];
+		    	 console.log(typeof g.boardNo);
+		    	 if (g.boardNo === boardNo && g.writer === writer) {
+		             isLiked = true;
+		         }
+		    }	 
+			     if (writer === "") {
+		            heartImage.attr("src", "resources/images/하트.png");
+		        } else if (isLiked) {
+		            heartImage.attr("src", "resources/images/free-icon-heart-833472좋아요후.png");
+		        } else {
+		            heartImage.attr("src", "resources/images/하트.png");
+		        } 	        
+		});
+
  </script>
 
 </html>
