@@ -32,6 +32,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -240,8 +241,7 @@ public class MemberController {
 		
 	//회원가입 메소드
 	@RequestMapping("insert.me")
-	public ModelAndView insertMember(Member m,String birthDay, String kakaoId, String access_token, ModelAndView mv, HttpSession session) throws IOException {
-		
+	public ModelAndView insertMember(Member m,String birthDay, String kakaoId, String access_token, ModelAndView mv, HttpSession session) throws IOException, ParseException {
 		//비밀번호 암호화
 		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
 		//System.out.println(encPwd);
@@ -280,19 +280,18 @@ public class MemberController {
 		int result = memberService.insertMember(m);
 
 		if(result>0) {
+			
 			session.setAttribute("alertMsg", "회원가입을 성공하였습니다.");
 			
-			//카카오 인증 후 회원가입하는 사람은 카카오 로그아웃 도시켜주기
-			String certification = "1";
-			//카카오 계정 로그아웃
-			if(certification.equals("1")) {
-				
-				String url = "https://kauth.kakao.com/oauth/logout";
-						url += "?client_id="+appKey;
-						url += "&logout_redirect_uri=http://localhost:8888/finalProject/";
-				
-				mv.setViewName("redirect:"+url);
-
+			//카카오 인증 회원가입
+			if(m.getCertification()==1) {
+				//카카오 로그아웃 도시켜주기
+					String url = "https://kauth.kakao.com/oauth/logout";
+					url += "?client_id="+appKey;
+					url += "&logout_redirect_uri=http://localhost:8888/finalProject/";
+					
+					mv.setViewName("redirect:"+url);
+					
 //				카카오 로그아웃
 //				String url = "https://kapi.kakao.com/v1/user/logout";
 //				
@@ -314,6 +313,44 @@ public class MemberController {
 //				
 //				mv.setViewName("redirect:/");
 			}
+			//네이버 인증 후 회원가입 시
+			if(m.getCertification()==2) {
+				String clientId = "xezYicDH1SzVKNokPSX2";
+				String ClientSecret = "h48MxFzhpW";
+				//네이버 탈퇴 요청
+				String url = "https://nid.naver.com/oauth2.0/token";
+						url += "?grant_type=delete";
+						url += "&client_id="+clientId;
+						url += "&client_secret="+ClientSecret;
+						url += "&access_token="+access_token;
+						url += "&redirect_uri=http://localhost:8888/finalProject/";
+						url += "&service_provider=NAVER";
+				//System.out.println(url);
+				
+				URL requestUrl = new URL(url);
+				HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
+				
+				//응답데이터 읽어오기
+				BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+				
+				String responseText="";
+				String line;
+				
+				while((line=br.readLine())!=null) {
+					responseText += line;
+				}
+						
+				//System.out.println(responseTextToken);
+				
+				//파싱 작업
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObj = (JSONObject) jsonParser.parse(responseText);
+				//System.out.println(jsonObj);
+				
+				String resultNaver = (String) jsonObj.get("result");
+				
+				mv.setViewName("redirect:/");
+			}
 		}else {
 			mv.addObject("errorMsg", "회원가입 실패").setViewName("common/errorPage");
 		}
@@ -323,7 +360,7 @@ public class MemberController {
 	//카카오 인증 조회 (1.인가 코드 받기 2.인가코드로 토큰 받기 3.토큰으로 정보 조회)
 	//회원가입 폼
 	@RequestMapping("enrollForm.me")
-	public String joinMember(Member m, String birthDay, ModelAndView mv, String code,String error, HttpServletRequest request, HttpSession session) throws IOException, ParseException{
+	public String joinMember(Member m, String birthDay, @RequestParam(value="certification",defaultValue="0") String certification, ModelAndView mv, String code,String error, HttpServletRequest request, HttpSession session) throws IOException, ParseException{
 		
 		//카카오톡
 		//로그인 인증 동의시 토큰 받기 요청위한 인가 코드(동의하고 계속하기 선택, 로그인 진행시)
@@ -337,13 +374,13 @@ public class MemberController {
 				session.setAttribute("alertMsg", "인증을 취소하였습니다.");
 			}
 		}
-		//인가 코드가 있으면 토큰 받아오기
-		if(code!=null) {
+		//인증1번으로 넘어오면 카카오로 토큰 받아오기
+		if(certification.equals("1")) {
 			//url작성
 			String url = "https://kauth.kakao.com/oauth/token";
 			url += "?grant_type=authorization_code";
 			url += "&client_id="+appKey;
-			url += "&redirect_uri=http://localhost:8888/finalProject/enrollForm.me";
+			url += "&redirect_uri=http://localhost:8888/finalProject/enrollForm.me?certification=1";
 			url += "&code="+code;
 			
 			//URL객체생성
@@ -451,27 +488,100 @@ public class MemberController {
 			
 			session.setAttribute("kakaoInfo",kakaoInfo);
 		}
+		
+		//인증2번으로 넘어올시 네이버 토큰 발급 후 정보 조회
+		if(certification.equals("2")) {
+			
+			String clientId = "xezYicDH1SzVKNokPSX2";
+			String ClientSecret = "h48MxFzhpW";
+			
+			//토큰 발급
+			String url = "https://nid.naver.com/oauth2.0/token";
+			url += "?grant_type=authorization_code";
+			url += "&client_id="+clientId;
+			url += "&client_secret="+ClientSecret;
+			url += "&code="+code;
+			url += "&state=test";
+			
+			URL requestUrl = new URL(url);
+			HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
+			
+			//응답데이터 읽어오기
+			BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+			
+			String responseText="";
+			String line;
+			
+			while((line=br.readLine())!=null) {
+				responseText += line;
+			}
+					
+			//System.out.println(responseTextToken);
+			
+			//파싱 작업
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObj = (JSONObject) jsonParser.parse(responseText);
+			//System.out.println(jsonObj);
+			
+			String access_token = (String) jsonObj.get("access_token");
+			//System.out.println(access_token);
+			
+			//토큰으로 사용자 정보 가져오기
+			String urlToken = "https://openapi.naver.com/v1/nid/me	";
+			
+			URL requestUrlInfo = new URL(urlToken);
+			HttpURLConnection urlInfoCon = (HttpURLConnection) requestUrlInfo.openConnection();
+			urlInfoCon.setRequestMethod("GET");
+			urlInfoCon.setRequestProperty("Authorization", "Bearer " + access_token);
+			
+			//System.out.println(urlInfoCon);
+			
+			//응답데이터 읽어오기
+			BufferedReader brInfo = new BufferedReader(new InputStreamReader(urlInfoCon.getInputStream()));
+			
+			String infoText="";
+			String lineInfo;
+			
+			while((lineInfo=brInfo.readLine())!=null) {
+				infoText += lineInfo;
+			}
+					
+			//System.out.println(infoText);
+			
+			//파싱 작업
+			JSONParser jsonParserToken = new JSONParser();
+			JSONObject jsonObjToken = (JSONObject) jsonParserToken.parse(infoText);
+			//System.out.println(jsonObjToken);
+			
+			JSONObject responseInfoText =  (JSONObject) jsonObjToken.get("response");
+			//System.out.println(responseInfoText);
+			
+			String mobile = (String) responseInfoText.get("mobile"); //010-1111-1111
+			String name = (String) responseInfoText.get("name");
+			String email = (String) responseInfoText.get("email");
+			String gender = (String) responseInfoText.get("gender");
+			String birthday = (String) responseInfoText.get("birthday"); //12-12
+			String birthyear = (String) responseInfoText.get("birthyear");
+			
+			//원하는 값으로 문자열로 바꿔주기
+			String phone = mobile.replaceAll("-", "");
+	        String birthdayInfo = birthday.replaceAll("-", "");
+	        String birthInfo = birthyear+birthdayInfo;
+	        
+	        Map<String,String> naverInfo = new HashMap();
+			naverInfo.put("phone", phone);
+			naverInfo.put("name", name);
+			naverInfo.put("email", email);
+			naverInfo.put("gender",gender);
+			naverInfo.put("birthDay",birthInfo);
+			naverInfo.put("access_token",access_token);
+			naverInfo.put("certification",certification);
+			
+			session.setAttribute("naverInfo",naverInfo);
+		}
+		
 		return "member/memberEnrollForm";
 	}
-	
-	//네이버 인증 조회(1.코드 받기 2.토큰발급 3.정보조회)
-	//키
-	public static final String client_id = "xezYicDH1SzVKNokPSX2";
-	
-	//코드 받기
-	@ResponseBody
-	@RequestMapping("naver.me")
-	public String naverConnect() {
-		
-		String url = "https://nid.naver.com/oauth2.0/authorize";
-		url += "?response_type=code";
-		url += "&client_id="+client_id;
-		url += "&redirect_uri=http://localhost:8888/finalProject/enrollForm.me";
-		url += "&state=test";
-		System.out.println(url);
-		return url;
-	}
-	
 	
 	//로그인 메소드
 	@ResponseBody

@@ -808,6 +808,7 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 			<!-- 카카오인증 후 탈퇴시 필요한 카카오 정보 -->
 			<input type="hidden" name="kakaoId" id="kakaoId" value="0">
 			<input type="hidden" name="access_token" id="access_token" value="0">
+			<input type="hidden" id="certification" name="certification" value="0">
 		</div>
 	</form>
 	<script>
@@ -947,16 +948,30 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 				$("#phone_check").show();
 			}
 		});
-		
-		//console.log($("#kakaoId").val());
-		//console.log($("#access_token").val());
+		console.log('${naverInfo.certification}');
+		console.log('${kakaoInfo.certification}');
+		console.log($("#certification").val());
 		//카카오 회원번호 넘어오면 정보 담아주기
-		$("#kakaoId").val('${kakaoInfo.id}');
-		$("#access_token").val('${kakaoInfo.access_token}');
-		//console.log('${kakaoInfo.id}');
-		//console.log('${kakaoInfo.access_token}');
-		console.log($("#kakaoId").val());
-		console.log($("#access_token").val());
+		if('${kakaoInfo.name}'!=""){
+			$("#kakaoId").val('${kakaoInfo.id}');
+			$("#access_token").val('${kakaoInfo.access_token}');			
+		}
+		
+		//네이버 정보 뿌려주기
+		if('${naverInfo.name}'!=""){
+	 		$("#userName").val('${naverInfo.name}');
+			$("#birthDay").val("${naverInfo.birthDay}");
+			if ('${naverInfo.gender}' === 'F') {
+				$('#F').prop('checked', true);
+			    } else {
+			    	$('#M').prop('checked', true);
+			    }
+			$("#phone").val('${naverInfo.phone}');
+			$("#email").val('${naverInfo.email}');
+			$("#certification").val('${naverInfo.certification}');
+			//네이버 토큰 정보 넣어주기
+			$("#access_token").val('${naverInfo.access_token}');		
+		}
 	});
 	
 	/* 비밀번호 확인(onblur이벤트로 포커스 해지시 발동... 비번,비번확인 일치하는지 ck) */
@@ -1106,18 +1121,54 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		
 		//인증시 인증값과 같은지 확인...
 		//카카오(성별,생일,나이대 알 수 있음)
-		//성별 확인
-		if('${kakaoInfo.gender}'!=$('input[name=gender]:checked').val()){
-			alert("인증하신 정보와 성별이 일치하지 않습니다.");
-			$("input[name=gender]").focus();
-			return false;
+		if('${kakaoInfo.gender}'!=""){
+			//성별 확인
+			if('${kakaoInfo.gender}'!=$('input[name=gender]:checked').val()){
+				alert("인증하신 정보와 성별이 일치하지 않습니다.");
+				$("input[name=gender]").focus();
+				return false;
+			}
+			//생일 확인
+			var birthDay = $('input[name=birthDay]').val().substring(4,8);
+			if('${kakaoInfo.birthday}'!=birthDay){
+				alert("인증하신 정보와 생년월일이 일치하지 않습니다.");
+				$('input[name=birthDay]').focus();
+				return false;
+			}
 		}
-		//생일 확인
-		var birthDay = $('input[name=birthDay]').val().substring(4,8);
-		if('${kakaoInfo.birthday}'!=birthDay){
-			alert("인증하신 정보와 생년월일이 일치하지 않습니다.");
-			$('input[name=birthDay]').focus();
-			return false;
+		
+		//네이버(이름,생년월일,폰,이메일,성별 알 수 있음);
+		if('${naverInfo.name}'!=""){
+			//이름 확인
+	 		if('${naverInfo.name}'!=$("#userName").val()){
+				alert("인증하신 정보와 성함이 일치하지 않습니다.");
+				$('input[name=userName]').focus();
+				return false;
+			}
+			//생년월일 확인
+			if("${naverInfo.birthDay}"!=$("#birthDay").val()){
+				alert("인증하신 정보와 생년월일이 일치하지 않습니다.");
+				$('input[name=birthDay]').focus();
+				return false;
+			}
+			//성별 확인
+			if('${naverInfo.gender}'!=$('input[name=gender]:checked').val()){
+				alert("인증하신 정보와 성별이 일치하지 않습니다.");
+				$("input[name=gender]").focus();
+				return false;
+			}
+			//폰 확인
+			if('${naverInfo.phone}'!=$("#phone").val()){
+				alert("인증하신 정보와 휴대전화 번호가 일치하지 않습니다.");
+				$('input[name=phone]').focus();
+				return false;
+			}
+			//이메일 확인
+			if('${naverInfo.email}'!=$("#email").val()){
+				alert("인증하신 정보와 메일이 일치하지 않습니다.");
+				$('input[name=email]').focus();
+				return false;
+			}
 		}
 		
 		//약관 동의
