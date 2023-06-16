@@ -19,7 +19,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- CKEditor -->
     <script src="resources/js/ckeditor/ckeditor.js"></script>
-    <title>문의관리-공지사항</title>
+    <title>문의관리-FAQ</title>
 </head>
 <body>
 <%@include file="adMenubar.jsp" %>
@@ -27,13 +27,13 @@
 <div id="content-wrapper">
     <div class="container-fluid">
         <div class="dash-title">
-            <h1>&nbsp;공지사항 등록
+            <h1>&nbsp;FAQ 등록
                 <button class="btn btn-info" onclick="history.back();">취소</button>
                 <button class="btn btn-success" onclick="enrollSubmit()">등록</button>
             </h1>
         </div>
-        <form class="notice-enroll-form" action="noticeInsert.ad" method="post" enctype="multipart/form-data">
-        	<input type="text" name="category" value="1" hidden>
+        <form class="notice-enroll-form" action="faqInsert.ad" method="post" enctype="multipart/form-data">
+        	<input type="text" name="category" value="2" hidden>
             <div class="enroll-container">
                 <div class="title-area">
                     <label for="title" class="">제목</label>
@@ -42,12 +42,6 @@
                 <div class="writer-area">
                     <label for="writer" class="">작성자</label>
                     <input type="text" name="writer" id="writer"  class="form-control input-lg" value="${loginUser.nickname}" readonly="readonly">
-                </div>
-                <div class="file-area bs3-primary">
-                    <input type="file" name="upfile" id="upfile" class="upload-hidden">
-                    <label for="upfile">첨부파일</label>
-                    <input class="upload-name form-control input-lg" value="파일선택" disabled>
-                    <button type="button" id="selectFile" onclick="$('#upfile').trigger('click');">파일 선택</button>
                 </div>
                 <div class="contents-area">
                     <label for="editor" class="">내용</label>

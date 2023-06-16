@@ -117,4 +117,18 @@
 		WHERE M.STATUS = 'Y'
 		AND NICKNAME = #{nickname}
 	</select>
+	
+	<!-- 마이페이지 Q&A 질문 등록 -->
+	<insert id="myQnaInsert">
+	  	INSERT INTO SERVICE(SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,WRITER)
+		VALUES(SEQ_BNO.NEXTVAL,#{category},#{serviceTitle},#{serviceContent},'N',#{writer})
+  	</insert>
+  	
+  	<!-- 마이페이지 Q&A 질문 파일 등록 -->
+	<insert id="myQnaFileInsert">
+	  	INSERT INTO ATTACHMENT(FILE_NO,BOARD_NO,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,FILE_LEVEL)
+	  	VALUES(SEQ_FNO.NEXTVAL,SEQ_BNO.CURRVAL,#{originName},#{changeName},#{filePath},2)
+  	</insert>
+  	
+	
 </mapper>

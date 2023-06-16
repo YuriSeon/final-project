@@ -298,6 +298,16 @@
   	</form>
   	
   	<script>
+  		//엔터키로 로그인버튼 누르기
+	  	$(function() {
+	  	    $("#userPwd").keyup(function(event) {
+	  	        if (event.which === 13) {
+	  	            $("#login-button").click();
+	  	        }
+	  	    });
+	  	});
+  	
+  	
   		//쿠키에 저장된 아이디값 가져오기
   		$(function(){
   			

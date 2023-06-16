@@ -24,7 +24,7 @@
 <body>
 <%@include file="adMenubar.jsp" %>
 <!-- Content - Start  -->
-<div id="content-wrapper" style="background-color: #EEEEEE;">
+<div id="content-wrapper" style="height: auto; background-color: #EEEEEE;">
     <div class="container-fluid">
         <div class="dash-title">
         <h1>&nbsp;대시보드</h1>
