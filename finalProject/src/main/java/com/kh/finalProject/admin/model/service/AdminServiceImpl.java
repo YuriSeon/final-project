@@ -108,5 +108,71 @@ public class AdminServiceImpl implements AdminService {
 		return adminDao.noticeSearchList(sqlSession,map,pi);
 	}
 
+	//==================================================FAQ===========================================================
+	
+	//FAQ 등록
+	@Override
+	public int insertFAQ(Notice n) {
+		return adminDao.insertFAQ(sqlSession,n);
+	}
 
+	//FAQ 리스트 개수
+	@Override
+	public int faqListCount() {
+		return adminDao.faqListCount(sqlSession);
+	}
+
+	//FAQ 리스트 조회
+	@Override
+	public ArrayList<Notice> selectFAQList(PageInfo pi) {
+		return adminDao.selectFAQList(sqlSession,pi);
+	}
+
+	//FAQ 수정 페이지 이동
+	@Override
+	public Notice faqSelect(int serviceNo) {
+		return adminDao.faqSelect(sqlSession,serviceNo);
+	}
+
+
+	//FAQ 수정
+	@Override
+	public int faqUpdate(Notice n) {
+		return adminDao.faqUpdate(sqlSession,n);
+	}
+
+	//FAQ 삭제
+	@Override
+	public int faqDelete(int serviceNo) {
+		return adminDao.faqDelete(sqlSession,serviceNo);
+	}
+
+	//FAQ 검색 개수
+	@Override
+	public int faqSearchCount(HashMap<String, String> map) {
+		return adminDao.faqSearchCount(sqlSession,map);
+	}
+
+	//FAQ 검색 리스트 조회
+	@Override
+	public ArrayList<Notice> faqSearchList(HashMap<String, String> map, PageInfo pi) {
+		return adminDao.faqSearchList(sqlSession,map,pi);
+	}
+
+
+//==================================================Q&A===========================================================
+	
+	//Q&A 리스트 개수
+	@Override
+	public int qnaListCount() {
+		return adminDao.qnaListCount(sqlSession);
+	}
+
+	//Q&A 리스트 조회
+	@Override
+	public ArrayList<Notice> selectQnaList(PageInfo pi) {
+		return adminDao.selectQnaList(sqlSession,pi);
+	}
+	
+	
 }

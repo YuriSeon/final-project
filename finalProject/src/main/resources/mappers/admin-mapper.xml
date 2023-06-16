@@ -47,6 +47,7 @@
   		SELECT COUNT(*)
   		FROM SERVICE
   		WHERE STATUS = 'Y'
+  		AND CATEGORY = 1
   	</select>
   	
 	<!-- 공지사항 리스트 조회 -->
@@ -135,6 +136,7 @@
 		SELECT COUNT(*)
 		FROM SERVICE
 		WHERE STATUS = 'Y'
+		AND CATEGORY = 1
 		<if test="status == 'title'">
 		AND SERVICE_TITLE
 		</if>
@@ -166,4 +168,97 @@
 		ORDER BY SERVICE_NO
 	</select>
 	
+	<!-- ===========================================FAQ============================================= -->
+	
+	<!-- FAQ 리스트 개수 -->
+  	<select id="faqListCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM SERVICE
+  		WHERE STATUS = 'Y'
+  		AND CATEGORY = 2
+  	</select>
+	
+	<!-- FAQ 리스트 조회 -->
+  	<select id="selectFAQList" resultMap="serviceResultSet">
+  		SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+        AND CATEGORY = 2
+		ORDER BY SERVICE_NO
+  	</select>
+	
+	<!-- FAQ 검색 개수-->
+  	<select id="faqSearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 2
+		<if test="status == 'title'">
+		AND SERVICE_TITLE
+		</if>
+		<if test="status == 'content'">
+			<![CDATA[
+				AND REGEXP_REPLACE(SERVICE_CONTENT, '<[^>]+>', '')
+			]]>
+		</if>
+		 LIKE '%'||#{keyword}||'%'
+	</select>
+	
+	<!-- FAQ 검색 리스트-->
+  	<select id="faqSearchList" resultMap="serviceResultSet">
+		SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 2
+		<choose>
+			<when test="status=='title'">
+				AND SERVICE_TITLE
+			</when>
+			<otherwise>
+				<![CDATA[
+					AND REGEXP_REPLACE(SERVICE_CONTENT, '<[^>]+>', '')
+				]]>
+			</otherwise>
+		</choose>
+		LIKE '%'||#{keyword}||'%'
+		ORDER BY SERVICE_NO
+	</select>
+	
+	<!-- ===========================================FAQ============================================= -->
+	
+	<!-- Q&A 리스트 개수 -->
+  	<select id="qnaListCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM SERVICE
+  		WHERE STATUS = 'Y'
+  		AND CATEGORY = 3
+  	</select>
+  	
+  	<!-- Q&A 리스트 조회 -->
+  	<select id="selectQnaList" resultMap="serviceResultSet">
+  		SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+        AND CATEGORY = 3
+		ORDER BY SERVICE_NO
+  	</select>
+  	
+  	<!-- 마이페이지 Q&A 개수 -->
+  	<select id="myQnaCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM SERVICE
+  		WHERE STATUS = 'Y'
+  		AND CATEGORY = 3
+  		AND WRITER = #{nick}
+  	</select>
+  	
+  	<!-- 마이페이지 Q&A 리스트 조회 -->
+  	<select id="myQnaList" resultMap="serviceResultSet">
+  		SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+        AND CATEGORY = 3
+        AND WRITER = #{nick}
+		ORDER BY CREATE_DATE DESC
+  	</select>
   </mapper>

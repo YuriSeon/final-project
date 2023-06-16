@@ -42,9 +42,10 @@
     color: #fff;
     font-size: 24px;
     position: relative;
-    left: -20px;
+    left: -250px;
     top: 10px;
     cursor: pointer;
+    z-index: 10;
 }
 #menubtn:hover+.pop_subMenu,#menubtn:hover+.pop_subMenu ul{
 	display: block;
@@ -58,7 +59,7 @@
     /* display: none; */
     position: absolute;
     top: 35px;
-    right: 0;
+    left: 230px;
     width: 120px;
     height: 90px;
     z-index: 1;
@@ -326,4 +327,411 @@ ul {
 .swiper-button-next::after,
 .swiper-button-prev::after {
     display: none;
+}
+
+/* ========================Q&A===================== */
+
+#QNAcontents{
+    width: 980px;
+    margin: 0 auto;
+    padding: 100px 20px 27px 20px;
+    box-sizing: border-box;
+    min-height: 60vh;
+    overflow: auto;
+}
+
+#QNAcontents div{
+    box-sizing: border-box;
+}
+
+.tit_cont{
+    width: 600px;
+    position: relative;
+    padding-right: 20px;
+}
+.tit_cont .area_tag{
+    padding-bottom: 0;
+}
+.tit_cont h2{
+    overflow: hidden;
+    font-weight: 800;
+    color: #333;
+    font-size: 36px;
+    letter-spacing: -1px;
+    word-break: keep-all;
+    display: block;
+}
+.area_tag a {
+    color: black;
+}
+.area_tag a:hover {
+    color: black;
+}
+.area_tag + h2 {
+    margin-top: -5px;
+}
+.tit_cont.tit_widCol2 .btn_apply {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+.tit_cont.tit_widCol2 .btn_apply:hover {
+	color: white;
+}
+a:link, a:visited, a:hover, a:focus, a:active {
+    text-decoration: none;
+}
+.btn_greyS {
+    display: inline-block;
+    padding: 5px 15px;
+    border: 0;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+    background: #13294b;
+    box-sizing: border-box;
+}
+
+
+.wrap_contView{
+    position: relative;
+    width: 100%;
+    margin-top: 24px;
+}
+.box_leftType1 {
+    float: left;
+    width: 600px;
+}
+.total_check {
+    position: relative;
+    width: 600px;
+    padding: 15px 0 13px;
+    font-weight: 700;
+    border-top: 1px solid #767676;
+}
+.total_check strong {
+    font-weight: 700;
+    font-size: 18px;
+    color: #000;
+}
+.total_check strong span {
+    padding: 0 2px;
+    color: #0a97cd;
+}
+.list_board1 {
+    float: left;
+    width: 600px;
+}
+.flnon {
+    float: none !important;
+    padding: 0;
+}
+.list_board1 > li.bdr_nor {
+    border-top: 1px solid #e6e6e6;
+}
+.list_board1 > li:first-child {
+    border-top: 1px solid #767676;
+}
+.list_board1 > li {
+    position: relative;
+    width: 100%;
+    padding: 20px 0;
+    border-bottom: 1px solid #e6e6e6;
+}
+.list_board1 > li > div {
+    padding-right: 20px;
+}
+.list_board1 > li .area_txt .tit {
+    display: block;
+    width: 100%;
+    padding-bottom: 5px;
+    font-weight: normal;
+}
+.list_board1 > li .area_txt .tit.on a {
+    font-weight: 800;
+    color: #000;
+}
+.list_board1 > li .area_txt .tit a {
+    display: inline-block;
+    font-weight: 400;
+    font-size: 20px;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
+.list_board1 > li .date {
+    color: #666;
+}
+.list_board1 > li .date .line {
+    padding-right: 10px;
+    margin-right: 7px;
+    background: url(../images/sub/line_tit.png) 100% 50% no-repeat;
+    font-weight: 400;
+    font-size: 14px;
+}
+.list_board1 > li .date .line {
+    padding-right: 10px;
+    margin-right: 7px;
+    background: url(../images/sub/line_tit.png) 100% 50% no-repeat;
+    font-weight: 400;
+    font-size: 14px;
+}
+.list_board1 > li .date .ans.ing {
+    color: #ff3333;
+}
+.list_board1 > li .btn_view {
+    overflow: hidden;
+    position: absolute;
+    top: 26px;
+    right: 0;
+    z-index: 90;
+    width: 14px;
+    height: 16px;
+    background: url(../images/btn_dot2.png) 0 0 no-repeat;
+    text-indent: -9999px;
+    border: 0 none;
+}
+.list_board1 > li > div {
+    padding-right: 20px;
+}
+.qna_subMenu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    z-index: 110;
+    width: 130px;
+    border: 1px solid #767676;
+    padding: 0 !important;
+    background: #fff;
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+}
+.qna_subMenu > ul:first-child {
+    background: none;
+}
+.qna_subMenu > ul {
+    padding: 10px 0;
+    background: url(../images/sub/line_menupop.png) 50% 0 no-repeat;
+}
+.qna_subMenu > ul > li {
+    position: relative;
+    padding: 5px 0;
+}
+.qna_subMenu > ul > li:hover {
+    background: #ededed;
+}
+.qna_subMenu > ul > li.btn_mod > a {
+    background-position: 0 -367px;
+}
+.qna_subMenu > ul > li > a {
+    display: block;
+    height: 20px;
+    margin-left: 20px;
+    padding: 0 20px 0 28px;
+    background: url(../images/sub/ico_sprite_pop.png) 0 0 no-repeat;
+    vertical-align: middle;
+    letter-spacing: -1.1px;
+	color: black;
+}
+.qna_subMenu > ul > li.btn_del > a {
+    background-position: 0 -400px;
+}
+.page_box {
+    padding-top: 30px;
+    text-align: center;
+}
+.page_box a.on {
+    border: 1px solid #13294b;
+    background-color: #13294b;
+    color: #fff;
+}
+.page_box a {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    line-height: 30px;
+    text-align: center;
+}
+caption, .blind, .hidden, .ir {
+    overflow: hidden;
+    position: absolute;
+    top: auto;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    text-indent: -9999px;
+}
+.box_rightType1 {
+    float: right;
+    width: 300px;
+}
+.snb_mypage {
+    width: 100%;
+    padding: 10px 20px 30px 0px;
+    background: #f7f7f7;
+}
+.snb_mypage > ul > li {
+    width: 100%;
+    padding-top: 20px;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.snb_mypage > ul > li:hover a {
+    background: url(../images/ico_mypagemenu.png) 0 0 no-repeat;
+    background-size: 4px 100%;
+    color: #333;
+}
+.snb_mypage > ul > li a {
+    display: block;
+    padding-left: 20px;
+    color: #666;
+}
+.snb_mypage ul li.on a {
+    background: url(../images/ico_mypagemenu.png) 0 0 no-repeat;
+    background-size: 4px 100%;
+    color: #333;
+}
+
+/* ========================Q&A 질문등록===================== */
+
+.write_board1 {
+    width: 100%;
+    margin-bottom: 20px;
+    border-top: 1px solid #767676;
+}
+.write_board1 .tit_write {
+    margin-top: 20px;
+    padding-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+}
+.wrap_contView h3 {
+    display: inline-block;
+    margin-top: 11px;
+    font-size: 22px;
+    color: #000;
+}
+.write_board1 .tit_write em {
+    font-size: 14px;
+    color: #ff3333;
+}
+.write_board1 input[type=text], .write_board1 textarea {
+    padding: 10px 10px;
+}
+.write_board1 .inp_write {
+    width: 100%;
+    height: 38px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    background: #fff;
+}
+.write_board1 .inp_textarea {
+    width: 100%;
+    line-height: 18px;
+    height: 120px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    background: #fff;
+    resize: none;
+}
+.write_board1 .file_area {
+    width: 100%;
+    margin-bottom: 10px;
+}
+.write_board1 .file_area .file_inr {
+    padding: 9px 15px;
+    border: 1px solid #ccc;
+    background-color: #f7f7f7;
+}
+caption, .blind, .hidden, .ir {
+    overflow: hidden;
+    position: absolute;
+    top: auto;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    text-indent: -9999px;
+}
+.write_board1 .file_area .btn_filesearch {
+    float: left;
+    width: 80px;
+    height: 30px;
+    margin-left: 3px;
+    border: 1px solid #ccc;
+    background: #e6e6e6;
+    vertical-align: middle;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+.write_board1 .file_area .btn_filesearch span {
+    display: block;
+    color: #333;
+    font-size: 14px;
+    text-align: center;
+    line-height: 28px;
+}
+.write_board1 .file_area .file_inr .txt {
+    display: inline-block;
+    margin-left: 10px;
+    font-weight: 400;
+    color: #666;
+    font-size: 14px;
+    line-height: 30px;
+}
+.write_board1 .file_area .uploadfile {
+    position: relative;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+.write_board1 .file_area .uploadfile input {
+    width: 100%;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    border: 0 none;
+    background-color: transparent;
+    color: #000;
+    font-size: 14px;
+    cursor: pointer;
+}
+.write_board1 .file_area .uploadfile .btn_file_del {
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 14px 20px;
+    font-size: 0;
+    border: 0 none;
+    background-color: transparent;
+}
+.write_board1 .file_area .uploadfile .btn_file_del span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: url(../images/btn_file_del.png) no-repeat 0 0;
+    background-size: 12px auto;
+    text-indent: -9999px;
+}
+.btn_center {
+    text-align: center;
+}
+.btn_greyL {
+    display: inline-block;
+    width: 150px;
+    padding: 10px 10px;
+    border: 0;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    background: #13294b;
+    border: 1px solid #13294b;
+    box-sizing: border-box;
+}
+.btn_greyL:hover{
+	color: white;	
 }

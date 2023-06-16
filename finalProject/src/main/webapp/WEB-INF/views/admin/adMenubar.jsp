@@ -125,12 +125,12 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="faq.ad">
                             <span class='glyphicon glyphicon-list-alt'></span> FAQ
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="qna.ad">
                             <span class='glyphicon glyphicon-list-alt'></span> Q&A
                         </a>
                     </li>
