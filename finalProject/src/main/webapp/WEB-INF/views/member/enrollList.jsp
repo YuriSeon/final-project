@@ -62,14 +62,16 @@
 
   <div id="login_wrap">
     <div class="btn_wrap">
-      <button type="button" onclick="location.href='enrollForm.me'">그냥 회원가입</button>
+      <button type="button" onclick="location.href='enrollForm.me'">회원가입</button>
     </div>
     <div class="sns_wrap">
     	<div><p>뷰페이지 ...</p>
     	</div>
     	<div>
-	    	<button type="button" onclick="naver();">네이버연동 로그인</button>
-    	    <button type="button" onclick="kakao();">카카오연동 로그인</button>
+	    	<button type="button" onclick="naver();">네이버인증 로그인</button>
+    	    <button type="button" onclick="kakao();">카카오인증 로그인</button>
+    	    <!-- 일반 회원가입인지, 카카오인지 네이버인지 구분하기 위해 -->
+    	    <input type="hidden" name="certification" id="certification" value="0">
     	</div>
     </div>
   </div>
@@ -82,25 +84,29 @@
 		function naver(){
 
 			var client_Id = "xezYicDH1SzVKNokPSX2";
+			var urlEnco = encodeURIComponent("http://localhost:8888/finalProject/enrollForm.me");
 			
 			var url = "https://nid.naver.com/oauth2.0/authorize";
 				url += "?response_type=code";
 				url += "&client_id="+client_Id;
-				url += "&redirect_uri=http://localhost:8888/finalProject/enrollForm.me";
+				url += "&redirect_uri=http://localhost:8888/finalProject/enrollForm.me?certification=2";
 				url += "&state=test";
 				
-				location.href=url;
+			location.href=url;
 		}
 		
 		//카카오 버튼 클릭시 카카오 로그인 페이지로
 		function kakao(){
+			
+ 			/* $("#certification").val('1');
+			console.log($("#certification").val()); */
 			
 			//앱키
 			appKey = "04c77a2f5ca75a521a0d0e08cbb740b3";
 			
 			var url = "https://kauth.kakao.com/oauth/authorize";
 			url += "?client_id="+appKey;
-			url += "&redirect_uri=http://localhost:8888/finalProject/enrollForm.me";
+			url += "&redirect_uri=http://localhost:8888/finalProject/enrollForm.me?certification=1";
 			url += "&response_type=code";
 			
 			location.href=url;
