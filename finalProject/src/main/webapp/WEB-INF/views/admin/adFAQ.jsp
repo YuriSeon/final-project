@@ -18,7 +18,7 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- css -->
-    <title>문의관리-공지사항</title>
+    <title>문의관리-FAQ</title>
 </head>
 <body>
 <%@include file="adMenubar.jsp" %>
@@ -26,13 +26,13 @@
 <div id="content-wrapper">
     <div class="container-fluid">
         <div class="dash-title">
-            <h1>&nbsp;문의 관리 - 공지사항</h1>
+            <h1>&nbsp;문의 관리 - FAQ</h1>
         </div>
         <div class="board-theme">
             <div class="search-btn" id="searchBtn">
                 <!-- 검색 시작 -->
                 <div class="search-section">
-                	<form action="noticeSearch.ad" method="get">
+                	<form action="faqSearch.ad" method="get">
                 	<input type="hidden" name="currentPage" value="1">
 	                    <select name="type" id="searchCate">
 	                        <option value="title" ${type == 'title' ? 'selected="selected"': ''}>제목</option>
@@ -46,7 +46,7 @@
                 <!-- 버튼 시작 -->
                 <div>
                     <button class="btn btn-danger" onclick="chkDelete();">선택삭제</button>
-                    <button class="btn btn-info" onclick="location.href='noticeEnroll.ad'">게시물 등록</button>
+                    <button class="btn btn-info" onclick="location.href='faqEnroll.ad'">게시물 등록</button>
                 </div>
                 <!-- 버튼 끝 -->
             </div>
@@ -86,17 +86,17 @@
                    			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
                 		</c:when>
                 		<c:otherwise>
-                			 <li class="page-item"><a class="page-link" href="notice.ad?currentPage=${pi.currentPage - 1 }">&lt;</a></li>
+                			 <li class="page-item"><a class="page-link" href="faq.ad?currentPage=${pi.currentPage - 1 }">&lt;</a></li>
                 		</c:otherwise>
                 	</c:choose>
                 	
                     <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
                     	<c:choose>
                     		<c:when test="${p eq pi.currentPage}">
-                   				<li class="page-item disabled"><a class="page-link" href="notice.ad?currentPage=${p}">${p}</a></li>
+                   				<li class="page-item disabled"><a class="page-link" href="faq.ad?currentPage=${p}">${p}</a></li>
 	                		</c:when>
 	                		<c:otherwise>
-	                			<li class="page-item"><a class="page-link" href="notice.ad?currentPage=${p}">${p}</a></li>
+	                			<li class="page-item"><a class="page-link" href="faq.ad?currentPage=${p}">${p}</a></li>
 	                		</c:otherwise>
                     	</c:choose>
                     </c:forEach>
@@ -106,7 +106,7 @@
 		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
                     	</c:when>
                     	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="notice.ad?currentPage=${pi.currentPage + 1}">&gt;</a></li>
+                    		<li class="page-item"><a class="page-link" href="faq.ad?currentPage=${pi.currentPage + 1}">&gt;</a></li>
                     	</c:otherwise>
                     </c:choose>
                 </ul>
@@ -141,7 +141,7 @@
     $(function () {
 		$(".theme-table>tbody>tr>td").not(":first-child").click(function () {
 			var bno = $(this).parent().children().eq(1).text();
-			location.href = 'noticeSelect.ad?serviceNo='+bno;
+			location.href = 'faqSelect.ad?serviceNo='+bno;
 		});
 	});
     
@@ -157,12 +157,12 @@
     	
     	$.ajax({
     		type: "post",
-    		url: "noticeChkDelete.ad",
+    		url: "faqChkDelete.ad",
     		data: {	list : list },
     		dataType: 'json',
 			success: function(result) {
 				if(result=="success"){
-					location.href="notice.ad";
+					location.href="faq.ad";
 				}else{
 					alertify.message("공지사항 삭제 실패");
 				}

@@ -27,17 +27,19 @@
 <div id="content-wrapper">
     <div class="container-fluid">
         <div class="dash-title">
-            <h1>&nbsp;공지사항 등록
+            <h1>&nbsp;공지사항 수정
                 <button class="btn btn-info" onclick="history.back();">취소</button>
-                <button class="btn btn-success" onclick="enrollSubmit()">등록</button>
+                <button class="btn btn-danger" onclick="noticeDelete();">삭제</button>
+                <button class="btn btn-success" onclick="enrollSubmit();">저장</button>
             </h1>
         </div>
-        <form class="notice-enroll-form" action="noticeInsert.ad" method="post" enctype="multipart/form-data">
+        <form class="notice-enroll-form" action="noticeUpdate.ad" method="post" enctype="multipart/form-data">
+        	<input type="text" name="serviceNo" value="${n.serviceNo}" hidden>
         	<input type="text" name="category" value="1" hidden>
             <div class="enroll-container">
                 <div class="title-area">
                     <label for="title" class="">제목</label>
-                    <input type="text" name="serviceTitle" id="title" class="form-control input-lg" style="width: 30%">
+                    <input type="text" name="serviceTitle" id="title" class="form-control input-lg" style="width: 30%" value="${n.serviceTitle}">
                 </div>
                 <div class="writer-area">
                     <label for="writer" class="">작성자</label>
@@ -48,11 +50,24 @@
                     <label for="upfile">첨부파일</label>
                     <input class="upload-name form-control input-lg" value="파일선택" disabled>
                     <button type="button" id="selectFile" onclick="$('#upfile').trigger('click');">파일 선택</button>
+                    
+                    <c:if test="${not empty a.originName}">
+                    	<div id="currentFileBox" style="display: inline;">
+		                    <label style="margin-left: 20px;">현재 업로드된 파일 </label> 
+		                    <a href="${a.filePath}${a.changeName}" download="${a.originName}">
+		                    	<input class="upload-name form-control input-lg" id="currentFile" value="${a.originName}" style="margin-left: 20px; width: 10%;" readonly="readonly">
+		                    </a>
+		                    <button type="button" onclick="fileDelete();" class="btn btn-danger" style="height: 35px;">파일 삭제</button>
+		                    <input type="hidden" value="${a.originName}" name="originName">
+		                    <input type="hidden" value="${a.changeName}" name="changeName">
+	                    </div>
+                    </c:if>
+                    
                 </div>
                 <div class="contents-area">
                     <label for="editor" class="">내용</label>
                     <div class="" style="margin-left: 0px;">
-                        <textarea name="serviceContent" class="form-control" id="editor"></textarea>
+                        <textarea name="serviceContent" class="form-control" id="editor">${n.serviceContent}</textarea>
                     </div>
                 </div>
             </div>
@@ -81,7 +96,7 @@
         filebrowserUploadUrl : '${pageContext.request.contextPath}/adm/fileupload.do',
     });
 
-    //파일 인풋
+    //파일 input
     $(function(){
         var fileTarget = $('.file-area .upload-hidden');
 
@@ -94,8 +109,54 @@
 
             $(this).siblings('.upload-name').val(filename);
         });
-    }); 
+    });
     
+    //공지 삭제
+	function noticeDelete() {
+		
+    	$.ajax({
+    		type: "post",
+    		url: "noticeDelete.ad",
+    		data: {	serviceNo : "${n.serviceNo}" },
+			success: function(result) {
+				if(result=="success"){
+					location.href="notice.ad";
+				}else{
+					alertify.message("공지사항 삭제 실패");
+				}
+			},
+			error: function(result) {
+				console.log("통신실패");
+			}
+    	});
+	}
+    
+    //파일 삭제
+    function fileDelete() {
+		
+    	$.ajax({
+    		type: "post",
+    		url: "noticeFileDelete.ad",
+    		data: {
+    			fileNo : "${a.fileNo}",
+    			boardNo : "${a.boardNo}",
+    			originName : "${a.originName}",
+    			changeName : "${a.changeName}",
+    			filePath : "${a.filePath}"
+    		},
+			success: function(result) {
+				if(result=="success"){
+					alertify.message("첨부파일 삭제 성공");
+					$("#currentFileBox").remove();
+				}else{
+					alertify.message("첨부파일 삭제 실패");
+				}
+			},
+			error: function(result) {
+				console.log("통신실패");
+			}
+    	});
+	}
     
 </script>
 </body>

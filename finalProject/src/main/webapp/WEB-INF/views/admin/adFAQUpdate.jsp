@@ -19,7 +19,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- CKEditor -->
     <script src="resources/js/ckeditor/ckeditor.js"></script>
-    <title>문의관리-공지사항</title>
+    <title>문의관리-FAQ</title>
 </head>
 <body>
 <%@include file="adMenubar.jsp" %>
@@ -27,32 +27,28 @@
 <div id="content-wrapper">
     <div class="container-fluid">
         <div class="dash-title">
-            <h1>&nbsp;공지사항 등록
+            <h1>&nbsp;FAQ 수정
                 <button class="btn btn-info" onclick="history.back();">취소</button>
-                <button class="btn btn-success" onclick="enrollSubmit()">등록</button>
+                <button class="btn btn-danger" onclick="noticeDelete();">삭제</button>
+                <button class="btn btn-success" onclick="enrollSubmit();">저장</button>
             </h1>
         </div>
-        <form class="notice-enroll-form" action="noticeInsert.ad" method="post" enctype="multipart/form-data">
-        	<input type="text" name="category" value="1" hidden>
+        <form class="notice-enroll-form" action="faqUpdate.ad" method="post" enctype="multipart/form-data">
+        	<input type="text" name="serviceNo" value="${n.serviceNo}" hidden>
+        	<input type="text" name="category" value="2" hidden>
             <div class="enroll-container">
                 <div class="title-area">
                     <label for="title" class="">제목</label>
-                    <input type="text" name="serviceTitle" id="title" class="form-control input-lg" style="width: 30%">
+                    <input type="text" name="serviceTitle" id="title" class="form-control input-lg" style="width: 30%" value="${n.serviceTitle}">
                 </div>
                 <div class="writer-area">
                     <label for="writer" class="">작성자</label>
                     <input type="text" name="writer" id="writer"  class="form-control input-lg" value="${loginUser.nickname}" readonly="readonly">
                 </div>
-                <div class="file-area bs3-primary">
-                    <input type="file" name="upfile" id="upfile" class="upload-hidden">
-                    <label for="upfile">첨부파일</label>
-                    <input class="upload-name form-control input-lg" value="파일선택" disabled>
-                    <button type="button" id="selectFile" onclick="$('#upfile').trigger('click');">파일 선택</button>
-                </div>
                 <div class="contents-area">
                     <label for="editor" class="">내용</label>
                     <div class="" style="margin-left: 0px;">
-                        <textarea name="serviceContent" class="form-control" id="editor"></textarea>
+                        <textarea name="serviceContent" class="form-control" id="editor">${n.serviceContent}</textarea>
                     </div>
                 </div>
             </div>
@@ -81,7 +77,7 @@
         filebrowserUploadUrl : '${pageContext.request.contextPath}/adm/fileupload.do',
     });
 
-    //파일 인풋
+    //파일 input
     $(function(){
         var fileTarget = $('.file-area .upload-hidden');
 
@@ -94,8 +90,54 @@
 
             $(this).siblings('.upload-name').val(filename);
         });
-    }); 
+    });
     
+    //공지 삭제
+	function noticeDelete() {
+		
+    	$.ajax({
+    		type: "post",
+    		url: "faqDelete.ad",
+    		data: {	serviceNo : "${n.serviceNo}" },
+			success: function(result) {
+				if(result=="success"){
+					location.href="faq.ad";
+				}else{
+					alertify.message("공지사항 삭제 실패");
+				}
+			},
+			error: function(result) {
+				console.log("통신실패");
+			}
+    	});
+	}
+    
+    //파일 삭제
+    function fileDelete() {
+		
+    	$.ajax({
+    		type: "post",
+    		url: "faqFileDelete.ad",
+    		data: {
+    			fileNo : "${a.fileNo}",
+    			boardNo : "${a.boardNo}",
+    			originName : "${a.originName}",
+    			changeName : "${a.changeName}",
+    			filePath : "${a.filePath}"
+    		},
+			success: function(result) {
+				if(result=="success"){
+					alertify.message("첨부파일 삭제 성공");
+					$("#currentFileBox").remove();
+				}else{
+					alertify.message("첨부파일 삭제 실패");
+				}
+			},
+			error: function(result) {
+				console.log("통신실패");
+			}
+    	});
+	}
     
 </script>
 </body>
