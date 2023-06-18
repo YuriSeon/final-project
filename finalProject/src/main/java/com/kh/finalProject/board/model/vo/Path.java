@@ -23,4 +23,5 @@ public class Path extends Plan{
 	private int daily;
 	private int pathNo;
 	private int pay;
+	
 }
