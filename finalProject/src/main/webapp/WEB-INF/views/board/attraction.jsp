@@ -50,6 +50,8 @@
 			});
 		});
 	</script>
+	<!-- 먼저 상세페이지로 이동하기위해 만들어놓은 태그 나중에 지우기 -->
+	<a href="detail.attr">상세페이지로이동태그</a>
     <div class="page-heading-about"></div>
     <!-- main화면의 큰 지도 들어갈 위치 -->
     <!-- react라서 수업 진도 나가고 나서 해보기 d3 cdn은 미리 넣어둠! -->

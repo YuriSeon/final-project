@@ -1,7 +1,6 @@
 package com.kh.finalProject.board.model.vo;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -14,8 +13,10 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class Selenium {
 	
 	private WebDriver wd;
-	public static String WEB_DRIVER_ID = "webdriver.chrome.driver"; // Properties 설정(정해져있는 키값)
-	public static String WEB_DRIVER_PATH = "/WEB-INF/lib/chromedriver.exe";  // 프로젝트내 경로로 작성
+	// 상대경로로 수정해서 변수처리 (강사님께 여쭤보기)
+	private static String TEST = (Selenium.class.getResource("/").getPath()).replace("target/classes/", "src/main/webapp/WEB-INF/lib/chromedriver");
+	private static String WEB_DRIVER_ID = "webdriver.chrome.driver"; // Properties 설정(정해져있는 키값)
+	private static String WEB_DRIVER_PATH = TEST;  
 	
 	// 기본생성자
 	public Selenium() {
@@ -29,22 +30,20 @@ public class Selenium {
 		// webDriver 옵션 설정.
 		ChromeOptions options = new ChromeOptions();
 		
-		options.setHeadless(true); // 브라우저를 띄우지 않겠다고 설정
-		options.addArguments("--disable-gpu"); //headless로 실행 가능하도록 설정
+//		options.setHeadless(true); // 브라우저를 띄우지 않겠다고 설정
+//		options.addArguments("--disable-gpu"); //headless로 실행 가능하도록 설정
 		options.addArguments("--lang=ko"); // 언어설정
 		options.addArguments("--no-sandbox"); // 보안 설정 해제
 		options.addArguments("--disable-dev-shm-usage"); // /deb/shm 디렉토리를 사용하지 않는다 (이 디렉토리는 공유 메모리를 담당하는 부분)
 		options.setCapability("ignoreProtectedModeSettings", true); // protectedMode 설정 무시하고 실행 설정
 		
 		wd = new ChromeDriver(options); // 설정한 option으로  webDriver생성
-		wd.manage().timeouts().pageLoadTimeout(100, TimeUnit.SECONDS); //페이지로드가 완료 될 때까지 기다리는 시간 설정
+		wd.manage().timeouts().pageLoadTimeout(50000, TimeUnit.SECONDS); //페이지로드가 완료 될 때까지 기다리는 시간 설정
 	}
 	
 	// info data 등록
 	public void infoDataGet(String[] pathArr) {
-		for(int i=0; i<pathArr.length; i++) {
-			System.out.println(pathArr[i]);
-		}
+		System.out.println("sel" +Arrays.toString(pathArr));
 		// 매개변수로 전달받은 배열에서 사용할 값 추출
 		String infoName = pathArr[0];
 		String infoAddress = pathArr[3];
@@ -52,8 +51,7 @@ public class Selenium {
 		wd.get("https://conlab.visitkorea.or.kr/conlab/search-result?mainKeyword=&mainSearchType=All");
 		
 		// 요소 추출
-		WebElement inputClass = wd.findElement(By.className("MuiAutocomplete-root MuiAutocomplete-hasClearIcon")); // search input tag 들어있는 클래스명 추출
-		WebElement input = inputClass.findElement(By.tagName("input")); // input 요소 선택
+		WebElement input = wd.findElement(By.xpath("//*[@id=\\\"mui-10523\\\"]")); // search input tag 들어있는 클래스명 추출
 		WebElement button = wd.findElement(By.className(".MuiButtonBase-root MuiButton-root MuiButton-text btn-init fill icon search")); // 검색어 입력 후 전송할 버튼
 		
 		// 검색어 입력 후 상세페이지로 이동
