@@ -1,4 +1,4 @@
-package com.kh.finalProject.board.service;
+package com.kh.finalProject.board.model.service;
 
 import java.util.ArrayList;
 

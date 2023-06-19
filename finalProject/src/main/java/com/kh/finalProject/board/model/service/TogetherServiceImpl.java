@@ -1,4 +1,4 @@
-package com.kh.finalProject.board.service;
+package com.kh.finalProject.board.model.service;
 
 import java.util.ArrayList;
 
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kh.finalProject.board.dao.TogetherDao;
+import com.kh.finalProject.board.model.dao.TogetherDao;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Plan;
