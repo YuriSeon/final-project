@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.kh.finalProject.board.model.service.AttrarctionService;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Selenium;
 import com.kh.finalProject.board.service.AttractionService;
@@ -25,7 +26,7 @@ public class AttractionController {
 	private static String SERVICEKEY = "E15I5%2FPXccZzl%2BCSlsAkGubm20fnvVbSgMXRQg5sSx2qPglZUEa73k3K32wX1dWvBNris%2BiRqICN51d93m08tA%3D%3D";
 	
 	@Autowired
-	private AttractionService atService;
+	private AttrarctionService atService;
 	
 	@ResponseBody
 	@GetMapping(value="searchKeyword1", produces = "application/json; charset=UTF-8")
