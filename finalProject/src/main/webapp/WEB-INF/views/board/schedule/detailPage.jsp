@@ -12,7 +12,7 @@
 </head>
 <body>
 <!-- 지도, 마커 반복문 추가, 마커 클릭시 데일리 일정 나오도록하고 그 후에... 지도 마커 클릭시 info 보여주기 나중에 대댓글 넣는거 하기 -->
-	<%@ include file="../common/menubar.jsp" %>
+	<%@ include file="../../common/menubar.jsp" %>
 	<div class="main-schedule">
       <div class="container">
           <div class="row">
@@ -136,6 +136,7 @@
             </div>
         </div>
       </div>
+      <%@include file="../../common/footer.jsp" %>
     <!-- 작성해둔 함수 넣은 파일 불러와서 사용 -->
     <script type="text/javascript" src="resources/js/function.js"></script> 
     <script>
@@ -146,8 +147,8 @@
             
             for(var i=0; i < circle.length; i++){
                 var list = circle[i];
-                $("#path").append(makeTag("div", "class", "marcker-area"+(i+1)));
-               	$(".marcker-area"+(i+1)).append(makeTag("img","class","marcker"+(i+1),"src","resources/images/marker2.png")).append(makeTag("div","class","color").append("span","text",i+1));
+                $("#path").append(makeTag("div", {"class":"marcker-area"+(i+1)}));
+               	$(".marcker-area"+(i+1)).append(makeTag("img",{"class":"marcker"+(i+1),"src":"resources/images/marker2.png"})).append(makeTag("div",{"class":"color"}).append("span",{"text":i+1}));
                 $(list).css("background-color", colors[i]);
             }
         });
@@ -157,7 +158,7 @@
     	/* 동행, 수정, 삭제 이벤트 연결 */
     	function form(num){
     		var formTeg = $("<form>"); 
-    		var bno = makeTag("input","type", "hidden", "name", "boardNo").prop("value", "${board.boardNo}"); 
+    		var bno = makeTag("input",{"type": "hidden", "name": "boardNo","value": "${board.boardNo}"}); 
     		var obj = formTeg.append(bno); // form 태그내 bno hidden으로 넣어줌
     		
     		if(num==1){ // 수정

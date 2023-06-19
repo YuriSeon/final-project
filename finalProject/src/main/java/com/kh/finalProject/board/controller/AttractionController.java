@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.board.model.vo.Selenium;
 import com.kh.finalProject.board.service.AttractionService;
 
 @Controller
@@ -64,5 +66,22 @@ public class AttractionController {
 	@RequestMapping("detail.attr")
 	public String detailAttr() {
 		return "board/attraction/attractionDetail";
+	}
+	
+	@RequestMapping("update.attr")
+	public String updateAttr() {
+		return "board/attraction/attractionUpdate";
+	}
+	
+	@RequestMapping("insert.attr")
+	public String insertAttr() {
+		return "board/attraction/attractionInsert";
+	}
+	
+	// 나중에 값 넣기 
+	@RequestMapping("searchInfo.attr")
+	public Info searchInfo(Info in) {
+		Info info = new Selenium().infoDataGet(in);
+		return info;
 	}
 }

@@ -95,7 +95,7 @@ public class BoardController {
 	@RequestMapping("attraction.bo")
 	public String goAttraction(@RequestParam(value="currentPage", defaultValue="1") int currentPage
 								, String sort, Model model) {
-		return "board/attraction";
+		return "board/attraction/attraction";
 	}
 	
 	@RequestMapping("feed.bo")
@@ -126,7 +126,7 @@ public class BoardController {
 	public String goSchedule(@RequestParam(value="sort", defaultValue="recently") String sort
 								,@RequestParam(value="currentPage", defaultValue="1") int currentPage, Model model) {
 		
-		return "board/schedule";
+		return "board/schedule/schedule";
 	}
 	
 	@RequestMapping("together.bo")
