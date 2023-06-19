@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.kh.finalProject.board.service.ScheduleService;
+import com.kh.finalProject.board.model.service.ScheduleService;
+
 
 
 @Controller

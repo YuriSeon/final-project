@@ -1,4 +1,4 @@
-package com.kh.finalProject.board.dao;
+package com.kh.finalProject.board.model.dao;
 
 import java.util.ArrayList;
 
