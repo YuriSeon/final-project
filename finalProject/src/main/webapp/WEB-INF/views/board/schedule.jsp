@@ -8,13 +8,13 @@
     <%@include file="../common/menubar.jsp" %>
 	<script>
 		/* 현재 페이지에 해당하는 메뉴바 체크되도록 설정 */
-		$(function(){
-			$(".nav>li>a").each(function(){
-				if($(this).text() == $("title").eq(0).text()){
-					$(this).addClass("active");
-				}
-			});
-		});
+// 		$(function(){
+// 			$(".nav>li>a").each(function(){
+// 				if($(this).text() == $("title").eq(0).text()){
+// 					$(this).addClass("active");
+// 				}
+// 			});
+// 		});
 	</script>
    <div class="main-schedule">
       <div class="container">

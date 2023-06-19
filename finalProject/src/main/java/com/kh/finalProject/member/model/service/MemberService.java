@@ -1,6 +1,10 @@
 package com.kh.finalProject.member.model.service;
 
+import java.util.ArrayList;
+
+import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.vo.Member;
 
 public interface MemberService {
@@ -31,4 +35,16 @@ public interface MemberService {
 
 	//프로필 조회
 	Member loadProfile(String nickname);
+
+	//마이페이지 Q&A 질문 등록
+	int myQnaInsert(Notice n);
+
+	//마이페이지 Q&A 질문 파일 등록
+	int myQnaFileInsert(Attachment a);
+
+	//마이페이지 Q&A 개수
+	int myQnaCount(String nick);
+
+	//마이페이지 Q&A 리스트 조회
+	ArrayList<Notice> myQnaList(PageInfo pi, String nick);
 }
