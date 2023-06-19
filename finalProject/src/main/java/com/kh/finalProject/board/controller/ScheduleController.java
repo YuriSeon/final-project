@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.finalProject.board.model.service.ScheduleService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Path;
-import com.kh.finalProject.board.service.ScheduleService;
 
 @Controller
 public class ScheduleController {
