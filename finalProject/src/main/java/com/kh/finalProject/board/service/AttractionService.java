@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.common.model.vo.PageInfo;
 
-public interface AttrarctionService {
+public interface AttractionService {
 
 	int selectListCount();
 

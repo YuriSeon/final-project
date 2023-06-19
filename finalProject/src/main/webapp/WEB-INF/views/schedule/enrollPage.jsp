@@ -8,21 +8,7 @@
 <link rel="stylesheet" type="text/css" href="resources/css/schedule.css?after">
 <link rel="stylesheet" type="text/css" href="resources/css/map.css?v=1">
 <title>schedule enroll form</title>
-<style type="text/css">
-	#together-yes, #together-no, #trans *{
-		width: 10%;
-		height : 20%;
-		font-size: 17px;
-		margin:0;
-		margin-right: 1%;
-	}
-	select[name="togetherCount"]{
-		width: 20%;
-		height: 30px;
-		text-align: center;
-		font-size: 16px;
-	}
-</style>
+<style type="text/css"></style>
 </head>
 <body>
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
@@ -116,7 +102,7 @@
 	            여행지 검색
 	            <button id="close">X</button>
 	        </div>
-	        <div id="map">
+	        <div class="map">
 	        	<div class="map_wrap">
 					<div id="map" style="width:100%;height:382.5px;position:relative;overflow:hidden;z-index:4;"></div>
 					<div id="menu_wrap" class="bg_white" style="z-index:5;">
@@ -124,7 +110,7 @@
 				            <div>
 				                <form onsubmit="searchPlaces(); return false;">
 				                    키워드 : <input type="text" value="이태원 맛집" id="keyword" size="15"> 
-				                    <button type="submit">검색하기</button> 
+				                    <button type="submit" id="map-btn">검색하기</button> 
 				                </form>
 				            </div>
 				        </div>
@@ -138,26 +124,10 @@
     </div>
     
     <!-- 작성해둔 함수 넣은 파일 불러와서 사용 -->
-    <!-- <script type="text/javascript" src="resources/js/function.js"></script> -->
+    <script type="text/javascript" src="resources/js/function.js"></script>
     <script type="text/javascript" src="resources/js/map.js"></script> 
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3f6edea42e65caf1e4e0b7f49028f282&libraries=services"></script>
     <script>
- // 태그생성 함수
-    function makeTag(tagName, attributes){
-    	  var $tag = $("<"+tagName+">");
-    	  for (var at in attributes) {
-    		  if(at != "name"){
-    		    $tag.prop(at, attributes[at]);
-    		  } else {
-    		  	$tag.attr(at, attributes[at]);
-    		  }
-    	  }
-    		  return $tag;
-    }
-    // 지도 태그내의 상세정보 가져오는 함수
-    function infoFind(type, tagName, num){
-    	return $(type).children(tagName).children().eq(num).text();
-    }
     	// 동행구하지않으면 버튼 생기지 않도록 처리
     	$(function(){
 			$("#together-yes").on("change", function(){
@@ -203,7 +173,6 @@
             $("#modal").css("display","none"); // 클릭전까지 모달 숨기기
             $(document).on("click",".plus", function(){
                var daily = $(this).attr("class").slice(-1); // 클릭이벤트 대상의 class name 마지막 번호 추출(N일차)
-                console.log(daily);
                 // 모달 생성 후 지도 띄워주기
                 $(document).ready(function(){
                     $("#modal").css("display", "block");
@@ -223,7 +192,8 @@
                     	var obj = "";
                     	obj = $($(".plus"+daily).parent());
                     	obj.append(makeTag("div", {"name": daily,"class":"day"})
-                    			.append(makeTag("pre",{"name": "infoName"}).text(infoName)
+                    			.append(makeTag("button",{"type":"button", "class":"path-delete"}).text("X")
+                    					,makeTag("pre",{"name": "infoName"}).text(infoName)
                     					,makeTag("pre",{"name":"infoAddress"}).text(infoAddress)
                     					,makeTag("input", {"type":"number","name":"pay","placeholder":"예상비용을 입력해주세요"})));
                     } else if(daily=='e'){ /* daily가 숫자가 아닐때(당일일정) */
@@ -245,6 +215,14 @@
 	       $("#modal").css("display","none");
 	    });
 	    
+	    // 선택한 일정영역 삭제하는 이벤트
+	    $(document).on("click",".path-delete", function(){
+	    	console.log($(this));
+	    	$(this).siblings().remove(); // 동위요소들 삭제
+	    	$(this).unwrap(); // 선택된 이벤트 대상의 부모요소 삭제
+	    	$(this).remove(); // 버튼까지 삭제
+	    });
+	    
 	    // 제출하기 이벤트
 	   	function insertForm(){
 	    	var totalPay = Number(0); // 계산한 값 담을 변수 및 number type으로 초기화
@@ -258,17 +236,19 @@
 	    	// 반복문으로 일차별 정보 담기
 	    	for(var i=0; i<day.length; i++){
 			    var path = makeTag("input", {"type":"hidden", "name":"path"});
-	    		// (infoName, daily, pathNo, infoAddress, pay)
-		    	path.prop("value",($($(day[i]).children()).eq(0).text()
-			    					+","+i
+	    		// pathVO(infoName, daily, pathNo, infoAddress, pay)
+	    		
+		    	path.prop("value",($($(day[i]).children()).eq(1).text()
 			    					+","+$(day[i]).attr("name")
-			    					+","+$($(day[i]).children()).eq(1).text()
-			    					+","+$($(day[i]).children()).eq(2).val()));
+			    					+","+i
+			    					+","+$($(day[i]).children()).eq(2).text()
+			    					+","+$($(day[i]).children()).eq(3).val()));
+	    		console.log(path);
 		    	// 담은 정보 폼태그에 넣어주기
 		    	$("#insertForm").append(path);
 		    	path = "";
 	    	}
-	    	$("#insertForm").submit();
+// 	    	$("#insertForm").submit();
 	    }	
 	    
 	    /* 지도 */

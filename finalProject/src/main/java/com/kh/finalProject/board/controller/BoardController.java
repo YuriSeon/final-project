@@ -23,7 +23,7 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Good;
 import com.kh.finalProject.board.model.vo.TogetherVO;
-import com.kh.finalProject.board.service.AttrarctionService;
+import com.kh.finalProject.board.service.AttractionService;
 import com.kh.finalProject.board.service.FeedService;
 import com.kh.finalProject.board.service.ScheduleService;
 import com.kh.finalProject.board.service.TogetherService;
@@ -34,7 +34,7 @@ import com.kh.finalProject.common.template.Pagination;
 public class BoardController {
 	
 	@Autowired
-	private AttrarctionService atService;
+	private AttractionService atService;
 	
 	@Autowired
 	private ScheduleService scService;
