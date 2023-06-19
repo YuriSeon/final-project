@@ -20,4 +20,9 @@ public class TogetherDao {
 		return (ArrayList)sqlSession.selectList("togetherMapper.selectTogetherList", null, new RowBounds(((pi.getCurrentPage()-1) * pi.getBoardLimit()), pi.getBoardLimit()));
 	}
 
+	public ArrayList<TogetherVO> optionSearch(SqlSession sqlSession, TogetherVO t) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

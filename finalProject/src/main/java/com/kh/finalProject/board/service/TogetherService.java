@@ -16,4 +16,6 @@ public interface TogetherService {
 	
 	ArrayList<TogetherVO> selectTogetherList(PageInfo pi);
 
+	ArrayList<TogetherVO> optionSearch(TogetherVO t);
+
 }

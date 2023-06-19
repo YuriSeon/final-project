@@ -23,6 +23,58 @@
 		height:14px;
 		margin-right:10px;
 	}
+	
+	   #searchDiv{
+			width:1110px;
+			height: 105px;
+			background-color: #7c838b;
+		}
+		#searchDiv>div{
+			float: left;
+		}
+		#titleMsg{
+			width: 25%;
+			color: white;
+			font-size: 22px;
+			font-weight: 500;
+			margin: 37px 15px 37px 15px;
+		}
+		select{
+			width: 130px;
+			height: 25px;
+			color: white;
+			background-color: #7c838b;
+			border: none;
+			border-bottom: 1px solid white;
+			text-align:center;
+		}
+		#searchOption1,#searchOption2{
+			width: 13%;
+			margin: 37px 3px;
+		}
+		#searchOption3,#searchOption4{
+			width: 15%;
+			margin: 39px 2.5px;
+		}
+		#search-Btn{
+			background-color: black;
+			width: 90px;
+			height: 35px;
+			color: white;
+			border: none;
+			margin-top: 37px;
+		}
+		input[type=date]{
+			border:none;
+			background-color : #7c838b;
+			color : white;
+			border-bottom : 1px solid white;
+			margin:0px;
+			padding:0px;
+		}
+		#contentOuter>div{
+			float:left;
+		}
 	</style>
     <title>함께 가치</title>
 
@@ -60,7 +112,6 @@
 			});
 		});
 	</script>
-    <!-- ***** About Us Page ***** -->
     <div class="page-heading-shows-events">
         <div class="container">
             <div class="row">
@@ -76,82 +127,96 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="search-box">
-                        <form id="subscribe" action="" method="get">
-                            <div class="row">
-                                <div class="col-lg-5">
-                                    <div class="search-heading">
-                                        <h4>원하는 조건을 입력 해보세요  </h4>
-                                    </div>
-                                </div>
-                                <div class="col-lg-7">
-                                    <div class="row">
-                                        <div class="col-lg-3">
-                                            <select value="month">
-                                            			<option value="">월</option>
-                                                        <option value="0">전체</option>
-												        <option value="1">1월</option>
-												        <option value="2">2월</option>
-												        <option value="3">3월</option>
-												        <option value="4">4월</option>
-												        <option value="5">5월</option>
-												        <option value="6">6월</option>
-												        <option value="7">7월</option>
-												        <option value="8">8월</option>
-												        <option value="9">9월</option>
-												        <option value="10">10월</option>
-												        <option value="11">11월</option>
-												        <option value="12">12월</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <select value="location">
-                                                <option value="">지역</option>
-					                            <option value='0'>전체</option>
-					                            <option value='서울'>서울특별시</option>
-					                            <option value='부산'>부산광역시</option>
-					                            <option value='대구'>대구광역시</option>
-					                            <option value='인천'>인천광역시</option>
-					                            <option value='광주'>광주광역시</option>
-					                            <option value='대전'>대전광역시</option>
-					                            <option value='울산'>울산광역시</option>
-					                            <option value='경기'>경기도</option>
-					                            <option value='강원'>강원도</option>
-					                            <option value='충북'>충청북도</option>
-					                            <option value='충남'>충청남도</option>
-					                            <option value='전북'>전라북도</option>
-					                            <option value='전남'>전라남도</option>
-					                            <option value='경북'>경상북도</option>
-					                            <option value='경남'>경상남도</option>
-					                            <option value='제주'>제주도</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <select value="pay">
-                                                <option value="">경비</option>
-                                                <option value="0">전체</option>
-                                                <option value="1">100,000원 이하</option>
-                                                <option value="2">200,000원 이하</option>
-                                                <option value="3">300,000원 이하</option>
-                                                <option value="4">400,000원 이하</option>
-                                                <option value="5">500,000원 이하</option>
-                                                <option value="10">1,000,000원 이하</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <fieldset>
-                                            <button type="submit" id="form-submit" class="main-dark-button">검색 </button>
-                                            </fieldset>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+ 
+					 <div id="searchDiv">
+							<div id="titleMsg">원하는 조건을 입력해보세요</div>
+							<div id="searchOption1">
+								<input type="date" id="startDate">
+							</div>
+							 <div style="color:white; margin:37px 7px 37px 0px;">~</div>
+							<div id="searchOption2">
+								<input type="date" id="endDate">
+							</div>
+							<div id="searchOption3">
+								<select  id="location">
+									<option value="">지역</option>
+									<option value='0'>전체</option>
+									<option value='서울'>서울특별시</option>
+									<option value='부산'>부산광역시</option>
+									<option value='대구'>대구광역시</option>
+									<option value='인천'>인천광역시</option>
+									<option value='광주'>광주광역시</option>
+									<option value='대전'>대전광역시</option>
+									<option value='울산'>울산광역시</option>
+									<option value='경기'>경기도</option>
+									<option value='강원'>강원도</option>
+									<option value='충북'>충청북도</option>
+									<option value='충남'>충청남도</option>
+									<option value='전북'>전라북도</option>
+									<option value='전남'>전라남도</option>
+									<option value='경북'>경상북도</option>
+									<option value='경남'>경상남도</option>
+									<option value='제주'>제주도</option>
+								</select>
+							</div>
+							<div id="searchOption4">
+								<select id="pay">
+									<option value="">경비</option>
+									<option value="0">전체</option>
+									<option value="100000">100,000원 이하</option>
+									<option value="200000">200,000원 이하</option>
+									<option value="300000">300,000원 이하</option>
+									<option value="400000">400,000원 이하</option>
+									<option value="500000">500,000원 이하</option>
+									<option value="1000000">1,000,000원 이하</option>
+								</select>
+							</div>
+							<div id="searchBtn">
+								<button type="button" id="search-Btn" onclick="goOptionSearch();">검색 </button>
+							</div>
+							
+							<script>
+								function goOptionSearch(){
+									var startDate = $("#startDate").val();
+									var endDate = $("#endDate").val();
+									var location = $("#location").val();
+									var pay = $("#pay").val();
+									
+									if(startDate == ""){
+										startDate = "지정 안함";
+									}
+									
+									if(endDate == ""){
+										endDate = "지정 안함";
+									}
+									
+									$.ajax({
+										url : "optionSearch.bo",
+										data : {
+											startDate : startDate,
+											endDate : endDate,
+											location : location,
+											pay : pay
+										},
+										success : function(result){
+											console.log(result);
+										},
+										error : function(){
+											console.log("옵션 검색 실패");
+										}
+									});
+									
+								}
+							</script>
+						</div>
+						
                 </div>
+                
                 <div class="col-lg-12">
                 <br><br>
                 </div>
+                
+       <div id="contentOuter">         
                 <jsp:useBean id="now" class="java.util.Date" />
                 <fmt:parseNumber value="${now.time / (1000*60*60*24)}" integerOnly="true" var="today" scope="request"/>
                 <c:choose>
@@ -180,11 +245,20 @@
 					                                	<li><img src="/finalProject/resources/images/기본프로필.png" style="border-radius:50%;"> <a id="nicknameHover" onclick="whoareyou();">${i.boardWriter }</a></li>
 					                                </c:otherwise>
 					                                </c:choose>
+					                                <li>작성일 : ${i.createDate }</li>
 					                            </ul>
 					                            <div class="main-dark-button" id="applyBtn">
 					                            <c:choose>
-					                            <c:when test="${endDate-today >0 and i.together - i.togetherCount != 0 }">
-					                            	    <a href="#">참여하기 ${i.togetherCount}/${i.together }</a>
+					                            <c:when test="${endDate-today >0 and i.together - i.togetherCount != 0}">
+					                            		<c:choose>
+					                            			<c:when test="${not empty loginUser }">
+								                            	    <a href="#">참여하기 ${i.togetherCount}/${i.together }</a>
+					                            			</c:when>
+					                            			<c:otherwise>
+					                            				    <a style="background-color:lightgray;">참여하기 ${i.togetherCount}/${i.together }</a>
+					                            				    <p>참여하려면 로그인을 해주세요.</p>
+					                            			</c:otherwise>
+					                            		</c:choose>
 					                            </c:when>
 					                            <c:otherwise>
 					                            		<a  style="background-color:lightgray;" disabled>마감되었습니다.</a>
@@ -239,8 +313,10 @@
 							<a href="togetherEnroll.bo?nickname=${loginUser.nickname}" class="btn btn-secondary">글 쓰기</a>	                   
 	                   </div>
                     </c:if>
-                </div>
-            </div>
+            	</div> <!-- pagination col-lg-12 -->
+             </div>  <!-- content outer -->
+        </div>
+        
         </div>
     </div>
 
