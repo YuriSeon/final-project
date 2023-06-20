@@ -16,6 +16,7 @@
   		<typeAlias type="com.kh.finalProject.member.model.vo.Member" alias="member"/>
   		<typeAlias type="com.kh.finalProject.board.model.vo.Good" alias="good"/>
   		<typeAlias type="com.kh.finalProject.admin.model.vo.Notice" alias="notice"/>
+  		<typeAlias type="com.kh.finalProject.board.model.vo.Festival" alias="festival"/>
   	</typeAliases>
   	
   	<mappers>
