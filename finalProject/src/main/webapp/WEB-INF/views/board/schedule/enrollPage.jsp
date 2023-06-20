@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="resources/css/schedule.css?after">
-<link rel="stylesheet" type="text/css" href="resources/css/listmap.css?v=1">
+<link rel="stylesheet" type="text/css" href="resources/css/listMap.css?v=1">
 <title>schedule enroll form</title>
 <style type="text/css"></style>
 </head>
@@ -125,8 +125,8 @@
     
     <!-- 작성해둔 함수 넣은 파일 불러와서 사용 -->
     <script type="text/javascript" src="resources/js/function.js"></script>
-    <script type="text/javascript" src="resources/js/listmap.js"></script> 
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3f6edea42e65caf1e4e0b7f49028f282&libraries=services"></script>
+    <script type="text/javascript" src="resources/js/listmap.js"></script> 
     <script>
     	// 동행구하지않으면 버튼 생기지 않도록 처리
     	$(function(){

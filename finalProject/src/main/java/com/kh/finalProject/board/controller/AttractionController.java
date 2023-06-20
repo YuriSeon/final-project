@@ -17,7 +17,6 @@ import com.google.gson.JsonObject;
 import com.kh.finalProject.board.model.service.AttrarctionService;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Selenium;
-import com.kh.finalProject.board.service.AttractionService;
 
 @Controller
 public class AttractionController {
