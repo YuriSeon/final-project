@@ -28,7 +28,7 @@
   	</select>
   	<select id="selectBoardList" resultMap="feedResultSet">
   		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",GOOD
-		FROM BOARD B
+		FROM BOARD 
 		WHERE STATUS = 'Y'
         AND CATEGORY = 4
 		ORDER BY CREATE_DATE DESC
@@ -40,6 +40,7 @@
   		<result column="BOARD_CONTENT" property="boardContent"/>
   		<result column="CREATE_DATE" property="createDate"/>
   		<result column="GOOD" property="good"/>
+  		<result column="ZONE_NO" property="zoneNo"/>
   	</resultMap>
   	
   	<select id="selectAttachmentList" resultMap="attaResultSet">
@@ -54,30 +55,52 @@
   		<result column="FILE_PATH" property="filePath"/>
   	</resultMap>
   	
+  	<!-- 보드지삭제 -->
   	<delete id="deleteBoard" parameterType="int">
   	  DELETE FROM BOARD
   	  WHERE BOARD_NO = #{boardNo}
       AND STATUS = 'Y'
   	</delete>
   	
+  	<!-- 첨부파일삭제 -->
   	<delete id="deleteAttachment">
   		DELETE FROM ATTACHMENT
   		WHERE BOARD_NO = #{boardNo}
     	AND STATUS = 'Y'
   	</delete>
   	
+  	<!-- 보드지우면서 지워지는 good테이블 -->
+  	<delete id="deleteGood">
+  		DELETE FROM GOOD
+  		WHERE BOARD_NO = #{boardNo}
+  	</delete>
+  	
+  	<!-- 같이지워지는 reply테이블 -->
+  	<delete id="replyDelete">
+  		DELETE FROM REPLY
+  		WHERE REF_QNO = #{boardNo}
+  	</delete>
+  	
+  	<!-- 같이지워지는 rereply테이블 -->
+  	<delete id="deleteRereply">
+  		DELETE FROM REREPLY
+  		WHERE REF_QNO = #{boardNo}
+  	</delete>
+  	<!-- good테이블 count세기 -->
   	<select id="ckHeart" resultType="_int">
   		SELECT COUNT(*) FROM GOOD
         WHERE BOARD_NO = #{boardNo} 
         AND WRITER = #{writer}
   	</select>
   	
+  	<!-- good테이블 삭제 -->
   	<delete id="deleteHeart">
   		DELETE FROM GOOD
   		WHERE BOARD_NO = #{boardNo}
   		AND WRITER = #{writer}
   	</delete>
   	
+  	<!-- 좋아요board테이블 업데이트 -->
   	<update id="updateDelete">
   		UPDATE BOARD
 		SET GOOD = GOOD-1
@@ -86,11 +109,13 @@
 		AND CATEGORY = 4	
   	</update>
   	
+  	<!-- good테이블 인서트 -->
   	<insert id="insertHeart">
   		INSERT INTO GOOD
   		VALUES(#{boardNo},#{writer})
   	</insert>
   	
+  	<!-- 좋아요board테이블 업데이트 -->
   	<update id="updateInsert">
   		UPDATE BOARD
   		SET GOOD = GOOD+1
@@ -98,6 +123,8 @@
 		AND STATUS = 'Y'
 		AND CATEGORY = 4	
   	</update>
+  	
+  	<!-- good테이블 select -->
   	<select id="selectGood" resultMap="goodResultMap">
   		SELECT BOARD_NO,WRITER
   		FROM GOOD
@@ -106,4 +133,136 @@
   		<result column="BOARD_NO" property="boardNo"/>
   		<result column="WRITER" property="writer"/>
   	</resultMap>
+  	
+  	<select id="selectMember" resultMap="memberResultMap">
+  		SELECT NICKNAME,(FILE_PATH || CHANGE_NAME) PROFILEIMG
+		FROM MEMBER M
+		LEFT JOIN ATTACHMENT A ON(NICKNAME = WRITER)
+		WHERE M.STATUS = 'Y'
+  	</select>
+  	<resultMap type="member" id="memberResultMap">
+  		<result column="NICKNAME" property="nickname"/>
+  		<result column="PROFILEIMG" property="profileImg"/>
+  	</resultMap>
+  	
+  	<!-- 댓글인서트-->
+  	<insert id="insertReply">
+  		INSERT INTO REPLY(REPLY_NO,CONTENT,REPLY_WRITER,REF_QNO)
+  		VALUES(SEQ_RNO.NEXTVAL,#{content},#{replyWriter},#{refQno})
+  	</insert>
+  	
+  	<!-- 댓글삽입 -->
+  	<select id="selectReplyList" resultMap="ReplyResultMap">
+  		SELECT REPLY_NO,CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",REPLY_WRITER,REF_QNO
+  		FROM REPLY
+  		WHERE REF_QNO = #{refQno}
+  		AND STATUS = 'Y'
+  	</select>
+  	
+  	<resultMap type="reply" id="ReplyResultMap">
+  		<result column="REPLY_NO" property="replyNo"/>
+  		<result column="CONTENT" property="content"/>
+  		<result column="CREATE_DATE" property="createDate"/>
+  		<result column="REPLY_WRITER" property="replyWriter"/>
+  		<result column="REF_QNO" property="refQno"/>
+  		<result column="REF_RNO" property="refRno"/>
+  		<result column="STATUS" property="status"/>
+  	</resultMap>
+  	
+  	<!-- 댓글삭제 -->
+  	<delete id="deleteReply">
+  		DELETE FROM REPLY
+  		WHERE REPLY_NO = #{replyNo}
+  		AND STATUS = 'Y'
+  	</delete>
+  	
+  	<!-- 댓글수정 -->
+  	<update id="updateReply">
+  		UPDATE REPLY
+  		SET CONTENT = #{content}
+  		WHERE REPLY_NO = #{replyNo}
+  		AND STATUS = 'Y'
+  	</update>
+  	
+  	<!-- 댓글신고 member-->
+  	<update id="reportReply">
+  		UPDATE MEMBER
+  		SET REPORT = REPORT+1
+  		WHERE NICKNAME = #{nickname}
+  		AND STATUS = 'Y'
+  	</update>
+  	
+  	<!-- 댓글신고 report -->
+  	<insert id="report">
+  		INSERT INTO REPORT(REPLY_NO,WRITER,REPORT_REASON)
+  		VALUES(#{replyNo},#{writer},#{reportReason})
+  	</insert>
+  	<insert id="insertAnswer">
+  		INSERT INTO REREPLY(REF_RNO,CONTENT,REPLY_WRITER,REF_QNO,REPLY_NO)
+  		VALUES(SEQ_RRO.NEXTVAL,#{content},#{replyWriter},#{refQno},#{replyNo})
+  	</insert>
+  	
+  	<!-- 대댓글삽입 -->
+  	<select id="selectRereply" resultMap="rereplyresultMap">
+  		SELECT REF_RNO,CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",REPLY_WRITER
+  		FROM REREPLY
+  		WHERE REPLY_NO = #{replyNo}
+  		AND STATUS = 'Y'
+  	</select>
+  	<resultMap type="rereply" id="rereplyresultMap">
+  		<result column="REF_RNO" property="refRno"/>
+  		<result column="CONTENT" property="content"/>
+  		<result column="CREATE_DATE" property="createDate"/>
+  		<result column="REPLY_WRITER" property="replyWriter"/>
+  	</resultMap>
+  	
+  	<!-- 대댓글 삭제 -->
+  	<delete id="deleteRere">
+  		DELETE FROM REREPLY
+  		WHERE REF_RNO = #{refRno}
+  		AND STATUS = 'Y'
+  	</delete>
+  	
+  	<!-- 대댓글수정 -->
+  	<update id="updateRere">
+  		UPDATE REREPLY
+  		SET CONTENT = #{content}
+  		WHERE REF_RNO = #{refRno}
+  		AND STATUS = 'Y'
+  	</update>
+  	
+  	<!-- 댓글신고확인 -->
+  	<select id="alreadReport" resultMap="reportResultMap">
+  		SELECT WRITER,REPLY_NO
+		FROM REPORT
+		WHERE WRITER = #{writer}
+		AND REPLY_NO = #{replyNo}
+  	</select>
+  	<resultMap type="report" id="reportResultMap">
+  		<result column="WRITER" property="writer"/>
+  		<result column="REPLY_NO" property="replyNo"/>
+  	</resultMap>
+  	
+  	<!-- 대댓글 신고 -->
+  	<insert id="insertReport">
+  		INSERT INTO REPORT(REF_RNO,WRITER,REPORT_REASON)
+  		VALUES(#{refRno},#{writer},#{reportReason})
+  	</insert>
+  	
+  	<!-- 게시물수정폼board -->
+  	<select id="selectBoard" resultMap="feedResultSet">
+  		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",ZONE_NO
+		FROM BOARD 
+		WHERE STATUS = 'Y'
+        AND CATEGORY = 4
+        AND BOARD_NO = #{boardNo}
+  	</select>
+  	
+  	<!-- 게시물수정폼attachment -->
+  	<select id="selectAttachment" resultMap="attaResultSet">
+  		SELECT BOARD_NO,FILE_PATH
+        FROM ATTACHMENT 
+        WHERE STATUS = 'Y'
+        AND BOARD_NO = #{boardNo}
+  	</select>
   </mapper>

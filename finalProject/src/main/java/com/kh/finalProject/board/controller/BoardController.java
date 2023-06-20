@@ -79,7 +79,7 @@ public class BoardController {
 	@RequestMapping("feed.bo")
 	public String goFeed(@RequestParam(value="currentPage", defaultValue="1") int currentPage,Model model,HttpServletRequest request) {
 
-		
+		ArrayList<Member> mlist = feedService.selectMember();
 		ArrayList<Good> glist = feedService.selectGood();
 		ArrayList<Attachment> alist = feedService.selectAttachmentList();
 		int listCount = feedService.selectListCount();
@@ -87,6 +87,8 @@ public class BoardController {
 		int boardLimit = 5;
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		
+		
 		ArrayList<Board> list = feedService.selectBoardList(pi);
 		
 		model.addAttribute("list", list);
@@ -96,6 +98,7 @@ public class BoardController {
 		model.addAttribute("alist", new Gson().toJson(alist));
 		model.addAttribute("size", alist.size());
 		model.addAttribute("glist",new Gson().toJson(glist));
+		model.addAttribute("mlist",new Gson().toJson(mlist));
 
 		return "board/feed";
 	}
