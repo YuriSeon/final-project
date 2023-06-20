@@ -27,15 +27,15 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Good;
 import com.kh.finalProject.board.model.vo.TogetherVO;
-import com.kh.finalProject.board.service.AttractionService;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
+import com.kh.finalProject.member.model.vo.Member;
 
 @Controller
 public class BoardController {
 	
 	@Autowired
-	private AttractionService atService;
+	private AttrarctionService atService;
 	
 	@Autowired
 	private ScheduleService scService;
@@ -96,13 +96,13 @@ public class BoardController {
 	@RequestMapping("attraction.bo")
 	public String goAttraction(@RequestParam(value="currentPage", defaultValue="1") int currentPage
 								, String sort, Model model) {
-		return "board/attraction";
+		return "board/attraction/attraction";
 	}
 	
 	@RequestMapping("feed.bo")
 	public String goFeed(@RequestParam(value="currentPage", defaultValue="1") int currentPage,Model model,HttpServletRequest request) {
 
-		
+		ArrayList<Member> mlist = feedService.selectMember();
 		ArrayList<Good> glist = feedService.selectGood();
 		ArrayList<Attachment> alist = feedService.selectAttachmentList();
 		int listCount = feedService.selectListCount();
@@ -110,6 +110,8 @@ public class BoardController {
 		int boardLimit = 5;
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		
+		
 		ArrayList<Board> list = feedService.selectBoardList(pi);
 		
 		model.addAttribute("list", list);
@@ -119,6 +121,7 @@ public class BoardController {
 		model.addAttribute("alist", new Gson().toJson(alist));
 		model.addAttribute("size", alist.size());
 		model.addAttribute("glist",new Gson().toJson(glist));
+		model.addAttribute("mlist",new Gson().toJson(mlist));
 
 		return "board/feed";
 	}
@@ -127,7 +130,7 @@ public class BoardController {
 	public String goSchedule(@RequestParam(value="sort", defaultValue="recently") String sort
 								,@RequestParam(value="currentPage", defaultValue="1") int currentPage, Model model) {
 		
-		return "board/schedule";
+		return "board/schedule/schedule";
 	}
 	
 	@RequestMapping("together.bo")

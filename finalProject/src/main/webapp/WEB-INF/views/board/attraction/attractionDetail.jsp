@@ -4,223 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="resources/css/attraction.css?after">
 <title>Insert title here</title>
-<style>
-.attracDetail{
-    width: 75%;
-    margin: auto;
-}
-.attracDetail *{
-    box-sizing: border-box;
-    margin: auto;
-    text-align: center;
-}
-
-.attracDetail #content{
-    width: 100%;
-    height: auto;
-    position: absolute;
-}
-.attracDetail .titleType, .attracDetail .titleType h2{
-    width: 100%;
-    
-}
-.attracDetail .titleType h2{
-    font-weight: 700;
-    margin-bottom: 15px;
-    margin-top: 15px;
-}
-.attracDetail .titleType #topAddr{
-    color: gray;
-    font-weight: 500;
-    margin-bottom: 10px;
-}
-.attracDetail .titTypeWrap span{
-    text-decoration-line: underline;
-    text-decoration-color: rgb(250, 205, 212);
-    text-decoration-thickness: 10px;
-    color: rgb(44, 44, 44);
-    font-size: 25px;
-    font-weight: 500;
-}
-.attracDetail .post_area {
-    text-align: right;
-    margin-right: 5%;
-}
-.attracDetail .post_area .ico img{
-    width: 30px;
-    margin-left: 15px;
-}
-.attracDetail hr{
-    border: 0;
-    height: 3px;
-    background: #ccc;
-    width: 95%;
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
-.attracDetail .img_area {
-    position: relative;
-    width: 100%;
-    height: 450px;
-}
-.attracDetail #wrapSlide {
-    width:100%;
-	height:100%;
-}
-
-.attracDetail #float{
-    width: 100%;
-	height: 90%;
-}
-.attracDetail #slideArea {
-    width: 60%;
-    height: 100%;
-}
-.attracDetail #slideImage {
-    width: auto;
-    max-height: 405px;
-    height: 100%;
-}
-.attracDetail #float>img, .attracDetail #float>div{
-    float: left;
-}
-.attracDetail #prev, .attracDetail #next {
-	position: relative;
-	opacity: 0.3;
-    width: 20%;
-    height: 100%;
-}
-
-.attracDetail #dotArea {
-	position: relative;
-	margin-top: 5px;
-    height: 5%;
-}
-
-.attracDetail #dotArea * {
-	margin-right: 10px;
-}
-.attracDetail .contView{
-    width: 100%;
-    height: 30px;
-}
-.attracDetail #cont1, .attracDetail #cont2{
-    width: 50%;
-    height: 100%;
-    float: left;
-}
-.attracDetail #detailInfo {
-    font-size: 25px;
-    font-weight: 650;
-    margin-left: 7%;
-    color: rgb(53, 53, 53);
-}
-.attracDetail #cont1 {
-    text-align: left;
-}
-.attracDetail #cont2 {
-    text-align: right;
-}
-.attracDetail .btn_modify {
-    margin-right: 7%;
-    font-size: 17px;
-    font-weight: 600;
-}
-.attracDetail .inr {
-    width: 93%;
-    text-align: left;
-}
-.attracDetail .cont_more {
-    text-align: right;
-    margin-right: 3%;
-}
-.attracDetail .surroundingsMap {
-    margin-top: 10px;
-    margin-bottom: 15px;
-    width: 90%;
-}
-.attracDetail .surroundingsMap img {
-    width : auto;
-    height: 100%;
-    max-height: 400px;
-}
-.attracDetail #detailinfoview {
-    margin-bottom: 20px;
-}
-.attracDetail #reply-area {
-	margin-top: 1%;
-	width: 95%;
-}
-
-.attracDetail #reply-title {
-	font-size: 23px;
-    font-weight: 800;
-    text-align: left;
-}
-.attracDetail #reply-title span {
-    font-size: 21px;
-    color: dodgerblue;
-}
-.attracDetail #reply-back {
-	background-color: rgb(234, 234, 234);
-	width: 100%;
-	height: 50px;
-}
-
-.attracDetail #reply-back input {
-	width: 80%;
-	height: 60%;
-	margin-top: 1%;
-	margin-left: 2%;
-    border-color: darkgray;
-    border-style: solid;
-    border-width: 1px;
-}
-.attracDetail #reply-back button {
-    width: 90px;
-	height: 30px;
-    border-color: darkgray;
-    border-style: solid;
-    border-width: 2px;
-    background-color: gray;
-    color: white;
-    font-weight: 800;
-}
-.attracDetail .foodReco{
-    width: 90%;
-    height: 370px;
-}
-.attracDetail .foodReco .food {
-    width: 88%;
-    height: 100%;
-    border: 1px solid black;
-}
-.attracDetail .foodReco .foodImg {
-    width: 95%;
-    height: 75%;
-    border: 1px solid;
-    margin-top: 2%;
-}
-.attracDetail .foodReco .foodInfo {
-    width: 95%;
-    height: 18%;
-    margin-top: 2%;
-    border: 1px solid;
-}
-.attracDetail .foodInfo .foodTitle {
-    width: 100%;
-    height: 60%;
-    font-size: 25px;
-    font-weight: 700;
-}
-.attracDetail .foodInfo .foodAddress {
-    width: 100%;
-    height: 40%;
-    font-size: 15px;
-    font-weight: 500;
-}
-</style>
+<style type="text/css"></style>
 <body>
 <%@include file="../../common/menubar.jsp" %>
     <div class="attracDetail">
@@ -252,11 +38,15 @@
                 <div class="img_area">
                     <div id="wrapSlide">
                         <div id="float">
-                            <img src="resources/images/left.png" id="prev" onclick="prev()">
+                            <div class="float-img">
+                                <img src="resources/images/left.png" id="prev" onclick="prev()">
+                            </div>
                             <div id="slideArea" onmouseover="opacityIn(this)" onmouseout="opacityOut(this)">
                                 <img id="slideImage"/>
                             </div>
-                            <img src="resources/images/right.png" id="next" onclick="next()">
+                            <div class="float-img">
+                                <img src="resources/images/right.png" id="next" onclick="next()">
+                            </div>
                         </div>
                         <div id="dotArea"></div>
                     </div>
@@ -264,11 +54,13 @@
                 <div id="detailGo">
                     <div class="wrap_contView">
                         <div class="contView">
-                            <div id="cont1">
+                            <div class="cont1">
                                 <span id="detailInfo">상세정보</span>
                             </div>
-                            <div id="cont2">
-                                <button class="btn_modify" onclick="modifyRequest();">관광정보 수정요청</button>
+                            <div class="cont2">
+                            	<c:if test="${loginUser.status ne 'A' }">
+                                	<button class="btn_modify" onclick="pageLoad(1);">관광정보 수정요청</button>
+                                </c:if>
                             </div>
                         </div>
                         <hr>
@@ -288,7 +80,7 @@
                 </div>
                 <!-- 주변정보 지도 -->
                 <div class="surroundingsMap" id="detailGo">
-                    <img src="resources/images/ex.map.png">
+                    <div id="map" style="width:100%;height:350px;"></div>
                 </div>
                 <div class="wrap_contView" id="detailinfoview">
                     <!-- 세부 정보 -->
@@ -299,30 +91,34 @@
             </div>
         </div>
         <div class="contView">
-            <div id="cont1">
+            <div class="cont1">
                 <span id="detailInfo">주변 맛집 추천</span>
             </div>
         </div>
         <hr>
         <div class="foodReco">
-            <div id="cont1">
-            <div class="food">
+            <div class="cont1">
+                <div class="food">
                     <div class="foodImg"></div>
                     <div class="foodInfo">
-                        <div class="foodTitle">fdsafdsa</div>
-                        <div class="foodAddress">fdsafd</div>
+                        <div class="foodTitle"></div>
+                        <div class="foodAddress"></div>
                     </div>
                 </div>
             </div>
-            <div id="cont2">
-
+            <div class="cont2">
                 <div class="food">
-            </div>
+                    <div class="foodImg"></div>
+                    <div class="foodInfo">
+                        <div class="foodTitle"></div>
+                        <div class="foodAddress"></div>
+                    </div>
+                </div>
             </div>
         </div>
         <hr>
         <div id="reply-area">
-            <div id="reply-title">명소톡<span> 1</span></div>
+            <div id="reply-title">여행톡<span> 1</span></div>
             <div>
                 <form action="insert.re" id="reply-form">
                     <div id="reply-back">
@@ -332,18 +128,92 @@
                 </form>
             </div>
         </div>
+        <div class="btn-area">
+            <button onclick="history.back();">목록</button>
+            <c:if test="${loginUser.status eq 'A' }">
+	            <button onclick="pageLoad(2);">수정하기</button>
+	            <button onclick="pageLoad(3);">삭제하기</button>
+            </c:if>
+        </div>
+    </div>
+    <!-- 맛집 클릭시 상세정보 나오는 모달 -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div id="modal-title">
+                            <h3>주변 맛집 상세 정보</h3>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div id="modal-body">
+                    <div id="body-size">
+                        <div class="info-area">
+                            <div class="float">
+                                <h4 id="topTitle">장소이름</h4>
+                                <div class="icon-area">
+                                    <span class="ico"><img src="resources/images/Like-before.png"></span>
+                                    <span class="ico"><img src="resources/images/star.png"></span>
+                                </div>
+                            </div>
+                            <div class="area_address" id="topAddr">
+                                <span>지역정보</span>
+                            </div>
+                            <div class="titTypeWrap">
+                                <span>
+                                    한줄설명내용 영역
+                                </span>
+                            </div>
+                        </div>
+                        <div class="photo-area">
+                            <div class="cont1">
+                                <img src="">
+                            </div>
+                            <div class="cont2">
+                                <div id="map"></div>
+                            </div>
+                        </div>
+                        <div class="detailInfo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <%@include file="../../common/footer.jsp" %>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3f6edea42e65caf1e4e0b7f49028f282&libraries=services"></script>
+    <script type="text/javascript" src="resources/js/function.js"></script> 
     <script>
+        $(function(){
+            $("#myModal").modal('hide'); // 페이지로드되면 먼저 모달 숨기기
+            
+            /* 맛집추천게시글 상세정보 모달 */
+            $(".food").on("click", function(){ 
+                $("#myModal").modal('show');
+            });
+            
+            /* 페이지 이동 이벤트 */
+            function pageLoad(num){
+                var obj = $(".attracDetail"); 
+                var form = makeTag("form", {"method":"get"});
+                // var boardNo = makeTag("input", {"type":"hidden", "name":"boardNo", "value":"${b.boardNo}"}); // 게시물번호 변수처리
+                switch(num){
+                    case "1" : form.attr("action", "modify.attr"); break; // 관리자에게 정보수정요청
+                    case "2" : form.attr("action", "update.attr"); break; // 게시물 수정
+                    case "3" : form.attr("action", "delete.attr"); break; // 게시물 삭제
+                }
+                (obj.append(form)).append(boardNo);
+                form.submit();
+            }
+            
+        });
 	    /* 사진 슬라이더 */
 		const slideIndex = ['ticket.png', '하트.png', 'star.png'];
 	    let currentIndex = slideIndex[0];
 	    const imagePath = 'resources/images/';
 	    const dotPath = 'resources/images/dot.png';
-	    
 	    $(function(){
 	        $("#slideImage").prop("src", imagePath + slideIndex[0]);
-	
 	        slideIndex.forEach(function(item, index, array){
 	            let img = document.createElement("img");
 	            img.setAttribute("src", dotPath);
@@ -352,7 +222,6 @@
 	            img.setAttribute("id", "dotImage" + index);
 	            img.setAttribute("class", "dotImage");
 	            img.setAttribute("onclick", "dotClickEvent(" + index + ")");
-	
 	            document.querySelector("#dotArea").appendChild(img);
 	        });
 	    });
@@ -390,22 +259,35 @@
 	            }
 	        });
 	    }
-	    function opacityIn(obj){
-	        obj.style.opacity = "0.5";
-	        $("#prev").css("opacity", 0.7);
-	        $("#next").css("opacity", 0.7);
-	    }
-	
-	    function opacityOut(obj){
-	        obj.style.opacity = "1";
-	        $("#prev").css("opacity", 0.3);
-	        $("#next").css("opacity", 0.3);
-	    }
-	
 	    function dotClickEvent(index){
 	        $("#slideImage").prop("src", imagePath + slideIndex[index]);
 	        currentIndex = slideIndex[index];
 	    }
+
+        /* 지도 영역 */
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+        mapOption = {
+            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+        };  
+        var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
+        var geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성
+        // 주소로 좌표를 검색합니다
+        geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function(result, status) {
+            if (status === kakao.maps.services.Status.OK) { // 정상적으로 검색 완료
+
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                var marker = new kakao.maps.Marker({ // 결과값으로 받은 위치 마커로 표시
+                    map: map,
+                    position: coords
+                });
+                var infowindow = new kakao.maps.InfoWindow({ // 인포윈도우로 장소 설명 표시
+                    content: '<div style="width:150px;text-align:center;padding:6px 0;">+장소이름넣기+</div>'
+                });
+                infowindow.open(map, marker);
+                map.setCenter(coords);// 지도의 중심 결과값으로 받은 위치로 이동
+            } 
+        });    
     </script>
 </body>
 </html>

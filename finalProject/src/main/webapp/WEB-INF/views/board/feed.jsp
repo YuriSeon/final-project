@@ -35,7 +35,7 @@
  	margin-right: 10px;
  }
  .col .nicname{background-color: white; width:500px; border:1px solid black;height: 35px;}
- .nicname>span{margin: 10px; font-weight: bold; }
+ .nicname>span{margin-top: 50px; font-weight: bold; line-height: 30px;}
  
  #category1{
  	margin-top: 20px;
@@ -223,11 +223,12 @@
   color: white;
   font-size: 17px;
 }
-#update{transform: translateY(-100%);}
+#updateBoard{transform: translateY(-100%);}
 #heart-area{cursor: pointer;}
- #reply{margin: 15px; width: 400px; }
+ #reply{margin-left: 30px; width: 400px; }
  #reply-text{padding: 10px; border-bottom: 1px solid; margin: 10px;}
  #reply-text>b{font-size: 14px; color: blue;}
+ #btn{transform: translateY(-50%);}
 </style>
 
   <head>
@@ -329,21 +330,27 @@
 							                        	<c:forEach var="f" items="${list}">
 							                    <div class="ticket-item" style="width: 400px;">
 							                        <div class="thumb">
-							                        	<div class="nicname">					                        								                        			
+							                        	<div class="nicname">							                        	 
+					                                            <img src="resources/images/profile/빈프로필.jpg" alt="" style="width:25px; height:25px; border-radius:50%; margin-left:5px;" id="profile">			                                        		
 							                        			<span> <a id="nicknameHover" onclick="whoareyou();">${f.boardWriter }</a></span>
+							                        			
 																<div id="up" class="up">
 																	<ul>
 																		<li>
 										                        			<input type="hidden" value="${f.boardNo }" class="boardNo" name="boardNo">
 										                        			<i class="bi bi-justify"></i>
-																			<ul id="sild">
-																				<li><button class="custom-button" id="update" onclick="update(this);">수정</button></li>
-																				<li><button class="custom-button" id="de" onclick="deletef(this);">삭제</button></li>
-																			</ul>
+																			<c:choose>
+							                        						<c:when test="${loginUser.nickname eq f.boardWriter }">
+																				<ul id="sild">
+																					<li><button class="custom-button" id="updateBoard" onclick="updateBoard(this);">수정</button></li>
+																					<li><button class="custom-button" id="de" onclick="deletef(this);">삭제</button></li>
+																				
+																				</ul>
+																			</c:when>
+																			</c:choose>
 																		</li>												
 																	</ul>
 																</div>	
-																
 							                        	</div>
 							                        	
 							                             
@@ -369,8 +376,7 @@
 							                            <div class="prices" style="width: 500px;">
 									                            <div class="price">
 									                                <span>좋아요 ${f.good }개</span>
-									                                <div  id="heart-area">
-									                                
+									                                <div  id="heart-area">		                                
 									                               		 <img src="resources/images/하트.png" alt="" id="heart">
 									                                </div>
 																	<div>			
@@ -391,30 +397,15 @@
 									                           
 									                        </div>
 									                        <hr>
-									                        <div class="">
-									                        	<input type="text" id="reply">
-									                        	<button>댓글</button>
+									                        <div class="reply-area">
+									                        	<div>
+										                        	<textarea rows="2" cols="1" id="reply" ></textarea>
+										                        	<button id="btn" class="btn btn-warning">댓글</button>
+									                        	</div>
 									                        	
-									                        	<div id="reply-text">
-									                        		<b>르네</b>
-									                        		<p>회원가입을 하지 않아도 모든 기능을 사용 할 수 있으나
-
-																		회원가입을 하고 진행한다면 자신의 발전 모습을 확인 할 수 있습니다.
-																		[출처] [한컴타자연습] 방탄소년단-봄날.txt / 긴글불러오기 방법|작성자 알쓸신컴</p>
-									                        	</div>
-									                        	<div id="reply-text">
-									                        		<b>르네</b>
-									                        		<p>회원가입을 하지 않아도 모든 기능을 사용 할 수 있으나
-
-																		회원가입을 하고 진행한다면 자신의 발전 모습을 확인 할 수 있습니다.
-																		</p>
-									                        	</div>
-									                        	<div id="reply-text">
-									                        		<b>르네</b>
-									                        		<p>회원가입을 하지 않아도 모든 기능을 사용 할 수 있으나
-
-																		회원가입을 하고 진행한다면 자신의 발전 모습을 확인 할 수 있습니다.
-																		[출처] [한컴타자연습] 방탄소년단-봄날.txt / 긴글불러오기 방법|작성자 알쓸신컴</p>
+									                        	<div id="replyBox">
+										                        	  
+										                        	
 									                        	</div>
 									                        	
 									                        </div>
@@ -500,6 +491,7 @@
   </body>
  <script >
  
+   
     var slides = document.querySelector('.slides'); //전체 슬라이드 컨테이너
    var slideImg = document.querySelectorAll('.slides>li'); //모든 슬라이드들
    let currentIdx = 0; //현재 슬라이드 index
@@ -509,7 +501,7 @@
    //전체 슬라이드 컨테이너 넓이 설정
    slides.style.width = slideWidth * slideCount + 'px';
 
-  
+  //이미지 넣는 메소드
 $(function(){
 	
 	 var size = ${size};
@@ -528,7 +520,7 @@ $(function(){
 	 }
 	 
 	   
-
+			// 사진 오른쪽버튼
 			$(document).on("click",".controller .next",function(){		
 				  
 				var slideContainer = $(this).parents("#slideShow").children("ul");
@@ -545,7 +537,8 @@ $(function(){
 				        slideContainer.css('left', -slideWidth * (imageCount-1) + 'px');
 				    }			
 			})
-				    
+				 
+			//사진 왼쪽 버튼
 			$(document).on("click",".controller .prev",function(){
 				
 				 var slideContainer = $(this).parents("#slideShow").children("ul");
@@ -562,6 +555,7 @@ $(function(){
 
  });
 
+//스크롤
  $(window).scroll(function(){
 	 var scrollTop = $(document).scrollTop();
 	 if (scrollTop < 50) {
@@ -592,6 +586,8 @@ var loginUser =  "${loginUser}";
  	 console.log($(this).parents(".thumb").children().eq(1).children().eq(0).children().children("img"));
 
  }) */
+ 
+ //본문 삭제
  function deletef(e){
 		$btn = e;
 		var boardNo = $($btn).closest("#up").find(".boardNo").val(); //보드번호
@@ -610,23 +606,27 @@ var loginUser =  "${loginUser}";
 
 		console.log(filePath);
 		    if (isCurrentUser) {
+		    	var chk = confirm("게시글을 삭제하시겠습니까?");
+		        if (chk === true){
+		        	
+				   $.ajax({
+			            url: "delete.fo",
+			            type: "POST",
+			            data: {
+			                boardNo: boardNo,
+			                filePath: filePath
+			            },
+			            success: function(result) {
+	
+			            	location.reload();
+			            },
+			            error: function() {
+			                // Handle the error response if needed
+			                console.log("error");
+			            }
+			        });
+		        }
 		   	
-			   $.ajax({
-		            url: "delete.fo",
-		            type: "POST",
-		            data: {
-		                boardNo: boardNo,
-		                filePath: filePath
-		            },
-		            success: function(result) {
-
-		            	location.reload();
-		            },
-		            error: function() {
-		                // Handle the error response if needed
-		                console.log("error");
-		            }
-		        });
 			   
 		  } else {
 		    alert("본인만 이용가능합니다.");
@@ -635,7 +635,7 @@ var loginUser =  "${loginUser}";
 	}
  
 
- 
+ //좋아요
  $(".col > .ticket-item").on("click", "#heart-area", function () {
 
 	 var heartImage = $(this).closest(".ticket-item").find("#heart");	 
@@ -672,19 +672,22 @@ var loginUser =  "${loginUser}";
  });
  
 	 
-
+	//리스트 이치문
 	 $(".col > .ticket-item").each(function () {
-		    var boardNo = $(this).find("#up .boardNo").val();
+		 
+		 //좋아요이미지 바꾸는 메소드
+		    var boardNo = $(this).find("#up .boardNo").val();//리스트에 있는 모든 보드넘버
 		    boardNo = parseInt(boardNo);
-		    /* console.log(typeof boardNo); */
+		    /*  console.log(boardNo);  */
 		    var heartImage = $(this).find("#heart");
 		    /* console.log(heartImage); */
 		    var writer = "${loginUser.nickname}";
+		   
 		    var isLiked = false; 
 		    var glist = ${glist};
 		    for (var i = 0; i < glist.length; i++){
 		    	 var g = glist[i];
-		    	 console.log(typeof g.boardNo);
+		    	 /* console.log(typeof g.boardNo); */
 		    	 if (g.boardNo === boardNo && g.writer === writer) {
 		             isLiked = true;
 		         }
@@ -695,8 +698,383 @@ var loginUser =  "${loginUser}";
 		            heartImage.attr("src", "resources/images/free-icon-heart-833472좋아요후.png");
 		        } else {
 		            heartImage.attr("src", "resources/images/하트.png");
-		        } 	        
+		        } 	 
+			     
+		//프로필 사진
+			var mlist = ${mlist};
+			var nickname = $(this).find("#nicknameHover").text();
+			var profile = $(this).find("#profile");
+		 	var m = []; 
+			 /* console.log(mlist);  */
+			 for (var i = 0; i<mlist.length; i++){
+				 m = mlist[i];
+				  
+				 if(m.nickname === nickname){
+					 profile.attr("src",m.profileImg);
+				 }else if(m.profileImg === ""){
+					 profile.attr("src","resources/images/profile/빈프로필.jpg");
+					 
+				 }
+			 } 
+			 
+		//댓글삽입
+			
+				var replyBox = $(this).find("#replyBox");//댓글 넣을 div
+										
+				 $.ajax({
+					 url:"selectReplyList.fo",
+					 data:{refQno:boardNo},
+					 success:function(list){
+						 if (list != ""){
+							 
+							 var str ="";
+							
+							 for(i in list){
+								/*   console.log(list[i].replyWriter); */
+
+								 str +="<div id='reply-text'>"
+								 	 +"<img src='resources/images/profile/빈프로필.jpg' alt='' style='width:20px; height:20px; border-radius:50%; margin-left:5px;margin-bottom: 4px;' id='profile'>"
+			             			 +"<b style='margin-bottom: 3px;'>"+list[i].replyWriter+"</b>"
+			             			 +"<button style='border: solid white; float: right;background-color: white;' id='report' onclick='report(\"" + list[i].replyWriter + "\",\"" + list[i].replyNo + "\")'>"
+			             			 +"<img alt='' src='resources/images/980829.png' style='width:15px; height:15px; float: right;'>"
+			             			 +"</button>"
+			             			 +"<p style='font-size: 12px;font-weight: bold;line-height: 15px;'>"+list[i].content+"</p>"   
+			             		if (writer === list[i].replyWriter) {	 
+			             		 str +="<button  onclick='deleteReply(\"" + list[i].replyNo + "\")' style='color: black;font-size: 11px;padding: 3px;float: right;border: solid white;'>삭제</button>"
+									 +"<button onclick='updateReplyForm(\"" + list[i].replyNo + "\",\"" + list[i].content + "\",\"" + list[i].replyWriter + "\",this)' style='color: black;font-size: 11px;padding: 3px;float: right;border-right: 1px solid;border: solid white;'>수정</button>"
+			             		   }
+								 str +="<p style='font-size: 11px'>"+list[i].createDate+"</p>"
+								 	 +"<button onclick='rere(\"" + list[i].replyNo + "\",\"" + list[i].refQno + "\",this);' style='color: black;font-size: 11px;padding: 3px;border: solid white;'>답글</button>"	
+									 +"<div id='rreply-box'>"								 	
+								 	 +"</div>"																				
+			             			 +"</div>"
+			             			 
+							 }
+							 
+							 replyBox.html(str);
+							 
+						 }
+					 },
+					 error:function(){
+						 console.log("error");
+					 }
+				 });
+				
+				
+				
+
+			 
+	     
 		});
+	//------------------------------------------------------------------------------------------------------------
+	 
+	 //댓글
+	  $(".col > .ticket-item").on("click", "#btn", function (){
+		 /*   console.log($(this).closest(".ticket-item").find("#up").find(".boardNo").val());   */
+		 var loginUser = "${loginUser}";
+
+		 if(loginUser !==""){
+			 
+			  $.ajax({
+				  url:"reply.fo",
+				  data:{content:$(this).prev().val(),
+					  refQno:$(this).closest(".ticket-item").find("#up").find(".boardNo").val(),
+					  replyWriter:"${loginUser.nickname}"
+					  },
+				success:function(result){
+					if(result =="success"){					
+						 /* selectReplyList();  */
+						$(this).prev().val("");
+						location.reload();
+					}
+				},
+				error:function(){
+					console.log("error");
+				}
+			  });
+			  
+		 }else{
+			 alert("로그인시 이용가능합니다.");
+			 location.reload();
+		 }
+		 
+		 
+	  });
+	 
+	//댓글 삭제
+	function deleteReply(replyNo){
+		$.ajax({
+			url:"deleteReply.fo",
+			data:{replyNo:replyNo},
+			success: function(result){
+				if(result == "success"){
+					alert("삭제 되었습니다.")
+					location.reload();
+				}
+			},
+			error:function(){
+				console.log("error");
+			}
+		})
+	}
+	
+	//댓글 수정업데이트폼
+	function updateReplyForm(replyNo,content,replyWriter,tg){
+		   
+		/*  console.log($(tg).parents("#reply-text")); */
+		
+		 var form ="";
+			 form +="<b>"+replyWriter+"</b>"
+				  +"<textarea rows='2' cols='50' style='margin-left: 20px' id='upcontent'>"+content+"</textarea>"
+   		          +"<button class='btn btn-warning' style='margin-left: 200px' onclick='updateReply("+replyNo+")'>수정</button>"
+				  		    
+   		       $(tg).parents("#reply-text").html(form);
+		}
+	 
+	//댓글 업데이트폼에 있는 수정하기 클릭이벤트
+	 function updateReply(replyNo){
+		
+		 var content = $("#upcontent").val();
+		
+		$.ajax({
+			url:"updateReply.fo",
+			data:{
+				replyNo:replyNo,
+				content:content
+			},
+			success:function(result){
+				if(result== "success"){
+					alert("댓글이 수정되었습니다.");
+					location.reload();
+				}
+			},
+			error:function(){
+				console.log("error");
+			}
+		})
+	};
+	
+	//댓글신고
+	function report(replyWriter,replyNo){
+		console.log(replyNo);
+		 var loginUser = "${loginUser.nickname}";
+
+		 if(loginUser !==""){
+			var content = prompt("정말 "+replyWriter+"님을 신고하실 건가요?\r신고사유를 입력해 주세요");
+		if(content !== null){
+			
+			$.ajax({
+				url:"report.fo",
+				data:{nickname:replyWriter, writer:loginUser, replyNo:replyNo,reportReason:content},
+				success:function(result){
+					if(result == "success"){
+						alert("댓글 신고되었습니다.");
+						location.reload();
+					}/* else if(result == "alreadyReported"){
+						alert("이미 신고한 댓글입니다.");
+						location.reload();
+					}					 */
+				},
+				error:function(){
+					console.log("error");
+				}				
+			});
+		}
+		
+	 }else{
+		 alert("로그인시 이용가능합니다.");
+	 }
+	}
+	
+	//대댓글폼
+	function rere(replyNo,refQno,aw){
+		 /* console.log($(aw).next("#rreply-box").children("#rereply"+replyNo)); */ 
+		var loginUser = "${loginUser}";
+		 if(loginUser !==""){
+			 
+				$(aw).hide();
+				var form ="";
+				
+					form += "<i class='bi bi-arrow-return-right' style='float: left;margin-left: 10px;'></i>"
+						  +"<textarea rows='2' cols='40' style='margin-left: 20px' id='rereply-content'></textarea>"
+						  +"<button  class='btn btn-warning' style='margin-left: 200px' onclick='answer("+replyNo+","+refQno+");'>답글</button>"
+				
+			
+						  
+		 }else{
+			 alert("로그인 후 이용가능합니다.");
+		 }
+		 $(aw).hide();
+		 $(aw).next("#rreply-box").html(form);
+			selectAnswer(replyNo, function(result) {
+	            $(aw).next("#rreply-box").append(result);
+	        });
+		  
+		
+	}
+	
+	//대댓글입력
+	function answer(replyNo,refQno){
+		var writer = "${loginUser.nickname}";	
+		var content = $("#rereply-content").val();
+		   /* console.log($("#rereply-content").val());  */  
+		$.ajax({
+			url:"answer.fo",
+			data:{
+				replyNo:replyNo,
+				content:content,
+				replyWriter:writer,
+				refQno:refQno
+			},
+			success:function(result){
+				if(result == "success"){
+					alert("답글 작성 완료");
+					location.reload();
+				}
+			},
+			error:function(){
+				console.log("error");
+			}
+		})
+	}
+	
+	//대댓글삽입
+	 function selectAnswer(replyNo, callback){
+		/* console.log(replyNo); */
+		var writer = "${loginUser.nickname}";
+				 var rstr = "";
+		
+		$.ajax({
+			url:"selectAnswer.fo",
+			data: {
+				replyNo:replyNo
+				},
+			success:function(list){
+				
+				for(i in list){
+					  rstr +="<div style='margin-top:10px;' id='rere-text'>"
+						 +"<i class='bi bi-arrow-return-right' style='float: left;margin-left: 10px;'></i>"				
+	            		 +"<img src='resources/images/profile/빈프로필.jpg' alt='' style='width:17px; height:17px; border-radius:50%; margin-left:5px;margin-bottom: 4px;'>"
+	        		     +"<b style='margin-bottom: 3px;font-size: 6px;'>"+list[i].replyWriter+"</b>"
+	        		     +"<button style='border: solid white; float: right;background-color: white;' id='rere-report' onclick='rereport(\"" + list[i].replyWriter + "\",\"" + list[i].refRno + "\")'>"
+	            		 +"<img alt='' src='resources/images/980829.png' style='width:13px; height:13px; float: right;'>"
+	        		     +"</button>"
+	        		     +"<p style='font-size: 11px;font-weight: bold;line-height: 15px;margin-left: 25px;'>"+list[i].content+"</p>"
+	        		     if (writer === list[i].replyWriter) {
+					rstr +="<button style='color: black;font-size: 11px;padding: 3px;float: right;border: solid white;' onclick='deleteRere(\"" + list[i].refRno + "\");'>삭제</button>"
+						 +"<button style='color: black;font-size: 11px;padding: 3px;float: right;border: solid white;' onclick='updateRereForm(\"" + list[i].refRno + "\",\"" + list[i].content + "\",\"" + list[i].replyWriter + "\",this);'>수정</button>"				
+	        		     }
+	        		rstr +="<p style='font-size: 11px;margin-left: 25px;'>"+list[i].createDate+"</p>"  
+					     +"</div>"
+				     
+				} 	
+				callback(rstr);
+			},
+			error:function(){
+				console.log("error");
+			}
+		});
+	}
+
+	//대댓글 삭제
+	function deleteRere(refRno){
+		$.ajax({
+			url:"deleteRere.fo",
+			data:{refRno:refRno},
+			success: function(result){
+				if(result == "success"){
+					alert("삭제 되었습니다.")
+					location.reload();
+				}
+			},
+			error:function(){
+				console.log("error");
+			}
+		})
+	}
+	
+	//대댓글 수정폼
+	function updateRereForm(refRno,content,replyWriter,tg){
+		var form ="";
+		 form +="<b style='font-size: 10px; color:blue;top:-55px;position: relative;right:-30px;'>"+replyWriter+"</b>"
+			  +"<textarea rows='2' cols='40' style='margin-left: 20px;' id='recontent'>"+content+"</textarea>"
+		      +"<button class='btn btn-warning' style='margin-left: 200px' onclick='updateRereply("+refRno+")'>수정</button>"
+			  		    
+		       $(tg).parents("#rere-text").html(form);
+	}
+	
+	//대댓글 수정
+	function updateRereply(refRno){
+		var content = $("#recontent").val();
+		/* console.log(content); */
+		$.ajax({
+			url:"updateRere.fo",
+			data:{
+				refRno:refRno,
+				content:content
+			},
+			success:function(result){
+				if(result == "success"){
+					alert("댓글이 수정되었습니다.");
+					location.reload();
+				}
+			},
+			error:function(){
+				
+			}
+		})
+	}
+	
+	//대댓글 신고
+	function rereport(replyWriter,refRno){
+		 var loginUser = "${loginUser.nickname}";
+
+		 if(loginUser !==""){
+			var content = prompt("정말 "+replyWriter+"님을 신고하실 건가요?\r신고사유를 입력해 주세요");
+		if(content !== null){
+			
+			$.ajax({
+				url:"rereport.fo",
+				data:{nickname:replyWriter, writer:loginUser, refRno:refRno,reportReason:content},
+				success:function(result){
+					if(result == "success"){
+						alert("댓글 신고되었습니다.");
+						location.reload();
+					}					
+				},
+				error:function(){
+					console.log("error");
+				}				
+			});
+		}
+		
+	 }else{
+		 alert("로그인시 이용가능합니다.");
+	 }
+	}
+	
+	//게시물 수정
+	 function updateBoard(e){
+	 /* console.log($(this));
+ 	 console.log($(this).closest("#up").find(".boardNo").val());
+ 	 console.log($(this).closest(".nicname").find("#nicknameHover").text()); */
+ 	 $btn = e;
+ 	var boardNo = $($btn).closest("#up").find(".boardNo").val(); //보드번호
+	/* var writer = $($btn).closest(".nicname").find("#nicknameHover").text(); // 보드닉네임
+	var images = $($btn).parents(".thumb").children().eq(1).children().eq(0).children().children("img"); //이미지 위치
+	var filePath = "";//이미지의 src를 담을 리스트
+
+	
+	images.each(function(index) {
+		var currentImg = $(this);
+        var src = currentImg.attr("src");
+        filePath += src + ",";
+	  
+	  }); */
+
+			location.href="updateEnroll.fo?boardNo="+boardNo;
+
+ }
 
  </script>
 
