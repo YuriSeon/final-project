@@ -20,13 +20,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import com.google.gson.Gson;
 import com.kh.finalProject.admin.model.vo.Report;
+
+import com.kh.finalProject.board.model.service.FeedService;
+
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
+
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.board.model.vo.Rereply;
-import com.kh.finalProject.board.service.FeedService;
+
+
+import com.kh.finalProject.member.model.vo.Member;
+
+import lombok.extern.slf4j.Slf4j;
+
 
 @Controller
 public class FeedController {

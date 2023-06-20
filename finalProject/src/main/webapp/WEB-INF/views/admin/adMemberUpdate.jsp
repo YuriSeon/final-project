@@ -22,12 +22,12 @@
 <body>
 <%@include file="adMenubar.jsp" %>
 <!-- Content - Start  -->
-<div id="content-wrapper" style="background-color: #EEEEEE;">
+<div id="content-wrapper">
     <div class="container-fluid">
         <div class="dash-title">
             <h1>&nbsp;편집 및 추가
                 <button class="btn btn-danger">삭제</button>
-                <button class="btn btn-info">저장</button>
+                <button class="btn btn-success">저장</button>
             </h1>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="30" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
