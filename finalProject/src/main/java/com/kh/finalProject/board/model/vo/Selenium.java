@@ -31,7 +31,7 @@ public class Selenium {
 		ChromeOptions options = new ChromeOptions();
 		
 //		options.setHeadless(true); // 브라우저를 띄우지 않겠다고 설정
-//		options.addArguments("--disable-gpu"); //headless로 실행 가능하도록 설정
+		options.addArguments("--disable-gpu"); //headless로 실행 가능하도록 설정
 		options.addArguments("--lang=ko"); // 언어설정
 		options.addArguments("--no-sandbox"); // 보안 설정 해제
 		options.addArguments("--disable-dev-shm-usage"); // /deb/shm 디렉토리를 사용하지 않는다 (이 디렉토리는 공유 메모리를 담당하는 부분)
@@ -81,6 +81,8 @@ public class Selenium {
 			}
 		}
 		System.out.println(info);
+		
+		quitDriver();
 //		// 이미지 가져오기 
 //		WebElement imgEl = wd.findElement(By.xpath("//*[@id='full-width-tabpanel-Formal']/div/div/div/div[2]/div/div[2]/div[1]/div[1]//img[1]")); // 사진 전체 영역에서 첫번째 이미지요소 선택(xpath//img[1])
 //		String imgPath = imgEl.getAttribute("src"); // 이미지 경로 변수에 담음
@@ -99,5 +101,10 @@ public class Selenium {
 	// 종료
 	public void quitDriver() {
 		wd.quit(); //close 하면 webDriver만 종료, quit으로 browser까지 종료
+	}
+
+	public Info infoDataGet(Info in) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
