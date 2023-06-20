@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.finalProject.admin.model.vo.Notice;
+import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.admin.model.dao.AdminDao;
 
@@ -21,6 +23,15 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Autowired
 	private SqlSessionTemplate sqlSession;
+
+	
+	//대시보드 최근 신고 5개
+	@Override
+	public ArrayList<Report> currentReportList() {
+		return adminDao.currentReportList(sqlSession);
+	}
+	
+	//==================================================공지사항===========================================================
 	
 	//공지사항 등록
 	@Override
@@ -173,6 +184,83 @@ public class AdminServiceImpl implements AdminService {
 	public ArrayList<Notice> selectQnaList(PageInfo pi) {
 		return adminDao.selectQnaList(sqlSession,pi);
 	}
+
+	//Q&A 파일 조회
+	@Override
+	public ArrayList<Attachment> qnaFileSelect(int serviceNo) {
+		return adminDao.qnaFileSelect(sqlSession,serviceNo);
+	}
+
+	//Q&A 답변 조회
+	@Override
+	public ArrayList<Reply> qnaReplyList(int serviceNo) {
+		return adminDao.qnaReplyList(sqlSession,serviceNo);
+	}
+	
+	//Q&A 답변 등록
+	@Override
+	public int qnaReplyInsert(Reply r) {
+		return adminDao.qnaReplyInsert(sqlSession,r);
+	}
+
+	//Q&A 답변 수정
+	@Override
+	public int qnaReplyUpdate(Reply r) {
+		return adminDao.qnaReplyUpdate(sqlSession,r);
+	}
+
+	//Q&A 답변 삭제
+	@Override
+	public int qnaReplyDelete(Reply r) {
+		return adminDao.qnaReplyDelete(sqlSession,r);
+	}
+
+	//Q&A 검색 개수
+	@Override
+	public int qnaSearchCount(HashMap<String, String> map) {
+		return adminDao.qnaSearchCount(sqlSession,map);
+	}
+
+	//Q&A 검색 리스트
+	@Override
+	public ArrayList<Notice> qnaSearchList(HashMap<String, String> map, PageInfo pi) {
+		return adminDao.qnaSearchList(sqlSession,map,pi);
+	}
+
+	//==================================================FAQ===========================================================
+	
+	//신고관리 리스트 개수
+	@Override
+	public int reportListCount() {
+		return adminDao.reportListCount(sqlSession);
+	}
+
+	//신고관리 리스트 조회
+	@Override
+	public ArrayList<Report> selectReportList(PageInfo pi) {
+		return adminDao.selectReportList(sqlSession,pi);
+	}
+
+	//신고 삭제
+	@Override
+	public int reportDelete(int reportNo) {
+		return adminDao.reportDelete(sqlSession,reportNo);
+	}
+
+	//신고 검색 개수
+	@Override
+	public int reportSearchCount(HashMap<String, String> map) {
+		return adminDao.reportSearchCount(sqlSession,map);
+	}
+
+	//신고 검색 리스트 조회
+	@Override
+	public ArrayList<Notice> reportSearchList(HashMap<String, String> map, PageInfo pi) {
+		return adminDao.reportSearchList(sqlSession,map,pi);
+	}
+
+	
+	
 	
 	
 }

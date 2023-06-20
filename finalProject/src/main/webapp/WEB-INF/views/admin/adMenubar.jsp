@@ -19,7 +19,7 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="resources/css/dashboard_admin.css?v=1">
+    <link rel="stylesheet" type="text/css" href="resources/css/dashboard_admin.css?v=2">
     <!-- Alertify JavaScript -->
 	<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 	<!-- Alertify CSS -->
@@ -131,14 +131,14 @@
                     </li>
                     <li>
                         <a href="qna.ad">
-                            <span class='glyphicon glyphicon-list-alt'></span> Q&A
+                            <span class='glyphicon glyphicon-list-alt'></span> Q&amp;A
                         </a>
                     </li>
                 </ul>
                 <!-- submenu end -->
             </li>
             <li>
-                <a href="#">
+                <a href="report.ad">
                     <span class='glyphicon glyphicon-exclamation-sign'></span> 신고관리
                 </a>
             </li>

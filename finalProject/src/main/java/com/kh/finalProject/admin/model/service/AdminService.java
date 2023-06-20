@@ -4,11 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.kh.finalProject.admin.model.vo.Notice;
+import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
 
 public interface AdminService {
 
+	//대시보드 최근 신고 5개
+	ArrayList<Report> currentReportList();
+
+	//==================================================공지사항===========================================================
+	
 	//공지사항 등록
 	int insertNotice(Notice n, Attachment a);
 
@@ -76,5 +83,44 @@ public interface AdminService {
 
 	//Q&A 리스트 조회
 	ArrayList<Notice> selectQnaList(PageInfo pi);
+
+	//Q&A 파일 조회
+	ArrayList<Attachment> qnaFileSelect(int serviceNo);
+
+	//Q&A 답변 조회
+	ArrayList<Reply> qnaReplyList(int serviceNo);
+	
+	//Q&A 답변 등록
+	int qnaReplyInsert(Reply r);
+
+	//Q&A 답변 수정
+	int qnaReplyUpdate(Reply r);
+	
+	//Q&A 답변 삭제
+	int qnaReplyDelete(Reply r);
+
+	//Q&A 검색 개수
+	int qnaSearchCount(HashMap<String, String> map);
+
+	//Q&A 검색 리스트
+	ArrayList<Notice> qnaSearchList(HashMap<String, String> map, PageInfo pi);
+	
+	//==================================================신고관리===========================================================
+	
+	//신고관리 리스트 개수
+	int reportListCount();
+
+	//신고관리 리스트 조회
+	ArrayList<Report> selectReportList(PageInfo pi);
+
+	//신고 삭제
+	int reportDelete(int reportNo);
+
+	//신고 검색 개수
+	int reportSearchCount(HashMap<String, String> map);
+
+	//신고 검색 리스트 조회
+	ArrayList<Notice> reportSearchList(HashMap<String, String> map, PageInfo pi);
+
 
 }

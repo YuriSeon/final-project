@@ -25,7 +25,9 @@ import com.google.gson.Gson;
 import com.kh.finalProject.admin.model.service.AdminService;
 import com.kh.finalProject.admin.model.vo.Criteria;
 import com.kh.finalProject.admin.model.vo.Notice;
+import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
 
@@ -67,6 +69,15 @@ public class AdminController {
 	@RequestMapping("/admin.ad")
 	public String goAdmin() {
 		return "admin/dashboard";
+	}
+	
+	//대시보드 최근 신고 5개
+	@ResponseBody
+	@RequestMapping(value = "currentReportList.ad",produces = "application/json; charset=UTF-8")
+	public String selectList() {
+		
+		ArrayList<Report> list = adminService.currentReportList();
+		return new Gson().toJson(list);
 	}
 	
 	//사용자 페이지로 이동
@@ -454,15 +465,187 @@ public class AdminController {
 		return mv;
 	}
 	
+	//Q&A 검색
+	@GetMapping("/qnaSearch.ad" )
+	public ModelAndView qnaSearch(Criteria cri
+								 ,ModelAndView mv
+								 ,HttpSession session) {
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map.put("keyword", cri.getKeyword());
+		map.put("status", cri.getType());
+		
+		int searchCount = adminService.qnaSearchCount(map);
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(searchCount, cri.getCurrentPage(), pageLimit, boardLimit);
+		
+		ArrayList<Notice> list = adminService.qnaSearchList(map,pi);
+		
+		mv.addObject("pi", pi);
+		mv.addObject("list", list);
+		mv.addObject("keyword", cri.getKeyword());
+		mv.addObject("type", cri.getType());
+		mv.setViewName("admin/adQNA");
+		
+		return mv;
+	}
+	
 	//Q&A 답변 페이지 이동
 	@RequestMapping("qnaSelect.ad")
 	public ModelAndView qnaSelect(@RequestParam(value="serviceNo") int serviceNo
 						 		 ,ModelAndView mv) {
 
 		Notice n = adminService.faqSelect(serviceNo);
+		ArrayList<Attachment> aList = adminService.qnaFileSelect(serviceNo);
+		mv.addObject("aList", aList);
 		mv.addObject("n", n).setViewName("admin/adQnaUpdate");
 		return mv;
 	}
 	
+	//Q&A 삭제
+	@ResponseBody
+	@RequestMapping("qnaDelete.ad")
+	public String qnaDelete(int serviceNo
+				   		   ,HttpSession session) {
+		
+		int result = adminService.faqDelete(serviceNo);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","Q&A 삭제 완료");
+		}
+		
+		return (result>0)?"success":"fail";
+	}
+	
+	//선택한 FAQ 삭제
+	@ResponseBody
+	@RequestMapping(value = "qnaChkDelete.ad",produces = "application/json; charset=UTF-8")
+	public String qnaChkDelete(@RequestParam(value = "list[]") int[] list
+					   		  ,HttpSession session) {
+		
+		int result = 0;
+		for (Integer i : list) {
+			result = adminService.faqDelete(i);
+		}
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","Q&A 삭제 완료");
+		}
+		
+		return (result>0)?new Gson().toJson("success"):new Gson().toJson("fail");
+	}
+	
+	//Q&A 답변 조회
+	@ResponseBody
+	@RequestMapping(value = "qnaReplyList.ad",produces = "application/json; charset=UTF-8")
+	public String qnaReplyList(int serviceNo) {
+		
+		ArrayList<Reply> list = adminService.qnaReplyList(serviceNo);
+		return new Gson().toJson(list);
+	}
+	
+	//Q&A 답변 등록
+	@ResponseBody
+	@RequestMapping("qnaReplyInsert.ad")
+	public String qnaReplyInsert(Reply r
+							 	,HttpSession session) {
+		
+		int result = adminService.qnaReplyInsert(r);
+		return (result>0)?"success":"fail";
+	}
+	
+	//Q&A 답변 수정
+	@ResponseBody
+	@RequestMapping("qnaReplyUpdate.ad")
+	public String qnaReplyUpdate(Reply r
+							 	,HttpSession session) {
+		
+		int result = adminService.qnaReplyUpdate(r);
+		return (result>0)?"success":"fail";
+	}
+	
+	//Q&A 답변 삭제
+	@ResponseBody
+	@RequestMapping("qnaReplyDelete.ad")
+	public String qnaReplyDelete(Reply r
+							 	,HttpSession session) {
+		
+		int result = adminService.qnaReplyDelete(r);
+		return (result>0)?"success":"fail";
+	}
+	
+	//	==================================================신고관리===========================================================
+	
+	//신고관리 페이지로 이동
+	@RequestMapping("/report.ad")
+	public ModelAndView goAdminReport(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
+		
+		int listCount = adminService.reportListCount();
+		
+		int pageLimit = 10;
+		
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		
+		ArrayList<Report> list = adminService.selectReportList(pi);
+		
+		mv.addObject("list",list);
+		
+		mv.addObject("pi",pi);
+		
+		mv.setViewName("admin/adReport");
+		
+		return mv;
+	}
+	
+	//신고내역 검색
+	@GetMapping("/reportSearch.ad" )
+	public ModelAndView reportSearch(Criteria cri
+								 	,ModelAndView mv
+								 	,HttpSession session) {
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map.put("keyword", cri.getKeyword());
+		map.put("status", cri.getType());
+		
+		int searchCount = adminService.reportSearchCount(map);
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(searchCount, cri.getCurrentPage(), pageLimit, boardLimit);
+		
+		ArrayList<Notice> list = adminService.reportSearchList(map,pi);
+		
+		mv.addObject("pi", pi);
+		mv.addObject("list", list);
+		mv.addObject("keyword", cri.getKeyword());
+		mv.addObject("type", cri.getType());
+		mv.setViewName("admin/adReport");
+		
+		return mv;
+	}
+	
+	//선택한 신고 삭제
+	@ResponseBody
+	@RequestMapping(value = "reportChkDelete.ad",produces = "application/json; charset=UTF-8")
+	public String reportChkDelete(@RequestParam(value = "list[]") int[] list
+					   		  									 ,HttpSession session) {
+		
+		int result = 0;
+		for (Integer i : list) {
+			result = adminService.reportDelete(i);
+		}
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","신고내역 삭제 완료");
+		}
+		
+		return (result>0)?new Gson().toJson("success"):new Gson().toJson("fail");
+	}
 	
 }

@@ -324,7 +324,7 @@ transform : scale(1.4);
   
 /* ===================대시보드======================== */
 #content-wrapper{
-	height: 100vh;
+	min-height: 100vh;
 	background-color: #EEEEEE;
 }
 
@@ -729,6 +729,8 @@ transform : scale(1.4);
 }
 .enroll-container div:not(:last-child) input{
 	margin-left: 100px;
+	background-color: white;
+	
 	
 }
 .enroll-container label{
@@ -791,4 +793,69 @@ transform : scale(1.4);
 	border-color: #2e6da4;
 }
 
+/* ================= Q&A =================== */
 
+.qna-question{
+	position: relative;
+	background-color: white;
+	box-shadow: 0px 0px 5px 5px rgb(199, 199, 199);
+	display: block;
+	min-height: 30vh;
+	height: auto;
+	width: 60% !important;
+	padding: 15px;
+    line-height: 1.8;
+    font-size: 18px;
+    color: #333;
+}
+
+.question-file{
+	margin-top: 15px;
+}
+.question-file label{
+	margin-right: 75px;
+}
+.question-file a{
+	font-size: 19px;
+	margin-right: 15px;
+}
+.qna-answer-enroll{
+	display: flex;
+}
+.qna-answer-enroll textarea {
+    width: 57%;
+    height: 10vh;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    padding: 15px 15px;
+    line-height: 1.167;
+    resize: none;
+    display: block;
+}
+.qna-answer{
+	position: relative;
+	background-color: white;
+	display: block;
+	min-height: 10vh;
+	height: auto;
+	width: 60% !important;
+	padding: 15px;
+    line-height: 1.8;
+    font-size: 18px;
+    color: #333;
+    margin-top: 20px;
+}
+.qna-answer ul{
+	list-style: none;
+	padding-left: 15px;
+}
+.qna-answer li{
+	border-bottom: 1px solid #e6e6e6;
+	padding-bottom: 20px;
+}
+.reply-btn button{
+	float: right;
+	position: relative;
+	top: -45px;
+	margin-left: 10px;
+}
