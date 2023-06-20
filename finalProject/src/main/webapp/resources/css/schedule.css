@@ -398,7 +398,7 @@ schedule
 	font-size: 17px;
 }
 
-.enroll-sc .content button {
+.enroll-sc .content #with {
 	width: 48%;
 	height: 30px;
 	font-size: 14px;
@@ -427,7 +427,7 @@ schedule
 	height: 450px;
 	margin: auto;
 	position: fixed;
-	z-index: 3;
+	z-index: 1;
 	top: 0;
 	left: 0;
 	right: 0;
@@ -477,7 +477,10 @@ schedule
 		font-size: 16px;
 	}
 .enroll-sc .day {
-	border : 1px solid skyblue;
+	border : 1.5px solid rgb(186, 211, 221);
+	margin-top : 5px;
+	padding : 5px 10px 10px 15px;
+	text-align: left;
 }
 .enroll-sc .day .path-delete {
 	float : right;
@@ -485,4 +488,8 @@ schedule
 	background-color: none;
 	font-size : 17px;
 	font-weight: bold;
+}
+.enroll-sc .day input {
+	text-align: center;
+	
 }
