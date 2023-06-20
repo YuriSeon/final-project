@@ -8,10 +8,14 @@ import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Good;
+import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.common.model.vo.PageInfo;
+import com.kh.finalProject.member.model.vo.Member;
 
 
 @Repository
@@ -51,6 +55,7 @@ public class FeedDao {
 		return (ArrayList)sqlSession.selectList("feedMapper.selectAttachmentList");
 	}
 
+	//피드게시물삭제
 	public int deleteFeed(SqlSessionTemplate sqlSession, int boardNo) {
 		
 
@@ -59,7 +64,13 @@ public class FeedDao {
 
         // Delete from ATTACHMENT table
         int result2 = sqlSession.delete("feedMapper.deleteAttachment", boardNo);
-		return result1 + result2;
+        //good테이블 삭제
+        int result3 = sqlSession.delete("feedMapper.deleteGood", boardNo);
+        //reply테이블 삭제
+        int result4 = sqlSession.delete("feedMapper.replyDelete", boardNo);
+        //rereply테이블 삭제
+        int result5 = sqlSession.delete("feedMapper.deleteRereply",boardNo);
+		return result1 + result2 + result3+result4+result5;
 	}
 
 	//good테이블 count세기
@@ -99,9 +110,102 @@ public class FeedDao {
 		 return sqlSession.update("feedMapper.updateInsert", boardNo);
 	}
 
+	//좋아요
 	public ArrayList<Good> selectGood(SqlSessionTemplate sqlSession) {
 		// TODO Auto-generated method stub
 		return (ArrayList)sqlSession.selectList("feedMapper.selectGood");
+	}
+
+	//프로필사진
+	public ArrayList<Member> selectMember(SqlSessionTemplate sqlSession) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("feedMapper.selectMember");
+	}
+
+	//댓글인서트
+	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("feedMapper.insertReply", r);
+	}
+
+	//댓글삽입
+	public ArrayList<Reply> selectReplyList(SqlSessionTemplate sqlSession, int refQno) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("feedMapper.selectReplyList", refQno);
+	}
+
+	//댓글삭제
+	public int deleteReply(SqlSessionTemplate sqlSession, int replyNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.delete("feedMapper.deleteReply", replyNo);
+	}
+
+	//댓글수정
+	public int updateReply(SqlSessionTemplate sqlSession, Reply r) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("feedMapper.updateReply", r);
+	}
+
+	//댓글신고
+	public int reportReply(SqlSessionTemplate sqlSession, String nickname, Report rep) {
+		//member테이블 업데이트
+		int result = sqlSession.update("feedMapper.reportReply", nickname);
+		
+		//report테이블 업데이트
+		
+		int result2 = sqlSession.insert("feedMapper.report",rep);
+		return result + result2;
+	}
+
+	//대댓글입력
+	public int insertAnswer(SqlSessionTemplate sqlSession, Rereply re) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("feedMapper.insertAnswer", re);
+	}
+
+	//대댓글삽입
+	public ArrayList<Rereply> selectRereply(SqlSessionTemplate sqlSession,int replyNo) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("feedMapper.selectRereply", replyNo);
+	}
+
+	//대댓글삭제
+	public int deleteRere(SqlSessionTemplate sqlSession, int refRno) {
+		// TODO Auto-generated method stub
+		return sqlSession.delete("feedMapper.deleteRere", refRno);
+	}
+
+	//대댓글수정
+	public int updateRere(SqlSessionTemplate sqlSession, Rereply re) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("feedMapper.updateRere", re);
+	}
+
+	//신고확인
+	public boolean isAlreadyReported(SqlSessionTemplate sqlSession, Report rep) {
+		
+	    boolean isAlreadyReported = sqlSession.selectOne("feedMapper.alreadReport", rep);
+		return isAlreadyReported;
+	}
+
+	//대댓글신고
+	public int rereportReply(SqlSessionTemplate sqlSession, String nickname, Report rep) {
+		int result = sqlSession.update("feedMapper.reportReply", nickname);
+		
+		int result2 = sqlSession.insert("feedMapper.insertReport", rep);
+		return result + result2;
+	}
+
+	//게시물수정폼board
+	public Board selectBoard(SqlSessionTemplate sqlSession, int boardNo) {
+		
+		return sqlSession.selectOne("feedMapper.selectBoard", boardNo);
+	}
+
+	//게시물수정폼attachment
+	public ArrayList<Attachment> selectAttachment(SqlSessionTemplate sqlSession, int boardNo) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("feedMapper.selectAttachment", boardNo);
 	}
 
 }

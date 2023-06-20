@@ -41,5 +41,6 @@ public class Board {
 	private String address; // 쿼리문 쓸 때 ZONE_NO 서브쿼리로 검색하기 위한 한글 주소 저장용 
 	private String changeName;//	CHANGE_NAME
 	private String filePath;//
+	private String profileImg; // 프로필이미지 경로+바뀐이름
 	
 }	

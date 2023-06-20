@@ -135,8 +135,9 @@
     }
     #zone{
     	float :left;
-    	margin-left: 30px;
+    	margin-left:30px;
     } 
+    b{ margin-left:30px; float :left;}
 	
 </style>
 </head>
@@ -146,14 +147,13 @@
 	<br><br>
 	
 	<div class="suel" align="center">
-		<form action="insert.fo" method="post" id="enroll-form" enctype="multipart/form-data" onsubmit="return imgcheck()">
-		<input type="hidden" name="boardWriter" value="${loginUser.nickname }">
+		<form action="updatefeed.fo" method="post" id="enroll-form" enctype="multipart/form-data" onsubmit="return imgcheck()">
 			<table>
 				<thead>
 					<tr height="20"> </tr>
 					<tr>
 						<th>닉네임</th>
-						<td><b><input value="${loginUser.nickname }" readonly></b> </td>
+						<td><b>${b.boardWriter }</b> </td>
 					</tr>
 					<tr height="10"></tr>
 					<tr>
@@ -194,12 +194,11 @@
                                 <input type="radio" name="slide" id="slide3">
                                 <input type="radio" name="slide" id="slide4">
                                
-                                <ul id="imgholder" class="imgs">
+                                <ul id="imgholder" class="imgs">                              
                                     <li><img id="contentImg1" width="500" height="350"></li>
                                     <li><img id="contentImg2" width="500" height="350"></li>
                                     <li><img id="contentImg3" width="500" height="350"></li>
-                                    <li><img id="contentImg4" width="500" height="350"></li>
-                                   
+                                    <li><img id="contentImg4" width="500" height="350"></li>                                  
                                 </ul>
                                <div class="bullets">
                                     <label for="slide1">&nbsp;</label>
@@ -216,7 +215,7 @@
 					<tr>
 						<th>내용</th>
 						<td colspan="2">
-							<textarea rows="10" cols="90" name="boardContent"></textarea>
+							<textarea rows="10" cols="90" name="boardContent">${b.boardContent }</textarea>
 						</td>
 					</tr>
 					<tr height="20"></tr>
@@ -233,7 +232,7 @@
 				
 			</div>
 			<div align="center">
-				<button type="submit" class="btn btn-warning">작성하기</button>
+				<button type="submit" class="btn btn-warning">수정하기</button>
 				<button class="btn btn-danger" onclick="javascript:history.go(-1);">뒤로가기</button>
 			</div>
 		</form>
@@ -326,6 +325,30 @@
            $("#country").append("<option>"+cnt[add][i]+"</option>");
         }         
     }
+    
+    $(function(){
+    	   var city = document.getElementById("zone");
+    	    var zoneNo = "${b.zoneNo}"; // "${b.zoneNo}" 값을 변수로 저장
+
+    	    $(city).val(zoneNo); // zoneNo 값을 기준으로 옵션 선택  \
+    	    var idx = $("#zone option").index($("#zone option:selected"));
+    	    change(idx);
+    	    
+    	    
+    	    var images = document.getElementById("imgholder");
+    	    })
+    	    
+   $(function(){
+	   var alist = ${alist};
+	   var size = ${size};
+	   var images = document.getElementById("imgholder");
+	   var image = $(images).children().children();
+	   
+	   for(var i=0; i<size; i++){		   			   
+			$(image[i]).attr("src",alist[i].filePath);
+		   
+	   }
+   })
 	
 	
 </script>
