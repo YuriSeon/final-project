@@ -164,7 +164,8 @@
     <script src="resources/js/accordions.js"></script>
     <script src="resources/js/owl-carousel.js"></script>
     <!-- Global Init -->
-    <script src="resources/js/custom.js"></script>
+    
+    <!-- 여기 -->
 
 	<!-- 알림창 -->
 	<c:if test="${not empty alertMsg }">

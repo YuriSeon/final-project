@@ -35,6 +35,8 @@
 	</script>
     <!-- ***** Header Area End ***** -->
 
+<script src="resources/js/custom.js"></script>
+
     <!-- ***** Main Banner Area Start ***** -->
     <div class="main-banner">
         <div class="counter-content">

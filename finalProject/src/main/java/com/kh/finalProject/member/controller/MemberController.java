@@ -705,7 +705,7 @@ public class MemberController {
 		if(saveId != null && saveId.equals("on")) {//체크 박스 체크시
 			//쿠키 생성
 			cookie = new Cookie("userId",m.getUserId());
-			cookie.setMaxAge(60*60*24*14);
+			cookie.setMaxAge(60*60*24*14*1000);
 			response.addCookie(cookie);
 		}else {//체크 아닐시
 			cookie = new Cookie("userId",null);
@@ -760,6 +760,9 @@ public class MemberController {
 		
 		Member m = memberService.loadProfile(nickname);
 		
+		if(m.getProfileImg() == null) {
+			m.setProfileImg("resources/images/기본프로필.png");
+		}
 		return new Gson().toJson(m);
 	}
 }
