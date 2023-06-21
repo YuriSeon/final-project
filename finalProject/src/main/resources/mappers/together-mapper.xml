@@ -28,7 +28,7 @@
 				SELECT B.BOARD_NO,ZONE_NAME,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,(FILE_PATH || CHANGE_NAME) FILE_PATH,TOGETHER,TOGETHER_COUNT,CONCEPT,TO_CHAR(START_DATE,'YY/MM/DD') START_DATE,TO_CHAR(END_DATE,'YY/MM/DD') END_DATE,TOTAL_DATE,TOTAL_PAY
 								,(SELECT (FILE_PATH || CHANGE_NAME)
 								    FROM ATTACHMENT
-								    WHERE WRITER = BOARD_WRITER) PROFILE_PATH,TO_CHAR(B.CREATE_DATE,'YY/MM/DD') CREATE_DATE
+								    WHERE WRITER = BOARD_WRITER) PROFILE_PATH
 				FROM BOARD B
 				JOIN ZONE USING (ZONE_NO)
 				JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
@@ -53,36 +53,5 @@
   				<result column="TOTAL_DATE" property="totalDate"/>
   				<result column="TOTAL_PAY" property="totalPay"/>
   				<result column="PROFILE_PATH" property="profilePath"/>
-  				<result column="CREATE_DATE" property="createDate"/>
   		</resultMap>
-  		
-  		<select id="optionSearch" resultMap="togetherResultSet">
-  				SELECT B.BOARD_NO,ZONE_NAME,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,(FILE_PATH || CHANGE_NAME) FILE_PATH,TOGETHER,TOGETHER_COUNT,CONCEPT,TO_CHAR(START_DATE,'YY/MM/DD') START_DATE,TO_CHAR(END_DATE,'YY/MM/DD') END_DATE,TOTAL_DATE,TOTAL_PAY
-				                ,(SELECT (FILE_PATH || CHANGE_NAME)
-				                    FROM ATTACHMENT
-				                    WHERE WRITER = BOARD_WRITER) PROFILE_PATH,TO_CHAR(B.CREATE_DATE,'YY/MM/DD') CREATE_DATE
-				FROM BOARD B
-				JOIN ZONE USING (ZONE_NO)
-				JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
-				JOIN PLAN P ON (B.BOARD_NO = P.BOARD_NO)
-				WHERE B.CATEGORY = 5
-				AND B.STATUS = 'Y'
-				<if test="startDate != null">
-					<![CDATA[AND START_DATE >  ]]> #{startDate}
-				</if>
-				<if test="endDate != null">
-					<![CDATA[AND END_DATE <  ]]> #{endDate}
-				</if>
-				<if test="totalPay != 0">
-					<![CDATA[AND TOTAL_PAY<= ]]> #{totalPay} 
-				</if>
-				<if test="zoneName != 'all'">
-					AND ZONE_NAME LIKE '%'||#{zoneName}||'%'
-				</if>
-				ORDER BY B.CREATE_DATE DESC
-  		</select>
-  		
-  		<update id="togetherApply" parameterType="_int">
-  				UPDATE PLAN SET TOGETHER_COUNT = TOGETHER_COUNT+1 WHERE BOARD_NO=#{boardNo} 
-  		</update>
   </mapper>
