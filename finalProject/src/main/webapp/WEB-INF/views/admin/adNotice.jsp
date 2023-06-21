@@ -105,6 +105,9 @@
                     	<c:when test="${pi.currentPage eq pi.maxPage}">
 		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
                     	</c:when>
+                    	<c:when test="${pi.listCount eq 0}">
+		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
+                    	</c:when>
                     	<c:otherwise>
                     		<li class="page-item"><a class="page-link" href="notice.ad?currentPage=${pi.currentPage + 1}">&gt;</a></li>
                     	</c:otherwise>

@@ -23,11 +23,11 @@
 	
 	<context:component-scan base-package="com.kh.finalProject" />
 	
-	<interceptors>
-		<interceptor>
-			<mapping path="/*.ad"/>
-			<beans:bean class="com.kh.finalProject.common.model.vo.AdminInterceptor" id="adminInterceptor"/>
-		</interceptor>
-	</interceptors>
+<!-- 	<interceptors> -->
+<!-- 		<interceptor> -->
+<!-- 			<mapping path="/*.ad"/> -->
+<!-- 			<beans:bean class="com.kh.finalProject.common.model.vo.AdminInterceptor" id="adminInterceptor"/> -->
+<!-- 		</interceptor> -->
+<!-- 	</interceptors> -->
 	
 </beans:beans>

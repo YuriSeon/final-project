@@ -1,13 +1,10 @@
 package com.kh.finalProject.board.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,12 +20,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+
+import com.google.gson.Gson;
+import com.kh.finalProject.admin.model.vo.Report;
+
 import com.kh.finalProject.board.model.service.FeedService;
+
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
+
+import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.Rereply;
+
+
 import com.kh.finalProject.member.model.vo.Member;
 
 import lombok.extern.slf4j.Slf4j;
+
 
 @Controller
 public class FeedController {
@@ -148,5 +157,138 @@ public class FeedController {
 			response.setContentType("application/json; charset=UTF-8");
 		    response.getWriter().print(result);
 		}
+		
+		@ResponseBody
+		@RequestMapping(value="reply.fo")
+		public String insertReply(Reply r){
+			
+			int result = feedService.insertReply(r);
+			/*
+			 * if(result>0) { return "success"; }else { return "fail"; }
+			 */
+			return (result>0)?"success":"fail";
+		}
+		
+		@ResponseBody
+		@RequestMapping(value="selectReplyList.fo",produces = "application/json; charset=UTF-8")
+		public String selectReplyList(int refQno) {
+			
+			ArrayList<Reply> list = feedService.selectReplyList(refQno);
+			return new Gson().toJson(list);
+		}
+		
+		@ResponseBody
+		@RequestMapping("deleteReply.fo")
+		public String deleteReply(int replyNo) {
+			int result = feedService.deleteReply(replyNo);
+//			System.out.println(result);
+			return (result>0)?"success":"fail";
+		}
+		
+		@ResponseBody
+		@RequestMapping("updateReply.fo")
+		public String updateReply(Reply r) {
+			
+			int result = feedService.updateReply(r);
+			
+			return (result>0)?"success":"fail";
+		}
+		
+		//댓글신고
+		@ResponseBody
+		@RequestMapping("report.fo")
+		public String reportReply(String nickname, Report rep) {
+			/*
+			 * boolean isAlreadyReported = feedService.isAlreadyReported(rep); // 이미 신고된
+			 * 회원인지 여부 확인
+			 * 
+			 * if (isAlreadyReported) { return "alreadyReported"; }
+			 */
+			int result = feedService.reportReply(nickname,rep);
+			
+			return (result>0)?"success":"fail";
+		}
+		
+		//대댓글입력
+		@ResponseBody
+		@RequestMapping("answer.fo")
+		public String insertAnswer(Rereply re) {
+			int result = feedService.insertAnswer(re);
+			
+			return (result>0)?"success":"fail";
+		}
+		
+		//대댓글 삽입
+		@ResponseBody
+		@RequestMapping(value="selectAnswer.fo",produces = "application/json; charset=UTF-8")
+		public String selectRereply(int replyNo) {
+			
+			ArrayList<Rereply> list = feedService.selectRereply(replyNo);
+			return new Gson().toJson(list);
+		}
+		
+		//대댓글 삭제
+		@ResponseBody
+		@RequestMapping("deleteRere.fo")
+		public String deleteRere(int refRno) {
+			int result = feedService.deleteRere(refRno);
+			return (result>0)?"success":"fail";
+		}
+		
+		//대댓글수정
+		@ResponseBody
+		@RequestMapping("updateRere.fo")
+		public String updateRere(Rereply re) {
+			int result = feedService.updateRere(re);
+			
+			return (result>0)?"success":"fail";
+		}
+		
+		//대댓글 신고
+		@ResponseBody
+		@RequestMapping("rereport.fo")
+		public String rereportReply(String nickname, Report rep) {
+			int result = feedService.rereportReply(nickname,rep);
+			
+			return (result>0)?"success":"fail";
+		}
+		
+		//게시물 수정폼
+		@RequestMapping("updateEnroll.fo")
+		public String updateForm(int boardNo,Model model) {
+			
+			
+			 Board b = feedService.selectBoard(boardNo);
+			 ArrayList<Attachment> alist = feedService.selectAttachment(boardNo);
+			 
+			 model.addAttribute("b", b);
+			 model.addAttribute("alist", new Gson().toJson(alist));
+			 model.addAttribute("size", alist.size());
+			return "board/feedUpdateForm";
+		}
+		
+		@RequestMapping(value="updatefeed.fo",method=RequestMethod.POST)
+		public ModelAndView updatefeed(Board b,ArrayList<MultipartFile> upfile,ModelAndView mv,HttpSession session) {
+			ArrayList<Attachment> list = new ArrayList<>();
+			
+			for(MultipartFile file : upfile) {
+				if(!file.getOriginalFilename().equals("")) {
+					Attachment at = new Attachment();
+					if(at.getOriginName() != null) {
+						new File(session.getServletContext().getRealPath(at.getChangeName())).delete();
+					}
+					
+				}
+			}
+			
+			
+			return mv;
+		}
+		
+		
+		
+		
+		
+		
 	
 }

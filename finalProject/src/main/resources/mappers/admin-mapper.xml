@@ -4,6 +4,46 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="adminMapper">
   	
+  	<!-- MEMBER RESULT MAP -->
+  	<resultMap type="member" id="memberResultSet">
+  		<result column="USER_NO" property="userNo"/>
+  		<result column="USER_ID" property="userId"/>
+  		<result column="NICKNAME" property="nickname"/>
+  		<result column="USER_PWD" property="userPwd"/>
+  		<result column="USER_NAME" property="userName"/>
+  		<result column="GENDER" property="gender"/>
+  		<result column="AGE" property="age"/>
+  		<result column="EMAIL" property="email"/>
+  		<result column="PHONE" property="phone"/>
+  		<result column="MBTI" property="mbti"/>
+  		<result column="SURVEY" property="survey"/>
+  		<result column="STYLE" property="style"/>
+  		<result column="REPORT" property="report"/>
+  		<result column="WARNING" property="warning"/>
+  		<result column="ENROLL_DATE" property="enrollDate"/>
+  		<result column="CERTIFICATION" property="certification"/>
+  		<result column="STATUS" property="status"/>
+  		<result column="INTEREST" property="interest"/>
+  		<result column="PROFILEIMG" property="profileImg"/>
+  	</resultMap>
+  	
+  	<!-- BOARD RESULT MAP -->
+  	<resultMap type="board" id="boardResultSet">
+  		<result column="BOARD_NO" property="boardNo"/>
+  		<result column="ZONE_NO" property="zoneNo"/>
+  		<result column="INFO_NO" property="infoNo"/>
+  		<result column="CATEGORY" property="category"/>
+  		<result column="BOARD_TITLE" property="boardTitle"/>
+  		<result column="BOARD_CONTENT" property="boardContent"/>
+  		<result column="CREATE_DATE" property="createDate"/>
+  		<result column="MODIFY_DATE" property="modifyDate"/>
+  		<result column="GOOD" property="good"/>
+  		<result column="REPORT" property="report"/>
+  		<result column="COUNT" property="count"/>
+  		<result column="STATUS" property="status"/>
+  		<result column="BOARD_WRITER" property="boardWriter"/>
+  	</resultMap>
+  	
 	<!-- SERVICE RESULT MAP -->
   	<resultMap type="notice" id="serviceResultSet">
   		<result column="SERVICE_NO" property="serviceNo"/>
@@ -30,6 +70,173 @@
   		<result column="WRITER" property="writer"/>
   	</resultMap>
   	
+  	<!-- REPLY RESULT MAP -->
+  	<resultMap type="reply" id="replyResultSet">
+  		<result column="REPLY_NO" property="replyNo"/>
+  		<result column="CONTENT" property="content"/>
+  		<result column="CREATE_DATE" property="createDate"/>
+  		<result column="REPLY_WRITER" property="replyWriter"/>
+  		<result column="REF_QNO" property="refQno"/>
+  		<result column="REF_RNO" property="refRno"/>
+  		<result column="STATUS" property="status"/>
+  	</resultMap>
+  	
+  	<!-- REPORT RESULT MAP -->
+  	<resultMap type="report" id="reportResultSet">
+  		<result column="REPORT_NO" property="reportNo"/>
+  		<result column="BOARD_NO" property="boardNo"/>
+  		<result column="REPLY_NO" property="replyNo"/>
+  		<result column="WRITER" property="writer"/>
+  		<result column="REPORT_REASON" property="reportReason"/>
+  		<result column="CREATE_DATE" property="createDate"/>
+  		<result column="BOARD_WRITER" property="boardWriter"/>
+  		<result column="REPLY_WRITER" property="replyWriter"/>
+  		<result column="REPORT1" property="boardReport"/>
+  		<result column="REPORT2" property="replyReport"/>
+  	</resultMap>
+
+<!-- ===========================================대시보드============================================= -->
+  	
+	<select id="currentReportList" resultMap="reportResultSet">
+		SELECT R.*
+		FROM(SELECT REPORT_NO,BOARD_NO,REPLY_NO,WRITER,REPORT_REASON,P.CREATE_DATE,B.BOARD_WRITER,M1.REPORT REPORT1,R.REPLY_WRITER,M2.REPORT REPORT2
+			 FROM REPORT P
+			 LEFT JOIN BOARD B USING(BOARD_NO)
+			 LEFT JOIN REPLY R USING(REPLY_NO)
+			 LEFT JOIN MEMBER M1 ON(B.BOARD_WRITER=M1.NICKNAME)
+			 LEFT JOIN MEMBER M2 ON(R.REPLY_WRITER=M2.NICKNAME)
+			 ORDER BY CREATE_DATE DESC, REPORT_NO ASC) R
+	 		 <![CDATA[
+			 WHERE ROWNUM <= 5
+			 ]]>
+	</select>
+
+<!-- ===========================================회원관리============================================= -->
+	
+	<!-- 회원 리스트 개수 -->
+  	<select id="memberListCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM MEMBER
+  		WHERE STATUS = 'Y'
+  	</select>
+  	
+	<!-- 회원 리스트 조회 -->
+  	<select id="selectMemberList" resultMap="memberResultSet">
+  		SELECT USER_NO,USER_ID,NICKNAME,USER_PWD,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') ENROLL_DATE,CERTIFICATION,STATUS,INTEREST
+		FROM MEMBER
+		WHERE STATUS IN ('Y','N')
+		ORDER BY USER_NO
+  	</select>
+  	
+  	<!-- 회원 검색 개수-->
+  	<select id="memberSearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE 
+		<if test="status == 'title'">
+			 USER_ID LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="status == 'writer'">
+			 USER_NAME LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="status == 'status'">
+			 (status = 'Y' AND '정상' LIKE '%'||#{keyword}||'%')
+   		  OR (status = 'N' AND '탈퇴' LIKE '%'||#{keyword}||'%')
+		</if>
+		<if test="status == 'certification'">
+			 (certification = 0 AND '미인증' LIKE '%'||#{keyword}||'%')
+		  OR (certification = 1 AND '카카오' LIKE '%'||#{keyword}||'%')
+		  OR (certification = 2 AND '네이버' LIKE '%'||#{keyword}||'%')
+		</if>
+		 
+	</select>
+	
+	<!-- 회원 검색 리스트-->
+  	<select id="memberSearchList" resultMap="memberResultSet">
+		SELECT USER_NO,USER_ID,NICKNAME,USER_PWD,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') ENROLL_DATE,CERTIFICATION,STATUS,INTEREST
+		FROM MEMBER
+		WHERE 
+		<choose>
+			<when test="status=='title'">
+				USER_ID LIKE '%'||#{keyword}||'%'
+			</when>
+			<when test="status=='writer'">
+				USER_NAME LIKE '%'||#{keyword}||'%'
+			</when>
+			<when test="status=='status'">
+				(status = 'Y' AND '정상' LIKE '%'||#{keyword}||'%')
+   		  	 OR (status = 'N' AND '탈퇴' LIKE '%'||#{keyword}||'%')
+			</when>
+			<otherwise>
+				(certification = 0 AND '미인증' LIKE '%'||#{keyword}||'%')
+			 OR (certification = 1 AND '카카오' LIKE '%'||#{keyword}||'%')
+			 OR (certification = 2 AND '네이버' LIKE '%'||#{keyword}||'%')
+			</otherwise>
+		</choose>
+		ORDER BY USER_NO
+	</select>
+
+	<!-- 회원 탈퇴 -->
+	<update id="memberDelete">
+		UPDATE MEMBER
+		SET STATUS = 'N'
+		WHERE USER_NO = #{userNo}
+		AND STATUS = 'Y'	
+	</update>
+
+	<!-- 회원 관리 조회 -->
+  	<select id="memberSelect" resultMap="memberResultSet">
+		SELECT USER_NO,USER_ID,NICKNAME,USER_PWD,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,ENROLL_DATE,CERTIFICATION,m.STATUS,INTEREST,FILE_PATH||CHANGE_NAME "PROFILEIMG"
+		FROM MEMBER M
+        LEFT JOIN ATTACHMENT A ON (NICKNAME=WRITER)
+		WHERE USER_NO = #{userNo} 
+	</select>
+	
+	<!-- 회원 수정 -->
+	<update id="memberUpdate">
+		UPDATE MEMBER
+		SET USER_ID = #{userId},
+			NICKNAME = #{nickname},
+			USER_NAME = #{userName},
+			EMAIL = #{email},
+			PHONE = #{phone}
+		WHERE USER_NO = #{userNo}	
+	</update>
+	
+	<!-- 프로필 사진 업데이트 -->
+	<update id="memberUpdateImg">
+		UPDATE ATTACHMENT
+		SET ORIGIN_NAME = #{originName},
+			CHANGE_NAME = #{changeName},
+			FILE_PATH = #{filePath}
+		WHERE WRITER = #{writer}
+	</update>
+	
+	<!-- 프로필 사진 삭제-->
+	<delete id="delProfileImg">
+		DELETE FROM ATTACHMENT
+		WHERE WRITER = #{nickname}
+	</delete>
+
+	<!-- 회원 정보 엑셀 다운로드 -->
+	<select id="memberExcelList" resultMap="memberResultSet">
+		SELECT USER_NO,USER_ID,NICKNAME,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,ENROLL_DATE,CERTIFICATION,STATUS,INTEREST
+		FROM MEMBER
+		WHERE STATUS IN ('Y','N')
+		ORDER BY USER_NO
+	</select>
+	
+	<!-- 회원 정보 게시물 개수 -->
+	<select id="boardCount" resultType="Integer">
+		SELECT COUNT(*) AS COUNT
+		FROM BOARD
+		WHERE BOARD_WRITER = #{nickname}
+		GROUP BY CATEGORY
+		ORDER BY CATEGORY
+	</select>
+	
+<!-- ===========================================공지사항============================================= -->
+
   	<!-- 공지사항 등록 -->
   	<insert id="insertNotice">
 	  	INSERT INTO SERVICE(SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,WRITER)
@@ -243,6 +450,87 @@
 		ORDER BY SERVICE_NO
   	</select>
   	
+  	<!-- Q&A 검색 개수-->
+  	<select id="qnaSearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 3
+		<if test="status == 'title'">
+		AND SERVICE_TITLE
+		</if>
+		<if test="status == 'content'">
+			<![CDATA[
+				AND REGEXP_REPLACE(SERVICE_CONTENT, '<[^>]+>', '')
+			]]>
+		</if>
+		<if test="status == 'writer'">
+		AND WRITER
+		</if>
+		 LIKE '%'||#{keyword}||'%'
+	</select>
+	
+	<!-- Q&A 검색 리스트-->
+  	<select id="qnaSearchList" resultMap="serviceResultSet">
+		SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 3
+		<choose>
+			<when test="status=='title'">
+				AND SERVICE_TITLE
+			</when>
+			<when test="status=='writer'">
+				AND WRITER
+			</when>
+			<otherwise>
+				<![CDATA[
+					AND REGEXP_REPLACE(SERVICE_CONTENT, '<[^>]+>', '')
+				]]>
+			</otherwise>
+		</choose>
+		LIKE '%'||#{keyword}||'%'
+		ORDER BY SERVICE_NO
+	</select>
+  	
+  	<!-- Q&A 답변 조회 -->
+  	<select id="qnaReplyList" resultMap="replyResultSet">
+  		SELECT REPLY_NO,CONTENT,TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE,REPLY_WRITER,REF_QNO,REF_RNO,STATUS
+		FROM REPLY
+		WHERE STATUS = 'Y'
+        AND REF_QNO = #{serviceNo}
+		ORDER BY CREATE_DATE ASC, REPLY_NO ASC
+  	</select>
+  	
+  	<!-- Q&A 답변 등록 -->
+  	<insert id="qnaReplyInsert">
+	  	INSERT INTO REPLY(REPLY_NO,CONTENT,REPLY_WRITER,REF_QNO)
+		VALUES(SEQ_RNO.NEXTVAL,#{content},#{replyWriter},#{refQno})
+  	</insert>
+  	
+  	<!-- Q&A 답변 등록 후 문의 상태값 변경 -->
+  	<update id="qnaAnswerStatus">
+	  	UPDATE SERVICE
+	  	SET ANSWER_STATUS = 'Y'
+	  	WHERE SERVICE_NO = #{refQno}
+  	</update>
+  	
+  	<!-- Q&A 답변 수정 -->
+  	<update id="qnaReplyUpdate">
+	  	UPDATE REPLY
+	  	SET CONTENT = #{content}
+	  	WHERE REPLY_NO = #{replyNo}
+	  	AND STATUS = 'Y'
+  	</update>
+  	
+  	<!-- Q&A 답변 삭제 -->
+  	<update id="qnaReplyDelete">
+	  	UPDATE REPLY
+	  	SET STATUS = 'N'
+	  	WHERE REPLY_NO = #{replyNo}
+	  	AND STATUS = 'Y'
+  	</update>
+  	
   	<!-- 마이페이지 Q&A 개수 -->
   	<select id="myQnaCount" resultType="_int">
   		SELECT COUNT(*)
@@ -261,4 +549,75 @@
         AND WRITER = #{nick}
 		ORDER BY CREATE_DATE DESC
   	</select>
+  	
+  	<!-- ===========================================신고관리============================================= -->
+	  	
+  	<!-- 신고 리스트 개수 -->
+  	<select id="reportListCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM REPORT
+  	</select>
+  	
+  	<!-- 신고 리스트 조회 -->
+  	<select id="selectReportList" resultMap="reportResultSet">
+  		SELECT REPORT_NO,BOARD_NO,REPLY_NO,WRITER,REPORT_REASON,P.CREATE_DATE,B.BOARD_WRITER,M1.REPORT REPORT1,R.REPLY_WRITER,M2.REPORT REPORT2
+		FROM REPORT P
+		LEFT JOIN BOARD B USING(BOARD_NO)
+		LEFT JOIN REPLY R USING(REPLY_NO)
+		LEFT JOIN MEMBER M1 ON(B.BOARD_WRITER=M1.NICKNAME)
+		LEFT JOIN MEMBER M2 ON(R.REPLY_WRITER=M2.NICKNAME)
+		ORDER BY CREATE_DATE DESC, REPORT_NO ASC
+  	</select>
+  	
+  	<!-- 신고 삭제 -->
+  	<delete id="reportDelete">
+  		DELETE FROM REPORT
+  		WHERE REPORT_NO = #{reportNo}
+  	</delete>
+  	
+  	<!-- 신고 검색 개수-->
+  	<select id="reportSearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM REPORT P
+		LEFT JOIN BOARD B USING(BOARD_NO)
+		LEFT JOIN REPLY R USING(REPLY_NO)
+		LEFT JOIN MEMBER M1 ON(B.BOARD_WRITER=M1.NICKNAME)
+		LEFT JOIN MEMBER M2 ON(R.REPLY_WRITER=M2.NICKNAME)
+		WHERE 
+		<if test="status == 'title'">
+		 	REPORT_REASON
+		</if>
+		<if test="status == 'writer'">
+			B.BOARD_WRITER LIKE '%'||#{keyword}||'%' OR R.REPLY_WRITER
+		</if>
+		<if test="status == 'reporter'">
+		 	WRITER
+		</if>
+		 LIKE '%'||#{keyword}||'%'
+	</select>
+	
+	<!-- 신고 검색 리스트-->
+  	<select id="reportSearchList" resultMap="reportResultSet">
+		SELECT REPORT_NO,BOARD_NO,REPLY_NO,WRITER,REPORT_REASON,P.CREATE_DATE,B.BOARD_WRITER,M1.REPORT REPORT1,R.REPLY_WRITER,M2.REPORT REPORT2
+		FROM REPORT P
+		LEFT JOIN BOARD B USING(BOARD_NO)
+		LEFT JOIN REPLY R USING(REPLY_NO)
+		LEFT JOIN MEMBER M1 ON(B.BOARD_WRITER=M1.NICKNAME)
+		LEFT JOIN MEMBER M2 ON(R.REPLY_WRITER=M2.NICKNAME)
+		WHERE 
+		<choose>
+			<when test="status=='title'">
+				 REPORT_REASON
+			</when>
+			<when test="status=='writer'">
+				 B.BOARD_WRITER LIKE '%'||#{keyword}||'%' OR R.REPLY_WRITER
+			</when>
+			<otherwise>
+				WRITER
+			</otherwise>
+		</choose>
+		LIKE '%'||#{keyword}||'%'
+		ORDER BY CREATE_DATE DESC, REPORT_NO ASC
+	</select>
+  	
   </mapper>
