@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
-import com.kh.finalProject.board.model.service.AttrarctionService;
+import com.kh.finalProject.board.model.service.AttractionService;
 import com.kh.finalProject.board.model.service.FeedService;
 import com.kh.finalProject.board.model.service.ScheduleService;
 import com.kh.finalProject.board.model.service.TogetherService;
@@ -34,7 +34,7 @@ import com.kh.finalProject.common.template.Pagination;
 public class BoardController {
 	
 	@Autowired
-	private AttrarctionService atService;
+	private AttractionService atService;
 	
 	@Autowired
 	private ScheduleService scService;

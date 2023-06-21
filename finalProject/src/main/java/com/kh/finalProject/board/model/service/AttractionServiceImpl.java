@@ -8,7 +8,7 @@ import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Service
-public class AttrarctionServiceImpl implements AttrarctionService {
+public class AttractionServiceImpl implements AttractionService {
 
 	@Override
 	public int selectListCount() {
