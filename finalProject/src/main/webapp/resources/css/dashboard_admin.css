@@ -632,7 +632,6 @@ transform : scale(1.4);
  	width: 180px;
  	height: 180px;
  	border-radius: 50%;
-	background-color: black;
 }
 .profile-name{
 	align-self: center;
@@ -707,6 +706,34 @@ transform : scale(1.4);
 }
 .info-write div{
 	flex: 1 1 50%;
+}
+
+/* 프로필 사진 변경 모달 */
+.modal-content{
+    background-color: #022c6c !important;
+    color: white !important;
+}
+.close{
+    color: white;
+    position: relative;
+    top: -40px;
+    left: -10px;
+}
+.modal-body2 button{
+	margin-bottom: 10px;
+}
+#imgChange{
+	position: relative;
+	left: -5px;
+}
+#profileImg{
+	margin: auto;
+	position: relative; 
+	top: -30px;
+}
+#imgForm button{
+	position: relative;
+	left: 33%;
 }
 
 /* ================= 공지사항 등록 =================== */

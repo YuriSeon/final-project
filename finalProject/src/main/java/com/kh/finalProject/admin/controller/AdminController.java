@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +18,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.parser.ParseException;
+import org.openqa.selenium.remote.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -170,11 +172,22 @@ public class AdminController {
 	}
 	
 	//회원 편집 페이지로 이동
-	@RequestMapping("/memberUpdate.ad")
-	public ModelAndView goAdminMemberUpdate(@RequestParam(value="userNo") int userNo
+	@RequestMapping("goMemberUpdate.ad")
+	public ModelAndView goMemberUpdate(@RequestParam(value="userNo") int userNo
 	 																		 ,ModelAndView mv) {
 		
 		Member m = adminService.memberSelect(userNo);
+		List<Integer> bcount = adminService.boardCount(m.getNickname());
+
+		if (bcount.size() < 3) {
+		    int remaining = 3 - bcount.size(); // 남은 개수 계산
+
+		    for (int i = 0; i < remaining; i++) {
+		        bcount.add(0); // 0 추가
+		    }
+		}
+
+		mv.addObject("bcount", bcount);
 		mv.addObject("m", m).setViewName("admin/adMemberUpdate");
 		return mv;
 	}
@@ -194,6 +207,70 @@ public class AdminController {
 			mv.addObject("errorMsg","회원정보 수정 실패").setViewName("common/errorPage");
 		}
 		return mv;
+	}
+	
+	//프로필 사진 업데이트
+	@PostMapping("memberUpdateImg.ad")
+	public ModelAndView memberUpdateImg(int userNo
+									   ,Attachment a
+									   ,ModelAndView mv
+				   					   ,MultipartFile upfile
+		   							   ,HttpSession session) {
+		
+		if(!upfile.getOriginalFilename().equals("")) {
+			
+			String originName= upfile.getOriginalFilename();
+			String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+			int ranNum = (int)(Math.random()*90000+10000);//5자리 랜덤값
+			String ext = originName.substring(originName.lastIndexOf("."));
+			String changeName = currentTime+ranNum+ext;
+			String savePath = session.getServletContext().getRealPath("/resources/images/profile/");
+			
+			try {
+				upfile.transferTo(new File(savePath+changeName));
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			a.setWriter(a.getWriter());
+			a.setOriginName(upfile.getOriginalFilename());
+			a.setChangeName(changeName);
+			a.setFilePath("resources/images/profile/");
+		}
+		
+		int result = adminService.memberUpdateImg(a);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","프로필 변경 완료");
+			mv.setViewName("redirect:goMemberUpdate.ad?userNo="+userNo);
+		}else {
+			mv.addObject("errorMsg","프로필 변경 실패").setViewName("common/errorPage");
+		}
+		
+		return mv;
+	}
+	
+	//프로필 사진 삭제
+	@ResponseBody
+	@PostMapping("delProfileImg.ad")
+	public String delProfileImg(Member m
+							   ,ModelAndView mv
+					   		   ,HttpSession session) {
+		
+		String profileImg = m.getProfileImg();
+		new File(session.getServletContext().getRealPath(profileImg)).delete();
+		
+		int result = adminService.delProfileImg(m.getNickname());
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","프로필 삭제 완료");
+		}else {
+			session.setAttribute("alertMsg","프로필 삭제 실패");
+		}
+		
+		return "";
 	}
 	
 	

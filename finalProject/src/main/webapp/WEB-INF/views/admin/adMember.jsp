@@ -49,7 +49,7 @@
                 <div>
                     <button class="btn btn-danger" onclick="chkDelete();">탈퇴 처리</button>
                     <button class="btn btn-info" onclick="location.href='memberExcel.ad';">정보 받기</button>
-                    <button class="btn btn-info">쪽지 발송</button>
+<!--                     <button class="btn btn-info">쪽지 발송</button> -->
                     <button class="btn btn-info">메일 발송</button>
                 </div>
                 <!-- 버튼 끝 -->
@@ -125,17 +125,17 @@
                    			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
                 		</c:when>
                 		<c:otherwise>
-                			 <li class="page-item"><a class="page-link" href="notice.ad?currentPage=${pi.currentPage - 1 }">&lt;</a></li>
+                			 <li class="page-item"><a class="page-link" href="member.ad?currentPage=${pi.currentPage - 1 }">&lt;</a></li>
                 		</c:otherwise>
                 	</c:choose>
                 	
                     <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
                     	<c:choose>
                     		<c:when test="${p eq pi.currentPage}">
-                   				<li class="page-item disabled"><a class="page-link" href="notice.ad?currentPage=${p}">${p}</a></li>
+                   				<li class="page-item disabled"><a class="page-link" href="member.ad?currentPage=${p}">${p}</a></li>
 	                		</c:when>
 	                		<c:otherwise>
-	                			<li class="page-item"><a class="page-link" href="notice.ad?currentPage=${p}">${p}</a></li>
+	                			<li class="page-item"><a class="page-link" href="member.ad?currentPage=${p}">${p}</a></li>
 	                		</c:otherwise>
                     	</c:choose>
                     </c:forEach>
@@ -148,7 +148,7 @@
 		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
                     	</c:when>
                     	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="notice.ad?currentPage=${pi.currentPage + 1}">&gt;</a></li>
+                    		<li class="page-item"><a class="page-link" href="member.ad?currentPage=${pi.currentPage + 1}">&gt;</a></li>
                     	</c:otherwise>
                     </c:choose>
                 </ul>
@@ -210,7 +210,7 @@
     $(function () {
 		$(".member-table>tbody>tr>td>button").click(function () {
 			var bno = $(this).closest("tr").children().eq(1).text();
-			location.href = 'memberUpdate.ad?userNo='+bno;
+			location.href = 'goMemberUpdate.ad?userNo='+bno;
 		});
 	});
     

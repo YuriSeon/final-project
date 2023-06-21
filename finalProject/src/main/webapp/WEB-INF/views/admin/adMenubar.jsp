@@ -20,7 +20,7 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="resources/css/dashboard_admin.css?v=2">
+    <link rel="stylesheet" type="text/css" href="resources/css/dashboard_admin.css?v=1">
     <!-- Alertify JavaScript -->
 	<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 	<!-- Alertify CSS -->
@@ -201,6 +201,39 @@
         });
     });
     
+    //게시판 단축키 이동
+    $(document).on("keydown", function(event) {
+    	var target = event.target;
+    	var key = event.keyCode;
+    	//input에 입력할때는 제외
+    	if (target.nodeName !== "INPUT") {
+    		if (key === 49) {
+    			location.href="admin.ad";
+    		}else if (key === 50) {
+    			location.href="theme.ad";
+			}else if (key === 51) {
+    			location.href="theme.ad";
+			}else if (key === 52) {
+    			location.href="theme.ad";
+			}else if (key === 53) {
+    			location.href="theme.ad";
+			}else if (key === 54) {
+    			location.href="theme.ad";
+			}else if (key === 81) {
+    			location.href="theme.ad";
+			}else if (key === 87) {
+    			location.href="member.ad";
+			}else if (key === 69) {
+    			location.href="notice.ad";
+			}else if (key === 82) {
+    			location.href="faq.ad";
+			}else if (key === 84) {
+    			location.href="qna.ad";
+			}else if (key === 89) {
+    			location.href="report.ad";
+			}	
+		}
+   	});
    </script>
 </body>
 </html>

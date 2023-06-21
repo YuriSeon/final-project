@@ -120,7 +120,7 @@
 					str +="<li>"
 						+ "<div class='reply-content' style='text-align:center;'>"
 	       				+ "답변을 입력해 주세요."
-	       				+ "</div>"
+	       				+ "</div>";
 				}else{
 					for(var i in list){
 						str +="<li>"
@@ -136,7 +136,7 @@
 	           				+ "<button type='button' class='btn btn-danger' id='replyDelete'>삭제</button>"
 	           				+ "<button type='button' class='btn btn-info' id='replyEditForm'>수정</button>"
 	       					+ "</div>"
-	       					+ "</li>"
+	       					+ "</li>";
 					}
 				}
 				$(".qna-answer>ul").html(str);

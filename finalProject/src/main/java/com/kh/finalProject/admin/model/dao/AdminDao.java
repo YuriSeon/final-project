@@ -2,6 +2,8 @@ package com.kh.finalProject.admin.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -292,6 +294,17 @@ public class AdminDao {
 	public ArrayList<Member> memberExcelList(SqlSessionTemplate sqlSession) {
 		return (ArrayList)sqlSession.selectList("adminMapper.memberExcelList");
 	}
+
+	//회원 정보 게시물 개수
+	public List<Integer> boardCount(SqlSessionTemplate sqlSession, String nickname) {
+		return sqlSession.selectList("adminMapper.boardCount",nickname);
+	}
+
+	//회원 프로필 이미지 삭제
+	public int delProfileImg(SqlSessionTemplate sqlSession, String nickname) {
+		return sqlSession.delete("adminMapper.delProfileImg", nickname);
+	}
+	
 
 	
 

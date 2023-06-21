@@ -27,6 +27,23 @@
   		<result column="PROFILEIMG" property="profileImg"/>
   	</resultMap>
   	
+  	<!-- BOARD RESULT MAP -->
+  	<resultMap type="board" id="boardResultSet">
+  		<result column="BOARD_NO" property="boardNo"/>
+  		<result column="ZONE_NO" property="zoneNo"/>
+  		<result column="INFO_NO" property="infoNo"/>
+  		<result column="CATEGORY" property="category"/>
+  		<result column="BOARD_TITLE" property="boardTitle"/>
+  		<result column="BOARD_CONTENT" property="boardContent"/>
+  		<result column="CREATE_DATE" property="createDate"/>
+  		<result column="MODIFY_DATE" property="modifyDate"/>
+  		<result column="GOOD" property="good"/>
+  		<result column="REPORT" property="report"/>
+  		<result column="COUNT" property="count"/>
+  		<result column="STATUS" property="status"/>
+  		<result column="BOARD_WRITER" property="boardWriter"/>
+  	</resultMap>
+  	
 	<!-- SERVICE RESULT MAP -->
   	<resultMap type="notice" id="serviceResultSet">
   		<result column="SERVICE_NO" property="serviceNo"/>
@@ -169,8 +186,9 @@
 
 	<!-- 회원 관리 조회 -->
   	<select id="memberSelect" resultMap="memberResultSet">
-		SELECT USER_NO,USER_ID,NICKNAME,USER_PWD,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') ENROLL_DATE,CERTIFICATION,STATUS,INTEREST
-		FROM MEMBER
+		SELECT USER_NO,USER_ID,NICKNAME,USER_PWD,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,ENROLL_DATE,CERTIFICATION,m.STATUS,INTEREST,FILE_PATH||CHANGE_NAME "PROFILEIMG"
+		FROM MEMBER M
+        LEFT JOIN ATTACHMENT A ON (NICKNAME=WRITER)
 		WHERE USER_NO = #{userNo} 
 	</select>
 	
@@ -184,13 +202,39 @@
 			PHONE = #{phone}
 		WHERE USER_NO = #{userNo}	
 	</update>
+	
+	<!-- 프로필 사진 업데이트 -->
+	<update id="memberUpdateImg">
+		UPDATE ATTACHMENT
+		SET ORIGIN_NAME = #{originName},
+			CHANGE_NAME = #{changeName},
+			FILE_PATH = #{filePath}
+		WHERE WRITER = #{writer}
+	</update>
+	
+	<!-- 프로필 사진 삭제-->
+	<delete id="delProfileImg">
+		DELETE FROM ATTACHMENT
+		WHERE WRITER = #{nickname}
+	</delete>
 
+	<!-- 회원 정보 엑셀 다운로드 -->
 	<select id="memberExcelList" resultMap="memberResultSet">
 		SELECT USER_NO,USER_ID,NICKNAME,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,ENROLL_DATE,CERTIFICATION,STATUS,INTEREST
 		FROM MEMBER
 		WHERE STATUS IN ('Y','N')
 		ORDER BY USER_NO
 	</select>
+	
+	<!-- 회원 정보 게시물 개수 -->
+	<select id="boardCount" resultType="Integer">
+		SELECT COUNT(*) AS COUNT
+		FROM BOARD
+		WHERE BOARD_WRITER = #{nickname}
+		GROUP BY CATEGORY
+		ORDER BY CATEGORY
+	</select>
+	
 <!-- ===========================================공지사항============================================= -->
 
   	<!-- 공지사항 등록 -->

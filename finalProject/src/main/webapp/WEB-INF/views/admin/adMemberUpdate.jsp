@@ -38,7 +38,16 @@
             <div class="member-update">
                 <div class="profile-image">
                     <div id="p_img">
-                        <img src="resources/images/person.png" alt="프로필사진">
+                        <c:choose>
+                   			<c:when test="${not empty m.profileImg}">
+	                         	<!--프로필 있으면-->
+	                         	<img id="mprofileImg" src="${m.profileImg}" alt="프로필사진">
+                   			</c:when>
+	                   		<c:otherwise>
+		                        <!--프로필 없으면-->
+		                        <img id="mprofileImg" src="resources/images/blackperson.png" alt="프로필사진">
+	                   		</c:otherwise>
+                  		</c:choose>
                     </div>
                     <div class="profile-name">
                         ${m.userName}
@@ -105,12 +114,12 @@
                     <div class="info-place">
                         <div class="info-title">작성</div>
                         <div class="info-write">
-                            <div>피드</div>
-                            <div>0개</div>
-                            <div>일정자랑</div>
-                            <div>0개</div>
-                            <div>함께가치</div>
-                            <div>0개</div>
+	                        <div>피드</div>
+	                        <div>${bcount.get(0)}개</div>
+	                        <div>일정자랑</div>
+	                        <div>${bcount.get(1)}개</div>
+	                        <div>함께가치</div>
+	                        <div>${bcount.get(2)}개</div>
                         </div>
                     </div>
                     <!-- <div class="info-place"> -->
@@ -181,7 +190,40 @@
                 </div>
             </div>
             <!-- 회원정보 끝 -->
-
+			<!--프로필사진 바꾸기 모달-->
+           	<div class="modal fade" id="followModal" role="dialog"> 
+               	<div class="modal-dialog">
+                  	<!-- Modal content-->   
+                  	<div class="modal-content">
+                    	<div class="modal-header2">
+                      		<h4 class="modal-title"></h4>
+                      		<button type="button" class="close" data-dismiss="modal">×</button>
+                    	</div>
+                    	<div class="modal-body2">
+                    		<div class="profile-image" id="p_img" style="position: relative; left: 0px;">
+                         		<c:choose>
+	                      			<c:when test="${not empty loginUser.profileImg}">
+			                            <!--프로필 있으면-->
+			                            <img id="profileImg" src="${loginUser.profileImg}" alt="프로필사진">
+		                      		</c:when>
+		                      		<c:otherwise>
+			                            <!--프로필 없으면-->
+			                            <img id="profileImg" src="resources/images/profile/person.png" alt="프로필사진">
+		                      		</c:otherwise>
+	                     		</c:choose>
+                    		</div>
+                           	<form action="memberUpdateImg.ad" method="post" enctype="multipart/form-data" id="imgForm">
+	                            <input type="file" class="form-control-file border" name="upfile" onchange="loadImg(this,1);" required="required">
+	                            <input type="hidden" name="writer" id="nickname" value="${m.nickname}">
+	                            <input type="hidden" name="userNo" value="${m.userNo}">
+	                            <button type="submit" class="btn btn-primary" id="imgChange">사진변경</button>
+	                            <button type="button" class="btn btn-danger" onclick="deleteImg()">사진삭제</button>
+                         	</form>
+                   		</div>
+               		</div>
+               	</div>
+           	</div>
+            <!--프로필사진 바꾸기 모달 끝-->
         </div><!--멤버  컨테이너-->
 
     </div><!-- container-fluid -->
@@ -238,6 +280,72 @@
 			history.back();
 		});
 	});
+    
+  	//프로필 변경 모달
+    $('#p_img').click(function(){
+        $('#followModal').modal(); //id가 "followModal"인 모달창을 열어준다. 
+        $('.modal-title').text("프로필 사진 변경"); //modal 의 header 부분에 값을 넣어준다.
+        $('.modal-title').css("font-size","30px");
+        $("#profileImg").attr("src","resources/images/profile/person.png");
+    });
+  	
+  	//파일인풋 숨기기
+    $(function() {
+		$("input[name=upfile]").hide();
+		$("#profileImg").click(function() {
+			$("input[name=upfile]").click();
+		});
+	});
+  	
+  	//프로필 사진 미리보기
+  	function loadImg(inputFile,num) {
+		if(inputFile.files.length == 1){
+			var reader = new FileReader();
+			
+			reader.readAsDataURL(inputFile.files[0]);
+			
+			reader.onload = function(e) {//e:이벤트 객체
+				$("#profileImg").attr("src",e.target.result);
+			}
+		}else{
+			$("#profileImg").attr("src","resources/images/profile/person.png");
+		}
+	}
+  	
+	//사진 안고르면 경고
+    $(function() {
+   		$('#imgChange').click(function(event) {
+       	    event.preventDefault(); // 폼 서브밋을 막음
+       	    var input = $('input[name=upfile]');
+       	    if (input[0].checkValidity()) {
+       	      $('#imgForm').submit(); // 폼 서브밋
+       	    } else {
+       	      alert("사진을 골라주세요.");
+       	    }
+       	  });
+	});
+  	
+    //프로필 사진 삭제
+    function deleteImg() {
+    	var nickname = $("#nickname").val();
+        
+    	if (confirm("사진을 삭제하시겠습니까?")) {
+			
+            $.ajax({
+                url: "delProfileImg.ad",
+                type: "POST",
+                data: { 
+                	nickname : nickname,
+                	profileImg : "${m.profileImg}"
+                	},
+                success: function() {
+                	location.reload();
+                },
+                error: function() {
+                }
+            });
+		}
+	}
     
 </script>
 </body>

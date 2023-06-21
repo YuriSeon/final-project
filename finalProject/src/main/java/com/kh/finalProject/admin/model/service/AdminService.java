@@ -2,6 +2,8 @@ package com.kh.finalProject.admin.model.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.admin.model.vo.Report;
@@ -148,6 +150,15 @@ public interface AdminService {
 
 	//회원 정보 엑셀
 	ArrayList<Member> memberExcelList();
+
+	//회원 정보조회 게시물 개수
+	List<Integer> boardCount(String nickname);
+
+	//회원 프로필이미지 삭제
+	int delProfileImg(String nickname);
+
+	//회원 프로필 이미지 수정
+	int memberUpdateImg(Attachment a);
 	
 	
 

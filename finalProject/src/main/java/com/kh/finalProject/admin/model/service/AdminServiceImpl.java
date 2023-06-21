@@ -1,20 +1,24 @@
 package com.kh.finalProject.admin.model.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.ServletContext;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.finalProject.admin.model.dao.AdminDao;
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
-import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
+import com.kh.finalProject.member.model.dao.MemberDao;
 import com.kh.finalProject.member.model.vo.Member;
-import com.kh.finalProject.admin.model.dao.AdminDao;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -23,7 +27,13 @@ public class AdminServiceImpl implements AdminService {
 	private AdminDao adminDao;
 	
 	@Autowired
+	private MemberDao memberDao;
+	
+	@Autowired
 	private SqlSessionTemplate sqlSession;
+	
+	@Autowired
+	private ServletContext ServletContext;
 
 	
 	//대시보드 최근 신고 5개
@@ -308,6 +318,37 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public ArrayList<Member> memberExcelList() {
 		return adminDao.memberExcelList(sqlSession);
+	}
+
+	//회원 정보 게시물 개수
+	@Override
+	public List<Integer> boardCount(String nickname) {
+		return adminDao.boardCount(sqlSession,nickname);
+	}
+
+	//회원 프로필 이미지 삭제
+	@Override
+	public int delProfileImg(String nickname) {
+		return adminDao.delProfileImg(sqlSession,nickname);
+	}
+
+	//회원 프로필 이미지 수정
+	@Override
+	public int memberUpdateImg(Attachment a) {
+	
+		Attachment att = memberDao.selectAttachment(sqlSession,a);
+		String nicknameCheck = null;
+		
+		if (att != null) {
+			nicknameCheck = att.getWriter();
+			new File(ServletContext.getRealPath("/"+att.getFilePath()+att.getChangeName())).delete();
+		}
+		
+		if (a.getWriter().equals(nicknameCheck)) {
+			return memberDao.updateImg(sqlSession,a);
+		}else {
+			return memberDao.insertImg(sqlSession,a);
+		}
 	}
 
 	

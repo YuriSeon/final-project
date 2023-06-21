@@ -223,7 +223,7 @@ public class MemberController {
 	}
 	
 	//프로필 사진 삭제
-	@PostMapping("/deleteImg.me")
+	@PostMapping("deleteImg.me")
 	@ResponseBody
 	public String deleteImg(String nickname
 						   ,ModelAndView mv
