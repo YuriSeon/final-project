@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="festivalMapper">
+
+	<!-- 보드 등록 -->
+	<insert id="insertBoard" parameterType="board" >
+		INSERT INTO BOARD (BOARD_NO, ZONE_NO, INFO_NO, CATEGORY, BOARD_TITLE, BOARD_CONTENT, BOARD_WRITER)
+            		VALUES (SEQ_BNO.NEXTVAL,#{zoneNo},SEQ_INO.NEXTVAL,6,#{boardTitle},#{boardContent},#{boardWriter})
+	</insert>
+	
+	<!-- 장소 정보 등록 -->
+	<insert id="insertInfo" parameterType="info">
+		INSERT INTO INFO (INFO_NO, BOARD_NO, ZONE_NO, INFO_ADDRESS, INFO_TIME,
+                    		INFO_HOMEPAGE, INFO_CALL, INFO_TYPE)
+            		VALUES(SEQ_INO.CURRVAL, SEQ_BNO.CURRVAL, #{zoneNo}, #{infoAddress}, #{infoTime},
+                    		#{infoHomepage}, #{infoCall}, 3)
+	</insert>
+	
+	<!-- 어태치먼트 등록 -->
+	<insert id="insertAt" parameterType="attachment">
+		INSERT INTO ATTACHMENT(FILE_NO, BOARD_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, FILE_LEVEL, WRITER)
+                		VALUES(SEQ_FNO.NEXTVAL, SEQ_BNO.CURRVAL,#{originName},#{changeName},#{filePath},#{fileLevel},#{writer})
+	</insert>
+	
+	<!-- 페스티벌 등록 -->
+	<insert id="insertFe" parameterType="festival">
+		INSERT INTO FESTIVAL(BOARD_NO, ZONE_NO, INFO_NO, START_DATE, END_DATE, FES_CATEGORY, FES_MONEY)
+            		VALUES(SEQ_BNO.CURRVAL, #{zoneNo}, SEQ_INO.CURRVAL, #{startDate}, #{endDate}, #{fesCategory}, #{fesMoney})
+	</insert>
+  
+</mapper>
