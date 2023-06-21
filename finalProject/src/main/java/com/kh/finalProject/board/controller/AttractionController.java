@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.kh.finalProject.board.service.AttractionService;
+import com.kh.finalProject.board.model.service.AttrarctionService;
+import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.board.model.vo.Selenium;
 
 @Controller
 public class AttractionController {
@@ -23,7 +25,7 @@ public class AttractionController {
 	private static String SERVICEKEY = "E15I5%2FPXccZzl%2BCSlsAkGubm20fnvVbSgMXRQg5sSx2qPglZUEa73k3K32wX1dWvBNris%2BiRqICN51d93m08tA%3D%3D";
 	
 	@Autowired
-	private AttractionService atService;
+	private AttrarctionService atService;
 	
 	@ResponseBody
 	@GetMapping(value="searchKeyword1", produces = "application/json; charset=UTF-8")
@@ -64,5 +66,22 @@ public class AttractionController {
 	@RequestMapping("detail.attr")
 	public String detailAttr() {
 		return "board/attraction/attractionDetail";
+	}
+	
+	@RequestMapping("update.attr")
+	public String updateAttr() {
+		return "board/attraction/attractionUpdate";
+	}
+	
+	@RequestMapping("insert.attr")
+	public String insertAttr() {
+		return "board/attraction/attractionInsert";
+	}
+	
+	// 나중에 값 넣기 
+	@RequestMapping("searchInfo.attr")
+	public Info searchInfo(Info in) {
+		Info info = new Selenium().infoDataGet(in);
+		return info;
 	}
 }

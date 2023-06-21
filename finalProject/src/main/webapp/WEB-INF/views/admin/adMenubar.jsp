@@ -76,7 +76,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="festival.ad">
                             <span class='glyphicon glyphicon-list-alt'></span> 축제
                         </a>
                     </li>
@@ -206,13 +206,13 @@
     	var target = event.target;
     	var key = event.keyCode;
     	//input에 입력할때는 제외
-    	if (target.nodeName !== "INPUT") {
+    	if (target.nodeName !== "INPUT" && target.nodeName !== "TEXTAREA") {
     		if (key === 49) {
     			location.href="admin.ad";
     		}else if (key === 50) {
     			location.href="theme.ad";
 			}else if (key === 51) {
-    			location.href="theme.ad";
+    			location.href="festival.ad";
 			}else if (key === 52) {
     			location.href="theme.ad";
 			}else if (key === 53) {

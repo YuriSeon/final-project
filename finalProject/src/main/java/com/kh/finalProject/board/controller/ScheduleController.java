@@ -24,7 +24,7 @@ public class ScheduleController {
 	// 게시물 등록페이지 이동
 	@GetMapping("insert.sc")
 	public String scInsert() {
-		return "schedule/enrollPage";
+		return "board/schedule/enrollPage";
 	}
 //	
 //	@PostMapping("insert.sc")

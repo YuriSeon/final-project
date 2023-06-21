@@ -106,6 +106,12 @@ public class AdminController {
 		return "admin/adTheme";
 	}
 	
+	//축제 페이지로 이동
+	@RequestMapping("festival.ad")
+	public String goAdminFestival() {
+		return "admin/adFestival";
+	}
+	
 //==================================================회원관리===========================================================
 	
 	//회원관리 페이지로 이동
