@@ -18,7 +18,7 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- css -->
-    <title>문의관리-FAQ</title>
+    <title>신고관리</title>
 </head>
 <body>
 <%@include file="adMenubar.jsp" %>
@@ -26,17 +26,18 @@
 <div id="content-wrapper">
     <div class="container-fluid">
         <div class="dash-title">
-            <h1>&nbsp;문의 관리 - FAQ</h1>
+            <h1>&nbsp;신고 관리</h1>
         </div>
         <div class="board-theme">
             <div class="search-btn" id="searchBtn">
                 <!-- 검색 시작 -->
                 <div class="search-section">
-                	<form action="faqSearch.ad" method="get">
+                	<form action="reportSearch.ad" method="get">
                 	<input type="hidden" name="currentPage" value="1">
 	                    <select name="type" id="searchCate">
-	                        <option value="title" ${type == 'title' ? 'selected="selected"': ''}>제목</option>
-	                        <option value="content" ${type == 'content' ? 'selected="selected"': ''}>내용</option>
+	                        <option value="title" ${type == 'title' ? 'selected="selected"': ''}>신고사유</option>
+	                        <option value="writer" ${type == 'writer' ? 'selected="selected"': ''}>작성자</option>
+	                        <option value="reporter" ${type == 'reporter' ? 'selected="selected"': ''}>신고자</option>
 	                    </select>
 	                    <input type="text" name="keyword" id="searchBar">
 	                    <button class="btn btn-default" id="searchBtn">검색</button>
@@ -46,7 +47,6 @@
                 <!-- 버튼 시작 -->
                 <div>
                     <button class="btn btn-danger" onclick="chkDelete();">선택삭제</button>
-                    <button class="btn btn-info" onclick="location.href='faqEnroll.ad'">게시물 등록</button>
                 </div>
                 <!-- 버튼 끝 -->
             </div>
@@ -55,23 +55,33 @@
                 <table class="theme-table" border="1">
                     <thead>
                         <tr>
-                            <th style="width: 60px;"><input type="checkbox" id="chkAll"></th>
-                            <th style="width: 60px">번호</th>
-                            <th >제목</th>
-                            <th style="width: 200px;">작성자</th>
-                            <th style="width: 300px;">작성시각</th>
-                            <th style="width: 100px;">조회수</th>
+                            <th style="width: 5%;"><input type="checkbox" id="chkAll"></th>
+                            <th style="width: 5%;">번호</th>
+                            <th style="width: 40%;">신고사유</th>
+                            <th style="width: 10%;">작성자</th>
+                            <th style="width: 10%;">신고횟수</th>
+                            <th style="width: 10%;">신고자</th>
+                            <th style="width: 20%;">신고일자</th>
                         </tr>
                     </thead>
                     <tbody>
-                    	<c:forEach var="n" items="${list}">
+                    	<c:forEach var="r" items="${list}">
                     		<tr>
 	                            <td class="table-chk"><input type="checkbox" class="check" name="chk" id=""></td>
-	                            <td>${n.serviceNo}</td>
-	                            <td>${n.serviceTitle}</td>
-	                            <td>${n.writer}</td>
-	                            <td>${n.createDate}</td>
-	                            <td>${n.count}</td>
+	                            <td>${r.reportNo}</td>
+	                            <td>${r.reportReason}</td>
+	                            <c:choose>
+	                            	<c:when test="${r.replyWriter eq null}">
+	                            		<td>${r.boardWriter}</td>
+	                            		<td>${r.boardReport}</td>
+	                            	</c:when>
+	                            	<c:otherwise>
+			                            <td>${r.replyWriter}</td>
+			                            <td>${r.replyReport}</td>
+	                            	</c:otherwise>
+	                            </c:choose>
+	                            <td>${r.writer}</td>
+	                            <td>${r.createDate}</td>
                         	</tr>
                     	</c:forEach>
                     </tbody>
@@ -86,17 +96,17 @@
                    			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
                 		</c:when>
                 		<c:otherwise>
-                			 <li class="page-item"><a class="page-link" href="faq.ad?currentPage=${pi.currentPage - 1 }">&lt;</a></li>
+                			 <li class="page-item"><a class="page-link" href="report.ad?currentPage=${pi.currentPage - 1 }">&lt;</a></li>
                 		</c:otherwise>
                 	</c:choose>
                 	
                     <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
                     	<c:choose>
                     		<c:when test="${p eq pi.currentPage}">
-                   				<li class="page-item disabled"><a class="page-link" href="faq.ad?currentPage=${p}">${p}</a></li>
+                   				<li class="page-item disabled"><a class="page-link" href="report.ad?currentPage=${p}">${p}</a></li>
 	                		</c:when>
 	                		<c:otherwise>
-	                			<li class="page-item"><a class="page-link" href="faq.ad?currentPage=${p}">${p}</a></li>
+	                			<li class="page-item"><a class="page-link" href="report.ad?currentPage=${p}">${p}</a></li>
 	                		</c:otherwise>
                     	</c:choose>
                     </c:forEach>
@@ -109,7 +119,7 @@
 		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
                     	</c:when>
                     	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="faq.ad?currentPage=${pi.currentPage + 1}">&gt;</a></li>
+                    		<li class="page-item"><a class="page-link" href="report.ad?currentPage=${pi.currentPage + 1}">&gt;</a></li>
                     	</c:otherwise>
                     </c:choose>
                 </ul>
@@ -144,7 +154,7 @@
     $(function () {
 		$(".theme-table>tbody>tr>td").not(":first-child").click(function () {
 			var bno = $(this).parent().children().eq(1).text();
-			location.href = 'faqSelect.ad?serviceNo='+bno;
+			location.href = "";
 		});
 	});
     
@@ -160,14 +170,14 @@
     	
     	$.ajax({
     		type: "post",
-    		url: "faqChkDelete.ad",
+    		url: "reportChkDelete.ad",
     		data: {	list : list },
     		dataType: 'json',
 			success: function(result) {
 				if(result=="success"){
-					location.href="faq.ad";
+					location.href="report.ad";
 				}else{
-					alertify.message("공지사항 삭제 실패");
+					alertify.message("신고내역 삭제 실패");
 				}
 			},
 			error: function(request,status,error) {

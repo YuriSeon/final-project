@@ -103,7 +103,7 @@
 				if(result=="success"){
 					location.href="faq.ad";
 				}else{
-					alertify.message("공지사항 삭제 실패");
+					alertify.message("FAQ 삭제 실패");
 				}
 			},
 			error: function(result) {

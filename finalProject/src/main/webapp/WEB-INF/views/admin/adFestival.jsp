@@ -18,7 +18,7 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- css -->
-    <title>게시글관리-테마</title>
+    <title>게시글관리-축제</title>
 </head>
 <body>
 <%@include file="adMenubar.jsp" %>
@@ -26,7 +26,7 @@
 <div id="content-wrapper">
     <div class="container-fluid">
         <div class="dash-title">
-            <h1>&nbsp;게시글 관리 - 테마</h1>
+            <h1>&nbsp;게시글 관리 - 축제</h1>
         </div>
         <div class="board-theme">
             <div class="search-btn" id="searchBtn">
@@ -43,7 +43,7 @@
                 <!-- 버튼 시작 -->
                 <div>
                     <button class="btn btn-danger">선택삭제</button>
-                    <button class="btn btn-info">게시물 등록</button>
+                    <button class="btn btn-info" onclick="location.href='fesEnrollForm.fe'">게시물 등록</button>
                 </div>
                 <!-- 버튼 끝 -->
             </div>
