@@ -10,6 +10,7 @@ import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Repository
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class ScheduleDao {
 
 	public int selectListCount(SqlSession sqlSession, String sort) {

@@ -13,10 +13,12 @@
 	<meta name="description" content="">
 	<meta name="author" content="Tooplate">
 	<link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 	
 	<!-- JavaScript -->
 	<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
@@ -185,7 +187,7 @@
                 			<!-- 로그인 전 -->
 		                    <div class="text-button">
 		                        <button type="button" data-toggle="modal" data-target="#loginModal">로그인</button>&nbsp;/
-		                        <button type="button" onclick="location.href='enrollForm.me'">회원가입</button>
+		                        <button type="button" onclick="location.href='enrollListForm.me'">회원가입</button>
 		                    </div>
                 		</c:when>
                 		<c:when test="${not empty loginUser and loginUser.status eq 'Y' }">
@@ -209,7 +211,7 @@
 						<c:otherwise>
 							<!-- 관리자 로그인 후 -->
 		                    <div class="text-button">
-		                        <button onclick="location.href='mypage.me'">관리자페이지</button>
+		                        <button onclick="location.href='admin.ad'">관리자페이지</button>
 		                        <button type="button" onclick="location.href='logout.me'">로그아웃</button>
 		                    </div>
 						</c:otherwise>
@@ -297,6 +299,16 @@
   	</form>
   	
   	<script>
+  		//엔터키로 로그인버튼 누르기
+	  	$(function() {
+	  	    $("#userPwd").keyup(function(event) {
+	  	        if (event.which === 13) {
+	  	            $("#login-button").click();
+	  	        }
+	  	    });
+	  	});
+  	
+  	
   		//쿠키에 저장된 아이디값 가져오기
   		$(function(){
   			

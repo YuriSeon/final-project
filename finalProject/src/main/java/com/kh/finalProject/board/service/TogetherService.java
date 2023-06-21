@@ -18,4 +18,6 @@ public interface TogetherService {
 
 	ArrayList<TogetherVO> optionSearch(TogetherVO t);
 
+	int togetherApply(int boardNo);
+
 }

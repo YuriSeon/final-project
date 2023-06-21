@@ -1,9 +1,14 @@
 package com.kh.finalProject.member.model.dao;
 
+import java.util.ArrayList;
+
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.vo.Member;
 
 @Repository
@@ -59,8 +64,32 @@ public class MemberDao {
 		return sqlSession.delete("memberMapper.deleteImg", nickname);
 	}
 
-		public Member loadProfile(SqlSessionTemplate sqlSession, String nickname) {
-			return (Member)sqlSession.selectOne("memberMapper.loadProfile",nickname);
-		}
+	public Member loadProfile(SqlSessionTemplate sqlSession, String nickname) {
+		return (Member)sqlSession.selectOne("memberMapper.loadProfile",nickname);
+	}
+
+	//마이페이지 Q&A 질문 등록
+	public int myQnaInsert(SqlSessionTemplate sqlSession, Notice n) {
+		return sqlSession.insert("memberMapper.myQnaInsert",n);
+	}
+
+	//마이페이지 Q&A 질문 파일 등록
+	public int myQnaFileInsert(SqlSessionTemplate sqlSession, Attachment a) {
+		return sqlSession.insert("memberMapper.myQnaFileInsert",a);
+	}
+
+	//마이페이지 Q&A 개수
+	public int myQnaCount(SqlSessionTemplate sqlSession, String nick) {
+		return sqlSession.selectOne("adminMapper.myQnaCount",nick);
+	}
+
+	//마이페이지 Q&A 리스트 조회
+	public ArrayList<Notice> myQnaList(SqlSessionTemplate sqlSession, PageInfo pi, String nick) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("adminMapper.myQnaList",nick,rowBounds);
+	}
 
 }

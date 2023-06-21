@@ -22,5 +22,6 @@ public class Info {
 	private String parking; //PARKING	VARCHAR2(1 BYTE)
 	private String infoName; //INFO_NAME	VARCHAR2(50 BYTE)
 	private int infoType; //INFO_TYPE	NUMBER
+	private String dayOff; // DAY_OFF VARCHAR2(50 BYTE)
 
 }

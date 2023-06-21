@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="adminMapper">
+  	
+	<!-- SERVICE RESULT MAP -->
+  	<resultMap type="notice" id="serviceResultSet">
+  		<result column="SERVICE_NO" property="serviceNo"/>
+  		<result column="CATEGORY" property="category"/>
+  		<result column="SERVICE_TITLE" property="serviceTitle"/>
+  		<result column="SERVICE_CONTENT" property="serviceContent"/>
+  		<result column="ANSWER_STATUS" property="answerStatus"/>
+  		<result column="COUNT" property="count"/>
+  		<result column="CREATE_DATE" property="createDate"/>
+  		<result column="STATUS" property="status"/>
+  		<result column="WRITER" property="writer"/>
+  	</resultMap>
+  	
+  	<!-- ATTACHMENT RESULT MAP -->
+  	<resultMap type="attachment" id="attachmentResultSet">
+  		<result column="FILE_NO" property="fileNo"/>
+  		<result column="BOARD_NO" property="boardNo"/>
+  		<result column="ORIGIN_NAME" property="originName"/>
+  		<result column="CHANGE_NAME" property="changeName"/>
+  		<result column="FILE_PATH" property="filePath"/>
+  		<result column="UPLOAD_DATE" property="uploadDate"/>
+  		<result column="FILE_LEVEL" property="fileLevel"/>
+  		<result column="STATUS" property="status"/>
+  		<result column="WRITER" property="writer"/>
+  	</resultMap>
+  	
+  	<!-- 공지사항 등록 -->
+  	<insert id="insertNotice">
+	  	INSERT INTO SERVICE(SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,WRITER)
+		VALUES(SEQ_BNO.NEXTVAL,#{category},#{serviceTitle},#{serviceContent},#{writer})
+  	</insert>
+  	
+  	<!-- 파일 등록 -->
+  	<insert id="insertAttachment">
+	  	INSERT INTO ATTACHMENT(FILE_NO,BOARD_NO,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,FILE_LEVEL)
+	  	VALUES(SEQ_FNO.NEXTVAL,SEQ_BNO.CURRVAL,#{originName},#{changeName},#{filePath},2)
+  	</insert>
+  	
+	<!-- 공지사항 리스트 개수 -->
+  	<select id="noticeListCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM SERVICE
+  		WHERE STATUS = 'Y'
+  		AND CATEGORY = 1
+  	</select>
+  	
+	<!-- 공지사항 리스트 조회 -->
+  	<select id="selectNoticeList" resultMap="serviceResultSet">
+  		SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+        AND CATEGORY = 1
+		ORDER BY SERVICE_NO
+  	</select>
+  	
+	<!-- 공지사항 수정 조회 -->
+  	<select id="noticeSelect" resultMap="serviceResultSet">
+		SELECT SERVICE_NO
+			  ,CATEGORY
+			  ,SERVICE_TITLE
+			  ,SERVICE_CONTENT
+			  ,ANSWER_STATUS
+		  	  ,COUNT
+			  ,CREATE_DATE
+			  ,STATUS
+			 ,WRITER
+		FROM SERVICE
+		WHERE SERVICE_NO = #{serviceNo} 
+		AND STATUS = 'Y'
+	</select>
+  	
+	<!-- 공지사항 수정 파일 조회 -->
+  	<select id="noticeFileSelect" resultMap="attachmentResultSet">
+		SELECT FILE_NO
+			  ,BOARD_NO
+			  ,ORIGIN_NAME
+			  ,CHANGE_NAME
+			  ,FILE_PATH
+			  ,UPLOAD_DATE
+			  ,FILE_LEVEL
+			  ,STATUS
+			  ,WRITER
+		FROM ATTACHMENT
+		WHERE BOARD_NO = #{serviceNo} 
+		AND STATUS = 'Y'
+	</select>
+	
+	<!-- 공지사항 수정 -->
+	<update id="noticeUpdate">
+		UPDATE SERVICE
+		SET SERVICE_TITLE = #{serviceTitle},
+			SERVICE_CONTENT = #{serviceContent}
+		WHERE SERVICE_NO = #{serviceNo}	
+		AND STATUS = 'Y'	
+	</update>
+	
+	<!-- 공지사항 파일 수정 -->
+	<update id="noticeFileUpdate">
+		UPDATE ATTACHMENT
+		SET ORIGIN_NAME = #{originName},
+			CHANGE_NAME = #{changeName}
+		WHERE BOARD_NO = #{boardNo}	
+		AND STATUS = 'Y'
+	</update>
+	
+	<!-- 공지사항 수정 파일 추가 -->
+  	<insert id="noticeNewFileUpdate">
+	  	INSERT INTO ATTACHMENT(FILE_NO,BOARD_NO,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,FILE_LEVEL)
+	  	VALUES(SEQ_FNO.NEXTVAL,#{boardNo},#{originName},#{changeName},#{filePath},2)
+  	</insert>
+	
+	<!-- 공지사항 삭제 -->
+	<update id="noticeDelete">
+		UPDATE SERVICE
+		SET STATUS = 'N'
+		WHERE SERVICE_NO = #{serviceNo}	
+		AND STATUS = 'Y'	
+	</update>
+	
+	<!-- 공지사항 파일 삭제 -->
+	<update id="noticeFileDelete">
+		UPDATE ATTACHMENT
+		SET STATUS = 'N'
+		WHERE BOARD_NO = #{serviceNo}	
+		AND STATUS = 'Y'	
+	</update>
+	
+	<!-- 공지사항 검색 개수-->
+  	<select id="noticeSearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 1
+		<if test="status == 'title'">
+		AND SERVICE_TITLE
+		</if>
+		<if test="status == 'content'">
+			<![CDATA[
+				AND REGEXP_REPLACE(SERVICE_CONTENT, '<[^>]+>', '')
+			]]>
+		</if>
+		 LIKE '%'||#{keyword}||'%'
+	</select>
+	
+	<!-- 공지사항 검색 리스트-->
+  	<select id="noticeSearchList" resultMap="serviceResultSet">
+		SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 1
+		<choose>
+			<when test="status=='title'">
+				AND SERVICE_TITLE
+			</when>
+			<otherwise>
+				<![CDATA[
+					AND REGEXP_REPLACE(SERVICE_CONTENT, '<[^>]+>', '')
+				]]>
+			</otherwise>
+		</choose>
+		LIKE '%'||#{keyword}||'%'
+		ORDER BY SERVICE_NO
+	</select>
+	
+	<!-- ===========================================FAQ============================================= -->
+	
+	<!-- FAQ 리스트 개수 -->
+  	<select id="faqListCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM SERVICE
+  		WHERE STATUS = 'Y'
+  		AND CATEGORY = 2
+  	</select>
+	
+	<!-- FAQ 리스트 조회 -->
+  	<select id="selectFAQList" resultMap="serviceResultSet">
+  		SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+        AND CATEGORY = 2
+		ORDER BY SERVICE_NO
+  	</select>
+	
+	<!-- FAQ 검색 개수-->
+  	<select id="faqSearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 2
+		<if test="status == 'title'">
+		AND SERVICE_TITLE
+		</if>
+		<if test="status == 'content'">
+			<![CDATA[
+				AND REGEXP_REPLACE(SERVICE_CONTENT, '<[^>]+>', '')
+			]]>
+		</if>
+		 LIKE '%'||#{keyword}||'%'
+	</select>
+	
+	<!-- FAQ 검색 리스트-->
+  	<select id="faqSearchList" resultMap="serviceResultSet">
+		SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 2
+		<choose>
+			<when test="status=='title'">
+				AND SERVICE_TITLE
+			</when>
+			<otherwise>
+				<![CDATA[
+					AND REGEXP_REPLACE(SERVICE_CONTENT, '<[^>]+>', '')
+				]]>
+			</otherwise>
+		</choose>
+		LIKE '%'||#{keyword}||'%'
+		ORDER BY SERVICE_NO
+	</select>
+	
+	<!-- ===========================================FAQ============================================= -->
+	
+	<!-- Q&A 리스트 개수 -->
+  	<select id="qnaListCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM SERVICE
+  		WHERE STATUS = 'Y'
+  		AND CATEGORY = 3
+  	</select>
+  	
+  	<!-- Q&A 리스트 조회 -->
+  	<select id="selectQnaList" resultMap="serviceResultSet">
+  		SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+        AND CATEGORY = 3
+		ORDER BY SERVICE_NO
+  	</select>
+  	
+  	<!-- 마이페이지 Q&A 개수 -->
+  	<select id="myQnaCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM SERVICE
+  		WHERE STATUS = 'Y'
+  		AND CATEGORY = 3
+  		AND WRITER = #{nick}
+  	</select>
+  	
+  	<!-- 마이페이지 Q&A 리스트 조회 -->
+  	<select id="myQnaList" resultMap="serviceResultSet">
+  		SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+        AND CATEGORY = 3
+        AND WRITER = #{nick}
+		ORDER BY CREATE_DATE DESC
+  	</select>
+  </mapper>

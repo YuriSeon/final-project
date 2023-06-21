@@ -72,8 +72,17 @@
 			margin:0px;
 			padding:0px;
 		}
+		#contentOuter{
+			width:1110px;
+		}
 		#contentOuter>div{
 			float:left;
+		}
+		.togetherBtn{
+			border : none;
+			width : 150px;
+			height : 50px;
+			background-color: #7c838b;
 		}
 	</style>
     <title>함께 가치</title>
@@ -112,6 +121,7 @@
 			});
 		});
 	</script>
+	
     <div class="page-heading-shows-events">
         <div class="container">
             <div class="row">
@@ -127,7 +137,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
- 
+ 					<br>
 					 <div id="searchDiv">
 							<div id="titleMsg">원하는 조건을 입력해보세요</div>
 							<div id="searchOption1">
@@ -140,7 +150,7 @@
 							<div id="searchOption3">
 								<select  id="location">
 									<option value="">지역</option>
-									<option value='0'>전체</option>
+									<option value='all'>전체</option>
 									<option value='서울'>서울특별시</option>
 									<option value='부산'>부산광역시</option>
 									<option value='대구'>대구광역시</option>
@@ -182,14 +192,6 @@
 									var location = $("#location").val();
 									var pay = $("#pay").val();
 									
-									if(startDate == ""){
-										startDate = "지정 안함";
-									}
-									
-									if(endDate == ""){
-										endDate = "지정 안함";
-									}
-									
 									$.ajax({
 										url : "optionSearch.bo",
 										data : {
@@ -199,7 +201,49 @@
 											pay : pay
 										},
 										success : function(result){
-											console.log(result);
+											
+												$("#contentOuter").children().remove();
+												var str = "";
+												var today = new Date().getTime();
+												for(var i in result){
+													str += "<div class='col-lg-4'>"
+										                +"<input type='hidden' name='boardNo'  class='togetherBoardNo' value="+result[i].boardNo+">"
+										                    +"<div class='ticket-item'>"
+										                        +"<div class='thumb'>"
+										                            +"<img src=/finalProject"+result[i].filePath+" alt=></div>"
+										                        +"<div class='down-content'>"
+										                        	+"<h5>["+result[i].totalDate+"박 "+ (result[i].totalDate +1)+"일]</h3>"
+										                            +"<h4>&lt;"+result[i].zoneName+" "+result[i].concept+" 여행&gt; <br> "+result[i].boardTitle+"</h4>"
+										                            +"<ul id='optionIcons'>"
+										                                +"<li><i class='fa fa-clock-o'></i>"+result[i].startDate+" ~ "+result[i].endDate+"</li>"
+										                                +"<li><i class='fa fa-map-marker'></i>"+result[i].zoneName+"</li>"
+										                                +"<li><img src='/finalProject/resources/images/together_won.png'>"+result[i].totalPay+"원 이하</li>";
+										                                if(result[i].profilePath){
+										                                	console.log("profle")
+									                               		    str += "<li><img src='/finalProject/"+result[i].profilePath+"' style='border-radius:50%;''> <a id='nicknameHover' onclick='whoareyou();''>"+result[i].boardWriter+"</a></li>";
+										                                }else{
+										                                	console.log("profle no")
+										                                	str += "<li><img src='/finalProject/resources/images/기본프로필.png' style='border-radius:50%;''> <a id='nicknameHover' onclick='whoareyou();''>"+result[i].boardWriter+"</a></li>";
+										                                }
+										                                str += "<li>작성일 : "+result[i].createDate+"</li></ul>"
+										                            +"<div class='main-dark-button' id='applyBtn'>";
+																	var d = new Date("20"+result[i].endDate).getTime();
+																	if(d - today >0 && result[i].together - result[i].togetherCount != 0){
+										                            			<%if(request.getSession().getAttribute("loginUser") != null){%>
+// 													                            	  str += "<a href='#'>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</a>";
+													                            	  str += "<button type='button' class='togetherBtn'>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</button>";
+													                           <%}else{%>
+// 															                          str += "<a style='background-color:lightgray;''>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</a>"
+																					  str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</button>";
+															                           		+"<p>참여하려면 로그인을 해주세요.</p>";
+													                           <%}%>
+																	}else{
+// 										                            		str += "<a  style='background-color:lightgray;' disabled>마감되었습니다.</a>";
+										                            		str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>마감되었습니다.</button>";
+																	}
+																	str += "</div></div></div></div></div>";
+												}
+												$("#contentOuter").append(str);
 										},
 										error : function(){
 											console.log("옵션 검색 실패");
@@ -236,7 +280,7 @@
 					                            <ul id="optionIcons">
 					                                <li><i class="fa fa-clock-o"></i>${i.startDate} ~ ${i.endDate }</li>
 					                                <li><i class="fa fa-map-marker"></i>${i.zoneName }</li>
-					                                <li><img src="/finalProject/resources/images/together_won.png">${i.totalPay } 이하</li>
+					                                <li><img src="/finalProject/resources/images/together_won.png">${i.totalPay }원 이하</li>
 					                                <c:choose>
 					                                <c:when test="${not empty i.profilePath }">
 				                               		    <li><img src="/finalProject/${i.profilePath }" style="border-radius:50%;"> <a id="nicknameHover" onclick="whoareyou();">${i.boardWriter }</a></li>
@@ -252,16 +296,19 @@
 					                            <c:when test="${endDate-today >0 and i.together - i.togetherCount != 0}">
 					                            		<c:choose>
 					                            			<c:when test="${not empty loginUser }">
-								                            	    <a href="#">참여하기 ${i.togetherCount}/${i.together }</a>
+<%-- 								                            	    <a href="#">참여하기 ${i.togetherCount}/${i.together }</a> --%>
+								                            	    <button type="button" class="togetherBtn">참여하기 ${i.togetherCount}/${i.together }</button>
 					                            			</c:when>
 					                            			<c:otherwise>
-					                            				    <a style="background-color:lightgray;">참여하기 ${i.togetherCount}/${i.together }</a>
+<%-- 					                            				    <a style="background-color:lightgray;">참여하기 ${i.togetherCount}/${i.together }</a> --%>
+ 																	<button type="button" class="togetherBtn" style="background-color:lightgray;">참여하기 ${i.togetherCount}/${i.together }</button>
 					                            				    <p>참여하려면 로그인을 해주세요.</p>
 					                            			</c:otherwise>
 					                            		</c:choose>
 					                            </c:when>
 					                            <c:otherwise>
-					                            		<a  style="background-color:lightgray;" disabled>마감되었습니다.</a>
+					                            		<button type="button" class="togetherBtn" style="background-color:lightgray;"disabled>마감되었습니다.</button>
+<!-- 					                            		<a  style="background-color:lightgray;" disabled>마감되었습니다.</a> -->
 					                            </c:otherwise>
 					                            </c:choose>
 					                            </div>
@@ -274,6 +321,50 @@
                 			<div>조회된 게시물이 없습니다. </div>
                 	</c:otherwise>
                 </c:choose>
+                
+                <script>
+                	$("#contentOuter").on("click","button",function(){
+                		var boardNo = $(this).parent().parent().parent().parent().children("input").val();
+                		if(confirm("이 여행의 세부 일정을 확인하시겠습니까 ?")){
+                			location.href="";
+                		}else{
+                			if(confirm("세부 일정을 확인하지 않고 이 여행에 참여하시겠습니까 ?")){
+	                			if(confirm("참여하기 버튼은 하루에 한개만 누르실 수 있습니다. \n진행하시겠습니까 ?")){
+	                				/*
+	                				$.ajax({
+	                					url : "togetherApply.bo",
+	                					data : {
+	                						boardNo : boardNo,
+	                						nickname : ${loginUser.nickname},
+	                						message : 
+	                						},
+	                					success : function(result){
+	                						console.log(result);
+	                						if(result == 1){
+	                							alert("참여하기에 성공하였습니다.\n작성자의 결정을 기다려주세요.");
+	                							
+	                							
+	                							
+	                							location.reload();
+	                						}else{
+	                							alert("참여하기에 실패하였습니다. \n다시 시도해주세요.");
+	                						}
+	                					},
+	                					error : function(){
+	                						console.log("참여하기 실패!");
+	                					}
+	                				});
+	                				*/
+	                				
+	                			}else{
+	                				alert("참여하기를 취소합니다.")
+	                			}
+                			}else{
+                				alert("참여하기를 취소합니다.");
+                			}
+                		}
+                	});
+                </script>
                 
                 <div class="col-lg-12">
                     <div class="pagination" align="center">
@@ -446,6 +537,8 @@
     
     <!-- Global Init -->
     <script src="/finalProject/resources/js/custom.js"></script>
+
+	
 
   </body>
 </html>

@@ -47,5 +47,10 @@ public class TogetherServiceImpl  implements TogetherService{
 		return togetherDao.optionSearch(sqlSession,t);
 	}
 
+	@Override
+	public int togetherApply(int boardNo) {
+		return togetherDao.togetherApply(sqlSession,boardNo);
+	}
+
 	
 }

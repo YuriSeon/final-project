@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Plan;
@@ -84,15 +85,32 @@ public String saveFile(MultipartFile upfile, HttpSession session) {
 	}
 
 @ResponseBody
-@GetMapping("optionSearch.bo")
+@GetMapping(value="optionSearch.bo",produces="application/json; charset=utf-8")
 public String optionSearch(String startDate, String endDate, String location, int pay) {
 	
 	//지정 안함 지정 안함 대구 400000
 	//2023-06-13 2023-06-16 대구 400000
 	
+	if(startDate.equals("")) {
+		startDate = null;
+	}
+	if(endDate.equals("")) {
+		endDate = null;
+	}
+	
 	TogetherVO t = TogetherVO.builder().startDate(startDate).endDate(endDate).totalPay(pay).zoneName(location).build();
 	
 	ArrayList<TogetherVO> list = togetherService.optionSearch(t);
-	return "";
+
+	return new Gson().toJson(list);
+}
+
+@ResponseBody
+@GetMapping("togetherApply.bo")
+public int togetherApply(int boardNo) {
+	
+	int result = togetherService.togetherApply(boardNo);
+	
+	return result;
 }
 }

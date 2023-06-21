@@ -1,15 +1,17 @@
 package com.kh.finalProject.board.model.vo;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Path {
+@SuperBuilder
+public class Path extends Plan{
 //	BOARD_NO	NUMBER
 //	INFO_NO	NUMBER // no보단 String으로 보여줄 일이 있어서 필드 String으로 생성함
 //	DAILY	NUMBER
@@ -21,4 +23,5 @@ public class Path {
 	private int daily;
 	private int pathNo;
 	private int pay;
+	
 }

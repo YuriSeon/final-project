@@ -21,8 +21,11 @@ public class TogetherDao {
 	}
 
 	public ArrayList<TogetherVO> optionSearch(SqlSession sqlSession, TogetherVO t) {
-		// TODO Auto-generated method stub
-		return null;
+		return  (ArrayList)sqlSession.selectList("togetherMapper.optionSearch",t);
+	}
+
+	public int togetherApply(SqlSession sqlSession, int boardNo) {
+		return sqlSession.update("togetherMapper.togetherApply",boardNo);
 	}
 
 }

@@ -308,6 +308,12 @@ li.link-active a, li.link-active a:hover, li.link-active a:focus {
 	border-top: 1px solid rgb(64, 64, 64);
 }
 
+input[type=checkbox] {
+
+transform : scale(1.4);
+
+}
+
 /* 게시판관리 서브메뉴 */
 #submenu{
 	display: none;
@@ -316,7 +322,12 @@ li.link-active a, li.link-active a:hover, li.link-active a:focus {
 	visibility: hidden;
 }
   
-/* =====대시보드===== */
+/* ===================대시보드======================== */
+#content-wrapper{
+	height: 100vh;
+	background-color: #EEEEEE;
+}
+
 .dash-title{
 	width: 101.6%;
 	height: 60px;
@@ -331,7 +342,7 @@ li.link-active a, li.link-active a:hover, li.link-active a:focus {
 .dash-title h1{
 	position: relative;
 	top: 10px;
-	left: 10px;
+	left: 0px;
 }
 /* 방문자 */
 .visit-section table{
@@ -368,6 +379,7 @@ li.link-active a, li.link-active a:hover, li.link-active a:focus {
 	box-shadow: 0px 0px 5px 5px rgb(199, 199, 199);
 	display: inline-block;
 	height: auto;
+	width: 40%;
 }
 
 .current-board span{
@@ -375,7 +387,7 @@ li.link-active a, li.link-active a:hover, li.link-active a:focus {
 	font-weight: bold;
 }
 .current-board table{
-	width: 800px;
+	width: 100%;
 	text-align: center;
 	position: relative;
 	background: white;
@@ -403,22 +415,380 @@ li.link-active a, li.link-active a:hover, li.link-active a:focus {
 .current-board>table>tbody> tr th {
   cursor: pointer;
 }
-.current-board>table>tbody> tr:hover {
+.current-board>table>tbody>tr:hover {
 	background: #4189C7;
 	opacity: 0.5;
 	color: black;
-  }
+}
 /* 그래프 */
 .container{
 	background-color: white;
-	width: 1000px;
+	width: 60%;
 	box-shadow: 0px 0px 5px 5px rgb(199, 199, 199);
 }
 
 .container2{
 	width: 100%;
 	display: inline-block;
+	margin-top: 20px;
 	margin-bottom: 50px;
 	background-color: white;
 	box-shadow: 0px 0px 5px 5px rgb(199, 199, 199);
 }
+
+/* =================게시판관리 - 테마=================== */
+
+.board-theme{
+	width: 80%;
+	margin: auto;
+	left: 0;
+	right: 0;
+	margin-bottom: 50px;
+}
+.board-theme table{
+	width: 100%;
+	margin-top: 10px;
+}
+.board-theme table *{
+	text-align: center;
+}
+
+.search-btn div{
+	width: 50%;
+	height: 100%;
+	float: left;
+}
+.search-btn div .btn{
+	float: right;
+	margin-bottom: 10px;
+	margin-left: 10px;
+}
+#searchCate{
+	height: 30px;
+	position: relative;
+	top: -5px;
+}
+#searchBar{
+	height: 30px;
+	position: relative;
+	top: -5px;
+}
+#searchBtn{
+	float: none;
+	margin-left: 0;
+}
+
+/* 테이블 */
+.theme-board{
+	position: relative;
+	left: 10px;
+	background-color: white;
+	box-shadow: 0px 0px 5px 5px rgb(199, 199, 199);
+	display: inline-block;
+	height: auto;
+	width: 100%;
+}
+.theme-table{
+	margin: 0;
+	width: 100%;
+	position: relative;
+	top: -5px;
+}
+.theme-table>tbody tr{
+	height: 40px;	
+}
+.theme-board>table>tbody>tr:hover td:not(:first-child) {
+	background: #4189C7;
+	opacity: 0.5;
+	color: black;
+}
+.theme-board>table>tbody>tr td:first-child {
+	background: rgb(3, 78, 141);
+	color: black;
+}
+
+.theme-board span{
+	font-size: 17px;
+	font-weight: bold;
+}
+.theme-board table{
+	width: 100%;
+	text-align: center;
+	position: relative;
+	background: white;
+	color: #555;
+}
+.theme-board th{
+	text-align: center;
+	vertical-align: bottom;
+	border-bottom: 1px solid #ccc;
+	text-transform: uppercase;
+	background-color: rgb(3, 78, 141);
+	color: white;
+}
+.theme-board>table>tbody>tr {
+	transition: all 0.3s ease;
+}
+.theme-board>table>tbody>tr button{
+	width: 50%;
+	height: 20px;
+	font-size: 12px;
+	line-height: 2px;
+
+}
+.theme-board>table>tbody> tr td,
+.theme-board>table>tbody> tr th {
+  cursor: pointer;
+}
+
+/* =================회원 관리=================== */
+
+.member-board{
+	position: relative;
+	left: 10px;
+	background-color: white;
+	box-shadow: 0px 0px 5px 5px rgb(199, 199, 199);
+	display: inline-block;
+	height: auto;
+}
+
+.member-board span{
+	font-size: 17px;
+	font-weight: bold;
+}
+.member-board table{
+	width: 100%;
+	text-align: center;
+	position: relative;
+	background: white;
+	color: #555;
+}
+.member-board th{
+	text-align: center;
+	vertical-align: bottom;
+	border-bottom: 1px solid #ccc;
+	text-transform: uppercase;
+	background-color: rgb(3, 78, 141);
+	color: white;
+}
+.member-board>table>tbody>tr {
+	transition: all 0.3s ease;
+}
+.member-board>table>tbody>tr button{
+	width: 50%;
+	height: 20px;
+	font-size: 12px;
+	line-height: 2px;
+
+}
+.member-board>table>tbody> tr td,
+.member-board>table>tbody> tr th {
+  cursor: default !important;
+}
+
+/* =================회원 관리 - 편집 =================== */
+.dash-title .btn{
+	float: right;
+	margin-right: 30px;
+}
+
+.bi-arrow-left:hover{
+	cursor: pointer;
+}
+
+.member-container{
+	margin-left: 5%;
+	margin-top: 30px;
+	
+}
+.member-container>div{
+	float: left;
+	margin-bottom: 50px;
+	box-shadow: 0px 0px 5px 5px rgb(199, 199, 199);
+}
+
+.member-update{
+	background-color: white;
+	height: 700px;
+	width: 47%;
+	margin-right: 30px;
+}
+.profile-image{
+	/* background-color: yellow; */
+	height: 40%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+.profile-image div{
+	flex: 1;
+}
+#p_img {
+	margin: auto;
+	justify-content: center;
+	margin-top: 20px;
+}
+#p_img>img {
+ 	width: 180px;
+ 	height: 180px;
+ 	border-radius: 50%;
+	background-color: black;
+}
+.profile-name{
+	align-self: center;
+	font-weight: 900;
+	font-size: 25px;
+}
+
+.member-update h3{
+	margin-left: 30px;
+	margin-top: 0;
+	padding-bottom: 10px;
+	border-bottom: #4189C7 solid;
+}
+
+
+.update-box{
+	/* background-color: #4189C7; */
+	height: 55%;
+	width: 100%;
+	margin-top: 20px;
+	display: flex;
+	flex-direction: column;
+}
+.update-box div{
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+.update-box div:last-child{
+}
+.update-box label{
+	font-size: 16px;
+	margin-left: 90px;
+	line-height: 50px;
+}
+.update-box input{
+	width: 60%;
+	margin-right: 70px;
+}
+
+.member-info{
+	background-color:white;
+	height: 700px;
+	width: 47%;
+}
+.member-info h3{
+	margin-left: 20px;
+	padding-bottom: 20px;
+	border-bottom: #4189C7 solid;
+}
+.info-container{
+	display: flex;
+	flex-wrap: wrap;
+	align-content: stretch;
+}
+.info-place{
+	flex: 1 1 40%;
+	margin-top: 30px;
+	padding-left: 50px;
+}
+.info-place div:not(.info-title){
+	font-size: 17px;
+	
+}
+.info-container .info-place .info-title{
+	font-weight: bold;
+	font-size: 20px;
+}
+.info-write{
+	display: flex;
+	flex-wrap: wrap;
+}
+.info-write div{
+	flex: 1 1 50%;
+}
+
+/* ================= 공지사항 등록 =================== */
+.enroll-container{
+	/* background-color: #4189C7; */
+	height: 55%;
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	margin-bottom: 30px;
+}
+.enroll-container div{
+	width: 100%;
+}
+#title{
+	margin-left: 130px;
+}
+#writer{
+	margin-left: 115px;
+}
+.enroll-container div:not(:last-child) input{
+	margin-left: 100px;
+	
+}
+.enroll-container label{
+	font-size: 16px;
+	margin-bottom: 20px;
+	/* margin-left: 90px; */
+	/* line-height: 50px; */
+}
+.enroll-container input{
+	width: 30%;
+	display: inline-block;
+}
+
+.file-area input[type="file"] {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip:rect(0,0,0,0);
+	border: 0;
+}
+
+.file-area button {
+	display: inline-block;
+	padding: .5em .75em;
+/* 	color: #999; */
+	font-size: inherit;
+	line-height: normal;
+	vertical-align: middle;
+/* 	background-color: #fdfdfd; */
+	cursor: pointer;
+	border: 1px solid #ebebeb;
+	border-bottom-color: #e2e2e2;
+	border-radius: .25em;
+}
+
+/* named upload */
+.file-area .upload-name {
+	display: inline-block;
+	padding: .5em .75em;
+	font-size: inherit;
+	font-family: inherit;
+	line-height: normal;
+	vertical-align: middle;
+	background-color: #f5f5f5;
+  	border: 1px solid #ebebeb;
+  	border-bottom-color: #e2e2e2;
+  	border-radius: .25em;
+  	-webkit-appearance: none;
+  	-moz-appearance: none;
+  	appearance: none;
+  
+}
+
+.file-area.bs3-primary #selectFile {
+	color: #fff;
+	background-color: #337ab7;
+	border-color: #2e6da4;
+}
+
+
