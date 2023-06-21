@@ -12,6 +12,7 @@ import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
+import com.kh.finalProject.member.model.vo.Member;
 
 @Repository
 public class AdminDao {
@@ -240,6 +241,56 @@ public class AdminDao {
 		RowBounds rowBounds = new RowBounds(offset,limit);
 		
 		return (ArrayList)sqlSession.selectList("adminMapper.reportSearchList",map,rowBounds);
+	}
+
+	//=================================================회원관리===========================================================
+	
+	//회원 리스트 개수
+	public int memberListCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminMapper.memberListCount");
+	}
+
+	//회원 리스트 조회
+	public ArrayList<Member> selectMemberList(SqlSessionTemplate sqlSession, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("adminMapper.selectMemberList",null,rowBounds);
+	}
+
+	//회원 탈퇴
+	public int memberDelete(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.update("adminMapper.memberDelete",userNo);
+	}
+
+	//회원 검색 개수
+	public int memberSearchCount(SqlSessionTemplate sqlSession, HashMap<String, String> map) {
+		return sqlSession.selectOne("adminMapper.memberSearchCount",map);
+	}
+
+	//회원 검색 리스트 조회
+	public ArrayList<Member> memberSearchList(SqlSessionTemplate sqlSession, HashMap<String, String> map, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("adminMapper.memberSearchList",map,rowBounds);
+	}
+
+	//회원 관리 페이지 이동
+	public Member memberSelect(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.selectOne("adminMapper.memberSelect",userNo);
+	}
+
+	//회원 수정
+	public int memberUpdate(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.update("adminMapper.memberUpdate",m);
+	}
+
+	//회원 정보 엑셀
+	public ArrayList<Member> memberExcelList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("adminMapper.memberExcelList");
 	}
 
 	

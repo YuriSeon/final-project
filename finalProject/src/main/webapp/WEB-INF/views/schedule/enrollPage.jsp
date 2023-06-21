@@ -6,27 +6,13 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="resources/css/schedule.css?after">
-<link rel="stylesheet" type="text/css" href="resources/css/map.css?after">
+<link rel="stylesheet" type="text/css" href="resources/css/map.css?v=1">
 <title>schedule enroll form</title>
-<style type="text/css">
-	#together-yes, #together-no, #trans *{
-		width: 10%;
-		height : 20%;
-		font-size: 17px;
-		margin:0;
-		margin-right: 1%;
-	}
-	select[name="togetherCount"]{
-		width: 20%;
-		height: 30px;
-		text-align: center;
-		font-size: 16px;
-	}
-</style>
+<style type="text/css"></style>
 </head>
 <body>
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-<!-- 동행구하는거 바로 작성하러갈지 아니면 작성하기 끝난 후에 연결할지 고민, 클릭후 목록 증식하는것만 잡기-->
+<!-- 동행구하는거 바로 작성하러갈지 아니면 작성하기 끝난 후에 연결할지 고민, 모달 배경색 수정 -->
 	<div class="enroll-sc" >
 		<form action="insert.sc" method="post" id="insertForm">
 	        <div>
@@ -62,7 +48,8 @@
 	                <p>동행을 구하시겠습니까?</p>
 	                <input type="radio" name="together" id="together-yes"><label for="together-yes">예</label> &nbsp;
 	                <input type="radio" name="together" id="together-no" value="0" checked><label for="together-no">아니오</label> <br>
-	                <button type="button" id="with" onclick="">바로 작성하러 가기</button> 
+	                
+
 	            </div>
 	            </div>
 	            <div class="container right">
@@ -110,41 +97,45 @@
 	            <button type="button" onclick="insertForm();">작성완료</button>
 	        </div>
 		</form>
-    </div>
-    <div class="modal">
-        <div id="title">
-            여행지 검색
-            <button id="close">X</button>
-        </div>
-        <div id="map">
-        	<div class="map_wrap">
-				<div id="map" style="width:100%;height:382.5px;position:relative;overflow:hidden;z-index:4;"></div>
-				<div id="menu_wrap" class="bg_white" style="z-index:5;">
-			        <div class="option">
-			            <div>
-			                <form onsubmit="searchPlaces(); return false;">
-			                    키워드 : <input type="text" value="이태원 맛집" id="keyword" size="15"> 
-			                    <button type="submit">검색하기</button> 
-			                </form>
-			            </div>
-			        </div>
-			        <hr>
-			        <ul id="placesList"></ul>
-			        <div id="pagination"></div>
-			    </div>
-			</div>
-        </div>
+	    <div id="modal">
+	        <div id="title">
+	            여행지 검색
+	            <button id="close">X</button>
+	        </div>
+	        <div class="map">
+	        	<div class="map_wrap">
+					<div id="map" style="width:100%;height:382.5px;position:relative;overflow:hidden;z-index:4;"></div>
+					<div id="menu_wrap" class="bg_white" style="z-index:5;">
+				        <div class="option">
+				            <div>
+				                <form onsubmit="searchPlaces(); return false;">
+				                    키워드 : <input type="text" value="이태원 맛집" id="keyword" size="15"> 
+				                    <button type="submit" id="map-btn">검색하기</button> 
+				                </form>
+				            </div>
+				        </div>
+				        <hr>
+				        <ul id="placesList"></ul>
+				        <div id="pagination"></div>
+				    </div>
+				</div>
+	        </div>
+	    </div>
     </div>
     
     <!-- 작성해둔 함수 넣은 파일 불러와서 사용 -->
-    <script type="text/javascript" src="resources/js/function.js"></script> 
+    <script type="text/javascript" src="resources/js/function.js"></script>
     <script type="text/javascript" src="resources/js/map.js"></script> 
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3f6edea42e65caf1e4e0b7f49028f282&libraries=services"></script>
     <script>
+    	// 동행구하지않으면 버튼 생기지 않도록 처리
     	$(function(){
-    		if($("input[name=together]").val()==0){
-    			$("#with").css("style","display:none");
-    		}
+			$("#together-yes").on("change", function(){
+				var btn = makeTag("button",{"id":"with","onclick": ""});
+	    		if($(this).val() != 0){
+	    			$($(this).parent()).append(btn.text("바로 작성하러가기"));
+	    		}
+    		});
     	});
     
         // 달력에 날짜 체크시 일정추가하는 영역 생기는 함수
@@ -156,21 +147,21 @@
             $("input[name=totalDate]").prop("value", totalDate+1); // 계산한 여행일정 input에 담아주기
             
             if(totalDate!=0 && !isNaN(totalDate)){// 당일여행아니면 일정 영역 양쪽으로 나누는 태그 추가
-                plan = plan.append(makeTag("div","class", "timeline line"));
+                plan = plan.append(makeTag("div",{"class": "timeline line"}));
             }
             for(var i=0; i<=totalDate; i++){
                 if(totalDate==0){ // 당일여행
-                    plan.append(makeTag("div", "id","center").append((makeTag("div","class","content plan").append(makeTag("span","class", "date").text("당일여행 계획")))));
+                    plan.append(makeTag("div", {"id":"center"}).append((makeTag("div",{"class":"content plan"}).append(makeTag("span",{"class":"date"}).text("당일여행 계획")))));
                 } else if(i%2==0){ //0과 짝수날
-                    plan.children().append(makeTag("div", "class", "container left").append(makeTag("div","class","content plan")));
+                    plan.children().append(makeTag("div", {"class":"container left"}).append(makeTag("div",{"class":"content plan"})));
                 } else { // 홀수날
-                	plan.children().append(makeTag("div", "class", "container right").append(makeTag("div","class","content plan")));
+                	plan.children().append(makeTag("div", {"class":"container right"}).append(makeTag("div",{"class":"content plan"})));
                 }
                 if(i==totalDate){ // 전체 반복문 마지막에만 생성된 영역에 아이콘 추가되도록 조건문 후 반복실행해 아이콘 넣음
                     for(var j=0; j<=totalDate;j++){
-                        $(".plan").eq(j).append(makeTag("img","src", "resources/images/+.png","class","plus plus"+(j+1))).append(makeTag("label","for","plus","class","plus plus"+(j+1)).text("일정추가"));
+                        $(".plan").eq(j).append(makeTag("img",{"src": "resources/images/+.png","class":"plus plus"+(j+1)})).append(makeTag("label",{"for":"plus","class":"plus plus"+(j+1)}).text("일정추가"));
                         if(j != totalDate){ // 마지막날엔 숙박 추가 아이콘 안생기도록 조건처리
-                            $(".plan").eq(j).append(makeTag("img", "src", "resources/images/+-pink.png", "class"," plus plus"+(j+1))).append(makeTag("label","for","plus","class","plus plus"+(j+1)).text("숙박추가"));
+                            $(".plan").eq(j).append(makeTag("img", {"src": "resources/images/+-pink.png", "class":" plus plus"+(j+1)})).append(makeTag("label",{"for":"plus","class":"plus plus"+(j+1)}).text("숙박추가"));
                         }
                     }
                 }
@@ -179,13 +170,12 @@
 
         // 일정과 숙박 추가 아이콘 클릭시 지도생성, 여행지 검색 후 일정 추가하는 이벤트
         $(function(){
-            $(".modal").hide(); // 클릭전까지 모달 숨기기
+            $("#modal").css("display","none"); // 클릭전까지 모달 숨기기
             $(document).on("click",".plus", function(){
-                daily = $(this).attr("class").slice(-1); // 클릭이벤트 대상의 class name 마지막 번호 추출(N일차)
-                
+               var daily = $(this).attr("class").slice(-1); // 클릭이벤트 대상의 class name 마지막 번호 추출(N일차)
                 // 모달 생성 후 지도 띄워주기
                 $(document).ready(function(){
-                    $(".modal").css("display", "block");
+                    $("#modal").css("display", "block");
                     window.setTimeout(function() {
                     	relayout();
                     }, 0); 
@@ -196,29 +186,41 @@
                     // 이벤트 대상 객체 매개변수로 넘겨줘서 검색하려는 대상 조회
                     var infoName = infoFind(this, "div", 0); 
                     var infoAddress = infoFind(this, "div", 1);
-                    $(".modal").css("display","none"); // 선택시 모달 닫기
                     // 지도에서 가져온 장소이름, 주소 태그생성해서 각 일정영역에 맞춰서 추가 
                     if(Number(daily)){ // daily가 숫자일때
                     	// 여기 수정하기 여러개 나오는것만!
-                    	console.log(daily);
                     	var obj = "";
-                    	obj = $($(".plus"+daily)[3]);
-                    	obj.after(makeTag("div", "name", daily)
-                    			.append(makeTag("pre","name", "infoName").text(infoName),makeTag("pre","name","infoAddress").text(infoAddress),makeTag("input", "type","number", "name","pay")));
-                    } else { // daily가 숫자가 아닐때(당일일정)
+                    	obj = $($(".plus"+daily).parent());
+                    	obj.append(makeTag("div", {"name": daily,"class":"day"})
+                    			.append(makeTag("button",{"type":"button", "class":"path-delete"}).text("X")
+                    					,makeTag("pre",{"name": "infoName"}).text(infoName)
+                    					,makeTag("pre",{"name":"infoAddress"}).text(infoAddress)
+                    					,makeTag("input", {"type":"number","name":"pay","placeholder":"예상비용을 입력해주세요"})));
+                    } else if(daily=='e'){ /* daily가 숫자가 아닐때(당일일정) */
                     	var addObj ="";
                     	addObj = $(".plan");
-                    	addObj.append(makeTag("div", "name", "1")
-                    			.append(makeTag("pre","name", "infoName").text(infoName),makeTag("pre","name","infoAddress").text(infoAddress),makeTag("input", "type","number", "name","pay")));
+                    	addObj.append(makeTag("div", {"name": "1","class":"day"})
+                    			.append(makeTag("pre",{"name": "infoName"}).text(infoName)
+                    					,makeTag("pre",{"name":"infoAddress"}).text(infoAddress)
+                    					,makeTag("input",{"type":"number","name":"pay","placeholder":"예상비용을 입력해주세요"})));
                     }
                     daily = ""; // 추가하고 나면 변수 비워줘야 다시 호출되었을때 누적이 안됨
+                    $("#modal").css("display","none"); // 선택시 모달 닫기
                  });
             });
         });
    
 	    // 모달창 닫아주는 함수 
 	    $(document).on("click", "#close", function() {
-	       $(".modal").css("display","none");
+	       $("#modal").css("display","none");
+	    });
+	    
+	    // 선택한 일정영역 삭제하는 이벤트
+	    $(document).on("click",".path-delete", function(){
+	    	console.log($(this));
+	    	$(this).siblings().remove(); // 동위요소들 삭제
+	    	$(this).unwrap(); // 선택된 이벤트 대상의 부모요소 삭제
+	    	$(this).remove(); // 버튼까지 삭제
 	    });
 	    
 	    // 제출하기 이벤트
@@ -229,7 +231,24 @@
 	    		totalPay += Number($(pay[i]).val());
 	    	}
 	    	$("input[name=totalPay]").prop("value",totalPay); // 반복문으로 계산한 값 넣어줌
-	    	$("#insertForm").submit();
+	    	
+	    	var	day = $(".day"); // path정보 들어있는 div 선택
+	    	// 반복문으로 일차별 정보 담기
+	    	for(var i=0; i<day.length; i++){
+			    var path = makeTag("input", {"type":"hidden", "name":"path"});
+	    		// pathVO(infoName, daily, pathNo, infoAddress, pay)
+	    		
+		    	path.prop("value",($($(day[i]).children()).eq(1).text()
+			    					+","+$(day[i]).attr("name")
+			    					+","+i
+			    					+","+$($(day[i]).children()).eq(2).text()
+			    					+","+$($(day[i]).children()).eq(3).val()));
+	    		console.log(path);
+		    	// 담은 정보 폼태그에 넣어주기
+		    	$("#insertForm").append(path);
+		    	path = "";
+	    	}
+// 	    	$("#insertForm").submit();
 	    }	
 	    
 	    /* 지도 */

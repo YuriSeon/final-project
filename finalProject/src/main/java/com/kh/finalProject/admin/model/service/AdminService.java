@@ -8,6 +8,7 @@ import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
+import com.kh.finalProject.member.model.vo.Member;
 
 public interface AdminService {
 
@@ -121,6 +122,34 @@ public interface AdminService {
 
 	//신고 검색 리스트 조회
 	ArrayList<Notice> reportSearchList(HashMap<String, String> map, PageInfo pi);
+
+	//==================================================회원관리===========================================================
+	
+	//회원 리스트 개수
+	int memberListCount();
+
+	//회원 리스트 조회
+	ArrayList<Member> selectMemberList(PageInfo pi);
+
+	//회원 탈퇴
+	int memberDelete(int userNo);
+
+	//회원 검색 개수
+	int memberSearchCount(HashMap<String, String> map);
+
+	//회원 검색 리스트 조회
+	ArrayList<Member> memberSearchList(HashMap<String, String> map, PageInfo pi);
+
+	//회원 관리 페이지 이동
+	Member memberSelect(int userNo);
+
+	//회원 수정
+	int memberUpdate(Member m);
+
+	//회원 정보 엑셀
+	ArrayList<Member> memberExcelList();
+	
+	
 
 
 }

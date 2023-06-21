@@ -13,6 +13,7 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
+import com.kh.finalProject.member.model.vo.Member;
 import com.kh.finalProject.admin.model.dao.AdminDao;
 
 @Service
@@ -227,7 +228,7 @@ public class AdminServiceImpl implements AdminService {
 		return adminDao.qnaSearchList(sqlSession,map,pi);
 	}
 
-	//==================================================FAQ===========================================================
+	//==================================================신고관리===========================================================
 	
 	//신고관리 리스트 개수
 	@Override
@@ -257,6 +258,56 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public ArrayList<Notice> reportSearchList(HashMap<String, String> map, PageInfo pi) {
 		return adminDao.reportSearchList(sqlSession,map,pi);
+	}
+
+	//==================================================회원관리===========================================================
+
+	//회원 리스트 개수
+	@Override
+	public int memberListCount() {
+		return adminDao.memberListCount(sqlSession);
+	}
+
+	//회원 리스트 조회
+	@Override
+	public ArrayList<Member> selectMemberList(PageInfo pi) {
+		return adminDao.selectMemberList(sqlSession,pi);
+	}
+
+	//회원 탈퇴
+	@Override
+	public int memberDelete(int userNo) {
+		return adminDao.memberDelete(sqlSession,userNo);
+	}
+
+	//회원 검색 개수
+	@Override
+	public int memberSearchCount(HashMap<String, String> map) {
+		return adminDao.memberSearchCount(sqlSession,map);
+	}
+
+	//회원 검색 리스트 조회
+	@Override
+	public ArrayList<Member> memberSearchList(HashMap<String, String> map, PageInfo pi) {
+		return adminDao.memberSearchList(sqlSession,map,pi);
+	}
+
+	//회원 관리 페이지 이동
+	@Override
+	public Member memberSelect(int userNo) {
+		return adminDao.memberSelect(sqlSession,userNo);
+	}
+
+	//회원 수정
+	@Override
+	public int memberUpdate(Member m) {
+		return adminDao.memberUpdate(sqlSession,m);
+	}
+
+	//회원 정보 엑셀
+	@Override
+	public ArrayList<Member> memberExcelList() {
+		return adminDao.memberExcelList(sqlSession);
 	}
 
 	

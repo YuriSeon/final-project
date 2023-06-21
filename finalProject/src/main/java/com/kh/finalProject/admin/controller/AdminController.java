@@ -8,8 +8,14 @@ import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +36,7 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
+import com.kh.finalProject.member.model.vo.Member;
 
 
 
@@ -41,6 +48,7 @@ public class AdminController {
 	
 	@Autowired
 	public AdminService adminService;
+	
 	
 	//파일 업로드 처리 메소드 (모듈)
 	public String saveFile(MultipartFile upfile,HttpSession session) {
@@ -66,10 +74,18 @@ public class AdminController {
 	}
 	
 	//관리자 페이지로 이동
-	@RequestMapping("/admin.ad")
+	@RequestMapping("admin.ad")
 	public String goAdmin() {
 		return "admin/dashboard";
 	}
+	
+	//사용자 페이지로 이동
+	@RequestMapping("custom.ad")
+	public String goCustom() {
+		return "redirect:/";
+	}
+
+//==================================================대시보드===========================================================	
 	
 	//대시보드 최근 신고 5개
 	@ResponseBody
@@ -80,32 +96,223 @@ public class AdminController {
 		return new Gson().toJson(list);
 	}
 	
-	//사용자 페이지로 이동
-	@RequestMapping("/custom.ad")
-	public String goCustom() {
-		return "redirect:/";
-	}
+//==================================================게시판관리===========================================================
 	
 	//테마 페이지로 이동
-	@RequestMapping("/theme.ad")
+	@RequestMapping("theme.ad")
 	public String goAdminTheme() {
 		return "admin/adTheme";
 	}
 	
+//==================================================회원관리===========================================================
+	
 	//회원관리 페이지로 이동
-	@RequestMapping("/member.ad")
-	public String goAdminMember() {
-		return "admin/adMember";
+	@RequestMapping("member.ad")
+	public ModelAndView goAdminMember(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
+		int listCount = adminService.memberListCount();
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Member> list = adminService.selectMemberList(pi);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.setViewName("admin/adMember");
+		
+		return mv;
+	}
+	
+	//회원 검색
+	@GetMapping("memberSearch.ad" )
+	public ModelAndView memberSearch(Criteria cri
+									,ModelAndView mv
+									,HttpSession session) {
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map.put("keyword", cri.getKeyword());
+		map.put("status", cri.getType());
+		
+		int searchCount = adminService.memberSearchCount(map);
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(searchCount, cri.getCurrentPage(), pageLimit, boardLimit);
+		
+		ArrayList<Member> list = adminService.memberSearchList(map,pi);
+		
+		mv.addObject("pi", pi);
+		mv.addObject("list", list);
+		mv.addObject("keyword", cri.getKeyword());
+		mv.addObject("type", cri.getType());
+		mv.setViewName("admin/adMember");
+		
+		return mv;
+	}
+	
+	//선택한 회원 탈퇴
+	@ResponseBody
+	@RequestMapping(value = "memberChkDelete.ad",produces = "application/json; charset=UTF-8")
+	public String memberChkDelete(@RequestParam(value = "list[]") int[] list
+					   		  	 								 ,HttpSession session) {
+		
+		int result = 0;
+		for (Integer i : list) {
+			result = adminService.memberDelete(i);
+		}
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","회원 탈퇴 완료");
+		}
+		
+		return (result>0)?new Gson().toJson("success"):new Gson().toJson("fail");
 	}
 	
 	//회원 편집 페이지로 이동
 	@RequestMapping("/memberUpdate.ad")
-	public String goAdminMemberUpdate() {
-		return "admin/adMemberUpdate";
+	public ModelAndView goAdminMemberUpdate(@RequestParam(value="userNo") int userNo
+	 																		 ,ModelAndView mv) {
+		
+		Member m = adminService.memberSelect(userNo);
+		mv.addObject("m", m).setViewName("admin/adMemberUpdate");
+		return mv;
 	}
 	
+	//회원 수정
+	@PostMapping("memberUpdate.ad")
+	public ModelAndView memberUpdate(Member m
+								    ,ModelAndView mv
+								    ,HttpSession session) {
+
+		int result = adminService.memberUpdate(m);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","회원정보 수정 완료");
+			mv.setViewName("redirect:member.ad");
+		}else {
+			mv.addObject("errorMsg","회원정보 수정 실패").setViewName("common/errorPage");
+		}
+		return mv;
+	}
+	
+	
+	//회원 정보 엑셀로 받기
+	@GetMapping("memberExcel.ad")
+    public void excelDownload(HttpServletResponse response) throws IOException {
+//        Workbook wb = new HSSFWorkbook();
+        Workbook wb = new XSSFWorkbook();
+        Sheet sheet = wb.createSheet("첫번째 시트");
+        Row row = null;
+        Cell cell = null;
+        int rowNum = 0;
+        
+        ArrayList<Member> list = adminService.memberExcelList();
+        
+        // Header
+        row = sheet.createRow(rowNum++);
+        cell = row.createCell(0);
+        cell.setCellValue("회원번호");
+        cell = row.createCell(1);
+        cell.setCellValue("아이디");
+        cell = row.createCell(2);
+        cell.setCellValue("닉네임");
+        cell = row.createCell(3);
+        cell.setCellValue("이름");
+        cell = row.createCell(4);
+        cell.setCellValue("성별");
+        cell = row.createCell(5);
+        cell.setCellValue("연령대");
+        cell = row.createCell(6);
+        cell.setCellValue("이메일");
+        cell = row.createCell(7);
+        cell.setCellValue("전화번호");
+        cell = row.createCell(8);
+        cell.setCellValue("MBTI");
+        cell = row.createCell(9);
+        cell.setCellValue("설문지 결과");
+        cell = row.createCell(10);
+        cell.setCellValue("여행 스타일");
+        cell = row.createCell(11);
+        cell.setCellValue("신고 횟수");
+        cell = row.createCell(12);
+        cell.setCellValue("경고 횟수");
+        cell = row.createCell(13);
+        cell.setCellValue("가입일");
+        cell = row.createCell(14);
+        cell.setCellValue("인증여부");
+        cell = row.createCell(15);
+        cell.setCellValue("상태");
+        cell = row.createCell(16);
+        cell.setCellValue("관심사");
+
+        
+        // Body
+        for (int i=0; i<list.size(); i++) {
+            row = sheet.createRow(rowNum++);
+            cell = row.createCell(0);
+            cell.setCellValue(list.get(i).getUserNo());
+            cell = row.createCell(1);
+            cell.setCellValue(list.get(i).getUserId());
+            cell = row.createCell(2);
+            cell.setCellValue(list.get(i).getNickname());
+            cell = row.createCell(3);
+            cell.setCellValue(list.get(i).getUserName());
+            cell = row.createCell(4);
+            if (list.get(i).getGender().equals("M")) {
+            	cell.setCellValue("남자");
+			}else {
+				cell.setCellValue("여자");
+			}
+            cell = row.createCell(5);
+            cell.setCellValue(list.get(i).getAge()+"대");
+            cell = row.createCell(6);
+            cell.setCellValue(list.get(i).getEmail());
+            cell = row.createCell(7);
+            cell.setCellValue(list.get(i).getPhone());
+            cell = row.createCell(8);
+            cell.setCellValue(list.get(i).getMBTI());
+            cell = row.createCell(9);
+            cell.setCellValue(list.get(i).getSurvey());
+            cell = row.createCell(10);
+            cell.setCellValue(list.get(i).getStyle());
+            cell = row.createCell(11);
+            cell.setCellValue(list.get(i).getReport()+"회");
+            cell = row.createCell(12);
+            cell.setCellValue(list.get(i).getWarning()+"회");
+            cell = row.createCell(13);
+            cell.setCellValue(list.get(i).getEnrollDate());
+            cell = row.createCell(14);
+            if (list.get(i).getCertification() == 1) {
+            	cell.setCellValue("카카오");
+			}else if (list.get(i).getCertification() == 2) {
+				cell.setCellValue("네이버");
+			}else{
+				cell.setCellValue("미인증");
+			}
+            cell = row.createCell(15);
+            if (list.get(i).getStatus().equals("Y")) {
+            	cell.setCellValue("정상");
+			}else {
+				cell.setCellValue("탈퇴");
+			}
+            cell = row.createCell(16);
+            cell.setCellValue(list.get(i).getInterest());
+        }
+
+        // 컨텐츠 타입과 파일명 지정
+        response.setContentType("ms-vnd/excel");
+        response.setHeader("Content-Disposition", "attachment;filename=memberExcel.xlsx");
+
+        // Excel File Output
+        wb.write(response.getOutputStream());
+        wb.close();
+    }
+	
+//==================================================공지사항===========================================================
+	
 	//공지사항 관리 페이지로 이동
-	@RequestMapping("/notice.ad")
+	@RequestMapping("notice.ad")
 	public ModelAndView goAdminNotice(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
 		
 		int listCount = adminService.noticeListCount();
@@ -128,7 +335,7 @@ public class AdminController {
 	}
 	
 	//공지사항 검색
-	@GetMapping("/noticeSearch.ad" )
+	@GetMapping("noticeSearch.ad" )
 	public ModelAndView noticeSearch(Criteria cri
 									,ModelAndView mv
 									,HttpSession session) {
@@ -156,7 +363,7 @@ public class AdminController {
 	}
 	
 	//공지사항 등록 페이지로 이동
-	@RequestMapping("/noticeEnroll.ad")
+	@RequestMapping("noticeEnroll.ad")
 	public String goAdminNoticeEnroll() {
 		return "admin/adNoticeEnroll";
 	}
@@ -303,7 +510,7 @@ public class AdminController {
 //==================================================FAQ===========================================================
 	
 	//FAQ 관리 페이지로 이동
-	@RequestMapping("/faq.ad")
+	@RequestMapping("faq.ad")
 	public ModelAndView goAdminFAQ(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
 		
 		int listCount = adminService.faqListCount();
@@ -326,7 +533,7 @@ public class AdminController {
 	}
 		
 	//FAQ 검색
-	@GetMapping("/faqSearch.ad" )
+	@GetMapping("faqSearch.ad" )
 	public ModelAndView faqSearch(Criteria cri
 								 ,ModelAndView mv
 								 ,HttpSession session) {
@@ -354,7 +561,7 @@ public class AdminController {
 	}
 	
 	//FAQ 등록 페이지로 이동
-	@RequestMapping("/faqEnroll.ad")
+	@RequestMapping("faqEnroll.ad")
 	public String goAdminFAQEnroll() {
 		return "admin/adFAQEnroll";
 	}
@@ -443,7 +650,7 @@ public class AdminController {
 	//	==================================================Q&A===========================================================		
 	
 	//Q&A 관리 페이지로 이동
-	@RequestMapping("/qna.ad")
+	@RequestMapping("qna.ad")
 	public ModelAndView goAdminQna(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
 		
 		int listCount = adminService.qnaListCount();
@@ -466,7 +673,7 @@ public class AdminController {
 	}
 	
 	//Q&A 검색
-	@GetMapping("/qnaSearch.ad" )
+	@GetMapping("qnaSearch.ad" )
 	public ModelAndView qnaSearch(Criteria cri
 								 ,ModelAndView mv
 								 ,HttpSession session) {
@@ -580,7 +787,7 @@ public class AdminController {
 	//	==================================================신고관리===========================================================
 	
 	//신고관리 페이지로 이동
-	@RequestMapping("/report.ad")
+	@RequestMapping("report.ad")
 	public ModelAndView goAdminReport(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
 		
 		int listCount = adminService.reportListCount();
@@ -603,7 +810,7 @@ public class AdminController {
 	}
 	
 	//신고내역 검색
-	@GetMapping("/reportSearch.ad" )
+	@GetMapping("reportSearch.ad" )
 	public ModelAndView reportSearch(Criteria cri
 								 	,ModelAndView mv
 								 	,HttpSession session) {

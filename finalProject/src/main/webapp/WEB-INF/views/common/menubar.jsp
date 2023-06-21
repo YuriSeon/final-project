@@ -307,12 +307,10 @@
 	  	    });
 	  	});
   	
-  	
   		//쿠키에 저장된 아이디값 가져오기
   		$(function(){
   			
   			var saveId = "${cookie.userId.value}"
-  			
   			if(saveId != ""){//넘어오는 쿠키값이 있으면...
 				$("input[name=userId]").val(saveId);
 				$("#saveId").attr("checked",true);

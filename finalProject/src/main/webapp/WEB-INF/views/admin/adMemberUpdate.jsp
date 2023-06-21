@@ -26,8 +26,8 @@
     <div class="container-fluid">
         <div class="dash-title">
             <h1>&nbsp;편집 및 추가
-                <button class="btn btn-danger">삭제</button>
-                <button class="btn btn-success">저장</button>
+                <button class="btn btn-danger" onclick="memberDelete();">삭제</button>
+                <button class="btn btn-success" onclick="enrollSubmit();" disabled="disabled">저장</button>
             </h1>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="30" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
@@ -41,37 +41,40 @@
                         <img src="resources/images/person.png" alt="프로필사진">
                     </div>
                     <div class="profile-name">
-                        김일호
+                        ${m.userName}
                     </div>
                 </div>
                 <h3>회원정보</h3>
                 
-                <div class="update-box">
-                    <div class="info-input">
-                        <label for="id">아이디</label>
-                        <input type="text" class="form-control input-lg" name="userId" id="id">
-                    </div>
-                    <div class="info-input">
-                        <label for="nick">닉네임</label>
-                        <input type="text" class="form-control input-lg" name="nickname" id="nick">
-                    </div>
-                    <div class="info-input">
-                        <label for="name">이름</label>
-                        <input type="text" class="form-control input-lg" name="userName" id="name">
-                    </div>
-                    <div class="info-input">
-                        <label for="email">이메일</label>
-                        <input type="text" class="form-control input-lg" name="email" id="email">
-                    </div>
-                    <div class="info-input">
-                        <label for="phone">전화번호</label>
-                        <input type="text" class="form-control input-lg" name="phone" id="phone">
-                    </div>
-                    <div class="info-input">
-                        <label for="pwd">비밀번호</label>
-                        <input type="button" class="btn btn-primary" id="pwd" value="비밀번호 초기화">
-                    </div>
-                </div>
+                <form action="memberUpdate.ad" class="member-enroll-form" method="post">
+                	<input type="text" name="userNo" id="no" value="${m.userNo}" hidden="hidden">
+	                <div class="update-box">
+	                    <div class="info-input">
+	                        <label for="id">아이디</label>
+	                        <input type="text" class="form-control input-lg" name="userId" id="id" value="${m.userId}">
+	                    </div>
+	                    <div class="info-input">
+	                        <label for="nick">닉네임</label>
+	                        <input type="text" class="form-control input-lg" name="nickname" id="nick" value="${m.nickname}">
+	                    </div>
+	                    <div class="info-input">
+	                        <label for="name">이름</label>
+	                        <input type="text" class="form-control input-lg" name="userName" id="name" value="${m.userName}">
+	                    </div>
+	                    <div class="info-input">
+	                        <label for="email">이메일</label>
+	                        <input type="text" class="form-control input-lg" name="email" id="email" value="${m.email}">
+	                    </div>
+	                    <div class="info-input">
+	                        <label for="phone">전화번호</label>
+	                        <input type="text" class="form-control input-lg" name="phone" id="phone" value="${m.phone}">
+	                    </div>
+	                    <div class="info-input">
+	                        <label for="pwd">비밀번호</label>
+	                        <input type="button" class="btn btn-primary" id="pwd" value="비밀번호 초기화">
+	                    </div>
+	                </div>
+                </form>
             </div>
             <!-- 회원정보수정 끝 -->
 
@@ -81,7 +84,7 @@
                 <div class="info-container">
                     <div class="info-place">
                         <div class="info-title">가입일</div>
-                        <div>2023.01.01</div>
+                        <div>${m.enrollDate}</div>
                     </div>
                     <div class="info-place">
                         <div class="info-title">로그인</div>
@@ -92,7 +95,12 @@
                         <div>192.169.11.11</div>
                         <br>
                         <div class="info-title">성별</div>
-                        <div>남</div>
+                        <div>
+                        	<c:choose>
+                        		<c:when test="${m.gender == 'M'}">남자</c:when>
+                        		<c:otherwise>여자</c:otherwise>
+                        	</c:choose>
+                        </div>
                     </div>
                     <div class="info-place">
                         <div class="info-title">작성</div>
@@ -110,35 +118,65 @@
                     <!-- </div> -->
                     <div class="info-place">
                         <div class="info-title">연령대</div>
-                        <div>20대</div>
+                        <div>${m.age}대</div>
                     </div>
                     <div class="info-place">
                         <div class="info-title">MBTI</div>
-                        <div>ENFJ</div>
+                        <div>
+                        	<c:choose>
+                        		<c:when test="${empty m.MBTI}">미입력</c:when>
+                        		<c:otherwise>${m.MBTI}</c:otherwise>
+                        	</c:choose>
+                        </div>
                     </div>
                     <div class="info-place">
                         <div class="info-title">설문지 결과</div>
-                        <div>프로여행러</div>
+                        <div>
+                        	<c:choose>
+                        		<c:when test="${empty m.survey}">미입력</c:when>
+                        		<c:otherwise>
+                        			<c:set var="survey" value="${m.survey}"/>
+                        			본인 : ${fn:substring(survey,0,4)} <br>
+                        			선호/비선호 : ${fn:substring(survey,5,9)} / ${fn:substring(survey,10,14)}
+                        		</c:otherwise>
+                        	</c:choose>
+                        </div>
                     </div>
                     <div class="info-place">
                         <div class="info-title">여행스타일</div>
-                        <div>액티비티,산</div>
+                        <div>
+                        	<c:choose>
+                        		<c:when test="${empty m.style}">미입력</c:when>
+                        		<c:otherwise>${m.style}</c:otherwise>
+                        	</c:choose>
+                        </div>
                     </div>
                     <div class="info-place">
                         <div class="info-title">관심사</div>
-                        <div>테마여행-축제-명소/맛집-동행구하기</div>
+                        <div>
+                        	<c:choose>
+                        		<c:when test="${empty m.interest}">미입력</c:when>
+                        		<c:otherwise>${m.interest}</c:otherwise>
+                        	</c:choose>
+                        </div>
                     </div>
                     <div class="info-place">
                         <div class="info-title">신고누적횟수</div>
-                        <div>153회</div>
+                        <div>${m.report}회</div>
                     </div>
                     <div class="info-place">
                         <div class="info-title">경고횟수</div>
-                        <div>270회</div>
+                        <div>${m.warning}회</div>
                     </div>
                     <div class="info-place">
                         <div class="info-title">인증 여부</div>
-                        <div>카카오마크</div>
+                        <div>
+                        	<c:choose>
+                        		<c:when test="${m.certification eq 0}">미인증</c:when>
+                        		<c:when test="${m.certification eq 1}">카카오</c:when>
+                        		<c:otherwise>네이버</c:otherwise>
+                        	</c:choose>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -150,27 +188,50 @@
 </div>
 
 <script>
+	
+	//수정사항이 있을때 저장버튼 활성화
+	$(function() {
+		$('#id, #nick, #name, #email, #phone').on('input', function() {
+			var idVal = $("#id").val();
+			var nickVal = $("#nick").val();
+			var nameVal = $("#name").val();
+			var emailVal = $("#email").val();
+			var phoneVal = $("#phone").val();
+			var $submitBtn = $(".dash-title>h1>.btn-success");
+			
+			if (idVal !== '' || nickVal !== '' || nameVal !== '' || emailVal !== '' || phoneVal !== '') {
+				$submitBtn.prop('disabled', false);
+			} else {
+				$submitBtn.prop('disabled', true);
+			}
+		});
+	});
+
+	//폼 서브밋
+	function enrollSubmit() {
+		$(".member-enroll-form").submit();
+	}
     
-    
-    //체크박스 전체선택
-    $(function() {
-        $("#chkAll").click(function() {
-            if($("#chkAll").is(":checked")) $("input[name=chk]").prop("checked", true);
-            else $("input[name=chk]").prop("checked", false);
-        });
-        
-        $("input[name=chk]").click(function() {
-            var total = $("input[name=chk]").length;
-            var checked = $("input[name=chk]:checked").length;
-            if(total != checked){
-                $("#chkAll").prop("checked", false);
-            }else{
-                $("#chkAll").prop("checked", true); 
-            }
-        });
-        
-    });
-   
+	//회원 탈퇴
+	function memberDelete() {
+		
+    	$.ajax({
+    		type: "post",
+    		url: "memberDelete.ad",
+    		data: {	userNo : "${m.userNo}" },
+			success: function(result) {
+				if(result=="success"){
+					location.href="member.ad";
+				}else{
+					alertify.message("회원 탈퇴 실패");
+				}
+			},
+			error: function(result) {
+				console.log("통신실패");
+			}
+    	});
+	}
+	
     //뒤로가기
     $(function() {
 		$("svg").click(function() {

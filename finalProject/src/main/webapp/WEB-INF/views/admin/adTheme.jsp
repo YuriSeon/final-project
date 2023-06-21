@@ -36,7 +36,7 @@
                         <option value="title">제목</option>
                         <option value="writer">작성자</option>
                     </select>
-                    <input type="text" name="searchBar" id="searchBar">
+                    <input type="text" name="searchBar" id="searchBar" >
                     <button class="btn btn-default" id="searchBtn">검색</button>
                 </div>
                 <!-- 검색 끝 -->

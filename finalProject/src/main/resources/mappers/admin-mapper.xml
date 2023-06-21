@@ -4,6 +4,29 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="adminMapper">
   	
+  	<!-- MEMBER RESULT MAP -->
+  	<resultMap type="member" id="memberResultSet">
+  		<result column="USER_NO" property="userNo"/>
+  		<result column="USER_ID" property="userId"/>
+  		<result column="NICKNAME" property="nickname"/>
+  		<result column="USER_PWD" property="userPwd"/>
+  		<result column="USER_NAME" property="userName"/>
+  		<result column="GENDER" property="gender"/>
+  		<result column="AGE" property="age"/>
+  		<result column="EMAIL" property="email"/>
+  		<result column="PHONE" property="phone"/>
+  		<result column="MBTI" property="mbti"/>
+  		<result column="SURVEY" property="survey"/>
+  		<result column="STYLE" property="style"/>
+  		<result column="REPORT" property="report"/>
+  		<result column="WARNING" property="warning"/>
+  		<result column="ENROLL_DATE" property="enrollDate"/>
+  		<result column="CERTIFICATION" property="certification"/>
+  		<result column="STATUS" property="status"/>
+  		<result column="INTEREST" property="interest"/>
+  		<result column="PROFILEIMG" property="profileImg"/>
+  	</resultMap>
+  	
 	<!-- SERVICE RESULT MAP -->
   	<resultMap type="notice" id="serviceResultSet">
   		<result column="SERVICE_NO" property="serviceNo"/>
@@ -54,6 +77,8 @@
   		<result column="REPORT1" property="boardReport"/>
   		<result column="REPORT2" property="replyReport"/>
   	</resultMap>
+
+<!-- ===========================================대시보드============================================= -->
   	
 	<select id="currentReportList" resultMap="reportResultSet">
 		SELECT R.*
@@ -69,6 +94,103 @@
 			 ]]>
 	</select>
 
+<!-- ===========================================회원관리============================================= -->
+	
+	<!-- 회원 리스트 개수 -->
+  	<select id="memberListCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM MEMBER
+  		WHERE STATUS = 'Y'
+  	</select>
+  	
+	<!-- 회원 리스트 조회 -->
+  	<select id="selectMemberList" resultMap="memberResultSet">
+  		SELECT USER_NO,USER_ID,NICKNAME,USER_PWD,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') ENROLL_DATE,CERTIFICATION,STATUS,INTEREST
+		FROM MEMBER
+		WHERE STATUS IN ('Y','N')
+		ORDER BY USER_NO
+  	</select>
+  	
+  	<!-- 회원 검색 개수-->
+  	<select id="memberSearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE 
+		<if test="status == 'title'">
+			 USER_ID LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="status == 'writer'">
+			 USER_NAME LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="status == 'status'">
+			 (status = 'Y' AND '정상' LIKE '%'||#{keyword}||'%')
+   		  OR (status = 'N' AND '탈퇴' LIKE '%'||#{keyword}||'%')
+		</if>
+		<if test="status == 'certification'">
+			 (certification = 0 AND '미인증' LIKE '%'||#{keyword}||'%')
+		  OR (certification = 1 AND '카카오' LIKE '%'||#{keyword}||'%')
+		  OR (certification = 2 AND '네이버' LIKE '%'||#{keyword}||'%')
+		</if>
+		 
+	</select>
+	
+	<!-- 회원 검색 리스트-->
+  	<select id="memberSearchList" resultMap="memberResultSet">
+		SELECT USER_NO,USER_ID,NICKNAME,USER_PWD,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') ENROLL_DATE,CERTIFICATION,STATUS,INTEREST
+		FROM MEMBER
+		WHERE 
+		<choose>
+			<when test="status=='title'">
+				USER_ID LIKE '%'||#{keyword}||'%'
+			</when>
+			<when test="status=='writer'">
+				USER_NAME LIKE '%'||#{keyword}||'%'
+			</when>
+			<when test="status=='status'">
+				(status = 'Y' AND '정상' LIKE '%'||#{keyword}||'%')
+   		  	 OR (status = 'N' AND '탈퇴' LIKE '%'||#{keyword}||'%')
+			</when>
+			<otherwise>
+				(certification = 0 AND '미인증' LIKE '%'||#{keyword}||'%')
+			 OR (certification = 1 AND '카카오' LIKE '%'||#{keyword}||'%')
+			 OR (certification = 2 AND '네이버' LIKE '%'||#{keyword}||'%')
+			</otherwise>
+		</choose>
+		ORDER BY USER_NO
+	</select>
+
+	<!-- 회원 탈퇴 -->
+	<update id="memberDelete">
+		UPDATE MEMBER
+		SET STATUS = 'N'
+		WHERE USER_NO = #{userNo}
+		AND STATUS = 'Y'	
+	</update>
+
+	<!-- 회원 관리 조회 -->
+  	<select id="memberSelect" resultMap="memberResultSet">
+		SELECT USER_NO,USER_ID,NICKNAME,USER_PWD,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') ENROLL_DATE,CERTIFICATION,STATUS,INTEREST
+		FROM MEMBER
+		WHERE USER_NO = #{userNo} 
+	</select>
+	
+	<!-- 회원 수정 -->
+	<update id="memberUpdate">
+		UPDATE MEMBER
+		SET USER_ID = #{userId},
+			NICKNAME = #{nickname},
+			USER_NAME = #{userName},
+			EMAIL = #{email},
+			PHONE = #{phone}
+		WHERE USER_NO = #{userNo}	
+	</update>
+
+	<select id="memberExcelList" resultMap="memberResultSet">
+		SELECT USER_NO,USER_ID,NICKNAME,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,ENROLL_DATE,CERTIFICATION,STATUS,INTEREST
+		FROM MEMBER
+		WHERE STATUS IN ('Y','N')
+		ORDER BY USER_NO
+	</select>
 <!-- ===========================================공지사항============================================= -->
 
   	<!-- 공지사항 등록 -->
