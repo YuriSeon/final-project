@@ -13,23 +13,27 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=944eea4bf318a38d2df62b60e838db52&libraries=services"></script>
 	<style>
 		.fes_wrap{
-            margin: auto;
             background-color: rgb(239, 239, 239);
             width: 900px;
             border-radius: 50px;
             min-height: 1150px;
             padding-top: 50px;
+			margin-top: 70px;
+			margin-left: auto;
+			margin-right: auto;
+			box-shadow: 0px 0px 5px 5px rgb(199, 199, 199);            
         }
         .fes_title{
             width: 900px;
             height: 50px;
-            background-color: rgb(181, 181, 181);
+            background-color: rgb(3, 78, 141);
             text-align: center;      
             font-size: 25px;
             font-weight: 500;
             display: flex;
             align-items: center; /* 수직 가운데 정렬 */
             justify-content: center; /* 수평 가운데 정렬 */
+            color: white;
         }
         .fes_input{
             padding: 10px;
@@ -75,15 +79,15 @@
 </style>
 </head>
 <body>
-	
-	<form action="fesEnroll.fe" method="post"  enctype="multipart/form-data">
-        <div class="fes_wrap">
+	<%@include file="../admin/adMenubar.jsp" %>
+	<form action="fesEnroll.fe" method="post" enctype="multipart/form-data">
+        <div class="fes_wrap" >
             <div class="fes_title">축제 등록</div>
             <div class="fes_text">
                 <div class="fes_input" style="margin-top: 10px;">
                     <label for="fesCategory">카테고리</label>
                     <select name="fesCategory" id="fesCategory" style="margin-left: 47px;">
-                        <option value="">카테고리</option>
+                        <option value="0">카테고리</option>
                         <option value="1">공연</option>
                         <option value="2">문화관광</option>
                         <option value="3">자연</option>
@@ -134,19 +138,19 @@
                     <input type="hidden" name="infoAddress" id="infoAddress">
                 </div>
                 <div class="fes_input">
-                    <label for="">사진 등록</label><br>
-                    <label for="" style="margin-right: 28px; position: relative; top: -130px;">대표 이미지</label>
+                    <label for="" class="photo-label">사진 등록</label><br>
+                    <label for="" style="margin-right: 28px;">대표 이미지</label>
                     <img id="titleImg">
                 </div>
                 <div class="fes_input">
-                    <label for="" style="margin-right: 28px; position: relative; top: -130px;">상세 이미지</label>
+                    <label for="" style="margin-right: 28px;">상세 이미지</label>
                     <img id="contentImg1">
                     <img id="contentImg2">
                     <img id="contentImg3">
                     <img id="contentImg4">
                 </div>
                 
-                <!-- 파일 첨부 영역 -->
+				<!-- 파일 첨부 영역 -->
                 <div id="file_area">
                     <input type="file" name="upfile" id="file1" onchange="LoadImg(this,1);">
                     <input type="file" name="upfile" id="file2" onchange="LoadImg(this,2);">

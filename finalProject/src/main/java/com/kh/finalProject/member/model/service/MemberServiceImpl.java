@@ -20,6 +20,7 @@ public class MemberServiceImpl implements MemberService{
 
 	@Autowired
 	private ServletContext ServletContext;
+	
 	@Autowired
 	private MemberDao memberDao;
 	
@@ -68,7 +69,7 @@ public class MemberServiceImpl implements MemberService{
 			new File(ServletContext.getRealPath("/"+att.getFilePath()+att.getChangeName())).delete();
 		}
 		
-		if (a.getWriter() == nicknameCheck) {
+		if (a.getWriter().equals(nicknameCheck)) {
 			return memberDao.updateImg(sqlSession,a);
 		}else {
 			return memberDao.insertImg(sqlSession,a);

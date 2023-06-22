@@ -108,7 +108,7 @@ public class FestivalController {
 		
 		if(result>0) {
 			session.setAttribute("alertMsg", "축제 게시글 등록이 완료되었습니다.");
-			mv.setViewName("redirect:/");//관리자 등록 페이지로 돌려줄 생각
+			mv.setViewName("redirect:festival.ad");//관리자 등록 페이지로 돌려줄 생각
 		}else {//실패시
 			//파일도 지워주기
 			for(int i=0; i<list.size(); i++) {
