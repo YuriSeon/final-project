@@ -112,12 +112,10 @@
         <div id="reply-area">
             <div id="reply-title">일정톡(<span>%{rlist.size()}</span>)</div>
             <div>
-                <form action="insert.re" id="reply-form">
-                    <div id="reply-back">
-                        <input type="text" name="reply-content" placeholder="지금 보고계신 일정에 대해 댓글을 작성해주세요!">
-                        <button type="submit">작성</button>
-                    </div>
-                </form>
+				<div id="reply-back">
+					<input type="text" name="reply-content" placeholder="지금 보고계신 일정에 대해 댓글을 작성해주세요!">
+					<button type="submit">작성</button>
+				</div>
             </div>
             <div id="reply-content"></div>
             <div id="btn">
@@ -140,8 +138,11 @@
     <!-- 작성해둔 함수 넣은 파일 불러와서 사용 -->
     <script type="text/javascript" src="resources/js/function.js"></script> 
     <script>
-		/* 데일리 일정 표시하는 마커 출력 */
 		$(function(){
+			/* 댓글 조회해오기 */
+			selectReplyList();
+
+			/* 데일리 일정 표시하는 마커 출력 */
             var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'skyblue']; // 일정 수 증가시 컬러만 추가해서 사용하도록 설정
             var circle = document.querySelectorAll('.color');
             
@@ -153,8 +154,8 @@
             }
         });
 
-    	var confirm = confirm("게시물을 정말로 삭제하시겠습니까?");
-    	
+    	var confirm = confirm("게시물을 정말로 삭제하시겠습니까?"); // 변수처리
+
     	/* 동행, 수정, 삭제 이벤트 연결 */
     	function form(num){
     		var formTeg = $("<form>"); 
@@ -220,47 +221,40 @@
     	});
     	
     	/* 댓글 조회 */
-    	$(function(){
+    	function selectReplyList(){
     		$.ajax({
     			url : "replyList.sc",
     			data : { boardNo : "${board.boardNo}" },
-    			success : function(list, m){
-    			/* <div id="content-pack">
-                    <div class="reply">
-                        <div class="pro">프로필</div>
-                        <div class="con">댓글내용</div>
-                        <div class="date"><a id="nicknameHover" onclick="whoareyou();">닉네임</a>/작성일</div>
-                        </div>
-                    </div>
-                    <div>
-                        <div>
-                            대댓글 영역 조건문 걸기 있을때만 생성
-                            <div class="reply">
-                                <div class="pro">프로필</div>
-                                <div class="con">댓글내용</div>
-                                <div class="date"><a id="nicknameHover" onclick="whoareyou();">닉네임</a>/작성일</div>
-                            </div>
-                        </div>
-                    </div> 
-                    원래 넣으려고 했던 형태. 추후 코드작성 끝나면 지우기
-                    */
-                    
-                    var div = $("<div>");
-                    var replyDiv = div.prop("id","content-pack").append(div.prop("class","reply"));
-                    
-                    for(var i=0; i<list.length;i++){
-	                    /* 
-	                    매개변수2개로 나눠져서 잘 넘어오는지 확인. 아니면 키값으로 프로필 사진 찾아오기
-	                   	m이 arraylist를 가져온거면 그냥 순서대로 꺼내도 됨
-	                    */
-	                    var proDiv = div.prop("class", "pro").append("${m[i]. 프로필사진}");
-	                    var conDiv = div.prop("class", "con").append("${list[i].replyContent}");
-	                    /* prop아니면 attr로 수정 */
-	                    var nic = $("<a>").prop("id", "nicknameHover").prop("onclick", "whoareyou();").text("${list[i].replyWriter}");
-	                    var dateDiv = div.prop("class", "date").append(nic).text("${list[i].createDate}");
-	                    replyDiv.append(proDiv, conDiv, dateDiv);
+    			success : function(result){
+					for(var i in result){
+                        // 넣을 태그 생성해서 key:value 
+                        var r = {
+                            reply : makeTag("div",{"class":"reply"}),
+                            pro : makeTag("div",{"class":"pro"}).append(makeTag("img",{"src":"/*프로필사진경로*/"})),
+                            date : makeTag("div",{"class":"date"}).text("/*댓글 작성일 들어갈 부분*/").append(makeTag("a",{"id":"nicknameHover","onclick":"whoareyou();"}).text("/*닉네임들어갈부분*/")),
+                            good : makeTag("span",{"class":"ico"}).append(makeTag("img",{"class":"good","src":"resources/images/Like-before.png"})),
+                            choice : makeTag("span",{"class":"ico"}).append(makeTag("img",{"class":"choice","src":"resources/images/star-before.png"})),
+                            reReplyinput : makeTag("intup",{"type":"text","id":"reReply-content","placeholder":"댓글을 작성해주세요!"}),
+                            reReplyBtn : makeTag("button", {"onclick":"reReplyinsert();"}),
+                            replyNo : makeTag("input",{"type":"hidden","class":"replyNo","value":"/*댓글번호넣어주기*/"}),
+                            reReplyNo : makeTag("input",{"type":"hidden","class":"reReplyNo","value":"/*댓글번호넣어주기*/"})
+                        }
+                        var replyBtn = makeTag("div",{"class":"reply-btn"}).append(r.good, r.choice, r.reReplyinput, r.reReplyBtn, r.replyNo);
+                        var reply_re = makeTag("div",{"class":"reply re"}).append(r.pro, r.con, r.date, r.good, r.choice,r.reReplyNo);
+                        if(result[i].refRno==null){ // 대댓글이 아닌경우
+                            $("#reply-content").append(r.reply.append(r.pro, r.con, r.date, replyBtn));
+                        } else { // 대댓글인경우
+                            $(".replyNo").each(function(){
+                                if($(this).val()==result[i].refRno){
+                                    $(this).parent().after(reply_re);
+                                }
+                            });
+                        }
+                        // 태그 재성성 할 수 있도록 초기화시키기
+                        r = null;
+                        replyBtn = null;
+                        reply_re = null;
                     }
-                    $("#reply-content").append(replyDiv); // 일단 댓글까지 출력함(대댓글 나중에!)
     			},
     			error : function(){
     				cosole.log("통신실패");
@@ -269,7 +263,31 @@
     				console.log("통신가능");
     			}
     		});
-    	});
+    	}
+
+		/* 댓글 등록 */
+        function insertReply(){
+            $.ajax({
+                url : "insertReply.sc",
+                data : {
+                    content : $("#reply-content"),
+                    replyWriter : "${loginUser.nickName}",
+                    refQno : $("#boardNo")
+                },
+                success : function(result){
+                    if(result>0){
+                        alert("댓글 등록 성공");
+                        selectReplyList(); // 리스트 추가됐으니 다시 조회
+                        $("#reply-content").val() = ""; // 댓글 등록됐으니 비워주기 
+                    } else {
+                        alert("댓글 등록 실패")
+                    }
+                },
+                error : function(){
+                    console.log("등록 실패");
+                }
+            });
+        }
     	
     	/* 사진 슬라이더 */
     	const slideIndex = ['image1.png', 'image2.png', 'image3.png', 'image4.png', 'image5.png'];

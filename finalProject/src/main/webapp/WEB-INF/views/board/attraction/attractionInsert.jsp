@@ -64,7 +64,7 @@
                         <th>주차장 여부</th>
                         <td><input type="text" name="parking" id="parking" placeholder="주차장 여부(Y/N)를 작성해주세요"></td>
                         <th>장소의 분류</th>
-                        <td><input type="number" name="infoType" id="infoType" placeholder="장소종류(1.여행, 2.맛집, 3.기타)"></td>
+                        <td><input type="number" name="infoType" id="infoType" placeholder="장소종류(1.여행, 2.맛집, 3.기타) - 숫자로 작성해주세요"></td>
                     </tr>
                     <tr>
                         <th>이미지</th>
@@ -114,7 +114,7 @@
     <script type="text/javascript" src="resources/js/listmap.js"></script>  
         <script>
             $(function(){
-                $("#insert-form").css("display", "none");
+                // $("#insert-form").css("display", "none");
             });
 
             /* 지도로 검색어 넘기는 이벤트 */
