@@ -110,7 +110,7 @@
                 </div>
                 <div class="fes_input">
                     <label for="infoCall">전화번호</label>
-                    <input type="number" name="infoCall" id="infoCall" style="margin-left: 47px;" >
+                    <input type="text" name="infoCall" id="infoCall" style="margin-left: 47px;" >
                 </div>
                 <div class="fes_input">
                     <label for="infoHomepage">홈페이지</label>
@@ -118,7 +118,7 @@
                 </div>
                 <div class="fes_input">
                     <label for="infoType">이용시간</label>
-                    <input type="text" id="infoTime" name="infoType" style="margin-left: 47px;">
+                    <input type="text" id="infoTime" name="infoTime" style="margin-left: 47px;">
                 </div>
                 <div class="fes_input">
                     <label for="fesMoney">이용요금</label>
