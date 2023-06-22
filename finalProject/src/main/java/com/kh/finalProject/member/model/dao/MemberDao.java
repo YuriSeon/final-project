@@ -46,7 +46,7 @@ public class MemberDao {
 		
 	//프로필 사진 추가
 	public int insertImg(SqlSessionTemplate sqlSession, Attachment a) {
-			return sqlSession.update("memberMapper.insertImg", a);
+			return sqlSession.insert("memberMapper.insertImg", a);
 	}
 		
 	//프로필 사진 업데이트

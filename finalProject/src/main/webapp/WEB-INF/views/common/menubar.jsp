@@ -233,7 +233,7 @@
                         <ul class="nav">
                             <li><a href="main.bo">메인</a></li>
                             <li><a href="theme.bo">테마</a></li>
-                            <li><a href="festival.bo">축제</a></li>
+                            <li><a href="festival.fe">축제</a></li>
                             <li><a href="attraction.bo">명소</a></li> 
                             <li><a href="feed.bo">피드</a></li> 
                             <li><a href="schedule.bo">일정 자랑</a></li> 
@@ -307,12 +307,10 @@
 	  	    });
 	  	});
   	
-  	
   		//쿠키에 저장된 아이디값 가져오기
   		$(function(){
   			
   			var saveId = "${cookie.userId.value}"
-  			
   			if(saveId != ""){//넘어오는 쿠키값이 있으면...
 				$("input[name=userId]").val(saveId);
 				$("#saveId").attr("checked",true);

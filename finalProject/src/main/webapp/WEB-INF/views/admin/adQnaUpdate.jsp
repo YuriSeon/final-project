@@ -30,7 +30,6 @@
             <h1>&nbsp;Q&amp;A 답변
                 <button class="btn btn-info" onclick="history.back();">취소</button>
                 <button class="btn btn-danger" onclick="noticeDelete();">삭제</button>
-                <button class="btn btn-success" onclick="enrollSubmit();">저장</button>
             </h1>
         </div>
         <form class="notice-enroll-form" action="faqUpdate.ad" method="post" enctype="multipart/form-data">
@@ -39,17 +38,37 @@
             <div class="enroll-container">
                 <div class="title-area">
                     <label for="title" class="">제목</label>
-                    <input type="text" name="serviceTitle" id="title" class="form-control input-lg" style="width: 30%" value="${n.serviceTitle}">
+                    <input type="text" name="serviceTitle" id="title" class="form-control input-lg" style="width: 30%" value="${n.serviceTitle}" readonly="readonly">
                 </div>
                 <div class="writer-area">
                     <label for="writer" class="">작성자</label>
                     <input type="text" name="writer" id="writer"  class="form-control input-lg" value="${n.writer}" readonly="readonly">
                 </div>
+                <div class="writer-area">
+                    <label for="writer" class="">등록일</label>
+                    <input type="text" name="writer" id="writer"  class="form-control input-lg" value="${n.createDate}" readonly="readonly">
+                </div>
                 <div class="contents-area">
                     <label for="editor" class="">내용</label>
-                    <div class="" style="margin-left: 0px;">
-                        <textarea name="serviceContent" class="form-control" id="editor">${n.serviceContent}</textarea>
+                    <div class="qna-question" style="margin-left: 0px;">
+                        ${n.serviceContent}
                     </div>
+                   	<div class="question-file">
+                   	<label for="editor" class="">첨부파일</label>
+                   		<c:forEach var="alist" items="${aList}">
+                   			<a href="${alist.filePath}${alist.changeName}" download="${alist.originName}">
+								${alist.originName}
+                   			</a>
+                   		</c:forEach>
+                   	</div>
+                   	<label for="editor" class="">답변</label>
+                   	<div class="qna-answer-enroll">
+                   		<textarea id="answer" title="답변작성" placeholder="답변작성"></textarea> <button type="button" class="btn btn-secondary" onclick="qnaReplyInsert();">등록</button>
+                   	</div>
+					<div class="qna-answer">
+	                   	<ul>
+	                   	</ul>
+                   	</div>                   		
                 </div>
             </div>
         </form><!-- notice-enroll-form end -->
@@ -63,47 +82,18 @@
 		$(".notice-enroll-form").submit();
 	}
     
-	// 텍스트 에디터
-    CKEDITOR.replace(editor, {
-        filebrowserUploadUrl: '/common/ckeditor/fileUpload',
-        font_names:
-            '맑은 고딕/Malgun Gothic;굴림/Gulim;돋움/Dotum;바탕/Batang;궁서/Gungsuh;Arial/Arial;Comic Sans MS/Comic Sans MS;Courier New/Courier New;Georgia/Georgia;Lucida Sans Unicode/Lucida Sans Unicode;Tahoma/Tahoma;Times New Roman/Times New Roman;MS Mincho/MS Mincho;Trebuchet MS/Trebuchet MS;Verdana/Verdana',
-        font_defaultLabel: '맑은 고딕/Malgun Gothic',
-        fontSize_defaultLabel: '12',
-        skin: 'office2013',
-        language: 'ko',
-        width: '80%',
-        height: '50vh',
-        filebrowserUploadUrl : '${pageContext.request.contextPath}/adm/fileupload.do',
-    });
-
-    //파일 input
-    $(function(){
-        var fileTarget = $('.file-area .upload-hidden');
-
-        fileTarget.on('change', function(){
-            if(window.FileReader){
-                var filename = $(this)[0].files[0].name;
-            } else {
-                var filename = $(this).val().split('/').pop().split('\\').pop();
-            }
-
-            $(this).siblings('.upload-name').val(filename);
-        });
-    });
-    
     //공지 삭제
 	function noticeDelete() {
 		
     	$.ajax({
     		type: "post",
-    		url: "faqDelete.ad",
+    		url: "qnaDelete.ad",
     		data: {	serviceNo : "${n.serviceNo}" },
 			success: function(result) {
 				if(result=="success"){
-					location.href="faq.ad";
+					location.href="qna.ad";
 				}else{
-					alertify.message("공지사항 삭제 실패");
+					alertify.message("Q&A 삭제 실패");
 				}
 			},
 			error: function(result) {
@@ -112,32 +102,154 @@
     	});
 	}
     
-    //파일 삭제
-    function fileDelete() {
-		
-    	$.ajax({
-    		type: "post",
-    		url: "faqFileDelete.ad",
-    		data: {
-    			fileNo : "${a.fileNo}",
-    			boardNo : "${a.boardNo}",
-    			originName : "${a.originName}",
-    			changeName : "${a.changeName}",
-    			filePath : "${a.filePath}"
-    		},
-			success: function(result) {
-				if(result=="success"){
-					alertify.message("첨부파일 삭제 성공");
-					$("#currentFileBox").remove();
-				}else{
-					alertify.message("첨부파일 삭제 실패");
-				}
+    //답변 불러오기
+    $(function() {
+		qnaReplyList();
+	});
+	
+    //답변 목록 조회
+	function qnaReplyList() {
+		$.ajax({
+			url:"qnaReplyList.ad",
+			data:{
+				serviceNo : "${n.serviceNo}"
 			},
-			error: function(result) {
+			success: function(list) {
+				var str = "";
+				if (list.length == 0) {
+					str +="<li>"
+						+ "<div class='reply-content' style='text-align:center;'>"
+	       				+ "답변을 입력해 주세요."
+	       				+ "</div>";
+				}else{
+					for(var i in list){
+						str +="<li>"
+							+ "<input type='text' value='"+list[i].replyNo+"' hidden>"					
+	           				+ "<div class='date'>"
+	       					+ "<em class='name'>"+list[i].replyWriter+"</em>&nbsp;|&nbsp;"
+	       					+ "<span>"+list[i].createDate+"</span>"
+		       				+ "</div>"
+		       				+ "<div class='reply-content'>"
+		       				+ list[i].content
+		       				+ "</div>"
+		       				+ "<div class='reply-btn'>"
+	           				+ "<button type='button' class='btn btn-danger' id='replyDelete'>삭제</button>"
+	           				+ "<button type='button' class='btn btn-info' id='replyEditForm'>수정</button>"
+	       					+ "</div>"
+	       					+ "</li>";
+					}
+				}
+				$(".qna-answer>ul").html(str);
+			},
+			error: function() {
 				console.log("통신실패");
 			}
-    	});
+		});
 	}
+	
+    //답변 등록
+	function qnaReplyInsert() {
+		$.ajax({
+			url:"qnaReplyInsert.ad",
+			type: "POST",
+			data:{
+				content : $("#answer").val(),
+				refQno : "${n.serviceNo}",
+				replyWriter : "${loginUser.nickname}" 
+			},
+			success: function(result) {
+				if(result=="success"){
+					alertify.message("답변 등록 성공");
+					qnaReplyList();
+					$("#answer").val("");
+				}else{
+					alertify.message("답변 등록 실패");
+				}
+			},
+			error: function() {
+				console.log("통신실패");
+			}
+		});
+	}
+
+	//답변 수정 폼 변경
+	$(".qna-answer").on("click", ".btn-info", function() {
+	    var rno = $(this).closest("li").children().first().val();
+	    var $content = $(this).closest("li").children(".reply-content");
+	    var htmls = "";
+	    
+	    $(this).closest(".reply-btn").css("display","none");
+	    
+	    htmls += "<div class='reply-edit-btn' style='display:flex'>"
+	    htmls += '<textarea name="editContent" id="editContent" class="form-control" rows="3" style= "resize:none">';
+	    htmls += $(this).closest("li").children(".reply-content").text();
+	    htmls += '</textarea>';
+	   	htmls += "<button type='button' class='btn btn-info' id='replyEdit' style='margin-left:5px;'>등록</button>"
+	   	htmls += "<button type='button' class='btn btn-danger' id='editCancle' style='margin-left:5px;'>취소</button>"
+	   	htmls += "</div>"
+	   	
+	    $content.replaceWith(htmls);
+	    
+  	});
+    
+	//답변 수정
+	$(".qna-answer").on("click", "#replyEdit", function() {
+		
+		var replyNo = $(this).closest("li").children().first().val();
+		var editContent = $(this).parent().children("textarea").val();
+		console.log(editContent);
+		
+		$.ajax({
+			url:"qnaReplyUpdate.ad",
+			type: "POST",
+			data:{
+				replyNo : replyNo,
+				content : editContent
+			},
+			success: function(result) {
+				if(result=="success"){
+					alertify.message("답변 수정 성공");
+					qnaReplyList();
+				}else{
+					alertify.message("답변 수정 실패");
+				}
+			},
+			error: function() {
+				console.log("통신실패");
+			}
+		});
+	});
+	
+	//답변 수정 취소
+	$(".qna-answer").on("click", "#editCancle", function() {
+		qnaReplyList();
+	});
+    
+	//답변 삭제
+	$(".qna-answer").on("click", "#replyDelete", function() {
+		
+		var replyNo = $(this).closest("li").children().first().val();
+		
+		$.ajax({
+			url:"qnaReplyDelete.ad",
+			type: "POST",
+			data:{
+				replyNo : replyNo,
+			},
+			success: function(result) {
+				if(result=="success"){
+					alertify.message("답변 삭제 성공");
+					qnaReplyList();
+				}else{
+					alertify.message("답변 삭제 실패");
+				}
+			},
+			error: function() {
+				console.log("통신실패");
+			}
+		});
+		
+	});
     
 </script>
 </body>
