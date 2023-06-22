@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -155,7 +156,7 @@ public class FestivalController {
 	//찜하기 눌렀을시
 	@ResponseBody
 	@RequestMapping("goodCk.fe")
-	public String choiceCk(@RequestParam("boardNo")String boardNo, HttpSession session) {
+	public Map<String, Object> choiceCk(@RequestParam("boardNo")String boardNo, HttpSession session) {
 		
 		String userNo = String.valueOf(((Member)session.getAttribute("loginUser")).getUserNo());
 		
@@ -166,27 +167,33 @@ public class FestivalController {
 		//찜 내역 조회
 		int choiceCount = festivalService.choiceCount(info);
 		
-		String resultText = "";
+		Map<String, Object> resultText = new HashMap<>();
+		
+		String Text = "";
 		
 		if(choiceCount>0) {//찜한 내역 있음
 			//찜한 내역 지워주기
 			int result = festivalService.choiceDel(info);
-			
 			if(result>0) {//찜 삭제 성공
-				resultText = "N";				
+				Text = "N";	
 			}else {//찜 삭제 실패
-				resultText = "NF";
+				Text = "NF";
 			}
 		}else {//찜한 내역 없음
 			//찜하기 추가
 			int result = festivalService.choiceCk(info);
-			
 			if(result>0) {//찜하기 성공				
-				resultText = "Y";
+				Text = "Y";
 			}else {//찜하기 실패
-				resultText ="YF";
+				Text ="YF";
 			}
 		}
+		//게시글의 총 찜 수 조회
+		int choiAllCount = festivalService.choiAllCount(info);
+
+		resultText.put("text", Text);
+		resultText.put("count", choiAllCount);
+		
 		return resultText;
 	}
 }
