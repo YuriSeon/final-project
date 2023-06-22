@@ -229,6 +229,24 @@
  #reply-text{padding: 10px; border-bottom: 1px solid; margin: 10px;}
  #reply-text>b{font-size: 14px; color: blue;}
  #btn{transform: translateY(-50%);}
+ .circle {
+  line-height: 30px;
+  padding: 3px;
+
+}
+
+.circle:hover, .circle.active {
+  background-color: #dddcdc;
+  width: 100px;
+  height: 50px;
+  border-radius: 90%;
+  position: relative;
+  color: rgb(60, 59, 59);
+  font-size: 17px;
+  font-weight: bold;
+}
+ .massge{cursor: pointer;}
+ #reply-area{display: none;}
 </style>
 
   <head>
@@ -278,32 +296,31 @@
                                                     <div class="col-lg-12">
                                                         <div class="heading-sidebar">
                                                            <ul>
-				                                        		<li><button class="btn btn-info" style="margin-left:20px;">최신순</button></li>
-				                                        		<li><button class="btn btn-warning">인기순</button></li>
+				                                        		<li><button class="btn btn-info" style="margin-left:20px;" onclick="newerList();">최신순</button></li>
+				                                        		<li><button class="btn btn-warning" onclick="ranking();">인기순</button></li>
 				                                        	</ul>                     
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-12">
                                                         <div class="city">                                                           
                                                             <ul>
-                                                                <li><a href="#">#전체</a></li>
-                                                                <li><a href="#">#서울</a></li>
-                                                                <li><a href="#">#인천</a></li>
-                                                                <li><a href="#">#부산</a></li>
-                                                                <li><a href="#">#대구</a></li>
-                                                                <li><a href="#">#광주</a></li>
-                                                                <li><a href="#">#대전</a></li>
-                                                                <li><a href="#">#울산</a></li>
-                                                                <li><a href="#">#세종</a></li>
-                                                                <li><a href="#">#경기</a></li>
-                                                                <li><a href="#">#강원</a></li>
-                                                                <li><a href="#">#충북</a></li>
-                                                                <li><a href="#">#충남</a></li>
-                                                                <li><a href="#">#경북</a></li>
-                                                                <li><a href="#">#경남</a></li>
-                                                                <li><a href="#">#전북</a></li>
-                                                                <li><a href="#">#전남</a></li>
-                                                                <li><a href="#">#제주</a></li>                                                           
+                                                                <li><a href="feed.bo" class="circle">#전체</a></li>
+                                                                <li><a href="city.bo?city=11" class="circle">#서울</a></li>
+                                                                <li><a href="city.bo?city=23" class="circle">#인천</a></li>
+                                                                <li><a href="city.bo?city=21" class="circle">#부산</a></li>
+                                                                <li><a href="city.bo?city=22" class="circle">#대구</a></li>
+                                                                <li><a href="city.bo?city=24" class="circle">#광주</a></li>
+                                                                <li><a href="city.bo?city=25" class="circle">#대전</a></li>
+                                                                <li><a href="city.bo?city=26" class="circle">#울산</a></li>                                                                
+                                                                <li><a href="city.bo?city=31" class="circle">#경기</a></li>
+                                                                <li><a href="city.bo?city=32" class="circle">#강원</a></li>
+                                                                <li><a href="city.bo?city=33" class="circle">#충북</a></li>
+                                                                <li><a href="city.bo?city=34" class="circle">#충남</a></li>
+                                                                <li><a href="city.bo?city=37" class="circle">#경북</a></li>
+                                                                <li><a href="city.bo?city=38" class="circle">#경남</a></li>
+                                                                <li><a href="city.bo?city=35" class="circle">#전북</a></li>
+                                                                <li><a href="city.bo?city=36" class="circle">#전남</a></li>
+                                                                <li><a href="city.bo?city=39" class="circle">#제주</a></li>                                                           
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -379,7 +396,7 @@
 									                                <div  id="heart-area">		                                
 									                               		 <img src="resources/images/하트.png" alt="" id="heart">
 									                                </div>
-																	<div>			
+																	<div class="massge">			
 																		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-right" viewBox="0 0 16 16">
 																			  <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1H2zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z"/>
 																		</svg>	
@@ -397,7 +414,7 @@
 									                           
 									                        </div>
 									                        <hr>
-									                        <div class="reply-area">
+									                        <div id="reply-area">
 									                        	<div>
 										                        	<textarea rows="2" cols="1" id="reply" ></textarea>
 										                        	<button id="btn" class="btn btn-warning">댓글</button>
@@ -408,7 +425,7 @@
 										                        	
 									                        	</div>
 									                        	
-									                        </div>
+									                       </div>
 							                            </div>
 							                            							                      
 							                    	</div>
@@ -458,33 +475,6 @@
     </div>
     
 
-
-    <!-- *** Subscribe *** -->
-    <div class="subscribe">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <h4>Subscribe Our Newsletter:</h4>
-                </div>
-                <div class="col-lg-8">
-                    <form id="subscribe" action="" method="get">
-                        <div class="row">
-                          <div class="col-lg-9">
-                            <fieldset>
-                              <input name="email" type="text" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your Email Address" required="">
-                            </fieldset>
-                          </div>
-                          <div class="col-lg-3">
-                            <fieldset>
-                              <button type="submit" id="form-submit" class="main-dark-button">Submit</button>
-                            </fieldset>
-                          </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
    <jsp:include page="../common/footer.jsp"></jsp:include>
  
@@ -558,14 +548,18 @@ $(function(){
 //스크롤
  $(window).scroll(function(){
 	 var scrollTop = $(document).scrollTop();
+	 var board = $(".ticket-item");
+	 
 	 if (scrollTop < 50) {
 	  scrollTop = 50;
-	 }else if(scrollTop > 800){
+	 }else if(scrollTop > board){
 		 scrollTop = 800;
 	 }
 	 $(".fixed-area").stop();
 	 $(".fixed-area").animate( { "top" : scrollTop });
  });
+ 
+ 
  
 function enrollerForm(){
 //console.log($(this));\
@@ -1035,7 +1029,7 @@ var loginUser =  "${loginUser}";
 			
 			$.ajax({
 				url:"rereport.fo",
-				data:{nickname:replyWriter, writer:loginUser, refRno:refRno,reportReason:content},
+				data:{nickname:replyWriter, writer:loginUser, rereplyNo:refRno,reportReason:content},
 				success:function(result){
 					if(result == "success"){
 						alert("댓글 신고되었습니다.");
@@ -1055,26 +1049,44 @@ var loginUser =  "${loginUser}";
 	
 	//게시물 수정
 	 function updateBoard(e){
-	 /* console.log($(this));
- 	 console.log($(this).closest("#up").find(".boardNo").val());
- 	 console.log($(this).closest(".nicname").find("#nicknameHover").text()); */
+	
  	 $btn = e;
  	var boardNo = $($btn).closest("#up").find(".boardNo").val(); //보드번호
-	/* var writer = $($btn).closest(".nicname").find("#nicknameHover").text(); // 보드닉네임
-	var images = $($btn).parents(".thumb").children().eq(1).children().eq(0).children().children("img"); //이미지 위치
-	var filePath = "";//이미지의 src를 담을 리스트
-
 	
-	images.each(function(index) {
-		var currentImg = $(this);
-        var src = currentImg.attr("src");
-        filePath += src + ",";
-	  
-	  }); */
 
 			location.href="updateEnroll.fo?boardNo="+boardNo;
-
  }
+	
+	//city호버스타일 그대로하기
+	 var circles = document.getElementsByClassName("circle");
+
+	 for (var i = 0; i < circles.length; i++) {
+	   circles[i].addEventListener("click", function() {
+	     this.classList.toggle("active");
+	   });
+	 }
+	 
+	 //최신순
+	 function newerList(){
+		 location.href ="feed.bo";
+	 }
+	 //인기순
+	 function ranking(){
+		 location.href = "feed.bo?currentPage=1&sort=2";
+	 }
+	 
+	 //메세지버튼 누르면 밑으로 나오게 하기
+	 $(".massge").click(function(){
+		 /* console.log($(this).parents(".prices").children("#reply-area")); */
+		 var $mass = $(this).parents(".prices").children("#reply-area");
+		 
+		 if($mass.css("display") == "none"){
+			 $(this).siblings("#reply-area").slideUp();
+             $mass.slideDown(0);
+		 }else{
+			 $mass.slideUp(0);
+		 }
+	 });
 
  </script>
 

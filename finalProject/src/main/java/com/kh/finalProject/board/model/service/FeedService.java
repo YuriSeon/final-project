@@ -82,6 +82,18 @@ public interface FeedService {
 	//게시물 수정폼attachment
 	ArrayList<Attachment> selectAttachment(int boardNo);
 
+	//게시물 수정
+	int updateFeed(Board b, ArrayList<Attachment> list);
+
+	//게시물수정시 기존에 있던 사진지우기
+	int deleteAttachment(int boardNo);
+
+	//인기순
+	ArrayList<Board> rankingBoardList(PageInfo pi);
+
+	//도시선택
+	ArrayList<Board> selectCityList(PageInfo pi, int city);
+
 	
 	
 	

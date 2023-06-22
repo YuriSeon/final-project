@@ -183,6 +183,40 @@ public class FeedServiceImpl implements FeedService{
 		return list;
 	}
 
+	@Override
+	public int updateFeed(Board b, ArrayList<Attachment> list) {
+		int result = feedDao.updateBoard(sqlSession,b);
+		int result2 = 1;
+		for(Attachment at : list) {
+			
+			result2 *= feedDao.updateAttachment(sqlSession,at);
+		}
+		
+		return result * result2;
+	}
+
+	//게시물수정시 기존에 있던 사진지우기
+	@Override
+	public int deleteAttachment(int boardNo) {
+		int result = feedDao.deleteAttachment(sqlSession,boardNo);
+		/* System.out.println("서비스:"+result); */
+		return result;
+	}
+
+	//인기순
+	@Override
+	public ArrayList<Board> rankingBoardList(PageInfo pi) {
+		ArrayList<Board> list = feedDao.rankingBoardList(sqlSession,pi);
+		return list;
+	}
+
+	//도시 선택
+	@Override
+	public ArrayList<Board> selectCityList(PageInfo pi, int city) {
+		ArrayList<Board> list = feedDao.selectCityList(sqlSession,pi,city);
+		return list;
+	}
+
 	
 
 }

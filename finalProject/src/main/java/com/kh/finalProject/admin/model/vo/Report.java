@@ -14,7 +14,7 @@ public class Report {
 	private String writer;			//	WRITER	VARCHAR2(30 BYTE)
 	private String reportReason;	//	REPORT_REASON	VARCHAR2(100 BYTE)
 	private String createDate; 		//	CREATE_DATE	DATE
-    private int refRno;             //	REF_RNO
+    private int rereplyNo;             //	REREPLY_NO
 	private String boardWriter;
 	private int boardReport;
 	private String replyWriter;
