@@ -43,7 +43,7 @@
                 <!-- 버튼 시작 -->
                 <div>
                     <button class="btn btn-danger">선택삭제</button>
-                    <button class="btn btn-info">게시물 등록</button>
+                    <button class="btn btn-info" onclick="thema();">게시물 등록</button>
                 </div>
                 <!-- 버튼 끝 -->
             </div>
@@ -261,6 +261,9 @@
         
     });
    
+    function thema(){
+    	location.href = "themaEnroll.bo";
+    }
     
 </script>
 </body>

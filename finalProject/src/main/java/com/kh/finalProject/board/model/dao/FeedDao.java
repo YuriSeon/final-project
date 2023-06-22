@@ -208,4 +208,42 @@ public class FeedDao {
 		return (ArrayList)sqlSession.selectList("feedMapper.selectAttachment", boardNo);
 	}
 
+	//게시물 수정 board
+	public int updateBoard(SqlSessionTemplate sqlSession, Board b) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("feedMapper.updateBoard", b);
+	}
+
+	//게시물 수정 attachment
+	public int updateAttachment(SqlSessionTemplate sqlSession, Attachment at) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("feedMapper.updateAttachment", at);
+	}
+
+	//게시물수정시 기존에 있던 사진지우기
+	public int deleteAttachment(SqlSessionTemplate sqlSession, int boardNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.delete("feedMapper.deleteAttachment", boardNo);
+	}
+
+	//인기순
+	public ArrayList<Board> rankingBoardList(SqlSessionTemplate sqlSession, PageInfo pi) {
+		int offset = (pi.getCurrentPage()-1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("feedMapper.rankingBoardList",null, rowBounds);
+	}
+
+	//도시선택
+	public ArrayList<Board> selectCityList(SqlSessionTemplate sqlSession, PageInfo pi, int city) {
+		int offset = (pi.getCurrentPage()-1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("feedMapper.selectCityList",city, rowBounds);
+	}
+
 }

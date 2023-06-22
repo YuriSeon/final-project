@@ -938,4 +938,5 @@ public class AdminController {
 		return (result>0)?new Gson().toJson("success"):new Gson().toJson("fail");
 	}
 	
+	
 }
