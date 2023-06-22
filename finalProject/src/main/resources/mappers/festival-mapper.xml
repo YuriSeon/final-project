@@ -8,7 +8,7 @@
 		<result property="boardNo" column="BOARD_NO"/>
 		<result property="boardTitle" column="BOARD_TITLE"/>
 		<result property="boardContent" column="BOARD_CONTENT"/>
-		<result property="good" column="GOOD"/>
+		<result property="choice" column="CHOICE"/>
 		<result property="count" column="COUNT"/>
 		
 		<collection property="info" resultMap="infoResultSet"></collection>
@@ -88,7 +88,7 @@
 	
 	<!-- 축제 디테일 조회 -->
 	<select id="selectFe" parameterType="_int" resultMap="boardResultSet" resultType="board">
-		SELECT BOARD_NO, BOARD_TITLE, BOARD_CONTENT, GOOD, COUNT,
+		SELECT BOARD_NO, BOARD_TITLE, BOARD_CONTENT, CHOICE, COUNT,
 	        	INFO_ADDRESS, INFO_TIME, INFO_HOMEPAGE, INFO_CALL,
 		        TO_CHAR(START_DATE,'YYYY-MM-DD') "START_DATE", TO_CHAR(END_DATE,'YYYY-MM-DD') "END_DATE", FES_MONEY,
 		        ZONE_NAME
@@ -119,18 +119,38 @@
 		SELECT COUNT(*)
 		FROM CHOICE
 		WHERE BOARD_NO = #{boardNo}
-		AND USER_NO = #{userNo}
+		AND WRITER = #{userNo}
 	</select>
 	<!-- 찜하기 -->
 	<insert id="choiceCk">
 		INSERT INTO CHOICE
                 VALUES(#{boardNo}, #{userNo})
 	</insert>
+	<!-- 찜하기 -> 찜 수 +1 업데이트 -->
+	<update id="choiceUp">
+		UPDATE BOARD
+		SET CHOICE = CHOICE+1
+		WHERE BOARD_NO = #{boardNo}
+	</update>
 	<!-- 찜하기 삭제 -->
 	<delete id="choiceDel">
 		DELETE FROM CHOICE
 		WHERE BOARD_NO = #{boardNo}
-		AND USER_NO = #{userNo}
+		AND WRITER = #{userNo}
 	</delete>
+	<!-- 찜 삭제 ->찜 수 -1 업데이트 -->
+	<update id="choiceDown">
+		UPDATE BOARD
+		SET CHOICE = CHOICE-1
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+	<!-- 게시글의 총 찜 수 조회 -->
+	<select id="choiAllCount" resultType="_int">
+		SELECT CHOICE
+		FROM BOARD
+		WHERE BOARD_NO = #{boardNo}
+	</select>
+	
+	
   
 </mapper>

@@ -34,4 +34,7 @@ public interface FestivalService {
 	int choiceCk(HashMap<String, String> info);
 	//찜하기 삭제
 	int choiceDel(HashMap<String, String> info);
+	//게시글의 총 찜 수 조회
+	int choiAllCount(HashMap<String, String> info);
+
 }

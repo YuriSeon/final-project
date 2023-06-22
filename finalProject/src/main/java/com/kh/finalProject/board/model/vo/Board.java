@@ -35,6 +35,7 @@ public class Board {
 	private String createDate;
 	private String modifyDate;
 	private int good;
+	private int choice;
 	private int report;
 	private int count;
 	private String status;

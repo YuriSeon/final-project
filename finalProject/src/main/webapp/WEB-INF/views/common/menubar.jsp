@@ -169,7 +169,7 @@
 	<!-- 알림창 -->
 	<c:if test="${not empty alertMsg }">
 		<script>
-			alertify.message('${alertMsg}');
+			alertify.success('${alertMsg}');
 		</script>
 		<c:remove var="alertMsg" scope="session"/>
 	</c:if>
