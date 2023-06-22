@@ -5,12 +5,16 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,6 +23,8 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Festival;
 import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.common.model.vo.PageInfo;
+import com.kh.finalProject.common.template.Pagination;
 import com.kh.finalProject.member.model.vo.Member;
 
 @Controller
@@ -26,6 +32,24 @@ public class FestivalController {
 	
 	@Autowired
 	public FestivalService festivalService;
+	
+	//축제 페이지로 이동
+	@RequestMapping("festival.fe")
+	public String fesList(@RequestParam(value="currentPage",defaultValue="1")int currentPage, Model model) {
+
+		int listCount = festivalService.fesCount();
+		int pageLimit = 10;
+		int boardLimit = 6;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		
+		ArrayList<Board> list = festivalService.fesList(pi);
+		
+		model.addAttribute("list",list);
+		model.addAttribute("pi",pi);
+		
+		return "board/festival";
+	}
 
 	//축제 등록 폼 이동
 	@RequestMapping("fesEnrollForm.fe")
@@ -87,12 +111,82 @@ public class FestivalController {
 			mv.setViewName("redirect:festival.ad");//관리자 등록 페이지로 돌려줄 생각
 		}else {//실패시
 			//파일도 지워주기
-//			for(int i=0; i<list.size(); i++) {
-//				new File(session.getServletContext().getRealPath("/"+list.get(i).getFilePath())).delete();
-//			}
+			for(int i=0; i<list.size(); i++) {
+				new File(session.getServletContext().getRealPath("/"+list.get(i).getFilePath())).delete();
+			}
 			mv.addObject("errorMsg", "축제 게시글 등록에 실패하였습니다.").setViewName("common/errorPage");
 		}
 		
 		return mv;
+	}
+	
+	//축제 디테일 페이지 이동
+	@RequestMapping("fesDetail.fe")
+	public ModelAndView fesDetail(@RequestParam("boardNo")int boardNo, ModelAndView mv) {
+		
+		//조회수 올려주기
+		int count = festivalService.countUp(boardNo);
+		
+		if(count>0) {
+			Board b = festivalService.detailFes(boardNo);
+			ArrayList<Attachment> at = festivalService.atList(boardNo);
+			
+			if(b!=null && at!=null) {
+				mv.addObject("b", b);
+				mv.addObject("at", at);
+				mv.setViewName("board/festivalDetailView");
+			}else {
+				mv.addObject("errorMsg", "축제 페이지를 불러오는데 실패하였습니다.").setViewName("common/errorPage");
+			}			
+		}else {
+			mv.addObject("errorMsg", "축제 페이지를 불러오는데 실패하였습니다.").setViewName("common/errorPage");
+		}
+		return mv;
+	}
+	
+	//찜하기 정보 조회
+	@ResponseBody
+	@RequestMapping("choice.fe")
+	public String choice(@RequestParam("boardNo")int boardNo) {
+		System.out.println(boardNo);
+		return "";
+	}
+	
+	//찜하기 눌렀을시
+	@ResponseBody
+	@RequestMapping("goodCk.fe")
+	public String choiceCk(@RequestParam("boardNo")String boardNo, HttpSession session) {
+		
+		String userNo = String.valueOf(((Member)session.getAttribute("loginUser")).getUserNo());
+		
+		HashMap<String,String> info = new HashMap<String,String>();
+		info.put("boardNo", boardNo);
+		info.put("userNo", userNo);
+		
+		//찜 내역 조회
+		int choiceCount = festivalService.choiceCount(info);
+		
+		String resultText = "";
+		
+		if(choiceCount>0) {//찜한 내역 있음
+			//찜한 내역 지워주기
+			int result = festivalService.choiceDel(info);
+			
+			if(result>0) {//찜 삭제 성공
+				resultText = "N";				
+			}else {//찜 삭제 실패
+				resultText = "NF";
+			}
+		}else {//찜한 내역 없음
+			//찜하기 추가
+			int result = festivalService.choiceCk(info);
+			
+			if(result>0) {//찜하기 성공				
+				resultText = "Y";
+			}else {//찜하기 실패
+				resultText ="YF";
+			}
+		}
+		return resultText;
 	}
 }

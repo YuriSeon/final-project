@@ -88,11 +88,6 @@ public class BoardController {
 		return "board/theme";
 	}
 	
-	@RequestMapping("festival.bo")
-	public String goFestival() {
-		return "board/festival";
-	}
-	
 	@RequestMapping("attraction.bo")
 	public String goAttraction(@RequestParam(value="currentPage", defaultValue="1") int currentPage
 								, String sort, Model model) {
