@@ -552,24 +552,32 @@
 	    function goodCk(event, boardNo, img){
 	    	//div온클릭 멈추기
 	    	event.stopPropagation();
+	    	
+	    	var user = "${loginUser}"
+	    	
+	    	if(!user == ""){
+		    	$.ajax({
+		    		url : "goodCk.fe",
+		    		data : {boardNo : boardNo},
+		    		success : function(result){
+		    			if(result.text == 'Y'){
+		    				alert("찜하기 완료!")
+		    				$(img).attr('src','/finalProject/resources/images/Like-after.png');
+		    			}else if (result.text == 'N'){
+		    				alert("찜삭제 완료!")
+		    				$(img).attr('src','/finalProject/resources/images/Like-before.png');
+		    			}else if(result.text == 'YF'){
+		    				alert("찜하기 실패하였습니다. 다시 눌러주세요.")
+		    			}else{
+		    				alert("찜삭제가 실패하였습니다. 다시 눌러주세요.")
+		    			}
+		    		}
+		    	});
+	    	}else{
+	    		alert("로그인 후 사용이 가능합니다.");
+				$('#loginModal').show();
+	    	}
 
-	    	$.ajax({
-	    		url : "goodCk.fe",
-	    		data : {boardNo : boardNo},
-	    		success : function(result){
-	    			if(result == 'Y'){
-	    				alert("찜하기 완료!")
-	    				$(img).attr('src','/finalProject/resources/images/Like-after.png');
-	    			}else if (result == 'N'){
-	    				alert("찜삭제 완료!")
-	    				$(img).attr('src','/finalProject/resources/images/Like-before.png');
-	    			}else if(result == 'YF'){
-	    				alert("찜하기 실패하였습니다. 다시 눌러주세요.")
-	    			}else{
-	    				alert("찜삭제가 실패하였습니다. 다시 눌러주세요.")
-	    			}
-	    		}
-	    	});
 	    }
 	    
 	    

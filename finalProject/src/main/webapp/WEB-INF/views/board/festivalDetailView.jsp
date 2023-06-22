@@ -2,179 +2,189 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
+<!-- 지도띄우기 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=944eea4bf318a38d2df62b60e838db52&libraries=services"></script>
 
 	<style>
 	/* 사진 슬라이드 부트스트랩 */
 	@import url(https://fonts.googleapis.com/css?family=Varela+Round);
 
-html, body { background: #333 url("https://codepen.io/images/classy_fabric.png"); }
-
-.slides {
-    padding: 0;
-    width: 609px;
-    height: 420px;
-    display: block;
-    margin: 0 auto;
-    position: relative;
-}
-
-.slides * {
-    user-select: none;
-    -ms-user-select: none;
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-}
-
-.slides input { display: none; }
-
-.slide-container { display: block; }
-
-.slide {
-    top: 0;
-    opacity: 0;
-    width: 609px;
-    height: 420px;
-    display: block;
-    position: absolute;
-
-    transform: scale(0);
-
-    transition: all .7s ease-in-out;
-}
-
-.slide img {
-    width: 100%;
-    height: 100%;
-}
-
-.nav label {
-    width: 200px;
-    height: 100%;
-    display: none;
-    position: absolute;
-
-	opacity: 0;
-    z-index: 9;
-    cursor: pointer;
-
-    transition: opacity .2s;
-
-    color: #FFF;
-    font-size: 156pt;
-    text-align: center;
-    line-height: 380px;
-    font-family: "Varela Round", sans-serif;
-    background-color: rgba(255, 255, 255, .3);
-    text-shadow: 0px 0px 15px rgb(119, 119, 119);
-}
-
-.slide:hover + .nav label { opacity: 0.5; }
-
-.nav label:hover { opacity: 1; }
-
-.nav .next { right: 0; }
-
-input:checked + .slide-container  .slide {
-    opacity: 1;
-
-    transform: scale(1);
-
-    transition: opacity 1s ease-in-out;
-}
-
-input:checked + .slide-container .nav label { display: block; }
-
-.nav-dots {
-	width: 100%;
-	bottom: 9px;
-	height: 11px;
-	display: block;
-	position: absolute;
-	text-align: center;
-}
-
-.nav-dots .nav-dot {
-	top: -5px;
-	width: 11px;
-	height: 11px;
-	margin: 0 4px;
-	position: relative;
-	border-radius: 100%;
-	display: inline-block;
-	background-color: rgba(0, 0, 0, 0.6);
-}
-
-.nav-dots .nav-dot:hover {
-	cursor: pointer;
-	background-color: rgba(0, 0, 0, 0.8);
-}
-
-input#img-1:checked ~ .nav-dots label#img-dot-1,
-input#img-2:checked ~ .nav-dots label#img-dot-2,
-input#img-3:checked ~ .nav-dots label#img-dot-3,
-input#img-4:checked ~ .nav-dots label#img-dot-4,
-input#img-5:checked ~ .nav-dots label#img-dot-5,
-input#img-6:checked ~ .nav-dots label#img-dot-6 {
-	background: rgba(0, 0, 0, 0.8);
-}
+	html, body { background: #333 url("https://codepen.io/images/classy_fabric.png"); }
+	
+	.slides {
+	    padding: 0;
+	    width: 609px;
+	    height: 420px;
+	    display: block;
+	    margin: 0 auto;
+	    position: relative;
+	}
+	
+	.slides * {
+	    user-select: none;
+	    -ms-user-select: none;
+	    -moz-user-select: none;
+	    -khtml-user-select: none;
+	    -webkit-user-select: none;
+	    -webkit-touch-callout: none;
+	}
+	
+	.slides input { display: none; }
+	
+	.slide-container { display: block; }
+	
+	.slide {
+	    top: 0;
+	    opacity: 0;
+	    width: 609px;
+	    height: 420px;
+	    display: block;
+	    position: absolute;
+	
+	    transform: scale(0);
+	
+	    transition: all .7s ease-in-out;
+	}
+	
+	.slide img {
+	    width: 100%;
+	    height: 100%;
+	}
+	
+	.nav label {
+	    width: 200px;
+	    height: 100%;
+	    display: none;
+	    position: absolute;
+	    border-radius: 8px;
+	
+		/* opacity: 0; */
+	    z-index: 9;
+	    cursor: pointer;
+	
+	    color: #FFF;
+	    font-size: 156pt;
+	    text-align: center;
+	    line-height: 380px;
+	    font-family: "Varela Round", sans-serif;
+	    background-color: rgb(231, 231, 231, 0.3);
+	    text-shadow: 0px 0px 15px rgb(119, 119, 119);
+	}
+	
+	.nav label:hover { opacity: 1; }
+	
+	.nav .next { right: 0; }
+	
+	input:checked + .slide-container  .slide {
+	    opacity: 1;
+	
+	    transform: scale(1);
+	
+	    transition: opacity 1s ease-in-out;
+	}
+	
+	input:checked + .slide-container .nav label { display: block; }
+	
+	.nav-dots {
+		width: 100%;
+		bottom: 9px;
+		height: 11px;
+		display: block;
+		position: absolute;
+		text-align: center;
+	}
+	
+	.nav-dots .nav-dot {
+		top: -5px;
+		width: 11px;
+		height: 11px;
+		margin: 0 4px;
+		position: relative;
+		border-radius: 100%;
+		display: inline-block;
+		background-color: rgba(0, 0, 0, 0.6);
+	}
+	
+	.nav-dots .nav-dot:hover {
+		cursor: pointer;
+		background-color: rgba(0, 0, 0, 0.8);
+	}
+	
+	input#img-1:checked ~ .nav-dots label#img-dot-1,
+	input#img-2:checked ~ .nav-dots label#img-dot-2,
+	input#img-3:checked ~ .nav-dots label#img-dot-3,
+	input#img-4:checked ~ .nav-dots label#img-dot-4,
+	input#img-5:checked ~ .nav-dots label#img-dot-5,
+	input#img-6:checked ~ .nav-dots label#img-dot-6 {
+		background: rgba(0, 0, 0, 0.8);
+	}
+	.prev{
+		right : 609px;
+	}
+	.next{
+		left : 609px;
+	}
           
 	/* 디테일 헤더 */
-		#title_menu{
-			font-size: 28px;
-			/* position: relative; */
-			/* top: -15px; */
-			/* left: 21%; */
-			padding: 0px 0px 0px 400px;
-			width:1000px;
-		}
-		#title_menu>a{
-			font-size: 18px;
-            text-decoration: none;
-            color: rgb(138, 138, 138);
-            font-weight: 600;
-		}
-		#title_menu>a:hover{
-			color:black;
-		}
-		#topTitle{
-			font-size: 30px;
-          	font-weight: 600;
-          	height: 60px;
-          	line-height: 40px;
-		}
-		.titleType1 {
-			text-align: center;
-            position: relative;
-			/* background-color : green; */
-		}
-		.titleType1 .area_tag {
-            text-align: left;
-        }
-        .brandingIcon {
-            float: right;
-            text-align: center;
-        }
-        .btn_good{
-            border: none;
-            background-color: white;
-            position: relative;
-            left: -470px;
-        }
-        .num_view{
-        	position: relative;
-            left: -470px;
-        }
-        .btn_sharing{
-        	position: relative;
-            left: 450px;
-            background-color:green;
-            border-radius: 20px;
-            border:50px;
-            border-color:black;
-            border-width: medium;
-        }
+	#title_menu{
+		font-size: 28px;
+		/* position: relative; */
+		/* top: -15px; */
+		/* left: 21%; */
+		padding: 0px 0px 0px 400px;
+		width:1000px;
+	}
+	#title_menu>a{
+		font-size: 18px;
+	          text-decoration: none;
+	          color: rgb(138, 138, 138);
+	          font-weight: 600;
+	}
+	#title_menu>a:hover{
+		color:black;
+	}
+	#topTitle{
+		font-size: 30px;
+	        	font-weight: 600;
+	        	height: 60px;
+	        	line-height: 40px;
+	}
+	.titleType1 {
+		text-align: center;
+	          position: relative;
+		/* background-color : green; */
+	}
+	.titleType1 .area_tag {
+	    text-align: left;
+	}
+	.brandingIcon {
+	    float: right;
+	    text-align: center;
+	}
+	.btn_good{
+	    border: none;
+	    background-color: white;
+	    position: relative;
+	    left: -470px;
+	}
+	 .btn_good:focus{
+	 	border: none;
+		outline:none;
+	}
+	.num_view{
+		position: relative;
+	    left: -470px;
+	}
+	.btn_sharing{
+		position: relative;
+	    left: 450px;
+	    background-color:green;
+	    border-radius: 20px;
+	    border:50px;
+	    border-color:black;
+	    border-width: medium;
+	}
+	
     /* 축제 정보 */
 	#fes-infor{
 		margin-top: 10px;
@@ -216,6 +226,7 @@ input#img-6:checked ~ .nav-dots label#img-dot-6 {
 	    
 	    /* display: block; */
 	}
+	
 	/* 지도 */
 	#map-wrap{
 		margin-top: 40px;
@@ -278,8 +289,6 @@ input#img-6:checked ~ .nav-dots label#img-dot-6 {
 	  margin-top: 20px;
 	  margin-bottom: 30px;
 	}
-	
-	
 	#M-list-wrap img {
 	  transition: transform .5s cubic-bezier(.7,-0.39,.31,1.38);
 	}
@@ -288,18 +297,18 @@ input#img-6:checked ~ .nav-dots label#img-dot-6 {
 	}
 	
 	@media (min-width: 1024px) {
-	#M-list-wrap {
-	  display: flex;
-	  flex-direction: row;
-	  flex-wrap: wrap;
-	  justify-content: center;
-	}
+		#M-list-wrap {
+		  display: flex;
+		  flex-direction: row;
+		  flex-wrap: wrap;
+		  justify-content: center;
+		}
 	}
 	@media (min-width: 1600px) {
-	#photo-list {
-	  margin-bottom: 4em;
-	  width: 30%;
-	}
+		#photo-list {
+		  margin-bottom: 4em;
+		  width: 30%;
+		}
 	}
 	</style>
 
@@ -342,9 +351,9 @@ input#img-6:checked ~ .nav-dots label#img-dot-6 {
             <div class="area_address" id="topAddr" style="color: rgb(135, 135, 135); position: relative; top: -18px;">${b.zone.zoneName }</div>
     
 			<div class="post_area">
-		        	<button type="button" class="btn_good" onclick="setLike();">
-		            	<span class="ico"><img src="resources/images/heart.png" alt="" style="height: 21px; width: 21px;"></span>
-		           		<span class="num" id="conLike">${b.good }</span>
+		        	<button type="button" class="btn_good">
+		            	<span class="ico"><img id="choice_img" src="resources/images/heart.png" onclick="choiceCk(event,'${b.boardNo}')" style="height: 21px; width: 21px;"></span>
+		           		<span class="num" id="conLike">${b.choice }</span>
 		        	</button>
 		        <span class="num_view"><img src="resources/images/eye.png" alt="" style="height: 24px; width: 24px;">&nbsp;${b.count }</span>
 		        <span class="rline">
@@ -419,15 +428,15 @@ ${b.boardContent }
     		
 			<div id="map-wrap" style="width:1110px;">
 				<div id="detail-map" style=" width:1110px;">
-					<div id="map" style="background-color:yellow;">
-			      		<img src="resources/images/ex.map.png" alt="" style="width: 100%; height: 100%;">
-			      	</div>
+					<div id="map"></div>
 			    </div>
 			        
 			    <div id="map-infor">
 			      	<dl>
 			        	<dt>주소</dt>
 			        	<dd>${b.info.infoAddress }</dd>
+			        	<input type="hidden" id="x">
+			        	<input type="hidden" id="y">
 			      	</dl>
 			      	<dl>
 		        	<dt>웹사이트</dt>
@@ -470,8 +479,111 @@ ${b.boardContent }
 
    <jsp:include page="../common/footer.jsp"/>
    
-   <script>
-	   
+	<script>
+		//지도
+		//좌표 값 가져오기
+		/* var geocoder = new kakao.maps.services.Geocoder();
+		var callback = function(result, status) {
+		    if (status === kakao.maps.services.Status.OK) {
+		    	console.log(result);
+		    }
+		};
+		geocoder.addressSearch('전북 고창군 상하면 석남갈산길 34-2', callback);
+		
+		//지도 생성
+		var container = document.getElementById('map');
+		var options = { //지도를 생성시 필요한 기본 옵션
+			center: new kakao.maps.LatLng($("#y").val(),$("#x").val()),
+			level: 5
+		};
+		var map = new kakao.maps.Map(container, options);
+		//마커 생성
+	    var marker = new daum.maps.Marker({
+	        position: new daum.maps.LatLng(37.537187, 127.005476),
+	        map: map
+	    }); */
+		
+	    /* 지도 */
+        var mapContainer = document.getElementById('map'),
+	        mapOption = {
+	            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도 중심좌표
+	            level: 5 // 지도 확대 레벨
+	        };
+
+	    //지도 생성
+	    var map = new daum.maps.Map(mapContainer, mapOption);
+	    
+	    //주소-좌표 변환 객체를 생성
+	    var geocoder = new daum.maps.services.Geocoder();
+	    //마커 미리 생성
+	    var marker = new daum.maps.Marker({
+	        position: new daum.maps.LatLng(37.537187, 127.005476),
+	        map: map
+	    });
+	    
+        $(function(){
+	        /* 우편번호 서비스  API*/
+	        new daum.Postcode({
+	            oncomplete: function(data) {
+	            	var addr = data.address; // 검색한 주소 정보
+	                document.getElementById("address").value = addr;
+	            	
+	                // 주소로 좌표 검색
+	                geocoder.addressSearch("${b.info.infoAddress}", function(results, status) {
+	                    // 정상적으로 검색이 완료됐으면
+	                    if (status === daum.maps.services.Status.OK) {
+
+	                        var result = results[0]; //첫번째 결과의 값을 활용
+
+	                        // 해당 주소에 대한 좌표를 받아서
+	                        var coords = new daum.maps.LatLng(result.y, result.x);
+	                        // 지도를 보여준다.
+	                        mapContainer.style.display = "block";
+	                        map.relayout();
+	                        // 지도 위치 변경
+	                        map.setCenter(coords);
+	                        // 마커 다시 잡기
+	                        marker.setPosition(coords)
+	                    }
+	                });
+	            }
+	        }).open();
+        });
+        
+        
+	    
+		//찜하기 기능
+		function choiceCk(event, boardNo){
+			
+			var user = "${loginUser}"
+			
+			if(!user == ""){
+				$.ajax({
+					url : "goodCk.fe",
+			   		data : {boardNo : boardNo},
+			   		success : function(result){
+			   			if(result.text == 'Y'){
+			   				alert("찜하기 완료!");
+			   				$("#choice_img").attr('src','/finalProject/resources/images/Like-after.png');
+			   				$("#conLike").text(result.count);
+			   			}else if (result.text == 'N'){
+			   				alert("찜삭제 완료!");
+			   				$("#choice_img").attr('src','/finalProject/resources/images/Like-before.png');
+			   				$("#conLike").text(result.count);
+			   			}else if(result.text == 'YF'){
+			   				alert("찜하기 실패하였습니다. 다시 눌러주세요.");
+			   			}else{
+			   				alert("찜삭제가 실패하였습니다. 다시 눌러주세요.");
+			   			}
+			   		},error : function(){
+			   				console.log("에이젝스 실패");
+			   		}
+			   	});
+			}else{
+				alert("로그인 후 사용이 가능합니다.");
+				$('#loginModal').show();
+			}
+		}
    </script>
 
     <!-- jQuery -->

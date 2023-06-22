@@ -73,8 +73,20 @@ public class FestivalDao {
 	public int choiceCk(SqlSession sqlSession, HashMap<String, String> info) {
 		return sqlSession.insert("festivalMapper.choiceCk", info);
 	}
+	//찜하기 -> 찜 수 +1 업데이트
+	public int choiceUp(SqlSession sqlSession, HashMap<String, String> info) {
+		return sqlSession.update("festivalMapper.choiceUp", info);
+	}
 	//찜하기 삭제
 	public int choiceDel(SqlSession sqlSession, HashMap<String, String> info) {
 		return sqlSession.delete("festivalMapper.choiceDel", info);
+	}
+	//찜 삭제 ->찜 수 -1 업데이트
+	public int choiceDown(SqlSession sqlSession, HashMap<String, String> info) {
+		return sqlSession.update("festivalMapper.choiceDown", info);
+	}
+	//게시글의 총 찜 수 조회
+	public int choiAllCount(SqlSession sqlSession, HashMap<String, String> info) {
+		return sqlSession.selectOne("festivalMapper.choiAllCount", info);
 	}
 }

@@ -9,7 +9,7 @@
 <style type="text/css"></style>
 <body>
 <%@include file="../../common/menubar.jsp" %>
-    <!-- 좋아요 페이지 생성 후 함수로 prop 추가해서 생성되어 넣도록바꾸고 좋아요등등 이벤트 한번에 할 수 있도록 조건처리 넣기 -->
+<!-- 맛집 추천 상세정보 출력구문작성, 댓글조회 원래 양식 확인하고 지우기 -->
     <div class="attracDetail">
         <div id="contents">
             <!-- 상단 -->
@@ -23,33 +23,20 @@
                         한줄설명내용 영역
                     </span>
                 </div>
-                <div class="post_area">
-                    <span class="ico">
-                        <c:choose>
-                            <c:when test="${good.userNo eq loginUser.userNo }">
-                                <img class="good" src="resources/images/Like-after.png">
-                            </c:when>
-                            <c:otherwise>
-                                <img class="good" src="resources/images/Like-before.png">
-                            </c:otherwise>
-                        </c:choose>
-                    </span>
-                    <span class="num" id="conLike">좋아요 수</span>
+                <div class="board-area">
                     <span class="ico"><img src="resources/images/view.png"></span>
                     <span class="num" id="conRead">조회수</span>
                     <span class="ico">
-                        <c:choose>
-		                	<c:when test="${choice.userNo eq loginUser.userNo }">
-		                		<img class="choice" src="resources/images/star-after.png">
-		                	</c:when>
-		                	<c:otherwise>
-		                		<img class="choice" src="resources/images/star.png">
-		                	</c:otherwise>
-		                </c:choose>
+                        <img class="good" src="resources/images/Like-before.png">
                     </span>
+                    <span class="num" id="conLike">좋아요 수</span>
+                    <span class="ico">
+                        <img class="choice" src="resources/images/star-before.png">
+                    </span>
+                    <!-- 스크립트 부분에서 사용하기위해서 숨겨둠 -->
+                    <input type="hidden" name="boardNo" value="${board.boardNo}"> 
                 </div>
             </div>
-            <!-- //상단 -->
             <hr>
             <!-- 내용 -->
             <div class="db_cont_detail">
@@ -118,19 +105,19 @@
         <div class="foodReco">
             <div class="cont1">
                 <div class="food">
-                    <div class="foodImg"></div>
+                    <div class="foodImg">이미지영역</div>
                     <div class="foodInfo">
-                        <div class="foodTitle"></div>
-                        <div class="foodAddress"></div>
+                        <div class="board-foodTitle">맛집이름</div>
+                        <div class="foodAddress">주소</div>
                     </div>
                 </div>
             </div>
             <div class="cont2">
                 <div class="food">
-                    <div class="foodImg"></div>
+                    <div class="foodImg">이미지영역</div>
                     <div class="foodInfo">
-                        <div class="foodTitle"></div>
-                        <div class="foodAddress"></div>
+                        <div class="board-foodTitle">맛집이름</div>
+                        <div class="foodAddress">주소</div>
                     </div>
                 </div>
             </div>
@@ -139,13 +126,12 @@
         <div id="reply-area">
             <div id="reply-title">여행톡<span> 1</span></div>
             <div>
-                <form action="insert.re" id="reply-form">
-                    <div id="reply-back">
-                        <input type="text" name="reply-content" placeholder="지금 보고계신 명소에 대해 댓글을 작성해주세요!">
-                        <button type="submit">작성</button>
-                    </div>
-                </form>
+                <div id="reply-back">
+                    <input type="text" id="reply-content" placeholder="지금 보고계신 명소에 대해 댓글을 작성해주세요!">
+                    <button onclick="insertReply();">작성</button>
+                </div>
             </div>
+            <div id="content-pack"></div>
         </div>
         <div class="btn-area">
             <button onclick="history.back();">목록</button>
@@ -170,27 +156,15 @@
                         <div class="info-area">
                             <div class="float">
                                 <h4 id="topTitle">장소이름</h4>
-                                <div class="icon-area">
+                                <div class="board-food-area">
                                     <span class="ico">
-                                        <c:choose>
-                                            <c:when test="${good.userNo eq loginUser.userNo }">
-                                                <img class="good" src="resources/images/Like-after.png">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <img class="good" src="resources/images/Like-before.png">
-                                            </c:otherwise>
-                                        </c:choose>
+                                        <img class="good" src="resources/images/Like-before.png">
                                     </span>
                                     <span class="ico">
-                                        <c:choose>
-                                            <c:when test="${choice.userNo eq loginUser.userNo }">
-                                                <img class="choice" src="resources/images/star-after.png">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <img class="choice" src="resources/images/star.png">
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </span> 
+                                        <c:if test="${choice.userNo eq loginUser.userNo }">
+                                            <img class="choice" src="resources/images/star-before.png">
+                                        </c:if>
+                                    </span>
                                 </div>
                             </div>
                             <div class="area_address" id="topAddr">
@@ -217,18 +191,28 @@
             </div>
         </div>
     </div>
-
+    
     <%@include file="../../common/footer.jsp" %>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3f6edea42e65caf1e4e0b7f49028f282&libraries=services"></script>
     <script type="text/javascript" src="resources/js/function.js"></script> 
     <script>
         $(function(){
-            // 페이지로드되면 먼저 숨기기
+            /* 페이지로드되면 바로 실행해야 할 부분 */ 
+            // 1. 숨길영역 숨기기
             $("#myModal").modal('hide'); 
             $(".text").hide(); 
-            // selectReplyList(); // 댓글 조회
-
-
+            // 2. 댓글 조회
+            selectReplyList(); 
+            // 3. 좋아요 신고 아이콘 변경
+            $(".ico").each(function(){
+                iconChange(this);
+            });
+            // 4. 로그인 확인 후 댓글 비활성화
+            if("${empty loginUser}"){
+                $("#reply-back").children().siblings().attr("disabled", "true"); // 비활성화 시키기
+            	$("#reply-back input").attr("placeholder", "로그인하셔야 댓글작성이 가능합니다.");
+            }
+            
             /* 상세정보 더보기 버튼 슬라이드 이벤트 */
             $("#btn_more").click(function(){
                 $(".text").slideToggle();
@@ -270,7 +254,7 @@
                             // 값이 같을때만 조건문에 들어오니까 매개변수로 받았던 list의 i번째의 데이터 뿌려주기
                             for(var j=0; j<2; j++){
                                 $($(".foodImg")[j]).append(makeTag("img",{"src":"/*여기에 사진파일 경로 넣어주기*/"}))
-                                $($(".foodTitle")[j]).text(list[i].infoName);
+                                $($(".board-foodTitle")[j]).text(list[i].infoName);
                                 $($(".foodAddress")[j]).text(list[i].infoAddress);
                                 $($(".food")[j]).append(makeTag("input",{"type":"hidden", "name":"infoNo","value":list[i].infoNo}));
                             }
@@ -284,12 +268,14 @@
         $(".food").on("click", function(){ 
             var obj = $(this).children().last().val(); // hidden으로 숨겨놓은 infoNo 추출
             $.ajax({
-                url : "foodrecommend.attr",
+                url : "foodRecommend.attr",
                 data : {
                     infoNo : obj,
                 },
                 success : function(result){
                     // info테이블에서 조회해서 뿌려주기만 하면 될 듯?
+                    // 받은거 뿌려줄때 좋아요 아이콘영역 상위의 마지막인덱스에 boardNo 넣기 
+                    // 좋아요 찜 조회하기
                 },
                 error : function(){
                     console.log("실패");
@@ -301,74 +287,72 @@
             $("#myModal").modal('show');
         });
 
-        /* 좋아요 찜 이벤트 */
-        $(".ico").click(function(){
-            var btnType = $(this).attr("class");
-            $.ajax({
-                url:"btnType",
-                data:{
-                    // boardNo : ${board.boardNo},
-                    // userNo : ${loginUser.userNo}
-                },
-                success : function(result){
-                    /* 돌려받는 result type 확인하고 수정 필요하면 수정하기 */
-                    /* 버튼타입 확인 후 result 값에 맞춰서 기존 이미지 변경해주기 */
-                    if(btnType=='good'){
-                        if(result==null){
-                            $(".good").css("content", "url(resources/images/Like-before.png)");
-                        } else {
-                            $(".good").css("content", "url(resources/images/Like-atfter.png)");
-                        }
-                    } else {
-                        if(result==null){
-                            $(".choice").css("content", "url(resources/images/star.png)");
-                        } else {
-                            $(".choice").css("content", "url(resources/images/star-after.png)");
-                        }
-                    }
-                },
-                error : function(){
-                    console.log("통신 실패");
-                },
-                complete : function(){
-                    console.log("통신 가능");
-                }
-            });
-        });
-
         /* 댓글 조회 */
         function selectReplyList(){
-            var replyDiv = $("#reply-area"); // 댓글 넣을 영역
+            var replyDiv = $("#content-pack"); // 댓글 넣을 영역
             $.ajax({
                 url : "replyList.attr",
                 data : { boardNo : "${board.boardNo}" },
                 success : function(result){
-                 /* <div id="content-pack">
-                        <div class="reply">
+                 /*     <div class="reply">
                             <div class="pro">프로필</div>
                             <div class="con">댓글내용</div>
                             <div class="date"><a id="nicknameHover" onclick="whoareyou();">닉네임</a>/작성일</div>
-                            대댓글작성버튼이랑 좋아요 신고하기
                             <div class="reply-btn">
+                                <span class="ico">
+                                    <img class="good" src="resources/images/Like-before.png">
+                                </span>
+                                <span class="ico">
+                                    <img class="choice" src="resources/images/bell-before.png">
+                                </span>
+                                <input type="text" id="reReply-content" placeholder="댓글을 작성해주세요!">
                                 <button onclick="reReplyinsert();"></button>
-                                <div class="ico">
-
-                                </div>
+                                <input type="hidden" id="replyNo" value="">
                             </div>
-                            <div>
-                                대댓글 영역 조건문 걸기 있을때만 생성
-                                <div class="reply">
-                                    <div class="pro">프로필</div>
-                                    <div class="con">댓글내용</div>
-                                    <div class="date"><a id="nicknameHover" onclick="whoareyou();">닉네임</a>/작성일</div>
-                                    종아요 신고하기
-                                </div>
+                            대댓글 영역 조건문 걸기 있을때만 생성
+                            <div class="reply re">
+                                <div class="pro">프로필</div>
+                                <div class="con">댓글내용</div>
+                                <div class="date"><a id="nicknameHover" onclick="whoareyou();">닉네임</a>/작성일</div>
+                                <span class="ico">
+                                    <img class="good" src="resources/images/Like-before.png">
+                                </span>
+                                <span class="ico">
+                                    <img class="choice" src="resources/images/bell-before.png">
+                                </span>
                             </div>
                         </div>
-                    </div>
-                    원래 넣으려고 했던 형태. 추후 코드작성 끝나면 지우기
-                */
-
+                    원래 넣으려고 했던 형태. 추후 코드작성 끝나면 지우기 
+                */ 
+                    for(var i in result){
+                        // 넣을 태그 생성해서 key:value 
+                        var r = {
+                            reply : makeTag("div",{"class":"reply"}),
+                            pro : makeTag("div",{"class":"pro"}).append(makeTag("img",{"src":"/*프로필사진경로*/"})),
+                            date : makeTag("div",{"class":"date"}).text("/*댓글 작성일 들어갈 부분*/").append(makeTag("a",{"id":"nicknameHover","onclick":"whoareyou();"}).text("/*닉네임들어갈부분*/")),
+                            good : makeTag("span",{"class":"ico"}).append(makeTag("img",{"class":"good","src":"resources/images/Like-before.png"})),
+                            choice : makeTag("span",{"class":"ico"}).append(makeTag("img",{"class":"choice","src":"resources/images/star-before.png"})),
+                            reReplyinput : makeTag("intup",{"type":"text","id":"reReply-content","placeholder":"댓글을 작성해주세요!"}),
+                            reReplyBtn : makeTag("button", {"onclick":"reReplyinsert();"}),
+                            replyNo : makeTag("input",{"type":"hidden","class":"replyNo","value":"/*댓글번호넣어주기*/"}),
+                            reReplyNo : makeTag("input",{"type":"hidden","class":"reReplyNo","value":"/*댓글번호넣어주기*/"})
+                        }
+                        var replyBtn = makeTag("div",{"class":"reply-btn"}).append(r.good, r.choice, r.reReplyinput, r.reReplyBtn, r.replyNo);
+                        var reply_re = makeTag("div",{"class":"reply re"}).append(r.pro, r.con, r.date, r.good, r.choice,r.reReplyNo);
+                        if(result[i].refRno==null){ // 대댓글이 아닌경우
+                            $("#content-pack").append(r.reply.append(r.pro, r.con, r.date, replyBtn));
+                        } else { // 대댓글인경우
+                            $(".replyNo").each(function(){
+                                if($(this).val()==result[i].refRno){
+                                    $(this).parent().after(reply_re);
+                                }
+                            });
+                        }
+                        // 태그 재성성 할 수 있도록 초기화시키기
+                        r = null;
+                        replyBtn = null;
+                        reply_re = null;
+                    }
                 },
                 error : function(){
                     console.log("실패");
@@ -378,6 +362,36 @@
                 }
             });
         }
+
+        /* 댓글 등록 */
+        function insertReply(){
+            $.ajax({
+                url : "insertReply.attr",
+                data : {
+                    content : $("#reply-content"),
+                    replyWriter : "${loginUser.nickName}",
+                    refQno : $("#boardNo")
+                },
+                success : function(result){
+                    if(result>0){
+                        alert("댓글 등록 성공");
+                        selectReplyList(); // 리스트 추가됐으니 다시 조회
+                        $("#reply-content").val() = ""; // 댓글 등록됐으니 비워주기 
+                    } else {
+                        alert("댓글 등록 실패")
+                    }
+                },
+                error : function(){
+                    console.log("등록 실패");
+                }
+            });
+        }
+
+         /* 좋아요 찜 버튼 클릭 이벤트 */
+         $(".ico").click(function(){
+            iconChange(this);
+        });
+        
         /* 페이지 이동 이벤트 */
         function pageLoad(num){
             
@@ -391,6 +405,50 @@
             }
             obj.append(form/*.append(boardNo)*/);
             form.submit();
+        }
+
+        /* 좋아요 신고 아이콘 변경 */
+        function iconChange(obj){ // 이벤트 대상 객체 매개변수로 받음
+            var btnType = $(obj).children().attr("class");
+            var realClass = $(obj).parent().attr("class"); // 아이콘이 들어있는 실제 태그 class명
+            var tableName = realClass.split("-")[0]; // 부모 클래스값에서 - 앞까지만 값 추출 
+            var no = $(obj).parent().last().val();
+            var imgsrc = ($(obj).children().attr("src"));
+            $.ajax({
+                url : "iconChange.attr",
+                data : {
+                    btnType : btnType,
+                    tableName : tableName,
+                    no : no,
+                    writer : "${loginUser.nickName}"
+                },
+                success : function(result){
+                    var changeSrc = ""; 
+                    if(result!=null){ // 좋아요 신고 찜을 눌렀다
+                        if(imgsrc.find("before")!=-1){
+                            changeSrc = imgsrc.replace("before","after");
+                        }
+                    } else {
+                        if(imgsrc.find("after")!=-1){
+                            changeSrc = imgsrc.replace("after","before");
+                        }
+                    }
+                    $(obj).children().attr("src", changeSrc);
+                }
+            });
+        }
+
+        /* kakao map api 내 주소 좌표로 바꾸는 부분 호출해 사용하기위해 함수처리 */
+        function coordCalculator(address){
+            var coord; // return용 변수 선언
+            var geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성
+            // 주소로 좌표 검색
+            geocoder.addressSearch(address, function(result, status) {
+                if (status === kakao.maps.services.Status.OK) { // 정상적으로 검색 완료
+                    coord = new kakao.maps.LatLng(result[0].y, result[0].x);
+                }
+            });
+            return coord;
         }
         
 	    /* 사진 슬라이더 */
@@ -474,19 +532,6 @@
                 map.setCenter(coords);// 지도의 중심 결과값으로 받은 위치로 이동
             } 
         });    
-        
-        // kakao map api 내 주소 좌표로 바꾸는 부분 호출해 사용하기위해 함수처리
-        function coordCalculator(address){
-            var coord; // return용 변수 선언
-            var geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성
-            // 주소로 좌표 검색
-            geocoder.addressSearch(address, function(result, status) {
-                if (status === kakao.maps.services.Status.OK) { // 정상적으로 검색 완료
-                    coord = new kakao.maps.LatLng(result[0].y, result[0].x);
-                }
-            });
-            return coord;
-        }
     </script>
 </body>
 </html>
