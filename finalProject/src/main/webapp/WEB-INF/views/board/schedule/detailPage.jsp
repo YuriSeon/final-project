@@ -180,8 +180,8 @@
     			$.ajax({
     				url:"btnType",
     				data:{
-    					boardNo : ${board.boardNo},
-    					userNo : ${loginUser.userNo}
+    					boardNo : "${board.boardNo}",
+    					userNo : "${loginUser.userNo}"
     				},
     				success : function(result){
     					/* 돌려받는 result type 확인하고 수정 필요하면 수정하기 */
@@ -223,7 +223,7 @@
     	$(function(){
     		$.ajax({
     			url : "replyList.sc",
-    			data : { boardNo : ${board.boardNo} },
+    			data : { boardNo : "${board.boardNo}" },
     			success : function(list, m){
     			/* <div id="content-pack">
                     <div class="reply">

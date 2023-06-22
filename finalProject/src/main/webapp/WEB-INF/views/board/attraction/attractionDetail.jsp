@@ -9,6 +9,7 @@
 <style type="text/css"></style>
 <body>
 <%@include file="../../common/menubar.jsp" %>
+    <!-- 좋아요 페이지 생성 후 함수로 prop 추가해서 생성되어 넣도록바꾸고 좋아요등등 이벤트 한번에 할 수 있도록 조건처리 넣기 -->
     <div class="attracDetail">
         <div id="contents">
             <!-- 상단 -->
@@ -23,11 +24,29 @@
                     </span>
                 </div>
                 <div class="post_area">
-                    <span class="ico"><img src="resources/images/Like-before.png"></span>
+                    <span class="ico">
+                        <c:choose>
+                            <c:when test="${good.userNo eq loginUser.userNo }">
+                                <img class="good" src="resources/images/Like-after.png">
+                            </c:when>
+                            <c:otherwise>
+                                <img class="good" src="resources/images/Like-before.png">
+                            </c:otherwise>
+                        </c:choose>
+                    </span>
                     <span class="num" id="conLike">좋아요 수</span>
-                    <span class="ico"><img src="resources/images/view.png">
-                    <span class="num" id="conRead">조회수 수</span></span>
-                    <span class="ico"><img src="resources/images/star.png"></span>
+                    <span class="ico"><img src="resources/images/view.png"></span>
+                    <span class="num" id="conRead">조회수</span>
+                    <span class="ico">
+                        <c:choose>
+		                	<c:when test="${choice.userNo eq loginUser.userNo }">
+		                		<img class="choice" src="resources/images/star-after.png">
+		                	</c:when>
+		                	<c:otherwise>
+		                		<img class="choice" src="resources/images/star.png">
+		                	</c:otherwise>
+		                </c:choose>
+                    </span>
                 </div>
             </div>
             <!-- //상단 -->
@@ -65,7 +84,7 @@
                         </div>
                         <hr>
                         <div class="inr_wrap">
-                            <div class="inr">
+                            <div class="inr text">
                                 강원도 평창 고랭지 청정지역에서 유기농 허브와 유기농 블루베리를 재배하고 있는 대한민국 스타팜 농장입니다. 2009년 8월에 국립농산물품질관리원에서 농장 전체를
                                 유기농인증을 받은 농장이다. 평창라벤다팜은 삼면이 산으로 둘러싸여 있어 더욱 청정지역을 유지할 수 있는 환경이며, 고랭지 해발 700m에 위치하여 큰 일교차, 비옥한
                                 토양, 일조량 등의 환경에서 자란 유기농허브와 유기농블루베리는 맛이 뛰어나다.2015년부터는 체험장을 오픈하여 더 많은 소비자들과 소통을
@@ -73,7 +92,7 @@
                                 오래간다. 다양한 허브와 블루베리를 이용한 체험프로그램을 진행하고 있고 중.고등학교 진로체험을 위한 프로그램도 진행하고 있다.<br>
                             </div>
                             <div class="cont_more">
-                                <button type="button" class="btn_more" title="내용더보기">더보기</button>
+                                <button type="button" id="btn_more" title="내용더보기">+ 더보기</button>
                             </div>
                         </div>
                     </div>
@@ -152,8 +171,26 @@
                             <div class="float">
                                 <h4 id="topTitle">장소이름</h4>
                                 <div class="icon-area">
-                                    <span class="ico"><img src="resources/images/Like-before.png"></span>
-                                    <span class="ico"><img src="resources/images/star.png"></span>
+                                    <span class="ico">
+                                        <c:choose>
+                                            <c:when test="${good.userNo eq loginUser.userNo }">
+                                                <img class="good" src="resources/images/Like-after.png">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img class="good" src="resources/images/Like-before.png">
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </span>
+                                    <span class="ico">
+                                        <c:choose>
+                                            <c:when test="${choice.userNo eq loginUser.userNo }">
+                                                <img class="choice" src="resources/images/star-after.png">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img class="choice" src="resources/images/star.png">
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </span> 
                                 </div>
                             </div>
                             <div class="area_address" id="topAddr">
@@ -180,33 +217,182 @@
             </div>
         </div>
     </div>
+
     <%@include file="../../common/footer.jsp" %>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3f6edea42e65caf1e4e0b7f49028f282&libraries=services"></script>
     <script type="text/javascript" src="resources/js/function.js"></script> 
     <script>
         $(function(){
-            $("#myModal").modal('hide'); // 페이지로드되면 먼저 모달 숨기기
-            
-            /* 맛집추천게시글 상세정보 모달 */
-            $(".food").on("click", function(){ 
-                $("#myModal").modal('show');
+            // 페이지로드되면 먼저 숨기기
+            $("#myModal").modal('hide'); 
+            $(".text").hide(); 
+            // selectReplyList(); // 댓글 조회
+
+
+            /* 상세정보 더보기 버튼 슬라이드 이벤트 */
+            $("#btn_more").click(function(){
+                $(".text").slideToggle();
             });
-            
-            /* 페이지 이동 이벤트 */
-            function pageLoad(num){
-                var obj = $(".attracDetail"); 
-                var form = makeTag("form", {"method":"get"});
-                // var boardNo = makeTag("input", {"type":"hidden", "name":"boardNo", "value":"${b.boardNo}"}); // 게시물번호 변수처리
-                switch(num){
-                    case "1" : form.attr("action", "modify.attr"); break; // 관리자에게 정보수정요청
-                    case "2" : form.attr("action", "update.attr"); break; // 게시물 수정
-                    case "3" : form.attr("action", "delete.attr"); break; // 게시물 삭제
+
+            /* 맛집추천 게시글 조회해오기 */
+            $.ajax({
+                url : "foodSearch.attr",
+                data : {
+                    // 해당지역 데이터 넘겨서 조회
+                    zoneName : $("#topAddr").children().text()
+                },
+                success : function(list){
+                    var boardAddr = $("#detailinfoview span[name=infoAddress]").text(); // 게시물의 주소
+                    var boardCoord = coordCalculator(boardAddr);
+                    var listCoords = {} // 좌표계산한것 담을 변수
+                   
+                    for(var i in list){
+                        listCoords += coordCalculator(list[i].infoAddress); // 좌표 계산한것 담음
+                    }
+                    // 주어진 좌표와의 거리를 계산하여 객체에 추가(카카오맵 내부적으로 계산하는 메소드 사용)
+                    var distances = listCoords.map(function(coord) {
+                        var distance = kakao.maps.geometry.distance(boardCoord, coord);
+                        return {
+                            coord: coord,
+                            distance: distance
+                        };
+                    });
+
+                    // 거리를 기준으로 정렬
+                    distances.sort(function(a, b) {
+                    return a.distance - b.distance;
+                    });
+
+                    // 정렬완료 후 가까운 1,2순위 기존에 받았던 list에서 값 추출
+                    // listCoords의 좌표랑 distances [0],[1]의 좌표값이 같은지 확인 후 같은걸 보여주면 됨
+                    for(var i=0; i<listCoords.length; i++){
+                        if(listCoords[i]==distances[0].coord || listCoords[i]==distances[1].coord){ 
+                            // 값이 같을때만 조건문에 들어오니까 매개변수로 받았던 list의 i번째의 데이터 뿌려주기
+                            for(var j=0; j<2; j++){
+                                $($(".foodImg")[j]).append(makeTag("img",{"src":"/*여기에 사진파일 경로 넣어주기*/"}))
+                                $($(".foodTitle")[j]).text(list[i].infoName);
+                                $($(".foodAddress")[j]).text(list[i].infoAddress);
+                                $($(".food")[j]).append(makeTag("input",{"type":"hidden", "name":"infoNo","value":list[i].infoNo}));
+                            }
+                        }
+                    }
                 }
-                (obj.append(form)).append(boardNo);
-                form.submit();
-            }
-            
+            });
         });
+            
+        /* 맛집추천게시글 상세정보 모달 */
+        $(".food").on("click", function(){ 
+            var obj = $(this).children().last().val(); // hidden으로 숨겨놓은 infoNo 추출
+            $.ajax({
+                url : "foodrecommend.attr",
+                data : {
+                    infoNo : obj,
+                },
+                success : function(result){
+                    // info테이블에서 조회해서 뿌려주기만 하면 될 듯?
+                },
+                error : function(){
+                    console.log("실패");
+                },
+                complete : function(){
+                    console.log("실행만 됨")
+                }
+            });
+            $("#myModal").modal('show');
+        });
+
+        /* 좋아요 찜 이벤트 */
+        $(".ico").click(function(){
+            var btnType = $(this).attr("class");
+            $.ajax({
+                url:"btnType",
+                data:{
+                    // boardNo : ${board.boardNo},
+                    // userNo : ${loginUser.userNo}
+                },
+                success : function(result){
+                    /* 돌려받는 result type 확인하고 수정 필요하면 수정하기 */
+                    /* 버튼타입 확인 후 result 값에 맞춰서 기존 이미지 변경해주기 */
+                    if(btnType=='good'){
+                        if(result==null){
+                            $(".good").css("content", "url(resources/images/Like-before.png)");
+                        } else {
+                            $(".good").css("content", "url(resources/images/Like-atfter.png)");
+                        }
+                    } else {
+                        if(result==null){
+                            $(".choice").css("content", "url(resources/images/star.png)");
+                        } else {
+                            $(".choice").css("content", "url(resources/images/star-after.png)");
+                        }
+                    }
+                },
+                error : function(){
+                    console.log("통신 실패");
+                },
+                complete : function(){
+                    console.log("통신 가능");
+                }
+            });
+        });
+
+        /* 댓글 조회 */
+        function selectReplyList(){
+            var replyDiv = $("#reply-area"); // 댓글 넣을 영역
+            $.ajax({
+                url : "replyList.attr",
+                data : { boardNo : "${board.boardNo}" },
+                success : function(result){
+                 /* <div id="content-pack">
+                        <div class="reply">
+                            <div class="pro">프로필</div>
+                            <div class="con">댓글내용</div>
+                            <div class="date"><a id="nicknameHover" onclick="whoareyou();">닉네임</a>/작성일</div>
+                            대댓글작성버튼이랑 좋아요 신고하기
+                            <div class="reply-btn">
+                                <button onclick="reReplyinsert();"></button>
+                                <div class="ico">
+
+                                </div>
+                            </div>
+                            <div>
+                                대댓글 영역 조건문 걸기 있을때만 생성
+                                <div class="reply">
+                                    <div class="pro">프로필</div>
+                                    <div class="con">댓글내용</div>
+                                    <div class="date"><a id="nicknameHover" onclick="whoareyou();">닉네임</a>/작성일</div>
+                                    종아요 신고하기
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    원래 넣으려고 했던 형태. 추후 코드작성 끝나면 지우기
+                */
+
+                },
+                error : function(){
+                    console.log("실패");
+                },
+                complete : function(){
+                    console.log("되기는 함");
+                }
+            });
+        }
+        /* 페이지 이동 이벤트 */
+        function pageLoad(num){
+            
+            var obj = $(".attracDetail"); 
+            var form = makeTag("form", {"method":"get"});
+            // var boardNo = makeTag("input", {"type":"hidden", "name":"boardNo", "value":"${b.boardNo}"}); // 게시물번호 변수처리
+            switch(num){
+                case 1 : form.attr("action", "modify.attr"); break; // 관리자에게 정보수정요청
+                case 2 : form.attr("action", "update.attr"); break; // 게시물 수정
+                case 3 : form.attr("action", "delete.attr"); break; // 게시물 삭제
+            }
+            obj.append(form/*.append(boardNo)*/);
+            form.submit();
+        }
+        
 	    /* 사진 슬라이더 */
 		const slideIndex = ['ticket.png', '하트.png', 'star.png'];
 	    let currentIndex = slideIndex[0];
@@ -273,7 +459,7 @@
         var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
         var geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성
         // 주소로 좌표를 검색합니다
-        geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function(result, status) {
+        geocoder.addressSearch('제주특별자치도 제주시 첨단로 242'/* 여기에 검색할 주소 넣기 */, function(result, status) {
             if (status === kakao.maps.services.Status.OK) { // 정상적으로 검색 완료
 
                 var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
@@ -288,6 +474,19 @@
                 map.setCenter(coords);// 지도의 중심 결과값으로 받은 위치로 이동
             } 
         });    
+        
+        // kakao map api 내 주소 좌표로 바꾸는 부분 호출해 사용하기위해 함수처리
+        function coordCalculator(address){
+            var coord; // return용 변수 선언
+            var geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성
+            // 주소로 좌표 검색
+            geocoder.addressSearch(address, function(result, status) {
+                if (status === kakao.maps.services.Status.OK) { // 정상적으로 검색 완료
+                    coord = new kakao.maps.LatLng(result[0].y, result[0].x);
+                }
+            });
+            return coord;
+        }
     </script>
 </body>
 </html>
