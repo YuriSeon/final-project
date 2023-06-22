@@ -28,11 +28,11 @@ import com.kh.finalProject.board.model.service.FeedService;
 
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
-
+import com.kh.finalProject.board.model.vo.Good;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.board.model.vo.Rereply;
-
-
+import com.kh.finalProject.common.model.vo.PageInfo;
+import com.kh.finalProject.common.template.Pagination;
 import com.kh.finalProject.member.model.vo.Member;
 
 import lombok.extern.slf4j.Slf4j;
@@ -264,27 +264,101 @@ public class FeedController {
 			 model.addAttribute("b", b);
 			 model.addAttribute("alist", new Gson().toJson(alist));
 			 model.addAttribute("size", alist.size());
+			 model.addAttribute("list", alist);
 			return "board/feedUpdateForm";
 		}
 		
+		//게시물 수정
 		@RequestMapping(value="updatefeed.fo",method=RequestMethod.POST)
-		public ModelAndView updatefeed(Board b,ArrayList<MultipartFile> upfile,ModelAndView mv,HttpSession session) {
+		public ModelAndView updatefeed(Board b,ArrayList<MultipartFile> upfile,String[] filePath,ModelAndView mv,HttpSession session) {
 			ArrayList<Attachment> list = new ArrayList<>();
 			
 			for(MultipartFile file : upfile) {
 				if(!file.getOriginalFilename().equals("")) {
-					Attachment at = new Attachment();
-					if(at.getOriginName() != null) {
-						new File(session.getServletContext().getRealPath(at.getChangeName())).delete();
+					
+					if(filePath != null) {
+						//기존 첨부파일 찾아서 지우기
+						for(String origin : filePath) {							
+							new File(session.getServletContext().getRealPath(origin)).delete();
+						}
 					}
 					
+					String originName = file.getOriginalFilename(); 
+					
+					//2.시간형식 문자열로 뽑아내기
+					//202305163033
+					String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+					
+					//3.뒤에 붙을 5자리 랜덤값 뽑아주기
+					int ranNum = (int)(Math.random()*90000+10000); //5자리 랜덤값
+					
+					//4.확장자명 추출하기
+					String ext = originName.substring(originName.lastIndexOf("."));
+					
+					//5.추출한 문자열들 다 합쳐서 changeName 만들기
+					String changeName = currentTime+ranNum+ext;
+					String savePath = session.getServletContext().getRealPath("/resources/feed/");
+					
+					try {
+						file.transferTo(new File(savePath+changeName));
+					} catch (IllegalStateException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					Attachment at = new Attachment();
+					at.setOriginName(originName);
+					at.setChangeName(changeName);
+					at.setFileLevel(2);
+					at.setFilePath("resources/feed/"+changeName);
+					at.setBoardNo(b.getBoardNo());
+					list.add(at);
 				}
 			}
+			int result = feedService.deleteAttachment(b.getBoardNo());
+			int result2 = feedService.updateFeed(b,list);
 			
+			if(result *result2>0) {
+				mv.addObject("alertMsg","피드게시물 수정완료").setViewName("redirect:feed.bo");
+			}else {
+				mv.addObject("errorMsg", "게시글 작성 실패").setViewName("common/errorPage");
+			}
 			
 			return mv;
 		}
-		
+
+		//도시선택
+		@RequestMapping("city.bo")
+		public String goFeed(@RequestParam(value="currentPage", defaultValue="1") int currentPage
+							,@RequestParam(value="city",defaultValue = "1") int city
+							,Model model,HttpServletRequest request) {
+
+			ArrayList<Member> mlist = feedService.selectMember();
+			ArrayList<Good> glist = feedService.selectGood();
+			ArrayList<Attachment> alist = feedService.selectAttachmentList();
+			int listCount = feedService.selectListCount();
+			int pageLimit = 5;
+			int boardLimit = 5;
+			
+			PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+					
+			ArrayList<Board> list = feedService.selectCityList(pi,city);			
+
+							
+			model.addAttribute("list", list);
+			model.addAttribute("blist", new Gson().toJson(list));
+			model.addAttribute("bsize",list.size());
+			model.addAttribute("pi", pi);
+			model.addAttribute("alist", new Gson().toJson(alist));
+			model.addAttribute("size", alist.size());
+			model.addAttribute("glist",new Gson().toJson(glist));
+			model.addAttribute("mlist",new Gson().toJson(mlist));
+
+			return "board/feed";
+		}
 		
 		
 		
