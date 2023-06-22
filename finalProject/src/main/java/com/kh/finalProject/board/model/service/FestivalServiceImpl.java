@@ -1,6 +1,7 @@
 package com.kh.finalProject.board.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Festival;
 import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Service
 public class FestivalServiceImpl implements FestivalService{
@@ -21,6 +23,18 @@ public class FestivalServiceImpl implements FestivalService{
 	
 	@Autowired
 	private FestivalDao festivalDao;
+	
+	//축제 총 게시글
+	@Override
+	public int fesCount() {
+		return festivalDao.fesCount(sqlSession);
+	}
+	
+	//축제 리스트
+	@Override
+	public ArrayList<Board> fesList(PageInfo pi) {
+		return festivalDao.fesList(sqlSession, pi);
+	}
 	
 	//트랜잭션 처리로 일괄처리
 	@Override
@@ -41,5 +55,42 @@ public class FestivalServiceImpl implements FestivalService{
 		
 		return result*result2*result3*result4;
 	}
+
+	//축제 조회
+	@Override
+	public Board detailFes(int boardNo) {
+		return festivalDao.selectFes(sqlSession, boardNo);
+	}
+	//사진파일 조회
+	@Override
+	public ArrayList<Attachment> atList(int boardNo) {
+		return festivalDao.atList(sqlSession,boardNo);
+	}
+
+	//조회수 올려주기
+	@Override
+	public int countUp(int boardNo) {
+		return festivalDao.countUp(sqlSession, boardNo);
+	}
+
+	//찜하기 내역 조회
+	@Override
+	public int choiceCount(HashMap<String, String> info) {
+		return festivalDao.choiceCount(sqlSession, info);
+	}
+	//찜하기
+	@Override
+	public int choiceCk(HashMap<String, String> info) {
+		return festivalDao.choiceCk(sqlSession, info);
+	}
+	//찜하기 삭제
+	@Override
+	public int choiceDel(HashMap<String, String> info) {
+		return festivalDao.choiceDel(sqlSession, info);
+	}
+
+
+
+
 
 }

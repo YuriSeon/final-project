@@ -43,4 +43,9 @@ public class Board {
 	private String filePath;//
 	private String profileImg; // 프로필이미지 경로+바뀐이름
 	
+	private Info info; //join시 사용할 객체 참조변수
+	private Festival festival;
+	private Attachment attachment;
+	private Zone zone;
+	
 }	
