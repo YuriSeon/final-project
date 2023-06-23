@@ -13,6 +13,7 @@
 <body>
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 <!-- 동행구하는거 작성하는거 체크시 해당 게시물 작성완료시 모달창으로 바로 연결할까요 물어보기 , 모달 배경색 수정 -->
+<%@include file="../../common/menubar.jsp" %>
 	<div class="enroll-sc" >
 		<form action="insert.sc" method="post" id="insertForm">
 	        <div>

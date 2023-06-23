@@ -163,4 +163,9 @@ public class BoardController {
 		return "member/myPage/survey";
 	}
 	
+	// 이거 나중에 지울게요 신경쓰지마세여
+	@GetMapping("menu.me")
+	public String menu() {
+		return "common/menubar";
+	}
 }
