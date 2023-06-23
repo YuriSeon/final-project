@@ -11,11 +11,14 @@ import com.kh.finalProject.common.model.vo.PageInfo;
 
 public interface FestivalService {
 
-	//축제 총 게시글
+	//축제 총 게시글 수
 	int fesCount();
 
 	//축제 리스트
 	ArrayList<Board> fesList(PageInfo pi);
+
+	//게시글 검색 시 게시글 수
+	int selectSearchCount(HashMap<String, String> keyword);
 
 	/* 축제 등록 */
 	int insertFes(Board b, Info in, ArrayList<Attachment> list, Festival f);
@@ -36,5 +39,6 @@ public interface FestivalService {
 	int choiceDel(HashMap<String, String> info);
 	//게시글의 총 찜 수 조회
 	int choiAllCount(HashMap<String, String> info);
+
 
 }

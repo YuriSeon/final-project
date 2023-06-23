@@ -121,6 +121,32 @@ public class FestivalController {
 		return mv;
 	}
 	
+	//축제 검색
+	@RequestMapping("search.fe")
+	public String search(@RequestParam("searchDate")String date, @RequestParam("searchArea")String area, @RequestParam("searchCate")String cate,
+							@RequestParam(value="currentPage",defaultValue="1")int currentPage) {
+		System.out.println(date);
+		System.out.println(area);
+		System.out.println(cate);
+		
+		HashMap<String, String> keyword = new HashMap<>();
+		keyword.put("date", date);
+		keyword.put("area", area);
+		keyword.put("cate", cate);
+		
+		int searchCount = festivalService.selectSearchCount(keyword);
+		int pageLimit = 10;
+		int boardLimit = 6;
+		
+		PageInfo pi = Pagination.getPageInfo(searchCount, currentPage, pageLimit, boardLimit);
+		
+		ArrayList<Festival> list = festivalService.selectSearchList(keyword, pi);
+		
+		
+		
+		return "";
+	}
+	
 	//축제 디테일 페이지 이동
 	@RequestMapping("fesDetail.fe")
 	public ModelAndView fesDetail(@RequestParam("boardNo")int boardNo, ModelAndView mv) {

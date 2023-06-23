@@ -91,7 +91,7 @@
                         <option value="1">공연</option>
                         <option value="2">문화관광</option>
                         <option value="3">자연</option>
-                        <option value="4">환경</option>
+                        <option value="4">먹거리</option>
                         <option value="5">꽃</option>
                         <option value="6">가족과함께</option>
                     </select>

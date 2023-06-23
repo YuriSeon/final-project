@@ -59,13 +59,18 @@
 		AND FILE_LEVEL = 1
 		ORDER BY CREATE_DATE DESC
 	</select>
+	
+	<!-- 축제 검색시 검색 게시글 수 -->
+	<select id="searchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM FESTIVAL
+	</select>
 
 	<!-- 보드(게시글) 등록 -->
 	<insert id="insertBoard" parameterType="board" >
 		INSERT INTO BOARD (BOARD_NO, ZONE_NO, INFO_NO, CATEGORY, BOARD_TITLE, BOARD_CONTENT, BOARD_WRITER)
             		VALUES (SEQ_BNO.NEXTVAL,#{zoneNo},SEQ_INO.NEXTVAL,6,#{boardTitle},#{boardContent},#{boardWriter})
 	</insert>
-	
 	<!-- 장소 정보 등록 -->
 	<insert id="insertInfo" parameterType="info">
 		INSERT INTO INFO (INFO_NO, BOARD_NO, ZONE_NO, INFO_ADDRESS, INFO_TIME,
@@ -73,13 +78,11 @@
             		VALUES(SEQ_INO.CURRVAL, SEQ_BNO.CURRVAL, #{zoneNo}, #{infoAddress}, #{infoTime},
                     		#{infoHomepage}, #{infoCall}, 3)
 	</insert>
-	
 	<!-- 어태치먼트 등록 -->
 	<insert id="insertAt" parameterType="attachment">
 		INSERT INTO ATTACHMENT(FILE_NO, BOARD_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, FILE_LEVEL)
                 		VALUES(SEQ_FNO.NEXTVAL, SEQ_BNO.CURRVAL,#{originName},#{changeName},#{filePath},#{fileLevel})
 	</insert>
-	
 	<!-- 페스티벌 등록 -->
 	<insert id="insertFe" parameterType="festival">
 		INSERT INTO FESTIVAL(BOARD_NO, ZONE_NO, INFO_NO, START_DATE, END_DATE, FES_CATEGORY, FES_MONEY)

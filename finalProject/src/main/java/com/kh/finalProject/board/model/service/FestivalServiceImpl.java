@@ -36,6 +36,12 @@ public class FestivalServiceImpl implements FestivalService{
 		return festivalDao.fesList(sqlSession, pi);
 	}
 	
+	//게시글 검색시 게시글 수
+	@Override
+	public int selectSearchCount(HashMap<String, String> keyword) {
+		return festivalDao.searchCount(sqlSession, keyword);
+	}
+	
 	//축제 등록
 	//트랜잭션 처리로 일괄처리
 	@Override
@@ -105,5 +111,5 @@ public class FestivalServiceImpl implements FestivalService{
 	public int choiAllCount(HashMap<String, String> info) {
 		return festivalDao.choiAllCount(sqlSession, info);
 	}
-
+	
 }

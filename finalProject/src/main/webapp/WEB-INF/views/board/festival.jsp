@@ -190,6 +190,14 @@
 		left: 310px;
 		top: 25px;
 	}
+	.col-lg-4:hover{
+		background-color: rgb(154, 154, 154, 0.3);
+		border-radius: 10px;
+		cursor: pointer;
+	}
+	.ticket-item{
+		margin-top: 14px;
+	}
 	
 	/* 페이지네이션 */
 	.page_list{
@@ -221,8 +229,6 @@
 	    </div>
 	  </div>
 	</div>
-	<!-- ***** Preloader End ***** -->
-	<!-- ***** Header Area End ***** -->
 	<script>
 	$(function(){
 		$(".nav>li>a").each(function(){
@@ -245,8 +251,6 @@
 						<!-- ***** 달력 ***** -->
 						<br>
 						<div class="fes_container calendar" id="fes_con">
-					        <!-- <button onclick="prevMonth();">이전 달</button>
-					        <button onclick="nextMonth();">다음 달</button> -->
 					        <header>
 					        
 					    		<h6 style="position: relative; left: -60px; top: 10px;">2023년</h6>
@@ -270,7 +274,7 @@
         <!-- 검색 -->
         <div class="search_slide_wrap">
             <div class="inner">
-                <form name="festivalSearch" id="festivalSearch" class="festival_search" onsubmit="return false;">
+                <form action="search.fe" name="festivalSearch" id="festivalSearch" class="festival_search">
                     <fieldset>
                         <div class="search_box_wrap">
                             <div class="select_box select_date">
@@ -292,20 +296,20 @@
                             </div>
                             <div class="select_box select_area">
                                 <select name="searchArea" id="searchArea" title="지역 선택">
-                                    <option value="location">지역</option>
-										<option name="1" id="Brazil">서울특별시</option>
-										<option name="2" id="Europe">경기도</option>
-										<option name="3" id="US">충청도</option>
-										<option name="4" id="Asia">전라도</option>
-										<option name="5" id="Asia">경상도</option>
-										<option name="Asia" id="Asia">강원도</option>
-										<option name="Asia" id="Asia">제주도</option>
-										<option name="Brazil" id="Brazil">부산광역시</option>
-										<option name="Brazil" id="Brazil">대구광역시</option>
-										<option name="Brazil" id="Brazil">인천광역시</option>
-										<option name="Brazil" id="Brazil">광주광역시</option>
-										<option name="Brazil" id="Brazil">대전광역시</option>
-										<option name="Brazil" id="Brazil">울산광역시</option>
+                                    <option value="">지역</option>
+										<option name="서울" id="Brazil">서울특별시</option>
+										<option name="경기" id="Europe">경기도</option>
+										<option name="충청" id="US">충청도</option>
+										<option name="전라" id="Asia">전라도</option>
+										<option name="경상" id="Asia">경상도</option>
+										<option name="강원" id="Asia">강원도</option>
+										<option name="제주" id="Asia">제주도</option>
+										<option name="부산">부산광역시</option>
+										<option name="대구" id="Brazil">대구광역시</option>
+										<option name="인천" id="Brazil">인천광역시</option>
+										<option name="광주" id="Brazil">광주광역시</option>
+										<option name="대전" id="Brazil">대전광역시</option>
+										<option name="울산" id="Brazil">울산광역시</option>
                                 </select>
                             </div>
                             <div class="select_box select_cate">
@@ -314,14 +318,14 @@
                                     <option value="공연">공연</option>
                                     <option value="문화관광">문화관광</option>
                                     <option value="자연">자연</option>
-                                    <option value="환경">환경</option>
+                                    <option value="먹거리">먹거리</option>
                                     <option value="꽃">꽃</option>
                                     <option value="가족과함께">가족과함께</option>
                                 </select>
                             </div>
                             <div class="btn_box">
-                              <button class="btn_search" id="btnSearch" onclick="" style="background-color: #c4edcd; border: 1px solid #2cab49;"><img src="/finalProject/resources/images/fes_search.png" style="width: 30px; height: 25px;"></button>
-                              <button class="btn_reset" onclick="" ><img src="/finalProject/resources/images/circular.png" style="width: 30px; height: 25px;"></button>
+                              <button type="submit" class="btn_search" id="btnSearch" style="background-color: #c4edcd; border: 1px solid #2cab49;"><img src="/finalProject/resources/images/fes_search.png" style="width: 30px; height: 25px;"></button>
+                              <button type="reset" class="btn_reset" onclick="" ><img src="/finalProject/resources/images/circular.png" style="width: 30px; height: 25px;"></button>
                             </div>
                         </div>
                     </fieldset>
@@ -336,18 +340,24 @@
 	    <div class="container">
 	        <div class="row">
 	        	<c:forEach var="b" items="${list }">
-		            <div class="col-lg-4" id="fes_div" onclick="location.href='fesDetail.fe?boardNo=${b.boardNo}'">
+		            <div class="col-lg-4" id="fes_div" onclick="location.href='fesDetail.fe?boardNo=${b.boardNo}'" style="height: 508px;">
 		                <div class="ticket-item">
-		                	<%-- <input type="hidden" class="boardNoList" id="boardNo" value="${b.boardNo }"> --%>
 		                    <div class="thumb">
 		                        <img src="${b.attachment.filePath }" alt="" style="height: 300px;">
 		                        <div class="price" id="fes_go">
 		                            <span>개최중</span>
 		                        </div>
 		                    </div>
-		                    <div id="good_div"><img<%--  name="${b.boardNo }" --%> src="/finalProject/resources/images/Like-before.png" id="good_img" onclick="goodCk(event, '${b.boardNo}', this)"></div>
+		                    <div id="good_div"><img src="/finalProject/resources/images/Like-before.png" id="good_img" onclick="goodCk(event, '${b.boardNo}', this)"></div>
 		                    <div class="down-content">
-		                        <h4>${b.boardTitle }</h4>
+								<c:choose>
+									<c:when test="${fn:length(b.boardTitle) < 12 }">
+										<h4>${b.boardTitle }</h4>									
+									</c:when>
+									<c:otherwise>
+										<h4>${fn:substring (b.boardTitle, 0,11) }...</h4>
+									</c:otherwise>
+								</c:choose>
 		                        <ul>
 		                            <li><i class="fa fa-clock-o"></i> ${b.festival.startDate } - ${b.festival.endDate }</li>
 		                            <li><i class="fa fa-map-marker"></i>${b.info.infoAddress }</li>
@@ -600,7 +610,7 @@
 	<script src="/finalProject/resources/js/imgfix.min.js"></script>
 	<script src="/finalProject/resources/js/mixitup.js"></script>
 	<script src="/finalProject/resources/js/accordions.js"></script>
-	<!-- <script src="/finalProject/resources/js/owl-carousel.js"></script> -->
+	<script src="/finalProject/resources/js/owl-carousel.js"></script>
 	
 	<!-- Global Init -->
 	<script src="/finalProject/resources/js/custom.js"></script>
