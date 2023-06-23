@@ -3,21 +3,26 @@ package com.kh.finalProject.board.controller;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.kh.finalProject.board.model.service.TogetherService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
-import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Plan;
+import com.kh.finalProject.board.model.vo.TogetherVO;
 
 @Controller
 public class TogetherController {
@@ -79,4 +84,35 @@ public String saveFile(MultipartFile upfile, HttpSession session) {
 
 		return changeName;
 	}
+
+@ResponseBody
+@GetMapping(value="optionSearch.bo",produces="application/json; charset=utf-8")
+public String optionSearch(String startDate, String endDate, String location, int pay) {
+	
+	//지정 안함 지정 안함 대구 400000
+	//2023-06-13 2023-06-16 대구 400000
+	
+	if(startDate.equals("")) {
+		startDate = null;
+	}
+	if(endDate.equals("")) {
+		endDate = null;
+	}
+	
+	TogetherVO t = TogetherVO.builder().startDate(startDate).endDate(endDate).totalPay(pay).zoneName(location).build();
+	
+	ArrayList<TogetherVO> list = togetherService.optionSearch(t);
+
+	return new Gson().toJson(list);
+}
+
+@PostMapping("togetherApply.bo")
+public ModelAndView togetherApply(int boardNo, String writer, String applyMessage, ModelAndView mv) {
+	
+//	int result = togetherService.togetherApply(boardNo);
+	System.out.println(boardNo+" "+writer+" "+applyMessage);
+	
+	
+	return mv;
+}
 }

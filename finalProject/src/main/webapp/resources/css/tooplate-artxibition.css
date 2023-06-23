@@ -1564,7 +1564,7 @@ Shows Events Page
 */
 
 .page-heading-shows-events {
-  background-image: url('../images/해바라기2.jpg');
+  background-image: url('/Users/syr065/Downloads/1.jpg');
   background-size: 2000px 330px;
   background-repeat: no-repeat;
   padding: 110px 0px;
@@ -1715,52 +1715,6 @@ Shows Events Page
 .shows-events-tabs .tabs-content .sidebar ul li a:hover {
   color: #343a3e!important;
 }
-/* 스케쥴페이지 */
-.schedule .sidebar {
-  background-color: #fff;
-  padding: 30px;
-}
-
-.schedule .sidebar .heading-sidebar h4 {
-  font-weight: 700;
-  color: #2a2a2a;
-  font-size: 15px;
-  line-height: 24px;
-}
-
-.schedule .sidebar .heading-sidebar {
-  border-bottom: 1px dotted #d7dadc;
-}
-
-.schedule .sidebar .month h6,
-.schedule .sidebar .category h6,
-.schedule .sidebar .venues h6 {
-  font-weight: 700;
-  color: #2a2a2a;
-  font-size: 15px;
-  margin-top: 30px;
-}
-
-.schedule .sidebar ul li {
-  display: block!important;
-}
-
-.schedule .sidebar .month,
-.schedule .sidebar .category {
-  border-bottom: 1px dotted #d7dadc;
-  padding-bottom: 30px;
-}
-
-.schedule .sidebar ul li a {
-  font-size: 14px;
-  color: #7c838b!important;
-  font-weight: 400!important;
-}
-
-.schedule .sidebar ul li a:hover {
-  color: #343a3e!important;
-}
-/*  */
 
 .shows-events-tabs .tabs-content .event-item {
   border: 1px dotted #d7dadc;
