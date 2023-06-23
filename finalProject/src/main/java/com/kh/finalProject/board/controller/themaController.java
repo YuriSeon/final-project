@@ -42,12 +42,24 @@ public class themaController {
 		
 		int listCount = themaService.selectListCount();
 		int pageLimit = 5;
-		int boardLimit = 5;
+		int boardLimit = 10;
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		
 		ArrayList<Board> list = new ArrayList<>();
 		
+		
+		if(sort ==1) {
+			//최신순 테마
+			list = themaService.selectThemaList(pi);
+		}else if(sort ==2) {
+			//인기순 테마
+			list = themaService.selectRankingThemaList(pi);
+		}
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("count", listCount);
 		return "thema/themaList";
 	}
 	
@@ -57,7 +69,7 @@ public class themaController {
 		return "thema/EnrollForm";
 	}
 	
-	//테마 인서트
+	//테마 등록
 	@RequestMapping("insertThema.bo")
 	public ModelAndView insertThema(Board b
 								   ,ModelAndView mv
@@ -106,9 +118,6 @@ public class themaController {
 			}
 		}
 		
-		
-		
-		
 		int result = themaService.insertThema(b,in,list,m);
 		
 		if(result>0) {
@@ -119,12 +128,32 @@ public class themaController {
 			for(int i=0; i<list.size(); i++) {
 				new File(session.getServletContext().getRealPath("/"+list.get(i).getFilePath())).delete();
 			}
-			mv.addObject("errorMsg", "축제 게시글 등록에 실패하였습니다.").setViewName("common/errorPage");
+			mv.addObject("errorMsg", "테마 게시글 등록에 실패하였습니다.").setViewName("common/errorPage");
 		}
 		
 		return mv;	
+
+	}
+	
+	@RequestMapping("detailTheme.bo")
+	public ModelAndView detailTheme(int boardNo,ModelAndView mv) {
 		
+		//조회수 올리기
+		int result = themaService.increaseCount(boardNo);
 		
+		if(result>0) {
+			//상세페이지
+			Board b = themaService.selectBoard(boardNo);
+			//상세페이지 at
+			ArrayList<Attachment> at = themaService.selectAttachment(boardNo);
+			
+			mv.addObject("b", b);
+			mv.addObject("at", at);
+			mv.setViewName("thema/themeDetailView");
+		}else {
+			mv.addObject("errorMsg", "테마 게시글 등록에 실패하였습니다.").setViewName("common/errorPage");
+		}
+		return mv;
 	}
 
 }
