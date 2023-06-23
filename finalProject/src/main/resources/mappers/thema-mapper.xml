@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="themaMapper">
+  	
+  	<!-- 보드등록 -->
+  	<insert id="insertBoard">
+  		INSERT INTO BOARD(BOARD_NO,ZONE_NO,INFO_NO,BOARD_WRITER,CATEGORY,BOARD_TITLE,BOARD_CONTENT)
+		VALUES(SEQ_BNO.NEXTVAL,#{zoneNo},SEQ_INO.NEXTVAL,#{boardWriter},1,#{boardTitle},#{boardContent})
+  	</insert>
+  	<!-- 장소등록 -->
+  	<insert id="insertInfo">
+  		INSERT INTO INFO(INFO_NO,BOARD_NO,ZONE_NO,INFO_ADDRESS,INFO_TIME,INFO_HOMEPAGE,INFO_CALL,INFO_TYPE,DAY_OFF)
+  		VALUES(SEQ_INO.CURRVAL,SEQ_BNO.CURRVAL,#{zoneNo},#{infoAddress},#{infoTime},#{infoHomepage},#{infoCall},1,#{dayOff})
+  	</insert>
+  
+    <!-- 첨부파일등록 -->
+    <insert id="insertAtt">
+    	INSERT INTO ATTACHMENT(FILE_NO,BOARD_NO,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,FILE_LEVEL)
+  		VALUES(SEQ_FNO.NEXTVAL,SEQ_BNO.CURRVAL,#{originName},#{changeName},#{filePath},#{fileLevel})  
+    </insert>
+    
+    <!-- 테마등록 -->
+    <insert id="insertThema">
+    	INSERT INTO THEME(BOARD_NO,THEME_NO,ZONE_NO)
+    	VALUES(SEQ_BNO.CURRVAL,#{themeNo},#{zoneNo})
+    </insert>
+    
+    <select id="selectListCount" resultType="_int">
+    	SELECT COUNT(*)
+  		FROM BOARD
+  		WHERE STATUS = 'Y'
+  		AND CATEGORY = 1
+    </select>
+  </mapper>

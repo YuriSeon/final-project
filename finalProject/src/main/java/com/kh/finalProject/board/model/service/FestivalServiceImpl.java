@@ -36,6 +36,7 @@ public class FestivalServiceImpl implements FestivalService{
 		return festivalDao.fesList(sqlSession, pi);
 	}
 	
+	//축제 등록
 	//트랜잭션 처리로 일괄처리
 	@Override
 	@Transactional
@@ -56,7 +57,7 @@ public class FestivalServiceImpl implements FestivalService{
 		return result*result2*result3*result4;
 	}
 
-	//축제 조회
+	//축제 디테일 조회
 	@Override
 	public Board detailFes(int boardNo) {
 		return festivalDao.selectFes(sqlSession, boardNo);
@@ -79,18 +80,30 @@ public class FestivalServiceImpl implements FestivalService{
 		return festivalDao.choiceCount(sqlSession, info);
 	}
 	//찜하기
+	@Transactional
 	@Override
 	public int choiceCk(HashMap<String, String> info) {
-		return festivalDao.choiceCk(sqlSession, info);
+		//찜하기
+		int result = festivalDao.choiceCk(sqlSession, info);
+		//찜 수 업데이트
+		int result2 = festivalDao.choiceUp(sqlSession, info);
+		return result*result2;
 	}
 	//찜하기 삭제
+	@Transactional
 	@Override
 	public int choiceDel(HashMap<String, String> info) {
-		return festivalDao.choiceDel(sqlSession, info);
+		//찜 삭제
+		int result = festivalDao.choiceDel(sqlSession, info);
+		//찜 수 업데이트
+		int result2 = festivalDao.choiceDown(sqlSession, info);
+		return result*result2;
+		
 	}
-
-
-
-
+	//게시글의 총 찜 수 조회
+	@Override
+	public int choiAllCount(HashMap<String, String> info) {
+		return festivalDao.choiAllCount(sqlSession, info);
+	}
 
 }
