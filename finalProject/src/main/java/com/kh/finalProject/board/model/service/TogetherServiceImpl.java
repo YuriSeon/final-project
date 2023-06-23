@@ -41,15 +41,11 @@ public class TogetherServiceImpl  implements TogetherService{
 	public ArrayList<TogetherVO> selectTogetherList(PageInfo pi) {
 		return togetherDao.selectTogetherList(sqlSession,pi);
 	}
-
+	
 	@Override
 	public ArrayList<TogetherVO> optionSearch(TogetherVO t) {
 		return togetherDao.optionSearch(sqlSession,t);
-	}
+	}	
 
-	@Override
-	public int togetherApply(int boardNo) {
-		return togetherDao.togetherApply(sqlSession,boardNo);
-	}
 	
 }

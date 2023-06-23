@@ -56,7 +56,7 @@
   				<result column="CREATE_DATE" property="createDate"/>
   		</resultMap>
   		
-  		<select id="optionSearch" resultMap="togetherResultSet">
+ 		<select id="optionSearch" resultMap="togetherResultSet">
   				SELECT B.BOARD_NO,ZONE_NAME,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,(FILE_PATH || CHANGE_NAME) FILE_PATH,TOGETHER,TOGETHER_COUNT,CONCEPT,TO_CHAR(START_DATE,'YY/MM/DD') START_DATE,TO_CHAR(END_DATE,'YY/MM/DD') END_DATE,TOTAL_DATE,TOTAL_PAY
 				                ,(SELECT (FILE_PATH || CHANGE_NAME)
 				                    FROM ATTACHMENT
@@ -80,9 +80,5 @@
 					AND ZONE_NAME LIKE '%'||#{zoneName}||'%'
 				</if>
 				ORDER BY B.CREATE_DATE DESC
-  		</select>
-  		
-  		<update id="togetherApply" parameterType="_int">
-  				UPDATE PLAN SET TOGETHER_COUNT = TOGETHER_COUNT+1 WHERE BOARD_NO=#{boardNo} 
-  		</update>
+  		</select> 		
   </mapper>

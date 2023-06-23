@@ -46,6 +46,9 @@ import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
 import com.kh.finalProject.member.model.service.MemberService;
 import com.kh.finalProject.member.model.vo.Member;
+
+import lombok.val;
+
 import com.kh.finalProject.admin.model.vo.Notice;
 
 @Controller
@@ -133,7 +136,6 @@ public class MemberController {
 							 ,Model model
 					   	     ,HttpSession session) {
 		
-//		System.out.println(n);
 		int result = memberService.myQnaInsert(n);
 		
 		if(result>0) {
@@ -155,9 +157,6 @@ public class MemberController {
 										           ,HttpSession session) {
 		
 		int result = 0;
-//		System.out.println(files[0].getOriginalFilename());
-//		System.out.println(files[1].getOriginalFilename());
-//		System.out.println(files[2].getOriginalFilename());
 		for (MultipartFile file : files) {
 			if (file != null) {
 				Attachment a = new Attachment();
@@ -224,7 +223,7 @@ public class MemberController {
 	}
 	
 	//프로필 사진 삭제
-	@PostMapping("/deleteImg.me")
+	@PostMapping("deleteImg.me")
 	@ResponseBody
 	public String deleteImg(String nickname
 						   ,ModelAndView mv
@@ -460,7 +459,7 @@ public class MemberController {
 				
 				String resultNaver = (String) jsonObj.get("result");
 				
-				mv.setViewName("redirect:/");
+				mv.setViewName("redirect:/index");
 			}
 		}else {
 			mv.addObject("errorMsg", "회원가입 실패").setViewName("common/errorPage");
@@ -701,11 +700,11 @@ public class MemberController {
 
 		//아이디 저장
 		Cookie cookie = null;
-			
+		
 		if(saveId != null && saveId.equals("on")) {//체크 박스 체크시
 			//쿠키 생성
 			cookie = new Cookie("userId",m.getUserId());
-			cookie.setMaxAge(60*60*24*14*1000);
+			cookie.setMaxAge(60*60*24*14);
 			response.addCookie(cookie);
 		}else {//체크 아닐시
 			cookie = new Cookie("userId",null);
@@ -759,7 +758,7 @@ public class MemberController {
 	public String loadProfile(String nickname) {
 		
 		Member m = memberService.loadProfile(nickname);
-		
+
 		if(m.getProfileImg() == null) {
 			m.setProfileImg("resources/images/기본프로필.png");
 		}

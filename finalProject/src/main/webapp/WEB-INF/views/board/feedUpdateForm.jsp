@@ -148,6 +148,7 @@
 	
 	<div class="suel" align="center">
 		<form action="updatefeed.fo" method="post" id="enroll-form" enctype="multipart/form-data" onsubmit="return imgcheck()">
+			<input type="hidden" name="boardNo" value="${b.boardNo }">
 			<table>
 				<thead>
 					<tr height="20"> </tr>
@@ -194,11 +195,13 @@
                                 <input type="radio" name="slide" id="slide3">
                                 <input type="radio" name="slide" id="slide4">
                                
-                                <ul id="imgholder" class="imgs">                              
-                                    <li><img id="contentImg1" width="500" height="350"></li>
-                                    <li><img id="contentImg2" width="500" height="350"></li>
-                                    <li><img id="contentImg3" width="500" height="350"></li>
-                                    <li><img id="contentImg4" width="500" height="350"></li>                                  
+                                <ul id="imgholder" class="imgs">    
+                                                       
+                                    <li><img id="contentImg1" width="500" height="350" ></li>
+                                    <li><img id="contentImg2" width="500" height="350" ></li>
+                                    <li><img id="contentImg3" width="500" height="350" ></li>
+                                    <li><img id="contentImg4" width="500" height="350" "></li>    
+                                                           
                                 </ul>
                                <div class="bullets">
                                     <label for="slide1">&nbsp;</label>
@@ -228,9 +231,13 @@
 				<input type="file" id="file1" name="upfile" onchange="loadImg(this,1);"> <!-- 대표이미지 -->
 				<input type="file" id="file2" name="upfile" onchange="loadImg(this,2);"> <br>
 				<input type="file" id="file3" name="upfile" onchange="loadImg(this,3);"><br>
-				<input type="file" id="file4" name="upfile" onchange="loadImg(this,4);"><br>
-				
+				<input type="file" id="file4" name="upfile" onchange="loadImg(this,4);"><br>				
 			</div>
+			<c:forEach var="at" items="${list}">
+					<input type="hidden" name="originName" value="${at.originName }">
+	    	        <input type="hidden" name="changeName" value="${at.changeName }">
+	    	        <input type="hidden" name="filePath" value="${at.filePath }">  
+				</c:forEach>
 			<div align="center">
 				<button type="submit" class="btn btn-warning">수정하기</button>
 				<button class="btn btn-danger" onclick="javascript:history.go(-1);">뒤로가기</button>
@@ -267,7 +274,6 @@
 					reader.readAsDataURL(inputFile.files[0]);
 					
 					reader.onload = function(e){//e:이벤트 객체
-						
 						
 						
 						switch(num){
@@ -334,21 +340,21 @@
     	    var idx = $("#zone option").index($("#zone option:selected"));
     	    change(idx);
     	    
-    	    
-    	    var images = document.getElementById("imgholder");
     	    })
     	    
-   $(function(){
+    $(function(){
 	   var alist = ${alist};
 	   var size = ${size};
 	   var images = document.getElementById("imgholder");
+	   var files = document.getElementById("file-area");
+	   var fileInputs = $(files).children("input");
 	   var image = $(images).children().children();
-	   
+	   /* console.log(file); */
 	   for(var i=0; i<size; i++){		   			   
 			$(image[i]).attr("src",alist[i].filePath);
-		   
+			  $("#file"+[i]+1).val(alist[i].filePath);  
 	   }
-   })
+   }) 
 	
 	
 </script>

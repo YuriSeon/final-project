@@ -36,14 +36,14 @@
                         <option value="title">제목</option>
                         <option value="writer">작성자</option>
                     </select>
-                    <input type="text" name="searchBar" id="searchBar">
+                    <input type="text" name="searchBar" id="searchBar" >
                     <button class="btn btn-default" id="searchBtn">검색</button>
                 </div>
                 <!-- 검색 끝 -->
                 <!-- 버튼 시작 -->
                 <div>
                     <button class="btn btn-danger">선택삭제</button>
-                    <button class="btn btn-info">게시물 등록</button>
+                    <button class="btn btn-info" onclick="thema();">게시물 등록</button>
                 </div>
                 <!-- 버튼 끝 -->
             </div>
@@ -261,6 +261,9 @@
         
     });
    
+    function thema(){
+    	location.href = "themaEnroll.bo";
+    }
     
 </script>
 </body>

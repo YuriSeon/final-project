@@ -37,6 +37,7 @@
 	                    <select name="type" id="searchCate">
 	                        <option value="title" ${type == 'title' ? 'selected="selected"': ''}>제목</option>
 	                        <option value="content" ${type == 'content' ? 'selected="selected"': ''}>내용</option>
+	                        <option value="writer" ${type == 'writer' ? 'selected="selected"': ''}>작성자</option>
 	                    </select>
 	                    <input type="text" name="keyword" id="searchBar">
 	                    <button class="btn btn-default" id="searchBtn">검색</button>
@@ -109,6 +110,9 @@
                     
                     <c:choose>
                     	<c:when test="${pi.currentPage eq pi.maxPage}">
+		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
+                    	</c:when>
+                    	<c:when test="${pi.listCount eq 0}">
 		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
                     	</c:when>
                     	<c:otherwise>

@@ -14,15 +14,15 @@
     <div class="attrUpdate">
         <div class="title-area">
             <div class="float">
-                <h2>관광정보 신규 등록</h2> 
+                <h2>관광정보 수정</h2> 
                 <img src="resources/images/attr3.png">
                 <img src="resources/images/attr2.png">
                 <img src="resources/images/attr1.png">
             </div>
-            <pre> 아래에 검색하여 정보를 먼저 가져온 뒤 비어있는 입력사항을 채워넣어주세요 </pre>
+            <pre> 새롭게 업데이트 된 정보를 조회하고싶다면 검색해주세요 </pre>
         </div>
         <div class="serach-area">
-            <input type="search" name="title" id="search-input" placeholder="등록을 원하는 관광지를 입력해주세요">
+            <input type="search" name="title" id="search-input" placeholder="조회를 원하는 관광지를 입력해주세요">
             <button onclick="mapSearch();">검색</button>
         </div>
         <hr>
@@ -64,7 +64,7 @@
                         <th>주차장 여부</th>
                         <td><input type="text" name="parking" id="parking" placeholder="주차장 여부(Y/N)를 작성해주세요" value="${info.parking}"></td>
                         <th>장소의 분류</th>
-                        <td><input type="number" name="infoType" id="infoType" placeholder="장소종류(1.여행, 2.맛집, 3.기타)" value="${info.infoType}"></td>
+                        <td><input type="number" name="infoType" id="infoType" placeholder="장소종류(1.여행, 2.맛집, 3.기타) - 숫자로 작성해주세요" value="${info.infoType}"></td>
                     </tr>
                     <tr>
                         <th>이미지</th>

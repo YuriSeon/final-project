@@ -9,12 +9,12 @@ import java.net.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.kh.finalProject.board.model.service.AttrarctionService;
+import com.kh.finalProject.board.model.service.AttractionService;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Selenium;
 
@@ -25,7 +25,7 @@ public class AttractionController {
 	private static String SERVICEKEY = "E15I5%2FPXccZzl%2BCSlsAkGubm20fnvVbSgMXRQg5sSx2qPglZUEa73k3K32wX1dWvBNris%2BiRqICN51d93m08tA%3D%3D";
 	
 	@Autowired
-	private AttrarctionService atService;
+	private AttractionService atService;
 	
 	@ResponseBody
 	@GetMapping(value="searchKeyword1", produces = "application/json; charset=UTF-8")
@@ -63,23 +63,27 @@ public class AttractionController {
 		return responseText;
 	}
 	
-	@RequestMapping("detail.attr")
+	@GetMapping("detail.attr")
 	public String detailAttr() {
 		return "board/attraction/attractionDetail";
 	}
 	
-	@RequestMapping("update.attr")
+	@GetMapping("update.attr")
 	public String updateAttr() {
 		return "board/attraction/attractionUpdate";
 	}
 	
-	@RequestMapping("insert.attr")
+	@GetMapping("insert.attr")
 	public String insertAttr() {
 		return "board/attraction/attractionInsert";
 	}
 	
+	@GetMapping("modify.attr")
+	public String modifyRequestAttr() {
+		return "board/attraction/attrModifyRequest";
+	}
 	// 나중에 값 넣기 
-	@RequestMapping("searchInfo.attr")
+	@PostMapping("searchInfo.attr")
 	public Info searchInfo(Info in) {
 		Info info = new Selenium().infoDataGet(in);
 		return info;

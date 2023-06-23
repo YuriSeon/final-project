@@ -245,8 +245,8 @@
   	
   	<!-- 대댓글 신고 -->
   	<insert id="insertReport">
-  		INSERT INTO REPORT(REF_RNO,WRITER,REPORT_REASON)
-  		VALUES(#{refRno},#{writer},#{reportReason})
+  		INSERT INTO REPORT(REREPLY_NO,WRITER,REPORT_REASON)
+  		VALUES(#{rereplyNo},#{writer},#{reportReason})
   	</insert>
   	
   	<!-- 게시물수정폼board -->
@@ -260,9 +260,47 @@
   	
   	<!-- 게시물수정폼attachment -->
   	<select id="selectAttachment" resultMap="attaResultSet">
-  		SELECT BOARD_NO,FILE_PATH
+  		SELECT BOARD_NO,FILE_PATH,ORIGIN_NAME,CHANGE_NAME
         FROM ATTACHMENT 
         WHERE STATUS = 'Y'
         AND BOARD_NO = #{boardNo}
+  	</select>
+  	
+  	<!-- 게시물 수정 baord -->
+  	<update id="updateBoard">
+  		UPDATE BOARD
+  		SET BOARD_CONTENT =#{boardContent}
+  		   ,ZONE_NO = #{zoneNo}
+  		WHERE BOARD_NO =#{boardNo}
+  		AND CATEGORY = 4
+  		AND STATUS = 'Y'
+  	</update>
+  	
+  	<!-- 게시물 수정 attachment -->
+  	<insert id="updateAttachment">
+  	INSERT INTO ATTACHMENT(FILE_NO,BOARD_NO,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,FILE_LEVEL)
+  	VALUES(SEQ_FNO.NEXTVAL,#{boardNo},#{originName},#{changeName},#{filePath},2)  	
+  	</insert>
+  	
+  	<!-- 인기순 -->
+  	<select id="rankingBoardList" resultMap="feedResultSet">
+  		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",GOOD
+		FROM BOARD 
+		WHERE STATUS = 'Y'
+        AND CATEGORY = 4
+		ORDER BY GOOD DESC
+  	</select>
+  	
+  	<!-- 도시선택 -->
+  	<select id="selectCityList" resultMap="feedResultSet">
+  		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",GOOD
+		FROM BOARD 
+		WHERE STATUS = 'Y'
+        AND CATEGORY = 4
+        <if test="city!=null">
+        AND ZONE_NO = #{city}
+        
+        </if>
+		ORDER BY CREATE_DATE DESC
   	</select>
   </mapper>

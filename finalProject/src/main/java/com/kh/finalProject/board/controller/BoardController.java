@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
-import com.kh.finalProject.board.model.service.AttrarctionService;
+import com.kh.finalProject.board.model.service.AttractionService;
 import com.kh.finalProject.board.model.service.FeedService;
 import com.kh.finalProject.board.model.service.ScheduleService;
 import com.kh.finalProject.board.model.service.TogetherService;
@@ -35,7 +35,7 @@ import com.kh.finalProject.member.model.vo.Member;
 public class BoardController {
 	
 	@Autowired
-	private AttrarctionService atService;
+	private AttractionService atService;
 	
 	@Autowired
 	private ScheduleService scService;
@@ -88,11 +88,6 @@ public class BoardController {
 		return "board/theme";
 	}
 	
-	@RequestMapping("festival.bo")
-	public String goFestival() {
-		return "board/festival";
-	}
-	
 	@RequestMapping("attraction.bo")
 	public String goAttraction(@RequestParam(value="currentPage", defaultValue="1") int currentPage
 								, String sort, Model model) {
@@ -100,7 +95,9 @@ public class BoardController {
 	}
 	
 	@RequestMapping("feed.bo")
-	public String goFeed(@RequestParam(value="currentPage", defaultValue="1") int currentPage,Model model,HttpServletRequest request) {
+	public String goFeed(@RequestParam(value="currentPage", defaultValue="1") int currentPage
+						,@RequestParam(value="sort",defaultValue = "1") int sort
+						,Model model,HttpServletRequest request) {
 
 		ArrayList<Member> mlist = feedService.selectMember();
 		ArrayList<Good> glist = feedService.selectGood();
@@ -111,8 +108,14 @@ public class BoardController {
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		
+		ArrayList<Board> list = new ArrayList<>();
+		if(sort == 1) {			
+			list = feedService.selectBoardList(pi);			
+		}else if(sort ==2) {
+			list = feedService.rankingBoardList(pi);
+		}
 		
-		ArrayList<Board> list = feedService.selectBoardList(pi);
+		
 		
 		model.addAttribute("list", list);
 		model.addAttribute("blist", new Gson().toJson(list));

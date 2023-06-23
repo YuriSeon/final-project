@@ -110,7 +110,7 @@ public String optionSearch(String startDate, String endDate, String location, in
 public ModelAndView togetherApply(int boardNo, String writer, String applyMessage, ModelAndView mv) {
 	
 //	int result = togetherService.togetherApply(boardNo);
-//	System.out.println(boardNo+" "+writer+" "+applyMessage);
+	System.out.println(boardNo+" "+writer+" "+applyMessage);
 	
 	
 	return mv;
