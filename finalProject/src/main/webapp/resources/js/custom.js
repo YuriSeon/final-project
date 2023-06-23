@@ -21,7 +21,7 @@
 			  }
 		  }
 	  })
-
+	  
 	const second = 1000,
       minute = second * 60,
       hour = minute * 60,
@@ -32,11 +32,28 @@
 
       let now = new Date().getTime(),
           distance = countDown - now;
+	
+		// 여기쯤 수정함 innerText 값이 있을때만 찾는 조건문 넣음
+      let daysElement = document.getElementById('days'),
+          hoursElement = document.getElementById('hours'),
+          minutesElement = document.getElementById('minutes'),
+          secondsElement = document.getElementById('seconds');
 
-      	document.getElementById('days').innerText = Math.floor(distance / (day)),
-        document.getElementById('hours').innerText = Math.floor((distance % (day)) / (hour)),
-        document.getElementById('minutes').innerText = Math.floor((distance % (hour)) / (minute)),
-        document.getElementById('seconds').innerText = Math.floor((distance % (minute)) / second);
+      if (daysElement) {
+        daysElement.innerText = Math.floor(distance / (day));
+      }
+
+      if (hoursElement) {
+        hoursElement.innerText = Math.floor((distance % (day)) / (hour));
+      }
+
+      if (minutesElement) {
+        minutesElement.innerText = Math.floor((distance % (hour)) / (minute));
+      }
+
+      if (secondsElement) {
+        secondsElement.innerText = Math.floor((distance % (minute)) / second);
+      }
 
       //do something later when date is reached
       //if (distance < 0) {
@@ -45,6 +62,7 @@
       //}
 
     }, second)
+	
 
 	$(function() {
         $("#tabs").tabs();
@@ -88,10 +106,8 @@
 
 
 	// Page loading animation
-	 $(window).on('load', function() {
-
+	$(window).on('load', function() {
         $('#js-preloader').addClass('loaded');
-
     });
 
 
@@ -107,10 +123,8 @@
 		$('.submenu').on('click', function() {
 			if(width < 767) {
 				$('.submenu ul').removeClass('active');
-				$(this).find('ul').toggleClass('active');
+				$(this).find
 			}
 		});
 	}
-
-
 })(window.jQuery);
