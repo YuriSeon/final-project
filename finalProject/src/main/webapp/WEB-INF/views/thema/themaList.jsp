@@ -31,8 +31,12 @@
 		padding: 20px;
 		width: 350px;
 	}
-	tbody th{
-		 /* border: 1px solid;  */
+	
+	#pagingArea{
+		/* border: 1px solid; */
+		position: relative;
+		margin-left: 850px; 
+		margin-top: 100px;
 	}
 	
 </style>
@@ -90,7 +94,7 @@
     <table align="center">
     	<thead>
     		<tr style="border-bottom: 2px solid gray; padding-bottom: 30px;">
-    			<th style="padding-left: 20px;">총(22,220)건</th>
+    			<th style="padding-left: 20px;">총${count }건</th>
     			<td style="float: right;padding-right: 30px;">
     				<a href="" style="font-weight: bold;color: black;font-size: 20px;">최신순 </a>|
     				<a href="" style="font-weight: bold;color: black;font-size: 20px;">인기순 </a>
@@ -98,85 +102,60 @@
     		</tr>    		
     	</thead>
     	<tbody>
+    	<c:forEach var="b" items="${list}">
     		<tr>
     			<td>
-    				<img alt="" src="" >
+    				<input type="hidden" name="boardNo" value="${b.boardNo} ">
+    				<img alt="" src="${b.attachment.getFilePath() }" >
     			</td>
     			<th style="border-bottom: 2px solid gray;">   				
     				<ul>
-    					<li><b style="font-size: 20px;">게시판 제목이 들어갈 자리</b></li>
-    					<li style="height: 130px;padding-top: 10px;">전라남도 공석군</li>
-    					<li>TEL)032-456-7894</li>
+    					<li><b style="font-size: 20px;">${b.boardTitle }</b></li>
+    					<li style="height: 110px;padding-top: 10px;">${b.zone.getZoneName() }</li>
+    					<li>홈페이지: ${b.info.getInfoHomepage() }</li>
+    					<li>TEL) ${b.info.getInfoCall() }</li>
     					<li style="float: right;padding-right: 30px;">
     						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
 							  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
 							  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
-							</svg> 20
+							</svg> ${b.count }
     					</li>
     				</ul>
     			</th>
     		</tr>
-    		<tr>
-    			<td>
-    				<img alt="" src="" >
-    			</td>
-    			<th style="border-bottom: 2px solid gray;">   				
-    				<ul>
-    					<li><b style="font-size: 20px;">게시판 제목이 들어갈 자리</b></li>
-    					<li style="height: 130px;padding-top: 10px;">전라남도 공석군</li>
-    					<li>TEL)032-456-7894</li>
-    					<li style="float: right;padding-right: 30px;">
-    						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-							  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
-							  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
-							</svg> 20
-    					</li>
-    				</ul>
-    			</th>
-    		</tr>
-    		<tr>
-    			<td>
-    				<img alt="" src="" >
-    			</td>
-    			<th style="border-bottom: 2px solid gray;">   				
-    				<ul>
-    					<li><b style="font-size: 20px;">게시판 제목이 들어갈 자리</b></li>
-    					<li style="height: 130px;padding-top: 10px;">전라남도 공석군</li>
-    					<li>TEL)032-456-7894</li>
-    					<li style="float: right;padding-right: 30px;">
-    						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-							  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
-							  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
-							</svg> 20
-    					</li>
-    				</ul>
-    			</th>
-    		</tr>
-    		<tr>
-    			<td>
-    				<img alt="" src="" >
-    			</td>
-    			<th style="border-bottom: 2px solid gray;">   				
-    				<ul>
-    					<li><b style="font-size: 20px;">게시판 제목이 들어갈 자리</b></li>
-    					<li style="height: 130px;padding-top: 10px;">전라남도 공석군</li>
-    					<li>TEL)032-456-7894</li>
-    					<li style="float: right;padding-right: 30px;">
-    						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-							  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
-							  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
-							</svg> 20
-    					</li>
-    				</ul>
-    			</th>
-    		</tr>
+    	</c:forEach>
     	</tbody>
     </table>
    
+    <div id="pagingArea" align="center">
+                <ul class="pagination">
+                	<c:choose>
+                		<c:when test="${pi.currentPage eq 1}">
+                   			 <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                		</c:when>
+                		<c:otherwise>
+                			 <li class="page-item"><a class="page-link" href="themaList.bo?currentPage=${pi.currentPage - 1 }">Previous</a></li>
+                		</c:otherwise>
+                	</c:choose>
+                	
+                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
+	                    <li class="page-item"><a class="page-link" href="themaList.bo?currentPage=${p}">${p}</a></li>
+                    </c:forEach>
+                    
+                    <c:choose>
+                    	<c:when test="${pi.currentPage eq pi.maxPage}">
+		                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+                    	</c:when>
+                    	<c:otherwise>
+                    		<li class="page-item"><a class="page-link" href="themaList.bo?currentPage=${pi.currentPage + 1}">Next</a></li>
+                    	</c:otherwise>
+                    </c:choose>
+                </ul>
+            </div> 
    
 	
 	
-	<jsp:include page="../common/footer.jsp"></jsp:include>
+	<jsp:include page="../common/footer.jsp"/>
 </body>
 <script>
 
@@ -207,5 +186,14 @@
 	       $("#country").append("<option>"+cnt[add][i]+"</option>");
 	    }         
 	}
+	
+	
+	$(function(){
+		$("tbody>tr").click(function(){
+			var bno = $(this).children().eq(0).children("input").val();
+			/* console.log($(this).children().eq(0).children("input").val()); */
+			 location.href="detailTheme.bo?boardNo="+bno; 
+		});
+	});
 </script>
 </html>
