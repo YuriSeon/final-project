@@ -234,6 +234,23 @@ public interface AdminService {
 	//게시글 축제 검색 리스트 조회
 	ArrayList<Board> themeSearchList(HashMap<String, String> map, PageInfo pi);
 
+	//게시글 테마 보드 삭제
+	int themeBoardDel(Integer boardNo);
+
+	//게시글 테마 파일 조회
+	ArrayList<Attachment> themeFilePath(Integer boardNo);
+	
+	//게시글 테마 파일 삭제
+	int themeFileDel(Integer boardNo);
+
+	//게시글 테마 테마 삭제
+	int themeDel(Integer boardNo);
+
+	//게시글 테마 인포 삭제
+	int themeInfoDel(Integer boardNo);
+
+
+
 
 	
 

@@ -125,6 +125,44 @@ public class AdminController {
 		return mv;
 	}
 	
+	//선택한 게시글 테마 삭제
+	@ResponseBody
+	@RequestMapping(value = "themeChkDelete.ad",produces = "application/json; charset=UTF-8")
+	public String themeChkDelete(@RequestParam(value = "list[]") int[] list, HttpSession session) {
+		
+		int result1 = 0;
+		int result2 = 0;
+		int result3 = 0;
+		int result4 = 0;
+		
+		for (Integer i : list) {
+			
+			ArrayList<Attachment> a = adminService.themeFilePath(i);
+			
+			for (Attachment file : a) {
+//				new File(ServletContext.getRealPath("/"+file)).delete();
+				System.out.println(file);
+				System.out.println(file.getFilePath());
+			}
+			
+			result1 = adminService.themeBoardDel(i);
+			result2 = adminService.themeFileDel(i);
+			result3 = adminService.themeDel(i);
+			result4 = adminService.themeInfoDel(i);
+		}
+		
+		System.out.println(result1);
+		System.out.println(result2);
+		System.out.println(result3);
+		System.out.println(result4);
+		
+		if(result1>0) {
+			session.setAttribute("alertMsg","게시글 삭제 완료");
+		}
+		
+		return (result1>0)?new Gson().toJson("success"):new Gson().toJson("fail");
+	}
+	
 	//게시글 축제 검색
 	@GetMapping("themeSearch.ad")
 	public ModelAndView themeSearch(Criteria cri
@@ -1209,5 +1247,6 @@ public class AdminController {
 		
 		return (result>0)?new Gson().toJson("success"):new Gson().toJson("fail");
 	}
+	
 	
 }

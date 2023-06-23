@@ -1,4 +1,4 @@
-.attracDetail {
+.attracDetail, .attrInsert {
 	width: 75%;
 	margin: auto;
 }
@@ -48,12 +48,12 @@
 	font-size: 17px;
 }
 
-.attracDetail .post_area {
+.attracDetail .board-area {
 	text-align: right;
 	margin-right: 5%;
 }
 
-.attracDetail .post_area .ico img, #myModal .ico img {
+.attracDetail .board-area .ico img, #myModal .ico img {
 	width: 30px;
 	margin-left: 13px;
 }
@@ -160,6 +160,11 @@
 	text-align: left;
 }
 
+.attracDetail #btn_more {
+	background-color: rgba(240, 248, 255, 0);
+	border: none;
+}
+
 .attracDetail .cont_more {
 	text-align: right;
 	margin-right: 3%;
@@ -247,7 +252,7 @@
 	padding-left: 15px;
 }
 
-.attracDetail .foodInfo .foodTitle {
+.attracDetail .foodInfo .board-foodTitle {
 	width: 100%;
 	height: 60%;
 	font-size: 25px;
@@ -361,11 +366,6 @@
 	margin-top: 10px;
 	margin-bottom: 15px;
 	overflow: auto;
-}
-
-.attrInsert {
-	width: 75%;
-	margin: auto;
 }
 
 .attrInsert * {
@@ -489,6 +489,7 @@
 	border: 1.5px solid rgb(96, 96, 96);
 	font-weight: 500;
 }
+
 .attrUpdate {
 	width: 75%;
 	margin: auto;
@@ -600,4 +601,176 @@
 	height: 35px;
 	margin-left: 15px;
 	margin-right: 15px;
+}
+
+.modifyRequest {
+	width: 75%;
+	margin: auto;
+}
+
+.modifyRequest * {
+	margin: auto;
+	box-sizing: border-box;
+	text-align: center;
+}
+
+.modifyRequest>div, .modifyRequest .con {
+	margin-bottom: 15px;
+}
+
+.modifyRequest .title-area {
+	width: 100%;
+	height: 50px;
+	margin-top: 30px;
+	margin-left: 37%;
+}
+
+.modifyRequest .title-area h2 {
+	font-weight: 800;
+}
+
+.modifyRequest .title-area .float1 {
+	height: 100%;
+}
+
+.modifyRequest .title-area .float2 {
+	height: 100%;
+	width: 7%;
+}
+
+.float1, .float2 {
+	float: left;
+	display: inline-block;
+}
+
+.modifyRequest img {
+	width: 40px;
+}
+
+.modifyRequest .fieldset {
+	border: 2px solid gray;
+	padding: 20px 0px 20px 20px;
+}
+
+.modifyRequest .checkbox-area table {
+	margin: auto;
+	left: 0;
+	right: 0;
+}
+
+.modifyRequest .checkbox-area table * {
+	font-size: 17px;
+	text-align: left;
+}
+
+.modifyRequest .checkbox-area td {
+	width: 180px;
+}
+
+.modifyRequest .checkbox-area input[type=checkbox] {
+	margin-right: 5px;
+}
+
+.modifyRequest .checkbox-area h6 {
+	font-size: 18px;
+	font-weight: 700;
+	margin-bottom: 20px;
+	text-decoration-line: underline;
+	text-decoration-color: rgba(250, 205, 219, 0.573);
+	text-decoration-thickness: 10px;
+	text-underline-offset: -3px;
+}
+
+.modifyRequest hr {
+	border: 0;
+	height: 3px;
+	background: #ccc;
+	margin-bottom: 20px;
+}
+
+.modifyRequest .modify-area {
+	width: 100%;
+	height: auto;
+}
+
+.modifyRequest .modify-area * {
+	text-align: left;
+}
+
+.modifyRequest .modify-area .title {
+	font-size: 22px;
+	font-weight: 600;
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+.modifyRequest .conwrap {
+	height: 80px;
+	width: 100%;
+}
+
+.modifyRequest .checkImg {
+	width: 6%;
+	float: left;
+	margin: auto;
+}
+
+.modifyRequest .con {
+	border: 1px solid;
+	width: 93%;
+	float: left;
+}
+
+.modifyRequest .con div {
+	border: 1px solid;
+}
+
+.modifyRequest .modify {
+	width: 100%;
+	height: 40px;
+}
+
+.modifyRequest .modify div {
+	float: left;
+}
+
+.modifyRequest .con .column, .modifyRequest .modify .name {
+	line-height: 2.1;
+}
+
+.modifyRequest .con .column {
+	height: 40px;
+	width: 100%;
+	font-size: 19px;
+	font-weight: 550;
+	padding-left: 15px;
+	text-align:center;
+}
+
+.modifyRequest .modify .name {
+	padding-left: 8px;
+	width: 9%;
+	height: 100%;
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.modifyRequest .modify .input-area {
+	width: 41%;
+	height: 100%;
+}
+
+.modifyRequest .modify input {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	padding-left: 10px;
+	border: 0;
+}
+
+.modifyRequest .btn-area button {
+	width: 90px;
+	height: 35px;
+	font-size: 17px;
+	margin: 10px;
 }

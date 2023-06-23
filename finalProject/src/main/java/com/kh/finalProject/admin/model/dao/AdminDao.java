@@ -471,6 +471,32 @@ public class AdminDao {
 		return (ArrayList)sqlSession.selectList("adminMapper.themeSearchList",map,rowBounds);
 	}
 
+	//게시글 테마 보드 삭제
+	public int themeBoardDel(SqlSessionTemplate sqlSession, Integer boardNo) {
+		return sqlSession.delete("adminMapper.themeBoardDel",boardNo);
+	}
+
+	//게시글 테마 파일 삭제
+	public int themeFileDel(SqlSessionTemplate sqlSession, Integer boardNo) {
+		return sqlSession.delete("adminMapper.themeFileDel",boardNo);
+	}
+
+	//게시글 테마 테마 삭제
+	public int themeDel(SqlSessionTemplate sqlSession, Integer boardNo) {
+		return sqlSession.delete("adminMapper.themeDel",boardNo);
+	}
+
+	//게시글 테마 인포 삭제
+	public int themeInfoDel(SqlSessionTemplate sqlSession, Integer boardNo) {
+		return sqlSession.delete("adminMapper.themeInfoDel",boardNo);
+	}
+
+	//게시글 테마 파일 조회
+	public ArrayList<Attachment> themeFilePath(SqlSessionTemplate sqlSession, Integer boardNo) {
+		return (ArrayList)sqlSession.selectList("adminMapper.themeFilePath",boardNo);
+	}
+
+
 	
 	
 

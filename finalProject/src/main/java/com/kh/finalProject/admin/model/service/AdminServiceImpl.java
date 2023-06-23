@@ -506,6 +506,37 @@ public class AdminServiceImpl implements AdminService {
 	public ArrayList<Board> themeSearchList(HashMap<String, String> map, PageInfo pi) {
 		return adminDao.themeSearchList(sqlSession,map,pi);
 	}
+
+	//게시글 테마 보드 삭제
+	@Override
+	public int themeBoardDel(Integer boardNo) {
+		return adminDao.themeBoardDel(sqlSession,boardNo);
+	}
+
+	//게시글 테마 파일 삭제
+	@Override
+	public int themeFileDel(Integer boardNo) {
+		return adminDao.themeFileDel(sqlSession,boardNo);
+	}
+
+	//게시글 테마 테마 삭제
+	@Override
+	public int themeDel(Integer boardNo) {
+		return adminDao.themeDel(sqlSession,boardNo);
+	}
+
+	//게시글 테마 인포 삭제
+	@Override
+	public int themeInfoDel(Integer boardNo) {
+		return adminDao.themeInfoDel(sqlSession,boardNo);
+	}
+
+	//게시글 테마 파일 조회
+	@Override
+	public ArrayList<Attachment> themeFilePath(Integer boardNo) {
+		return adminDao.themeFilePath(sqlSession,boardNo);
+	}
+
 	
 	
 	

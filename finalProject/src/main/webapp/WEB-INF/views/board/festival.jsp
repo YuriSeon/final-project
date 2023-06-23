@@ -179,6 +179,17 @@
   		top:10px;
   		left: 10px;
 	}
+	.down-content{
+		margin-top: -40px;
+	}
+	#good_img{
+		cursor: pointer;
+		width: 15px;
+		height: 20px;
+		position:relative;
+		left: 310px;
+		top: 25px;
+	}
 	
 	/* 페이지네이션 */
 	.page_list{
@@ -188,7 +199,6 @@
 		background-color: rgb(142, 195, 142) !important;
 		border-radius: 50%;
 	}
-
     </style>
 
     <!-- Additional CSS Files -->
@@ -325,118 +335,51 @@
 	<div class="tickets-page">
 	    <div class="container">
 	        <div class="row">
-	            <div class="col-lg-4">
-	                <div class="ticket-item">
-	                    <div class="thumb">
-	                        <img src="/finalProject/resources/images/festivalImg/fesEx01.png" alt="" style="height: 300px;">
-	                        <div class="price" id="fes_go">
-	                            <span>개최중</span>
-	                        </div>
-	                    </div>
-	                    <div class="down-content">
-	                        <h4>해운대 모래축제</h4>
-	                        <ul>
-	                            <li><i class="fa fa-clock-o"></i> 2023.05.06 - 2023.05.16</li>
-	                            <li><i class="fa fa-map-marker"></i>제주특별자치도 제주시 한림읍 한림로 300</li>
-	                        </ul>
-	                    </div>
-	                </div>
-	            </div>
-	            <div class="col-lg-4">
-	                <div class="ticket-item">
-	                    <div class="thumb">
-	                        <img src="/finalProject/resources/images/festivalImg/fesEx01.png" alt="" style="height: 300px;">
-	                        <div class="price" id="fes_go">
-	                            <span>개최중</span>
-	                        </div>
-	                    </div>
-	                    <div class="down-content">
-	                        <h4>해운대 모래축제</h4>
-	                        <ul>
-	                            <li><i class="fa fa-clock-o"></i> 2023.05.06 - 2023.05.16</li>
-	                            <li><i class="fa fa-map-marker"></i>제주특별자치도 제주시 한림읍 한림로 300</li>
-	                        </ul>
-	                    </div>
-	                </div>
-	            </div>
-	            <div class="col-lg-4">
-	                <div class="ticket-item">
-	                    <div class="thumb">
-	                        <img src="/finalProject/resources/images/festivalImg/fesEx01.png" alt="" style="height: 300px;">
-	                        <div class="price" id="fes_go">
-	                            <span>개최중</span>
-	                        </div>
-	                    </div>
-	                    <div class="down-content">
-	                        <h4>해운대 모래축제</h4>
-	                        <ul>
-	                            <li><i class="fa fa-clock-o"></i> 2023.05.06 - 2023.05.16</li>
-	                            <li><i class="fa fa-map-marker"></i>제주특별자치도 제주시 한림읍 한림로 300</li>
-	                        </ul>
-	                    </div>
-	                </div>
-	            </div>
-	            <div class="col-lg-4">
-	                <div class="ticket-item">
-	                    <div class="thumb">
-	                        <img src="/finalProject/resources/images/festivalImg/fesEx01.png" alt="" style="height: 300px;">
-	                        <div class="price" id="fes_go">
-	                            <span>개최중</span>
-	                        </div>
-	                    </div>
-	                    <div class="down-content">
-	                        <h4>해운대 모래축제</h4>
-	                        <ul>
-	                            <li><i class="fa fa-clock-o"></i> 2023.05.06 - 2023.05.16</li>
-	                            <li><i class="fa fa-map-marker"></i>제주특별자치도 제주시 한림읍 한림로 300</li>
-	                        </ul>
-	                    </div>
-	                </div>
-	            </div>
-	            <div class="col-lg-4">
-	                <div class="ticket-item">
-	                    <div class="thumb">
-	                        <img src="/finalProject/resources/images/festivalImg/fesEx01.png" alt="" style="height: 300px;">
-	                        <div class="price" id="fes_go">
-	                            <span>개최중</span>
-	                        </div>
-	                    </div>
-	                    <div class="down-content">
-	                        <h4>해운대 모래축제</h4>
-	                        <ul>
-	                            <li><i class="fa fa-clock-o"></i> 2023.05.06 - 2023.05.16</li>
-	                            <li><i class="fa fa-map-marker"></i>제주특별자치도 제주시 한림읍 한림로 300</li>
-	                        </ul>
-	                    </div>
-	                </div>
-	            </div>
-	            <div class="col-lg-4">
-	                <div class="ticket-item">
-	                    <div class="thumb">
-	                        <img src="/finalProject/resources/images/festivalImg/fesEx01.png" alt="" style="height: 300px;">
-	                        <div class="price" id="fes_go">
-	                            <span>개최중</span>
-	                        </div>
-	                    </div>
-	                    <div class="down-content">
-	                        <h4>해운대 모래축제</h4>
-	                        <ul>
-	                            <li><i class="fa fa-clock-o"></i> 2023.05.06 - 2023.05.16</li>
-	                            <li><i class="fa fa-map-marker"></i>제주특별자치도 제주시 한림읍 한림로 300</li>
-	                        </ul>
-	                    </div>
-	                </div>
-	            </div>
+	        	<c:forEach var="b" items="${list }">
+		            <div class="col-lg-4" id="fes_div" onclick="location.href='fesDetail.fe?boardNo=${b.boardNo}'">
+		                <div class="ticket-item">
+		                	<%-- <input type="hidden" class="boardNoList" id="boardNo" value="${b.boardNo }"> --%>
+		                    <div class="thumb">
+		                        <img src="${b.attachment.filePath }" alt="" style="height: 300px;">
+		                        <div class="price" id="fes_go">
+		                            <span>개최중</span>
+		                        </div>
+		                    </div>
+		                    <div id="good_div"><img<%--  name="${b.boardNo }" --%> src="/finalProject/resources/images/Like-before.png" id="good_img" onclick="goodCk(event, '${b.boardNo}', this)"></div>
+		                    <div class="down-content">
+		                        <h4>${b.boardTitle }</h4>
+		                        <ul>
+		                            <li><i class="fa fa-clock-o"></i> ${b.festival.startDate } - ${b.festival.endDate }</li>
+		                            <li><i class="fa fa-map-marker"></i>${b.info.infoAddress }</li>
+		                        </ul>
+		                    </div>
+		                </div>
+		            </div>	
+	        	</c:forEach>
 	            <div class="col-lg-12">
 	                <div class="pagination">
 	                    <ul>
-	                        <li><a href="#" style="background-color: white;"><img src="/finalProject/resources/images/fes_left.png" style="width: 30px; height: 40px;"></a></li>
-	                        <li><a class="page_list" href="#">1</a></li>
-	                        <li><a class="page_list" href="#">2</a></li>
-	                        <li><a class="page_list" href="#" >3</a></li>
-	                        <li><a class="page_list" href="#">4</a></li>
-	                        <li><a class="page_list" href="#">5</a></li>
-	                        <li><a href="#" style="background-color: white;"><img src="/finalProject/resources/images/right01.png" style="width: 30px; height: 40px;"></a></li>
+	                    	<c:choose>
+	                    		<c:when test="${pi.currentPage eq 1 }">
+			                        <li><a href="#" style="background-color: white;" disabled><img src="/finalProject/resources/images/fes_left.png" style="width: 30px; height: 40px;"></a></li>	                    		
+	                    		</c:when>
+	                    		<c:otherwise>
+	                   				<li><a href="festival.fe?currentPage=${pi.currentPage-1 }" style="background-color: white;"><img src="/finalProject/resources/images/fes_left.png" style="width: 30px; height: 40px;"></a></li>
+	                    		</c:otherwise>
+	                    	</c:choose>
+
+		                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage }">
+		                    	<li><a class="page_list" href="festival.fe?currentPage=${p }">${p }</a></li>
+		                    </c:forEach>
+		                        
+		                   	<c:choose>
+		                   		<c:when test="${pi.currentPage eq pi.maxPage }">
+			                        <li><a href="#" style="background-color: white;" disabled><img src="/finalProject/resources/images/right01.png" style="width: 30px; height: 40px;"></a></li>
+		                   		</c:when>
+		                   		<c:otherwise>
+									<li><a href="festival.fe?currentPage=${pi.currentPage+1 }" style="background-color: white;"><img src="/finalProject/resources/images/right01.png" style="width: 30px; height: 40px;"></a></li>		                   		
+		                   		</c:otherwise>
+		                   	</c:choose>
 	                    </ul>
 	                </div>
 	            </div>
@@ -444,10 +387,36 @@
 	    </div>
 	</div>
 	<button type="button" onclick="location.href='fesEnrollForm.fe'">축제 등록</button>
+	
+	<!-- 로그인 정보 있을시 -->
+<%-- 	<c:choose>
+		<c:when test="${not empty loginUser }">
+			<script>
+				$(function(){
+					var boardNos = [];
+					
+					$(".boardNoList").each(function(){
+						var boardNo = $(this).val(); // boardNo 값을 가져옵니다.
+				        boardNos.push(boardNo);
+						
+						// 찜하기 정보 불러오기
+				    	$.ajax({
+				    		url : "choice.fe",
+				    		data : {boardNo : boardNos},
+				    		success : function(){
+				    			console.log("에젝성공");
+				    		},complete : function(){
+				    			console.log("에젝 성공만함");
+				    		}
+				    	});
+					});
+				});
+			</script>
+		</c:when>
+	</c:choose> --%>
+	
 	<script>
-	$(function(){
-		//console.log($("#fes_con header h6").text());
-	})
+
 		//오늘 날짜 가져오기
 	    //년도
 	    var yearVal = $("#fes_con header h6");
@@ -456,8 +425,9 @@
 	    var monthVal = $("#fes_con header h3");
 	    var nowMonth = new Date().getMonth()+1;
 	
-	    //온로드로 페이지 열자마자 오늘 날짜 넣어서 달력 생성
+	    //온로드로 페이지 열자마자
 	    $(function(){
+	    //오늘 날짜 넣어서 달력 생성
 	    	monthVal.text(nowMonth+'월');
 	    	yearVal.text(nowYear+'년');
 	        createCalendar(nowYear,nowMonth);
@@ -577,6 +547,40 @@
 	        }
 	        console.log("클릭한 날짜:", nowYear+'-'+nowMonth+'-'+clickDate);
 	    }
+	    
+	    //찜하기 기능
+	    function goodCk(event, boardNo, img){
+	    	//div온클릭 멈추기
+	    	event.stopPropagation();
+	    	
+	    	var user = "${loginUser}"
+	    	
+	    	if(!user == ""){
+		    	$.ajax({
+		    		url : "goodCk.fe",
+		    		data : {boardNo : boardNo},
+		    		success : function(result){
+		    			if(result.text == 'Y'){
+		    				alert("찜하기 완료!")
+		    				$(img).attr('src','/finalProject/resources/images/Like-after.png');
+		    			}else if (result.text == 'N'){
+		    				alert("찜삭제 완료!")
+		    				$(img).attr('src','/finalProject/resources/images/Like-before.png');
+		    			}else if(result.text == 'YF'){
+		    				alert("찜하기 실패하였습니다. 다시 눌러주세요.")
+		    			}else{
+		    				alert("찜삭제가 실패하였습니다. 다시 눌러주세요.")
+		    			}
+		    		}
+		    	});
+	    	}else{
+	    		alert("로그인 후 사용이 가능합니다.");
+				$('#loginModal').show();
+	    	}
+
+	    }
+	    
+	    
 	</script>
 	
 	<!-- *** Footer *** -->

@@ -20,6 +20,8 @@
   		<typeAlias type="com.kh.finalProject.board.model.vo.Reply" alias="reply"/>
   		<typeAlias type="com.kh.finalProject.board.model.vo.Rereply" alias="rereply"/>
   		<typeAlias type="com.kh.finalProject.admin.model.vo.Report" alias="report"/>
+  		<typeAlias type="com.kh.finalProject.board.model.vo.Zone" alias="zone"/>
+  		<typeAlias type="com.kh.finalProject.board.model.vo.Theme" alias="theme"/>
   	</typeAliases>
   	
   	<mappers>

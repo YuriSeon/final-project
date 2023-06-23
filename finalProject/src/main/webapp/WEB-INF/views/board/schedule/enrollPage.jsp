@@ -12,7 +12,7 @@
 </head>
 <body>
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-<!-- 동행구하는거 바로 작성하러갈지 아니면 작성하기 끝난 후에 연결할지 고민, 모달 배경색 수정 -->
+<!-- 동행구하는거 작성하는거 체크시 해당 게시물 작성완료시 모달창으로 바로 연결할까요 물어보기 , 모달 배경색 수정 -->
 	<div class="enroll-sc" >
 		<form action="insert.sc" method="post" id="insertForm">
 	        <div>
@@ -131,7 +131,7 @@
     	// 동행구하지않으면 버튼 생기지 않도록 처리
     	$(function(){
 			$("#together-yes").on("change", function(){
-				var btn = makeTag("button",{"id":"with","onclick": ""});
+				var btn = makeTag("button",{"id":"with","onclick": "togetherEnroll.bo"});
 	    		if($(this).val() != 0){
 	    			$($(this).parent()).append(btn.text("바로 작성하러가기"));
 	    		}
