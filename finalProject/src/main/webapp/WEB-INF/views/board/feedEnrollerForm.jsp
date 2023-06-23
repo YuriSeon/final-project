@@ -36,7 +36,7 @@
 		width: 300px;
 	}
 	#enroll-form textarea{
-		
+		 white-space: pre;
 		
 	}
 	/* #enroll-form img{
@@ -234,7 +234,7 @@
 			</div>
 			<div align="center">
 				<button type="submit" class="btn btn-warning">작성하기</button>
-				<button type="" class="btn btn-danger">뒤로가기</button>
+				<button class="btn btn-danger" onclick="javascript:history.go(-1);">뒤로가기</button>
 			</div>
 		</form>
 	</div>
@@ -259,29 +259,17 @@
 	
 	//이미지 미리보기
 	function loadImg(inputFile,num){
-				//inputFile : 현재 변화가 생긴 요소객체
-				//console.log(inputFile.files);
-				//inputFile.files : 업로드된 파일의 정보를 배열의 형태로 반환하는 속성
-				//파일 선택시 iength가 1이 반환된다. 취소하면 파일정보가 없어지니 length가 0이 된다.
+
 				if(inputFile.files.length ==1){
-					//선택한 파일이 존재한다면
-					//해당 파일을 읽어서 영역에 미리보기 시켜주기
-					//파일 읽어줄 객체 FileReader
+					
 					var reader = new FileReader();
-					//파일을 읽어줄 메소드 : readAsDataURL(파일)
-					//-파일을 읽어들이는 순간 고유한 url을 부여한다.
-					//-부여된 url을 src에 추가하면 해당 이미지를 띄어줄수 있음.
+					
 					
 					reader.readAsDataURL(inputFile.files[0]);
 					
-					//파일 읽기가 완료된 시점에 img src속성에 해당 결과 url을 담아주는 작업하기
 					reader.onload = function(e){//e:이벤트 객체
 						
-						//console.log(e);
-						//console.log(e.target);
-						//console.log(e.target.result);
-						//부여된 url은 target에 result속성에 들어있다 해당 result를
-						//img src속성에 부여하면 미리보기 가능
+						
 						
 						switch(num){
 						case 1: $("#contentImg1").attr("src",e.target.result); break;

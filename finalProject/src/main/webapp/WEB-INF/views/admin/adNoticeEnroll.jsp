@@ -24,12 +24,12 @@
 <body>
 <%@include file="adMenubar.jsp" %>
 <!-- Content - Start  -->
-<div id="content-wrapper" style="background-color: #EEEEEE;">
+<div id="content-wrapper">
     <div class="container-fluid">
         <div class="dash-title">
             <h1>&nbsp;공지사항 등록
-                <button class="btn btn-danger">취소</button>
-                <button class="btn btn-info" onclick="enrollSubmit()">등록</button>
+                <button class="btn btn-info" onclick="history.back();">취소</button>
+                <button class="btn btn-success" onclick="enrollSubmit()">등록</button>
             </h1>
         </div>
         <form class="notice-enroll-form" action="noticeInsert.ad" method="post" enctype="multipart/form-data">
@@ -47,7 +47,7 @@
                     <input type="file" name="upfile" id="upfile" class="upload-hidden">
                     <label for="upfile">첨부파일</label>
                     <input class="upload-name form-control input-lg" value="파일선택" disabled>
-                    <button type="button" onclick="$('#upfile').trigger('click');">파일 선택</button>
+                    <button type="button" id="selectFile" onclick="$('#upfile').trigger('click');">파일 선택</button>
                 </div>
                 <div class="contents-area">
                     <label for="editor" class="">내용</label>

@@ -35,11 +35,18 @@ public class Board {
 	private String createDate;
 	private String modifyDate;
 	private int good;
+	private int choice;
 	private int report;
 	private int count;
 	private String status;
 	private String address; // 쿼리문 쓸 때 ZONE_NO 서브쿼리로 검색하기 위한 한글 주소 저장용 
 	private String changeName;//	CHANGE_NAME
 	private String filePath;//
+	private String profileImg; // 프로필이미지 경로+바뀐이름
+	
+	private Info info; //join시 사용할 객체 참조변수
+	private Festival festival;
+	private Attachment attachment;
+	private Zone zone;
 	
 }	

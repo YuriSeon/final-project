@@ -391,14 +391,14 @@ schedule
 	font-weight: 650;
 }
 
-.enroll-sc button {
+.enroll-sc .btn-area button, .content button {
 	width: 13%;
 	height: 35px;
 	margin: 3%;
 	font-size: 17px;
 }
 
-.enroll-sc .content button {
+.enroll-sc .content #with {
 	width: 48%;
 	height: 30px;
 	font-size: 14px;
@@ -420,29 +420,30 @@ schedule
 	height: 15px;
 }
 
-.enroll-sc .modal {
+.enroll-sc #modal {
 	backgrund-color: lightgray;
 	text-align: center;
 	width: 60%;
 	height: 450px;
 	margin: auto;
 	position: fixed;
-	z-index: 3;
+	z-index: 1;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
 }
 
-.enroll-sc .modal #title {
+.enroll-sc #modal #title {
 	font-size: 22px;
+	backgrund-color: lightgray;
 	width: 100%;
 	height: 10%;
 	line-height: 2.8;
 	margin-bottom: 2%;
 }
 
-.enroll-sc .modal #close {
+.enroll-sc #modal #close {
 	border: none;
 	background-color: lightgray;
 	font-size: 30px;
@@ -451,9 +452,10 @@ schedule
 	float: right;
 	margin-right: 5%;
 	margin-top: 1%;
+	cursor: pointer;
 }
 
-.enroll-sc .modal #map {
+.enroll-sc #modal .map {
 	width: 95%;
 	height: 85%;
 	background-color: white;
@@ -461,12 +463,33 @@ schedule
 	top: 0;
 	bottom: 0;
 }
-
-.enroll-sc .modal iframe {
-	width: 100%;
-	height: 100%;
-	box-sizing: border-box;
+.enroll-sc #together-yes,.enroll-sc #together-no,.enroll-sc #trans *{
+		width: 10%;
+		height : 20%;
+		font-size: 17px;
+		margin:0;
+		margin-right: 1%;
+	}
+.enroll-sc select[name="togetherCount"]{
+		width: 20%;
+		height: 30px;
+		text-align: center;
+		font-size: 16px;
+	}
+.enroll-sc .day {
+	border : 1.5px solid rgb(186, 211, 221);
+	margin-top : 5px;
+	padding : 5px 10px 10px 15px;
+	text-align: left;
 }
-.enroll-sc.content {
-	float:left; 
+.enroll-sc .day .path-delete {
+	float : right;
+	border:none;
+	background-color: none;
+	font-size : 17px;
+	font-weight: bold;
+}
+.enroll-sc .day input {
+	text-align: center;
+	
 }

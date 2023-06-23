@@ -22,7 +22,7 @@ public class Reply {
 	
 	private int replyNo;
 	private String content;
-	private Date createDate;
+	private String createDate;
 	private String replyWriter;
 	private int refQno;
 	private int refRno;

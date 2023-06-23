@@ -1,0 +1,776 @@
+.attracDetail, .attrInsert {
+	width: 75%;
+	margin: auto;
+}
+
+.attracDetail * {
+	box-sizing: border-box;
+	margin: auto;
+	text-align: center;
+}
+
+.attracDetail #content {
+	width: 100%;
+	height: auto;
+	position: absolute;
+}
+
+.attracDetail .titleType, .attracDetail .titleType h2 {
+	width: 100%;
+}
+
+.attracDetail .titleType h2 {
+	font-weight: 700;
+	margin-bottom: 15px;
+	margin-top: 15px;
+}
+
+.attracDetail .titleType #topAddr, #myModal #topAddr {
+	color: gray;
+	font-weight: 500;
+	margin-bottom: 5px;
+}
+
+.attracDetail .titTypeWrap span, #myModal .titTypeWrap span {
+	text-decoration-line: underline;
+	text-decoration-color: rgba(250, 205, 212, 0.573);
+	text-decoration-thickness: 10px;
+	text-underline-offset: -3px;
+	color: rgb(44, 44, 44);
+	font-weight: 500;
+}
+
+.attracDetail .titTypeWrap span {
+	font-size: 22px;
+}
+
+#myModal .titTypeWrap span {
+	font-size: 17px;
+}
+
+.attracDetail .board-area {
+	text-align: right;
+	margin-right: 5%;
+}
+
+.attracDetail .board-area .ico img, #myModal .ico img {
+	width: 30px;
+	margin-left: 13px;
+}
+
+.attracDetail hr {
+	border: 0;
+	height: 3px;
+	background: #ccc;
+	width: 95%;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.attracDetail .img_area {
+	position: relative;
+	width: 100%;
+	height: 450px;
+}
+
+.attracDetail #wrapSlide {
+	width: 100%;
+	height: 100%;
+}
+
+.attracDetail #float {
+	width: 100%;
+	height: 90%;
+}
+
+.attracDetail #slideArea {
+	width: 60%;
+	height: 100%;
+}
+
+.attracDetail #slideImage {
+	width: auto;
+	max-height: 405px;
+	height: 100%;
+}
+
+.attracDetail #float>div {
+	float: left;
+}
+
+.attracDetail .float-img {
+	width: 20%;
+	height: 100%;
+}
+
+.attracDetail #prev, .attracDetail #next {
+	position: relative;
+	opacity: 0.3;
+	width: 60%;
+	height: auto;
+	margin-top: 65%;
+	opacity: calc(0.1);
+	cursor: pointer;
+}
+
+.attracDetail #dotArea {
+	position: relative;
+	margin-top: 5px;
+	height: 5%;
+}
+
+.attracDetail #dotArea * {
+	margin-right: 10px;
+}
+
+.attracDetail .contView {
+	width: 100%;
+	height: 30px;
+}
+
+.attracDetail .cont1, .attracDetail .cont2 {
+	width: 50%;
+	height: 100%;
+	float: left;
+}
+
+.attracDetail #detailInfo {
+	font-size: 25px;
+	font-weight: 650;
+	margin-left: 7%;
+	color: rgb(53, 53, 53);
+}
+
+.attracDetail .cont1 {
+	text-align: left;
+}
+
+.attracDetail .cont2 {
+	text-align: right;
+}
+
+.attracDetail .btn_modify {
+	margin-right: 7%;
+	font-size: 17px;
+	font-weight: 600;
+}
+
+.attracDetail .inr {
+	width: 93%;
+	text-align: left;
+}
+
+.attracDetail #btn_more {
+	background-color: rgba(240, 248, 255, 0);
+	border: none;
+}
+
+.attracDetail .cont_more {
+	text-align: right;
+	margin-right: 3%;
+}
+
+.attracDetail .surroundingsMap {
+	margin-top: 10px;
+	margin-bottom: 15px;
+	width: 90%;
+}
+
+.attracDetail #detailinfoview {
+	margin-bottom: 20px;
+}
+
+.attracDetail #reply-area {
+	margin-top: 1%;
+	width: 95%;
+}
+
+.attracDetail #reply-title {
+	font-size: 23px;
+	font-weight: 800;
+	text-align: left;
+}
+
+.attracDetail #reply-title span {
+	font-size: 21px;
+	color: dodgerblue;
+}
+
+.attracDetail #reply-back {
+	background-color: rgb(234, 234, 234);
+	width: 100%;
+	height: 80px;
+}
+
+.attracDetail #reply-back input {
+	width: 80%;
+	height: 40%;
+	margin-top: 25px;
+	border-color: darkgray;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.attracDetail #reply-back button {
+	width: 90px;
+	height: 30px;
+	border-color: darkgray;
+	border-style: solid;
+	border-width: 2px;
+	background-color: gray;
+	color: white;
+	font-weight: 800;
+}
+
+.attracDetail .foodReco {
+	width: 90%;
+	height: 370px;
+}
+
+.attracDetail .foodReco .food {
+	width: 88%;
+	height: 100%;
+	border: 1px solid black;
+}
+
+.attracDetail .foodReco .foodImg {
+	width: 95%;
+	height: 75%;
+	border: 1px solid;
+	margin-top: 2%;
+}
+
+.attracDetail .foodReco .foodInfo {
+	width: 95%;
+	height: 18%;
+	margin-top: 2%;
+	border: 1px solid;
+}
+
+.attracDetail .foodInfo * {
+	text-align: left;
+	padding-left: 15px;
+}
+
+.attracDetail .foodInfo .board-foodTitle {
+	width: 100%;
+	height: 60%;
+	font-size: 25px;
+	font-weight: 700;
+}
+
+.attracDetail .foodInfo .foodAddress {
+	width: 100%;
+	height: 40%;
+	font-size: 15px;
+	font-weight: 500;
+}
+
+.attracDetail .btn-area {
+	margin-top: 20px;
+}
+
+.attracDetail .btn-area button {
+	width: 100px;
+	height: 35px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+#myModal #modal-title {
+	margin-left: 38%;
+}
+
+#myModal #modal-title h3 {
+	font-weight: 800;
+	color: rgb(54, 54, 54);
+}
+
+#myModal #modal-body {
+	width: 100%;
+}
+
+#myModal #body-size {
+	margin: auto;
+	margin-bottom: 10px;
+	width: 95%;
+	height: auto;
+	border: 1px solid gray;
+}
+
+#myModal .info-area {
+	text-align: center;
+}
+
+#myModal .float {
+	width: 100%;
+	height: 50px;
+	margin: 0;
+}
+
+#myModal .float * {
+	float: left;
+}
+
+#myModal .float h4 {
+	height: 100%;
+	width: 70%;
+	margin-left: 15%;
+	font-weight: 700;
+	line-height: 2.5;
+}
+
+#myModal .float div {
+	height: 100%;
+	width: 15%;
+}
+
+#myModal .ico img {
+	margin-top: 13px;
+}
+
+#myModal .photo-area {
+	border: 1px solid;
+	width: 95%;
+	height: 250px;
+	margin: auto;
+	margin-top: 10px;
+}
+
+#myModal .cont1, #myModal .cont2 {
+	width: 45%;
+	border: 1px solid;
+	height: 100%;
+	float: left;
+	margin-left: 2.5%;
+	margin-right: 2.5%;
+}
+
+#myModal .cont1 img {
+	width: auto;
+	height: auto;
+	max-height: 248px;
+}
+
+#myModal .map {
+	width: 100%;
+	height: 100%;
+}
+
+#myModal .detailInfo {
+	width: 50%;
+	height: 150px;
+	border: 1px solid;
+	font-size: 14px;
+	margin: auto;
+	margin-top: 10px;
+	margin-bottom: 15px;
+	overflow: auto;
+}
+
+.attrInsert * {
+	box-sizing: border-box;
+}
+
+.attrInsert+div {
+	margin-bottom: 15px;
+}
+
+.attrInsert .title-area, .attrInsert .serach-area {
+	padding: 15px;
+}
+
+.attrInsert .float * {
+	float: left;
+}
+
+.attrInsert .float h2 {
+	font-weight: 700;
+	width: 67%;
+	line-height: 2;
+}
+
+.attrInsert .float img {
+	width: 8%;
+	margin-left: 25px;
+}
+
+.attrInsert .title-area pre {
+	font-size: 13px;
+	font-weight: 500;
+	width: 100%;
+}
+
+.attrInsert hr {
+	border: 0;
+	height: 3px;
+	background: #ccc;
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.attrInsert .serach-area input {
+	width: 50%;
+	height: 35px;
+}
+
+.attrInsert .btn-area button, .attrInsert .serach-area button {
+	font-weight: 700;
+	border-radius: 7%;
+}
+
+.attrInsert .serach-area button {
+	width: 50px;
+	height: 35px;
+}
+
+.attrInsert .modalBody {
+	width: 90%;
+}
+
+.attrInsert table {
+	width: 100%;
+	border: 2px solid darkgray;
+}
+
+.attrInsert thead th {
+	height: 50px;
+	font-size: 25px;
+	font-weight: 800;
+	padding-left: 20px;
+	color: #282828;
+}
+
+.attrInsert tbody th {
+	height: 40px;
+	width: 18%;
+	text-align: center;
+	color: #3e3e3e;
+}
+
+.attrInsert table * {
+	border-collapse: collapse;
+	border: 2px solid darkgray;
+}
+
+.attrInsert table input {
+	width: 100%;
+	height: 100%;
+	border: none;
+}
+
+.attrInsert table #img-area {
+	height: 300px;
+}
+
+.attrInsert .btn-area {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.attrInsert .btn-area button {
+	width: 100px;
+	height: 35px;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+#myMap .modal-content {
+	padding: 20px;
+}
+
+#myMap .modal-header h3 {
+	font-weight: 800;
+}
+
+#myMap #map-submit button {
+	width: 55px;
+	border: 1.5px solid rgb(96, 96, 96);
+	font-weight: 500;
+}
+
+.attrUpdate {
+	width: 75%;
+	margin: auto;
+}
+
+.attrUpdate * {
+	box-sizing: border-box;
+}
+
+.attrUpdate+div {
+	margin-bottom: 15px;
+}
+
+.attrUpdate .title-area, .attrUpdate .serach-area {
+	padding: 15px;
+}
+
+.attrUpdate .float * {
+	float: left;
+}
+
+.attrUpdate .float h2 {
+	font-weight: 700;
+	width: 67%;
+	line-height: 2;
+}
+
+.attrUpdate .float img {
+	width: 8%;
+	margin-left: 25px;
+}
+
+.attrUpdate .title-area pre {
+	font-size: 13px;
+	font-weight: 500;
+	width: 100%;
+}
+
+.attrUpdate hr {
+	border: 0;
+	height: 3px;
+	background: #ccc;
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.attrUpdate .serach-area input {
+	width: 50%;
+	height: 35px;
+}
+
+.attrUpdate .btn-area button, .attrUpdate .serach-area button {
+	font-weight: 700;
+	border-radius: 7%;
+}
+
+.attrUpdate .serach-area button {
+	width: 50px;
+	height: 35px;
+}
+
+.attrUpdate .modalBody {
+	width: 90%;
+}
+
+.attrUpdate table {
+	width: 100%;
+	border: 2px solid darkgray;
+}
+
+.attrUpdate thead th {
+	height: 50px;
+	font-size: 25px;
+	font-weight: 800;
+	padding-left: 20px;
+	color: #282828;
+}
+
+.attrUpdate tbody th {
+	height: 40px;
+	width: 18%;
+	text-align: center;
+	color: #3e3e3e;
+}
+
+.attrUpdate table * {
+	border-collapse: collapse;
+	border: 2px solid darkgray;
+}
+
+.attrUpdate table input {
+	width: 100%;
+	height: 100%;
+	border: none;
+}
+
+.attrUpdate table #img-area {
+	height: 300px;
+}
+
+.attrUpdate .btn-area {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.attrUpdate .btn-area button {
+	width: 100px;
+	height: 35px;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+.modifyRequest {
+	width: 75%;
+	margin: auto;
+}
+
+.modifyRequest * {
+	margin: auto;
+	box-sizing: border-box;
+	text-align: center;
+}
+
+.modifyRequest>div, .modifyRequest .con {
+	margin-bottom: 15px;
+}
+
+.modifyRequest .title-area {
+	width: 100%;
+	height: 50px;
+	margin-top: 30px;
+	margin-left: 37%;
+}
+
+.modifyRequest .title-area h2 {
+	font-weight: 800;
+}
+
+.modifyRequest .title-area .float1 {
+	height: 100%;
+}
+
+.modifyRequest .title-area .float2 {
+	height: 100%;
+	width: 7%;
+}
+
+.float1, .float2 {
+	float: left;
+	display: inline-block;
+}
+
+.modifyRequest img {
+	width: 40px;
+}
+
+.modifyRequest .fieldset {
+	border: 2px solid gray;
+	padding: 20px 0px 20px 20px;
+}
+
+.modifyRequest .checkbox-area table {
+	margin: auto;
+	left: 0;
+	right: 0;
+}
+
+.modifyRequest .checkbox-area table * {
+	font-size: 17px;
+	text-align: left;
+}
+
+.modifyRequest .checkbox-area td {
+	width: 180px;
+}
+
+.modifyRequest .checkbox-area input[type=checkbox] {
+	margin-right: 5px;
+}
+
+.modifyRequest .checkbox-area h6 {
+	font-size: 18px;
+	font-weight: 700;
+	margin-bottom: 20px;
+	text-decoration-line: underline;
+	text-decoration-color: rgba(250, 205, 219, 0.573);
+	text-decoration-thickness: 10px;
+	text-underline-offset: -3px;
+}
+
+.modifyRequest hr {
+	border: 0;
+	height: 3px;
+	background: #ccc;
+	margin-bottom: 20px;
+}
+
+.modifyRequest .modify-area {
+	width: 100%;
+	height: auto;
+}
+
+.modifyRequest .modify-area * {
+	text-align: left;
+}
+
+.modifyRequest .modify-area .title {
+	font-size: 22px;
+	font-weight: 600;
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+.modifyRequest .conwrap {
+	height: 80px;
+	width: 100%;
+}
+
+.modifyRequest .checkImg {
+	width: 6%;
+	float: left;
+	margin: auto;
+}
+
+.modifyRequest .con {
+	border: 1px solid;
+	width: 93%;
+	float: left;
+}
+
+.modifyRequest .con div {
+	border: 1px solid;
+}
+
+.modifyRequest .modify {
+	width: 100%;
+	height: 40px;
+}
+
+.modifyRequest .modify div {
+	float: left;
+}
+
+.modifyRequest .con .column, .modifyRequest .modify .name {
+	line-height: 2.1;
+}
+
+.modifyRequest .con .column {
+	height: 40px;
+	width: 100%;
+	font-size: 19px;
+	font-weight: 550;
+	padding-left: 15px;
+	text-align:center;
+}
+
+.modifyRequest .modify .name {
+	padding-left: 8px;
+	width: 9%;
+	height: 100%;
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.modifyRequest .modify .input-area {
+	width: 41%;
+	height: 100%;
+}
+
+.modifyRequest .modify input {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	padding-left: 10px;
+	border: 0;
+}
+
+.modifyRequest .btn-area button {
+	width: 90px;
+	height: 35px;
+	font-size: 17px;
+	margin: 10px;
+}

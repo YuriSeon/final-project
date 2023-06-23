@@ -16,11 +16,11 @@ public class Info {
 	private int zoneNo; //ZONE_NO	NUMBER
 	private String infoAddress; //INFO_ADDRESS	VARCHAR2(100 BYTE)
 	private String infoTime; //INFO_TIME	VARCHAR2(50 BYTE)
-	private int infoMoney; // INFO_MONEY	NUMBER
 	private String infoHomepage; //INFO_HOMEPAGE	VARCHAR2(500 BYTE)
 	private String infoCall; //INFO_CALL	VARCHAR2(30 BYTE)
 	private String parking; //PARKING	VARCHAR2(1 BYTE)
 	private String infoName; //INFO_NAME	VARCHAR2(50 BYTE)
 	private int infoType; //INFO_TYPE	NUMBER
+	private String dayOff; // DAY_OFF VARCHAR2(50 BYTE)
 
 }

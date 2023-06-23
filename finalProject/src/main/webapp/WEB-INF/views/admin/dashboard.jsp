@@ -24,7 +24,7 @@
 <body>
 <%@include file="adMenubar.jsp" %>
 <!-- Content - Start  -->
-<div id="content-wrapper" style="background-color: #EEEEEE;">
+<div id="content-wrapper" style="height: auto; background-color: #EEEEEE;">
     <div class="container-fluid">
         <div class="dash-title">
         <h1>&nbsp;대시보드</h1>
@@ -56,58 +56,19 @@
             <!-- current-board start -->
             <div class="current-board">
                 <span>최근 신고 내역</span>
-                <table style="margin-bottom: 20px;">
+                <table id="reportTable" style="margin-bottom: 20px;">
                     <thead>
                         <tr>
-                            <th colspan="2">제목</th>
-                            <th>작성자</th>
-                            <th>신고횟수</th>
-                            <th>신고자</th>
-                            <th>신고날짜</th>
-                            <th>신고사유</th>
+                            <th style="width: 10%;">번호</th>
+                            <th style="width: 35%;">신고사유</th>
+                            <th style="width: 10%;">작성자</th>
+                            <th style="width: 10%;">신고횟수</th>
+                            <th style="width: 10%;">신고자</th>
+                            <th style="width: 20%;">신고일자</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td colspan="2">광고글 도배</td>
-                            <td>user01</td>
-                            <td>2</td>
-                            <td>user02</td>
-                            <td>2023.06.01</td>
-                            <td><button class="btn btn-info">신고 사유</button></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">광고글 도배</td>
-                            <td>user01</td>
-                            <td>2</td>
-                            <td>user02</td>
-                            <td>2023.06.01</td>
-                            <td><button class="btn btn-info">신고 사유</button></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">광고글 도배</td>
-                            <td>user01</td>
-                            <td>2</td>
-                            <td>user02</td>
-                            <td>2023.06.01</td>
-                            <td><button class="btn btn-info">신고 사유</button></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">광고글 도배</td>
-                            <td>user01</td>
-                            <td>2</td>
-                            <td>user02</td>
-                            <td>2023.06.01</td>
-                            <td><button class="btn btn-info">신고 사유</button></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">광고글 도배</td>
-                            <td>user01</td>
-                            <td>2</td>
-                            <td>user02</td>
-                            <td>2023.06.01</td>
-                            <td><button class="btn btn-info">신고 사유</button></td>
-                        </tr>
+                        
                     </tbody>
                 </table>
                 <span>최근 작성 글</span>
@@ -327,6 +288,48 @@
         }
         }
     });
+    
+    $(function() {
+		currentReportList();
+	});
+    
+    //최근 신고 5개
+    function currentReportList() {
+		$.ajax({
+			url:"currentReportList.ad",
+			success: function(list) {
+				var str = "";
+				for(var i in list){
+					str +="<tr>"
+	                    +"<td>"+list[i].reportNo+"</td>"
+	                    +"<td>"+list[i].reportReason+"</td>";
+	                    
+                    if (list[i].replyWriter == null) {
+                    	str +="<td>"+list[i].boardWriter+"</td>"
+                    		+"<td>"+list[i].boardReport+"</td>";
+					}else{
+						str +="<td>"+list[i].replyWriter+"</td>"
+                   			+"<td>"+list[i].replyReport+"</td>";
+					}
+                    
+                    str +="<td>"+list[i].writer+"</td>"
+	                    +"<td>"+list[i].createDate+"</td>"
+	                	+"</tr>";
+				}
+				
+				$("#reportTable>tbody").html(str);
+				
+// 				$("#boardList>tbody>tr").click(function () {
+// 					var bno = $(this).children().eq(0).text();
+// 					location.href = 'detail.bo?boardNo='+bno;
+// 				});
+				
+			},
+			error: function() {
+				console.log("통신실패");
+			}
+		});
+	}
    </script>
 </body>
 </html>
