@@ -15,6 +15,9 @@ import com.kh.finalProject.admin.model.dao.AdminDao;
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Festival;
+import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.dao.MemberDao;
@@ -350,7 +353,159 @@ public class AdminServiceImpl implements AdminService {
 			return memberDao.insertImg(sqlSession,a);
 		}
 	}
+	
+	//==================================================회원관리===========================================================
 
+	//게시글 축제 리스트 개수
+	@Override
+	public int festivalListCount() {
+		return adminDao.festivalListCount(sqlSession);
+	}
+
+	//게시글 축제 리스트 개수
+	@Override
+	public ArrayList<Board> selectFestivalList(PageInfo pi) {
+		return adminDao.selectFestivalList(sqlSession,pi);
+	}
+
+	//게시글 축제 검색 개수
+	@Override
+	public int festivalSearchCount(HashMap<String, String> map) {
+		return adminDao.festivalSearchCount(sqlSession,map);
+	}
+
+	//게시글 축제 검색 리스트 개수
+	@Override
+	public ArrayList<Board> festivalSearchList(HashMap<String, String> map, PageInfo pi) {
+		return adminDao.festivalSearchList(sqlSession,map,pi);
+	}
+
+	//게시글 축제 삭제
+	@Override
+	public int festivalDelete(Integer boardNo) {
+		return adminDao.festivalDelete(sqlSession, boardNo);
+	}
+
+	//게시글 축제 수정 조회
+	@Override
+	public Board festivalSelect(int boardNo) {
+		return adminDao.festivalSelect(sqlSession,boardNo);
+	}
+
+	//게시글 축제 수정 파일 조회
+	@Override
+	public ArrayList<Attachment> festivalFileSelect(int boardNo) {
+		return adminDao.festivalFileSelect(sqlSession,boardNo);
+	}
+
+	//게시글 축제 수정 축제 조회
+	@Override
+	public Festival festivalFesSelect(int boardNo) {
+		return adminDao.festivalFesSelect(sqlSession,boardNo);
+	}
+
+	//게시글 축제 수정 인포 조회
+	@Override
+	public Info festivalInfoSelect(int boardNo) {
+		return adminDao.festivalInfoSelect(sqlSession,boardNo);
+	}
+
+	//게시글 축제 수정
+	@Override
+	public int festivalUpdate(Board b, Info in, ArrayList<Attachment> list, Festival f) {
+		
+		//보드 등록
+		int result =  adminDao.festivalUpdateBoard(sqlSession, b);
+		//장소 정보 등록
+		int result2 = adminDao.festivalUpdateInfo(sqlSession, in);
+		//어태치먼트 등록
+		int result3 = 1;
+		for(Attachment at : list) {
+			result3 *= adminDao.festivalUpdateAt(sqlSession, at);			
+		}
+		//페스티발 등록
+		int result4 = adminDao.festivalUpdateFes(sqlSession, f);
+		
+		return result*result2*result3*result4;
+	}
+
+	//게시글 축제 수정 파일 삭제
+	@Override
+	public int festivalFileDel(Integer fileNo) {
+		return adminDao.festivalFileDel(sqlSession,fileNo);
+	}
+
+	//게시글 테마 리스트 개수
+	@Override
+	public int themeListCount() {
+		return adminDao.themeListCount(sqlSession);
+	}
+
+	//게시글 테마 리스트 조회
+	@Override
+	public ArrayList<Board> selectThemeList(PageInfo pi) {
+		return adminDao.selectThemeList(sqlSession,pi);
+	}
+
+	//게시글 명소 리스트 개수
+	@Override
+	public int attractionListCount() {
+		return adminDao.attractionListCount(sqlSession);
+	}
+	
+	//게시글 명소 리스트 조회
+	@Override
+	public ArrayList<Board> selectAttractionList(PageInfo pi) {
+		return adminDao.selectAttractionList(sqlSession,pi);
+	}
+
+	//게시글 피드 리스트 개수
+	@Override
+	public int feedListCount() {
+		return adminDao.feedListCount(sqlSession);
+	}
+
+	//게시글 피드 리스트 조회
+	@Override
+	public ArrayList<Board> selectFeedList(PageInfo pi) {
+		return adminDao.selectFeedList(sqlSession,pi);
+	}
+
+	//게시글 일정자랑 리스트 개수
+	@Override
+	public int scheduleListCount() {
+		return adminDao.scheduleListCount(sqlSession);
+	}
+
+	//게시글 일정자랑 리스트 조회
+	@Override
+	public ArrayList<Board> selectScheduleList(PageInfo pi) {
+		return adminDao.selectScheduledList(sqlSession,pi);
+	}
+
+	//게시글 함께가치 리스트 개수
+	@Override
+	public int togetherListCount() {
+		return adminDao.togetherListCount(sqlSession);
+	}
+
+	//게시글 함께가치 리스트 조회
+	@Override
+	public ArrayList<Board> selectTogetherList(PageInfo pi) {
+		return adminDao.selectTogetherList(sqlSession,pi);
+	}
+
+	//게시글 테마 검색 개수
+	@Override
+	public int themeSearchCount(HashMap<String, String> map) {
+		return adminDao.themeSearchCount(sqlSession,map);
+	}
+
+	//게시글 테마 검색 리스트 조회	
+	@Override
+	public ArrayList<Board> themeSearchList(HashMap<String, String> map, PageInfo pi) {
+		return adminDao.themeSearchList(sqlSession,map,pi);
+	}
 	
 	
 	

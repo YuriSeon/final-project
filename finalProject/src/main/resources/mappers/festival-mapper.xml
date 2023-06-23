@@ -7,7 +7,7 @@
 	<!-- 보드 등록 -->
 	<insert id="insertBoard" parameterType="board" >
 		INSERT INTO BOARD (BOARD_NO, ZONE_NO, INFO_NO, CATEGORY, BOARD_TITLE, BOARD_CONTENT, BOARD_WRITER)
-            		VALUES (SEQ_BNO.NEXTVAL,#{zoneNo},SEQ_INO.NEXTVAL,6,#{boardTitle},#{boardContent},#{boardWriter})
+            		VALUES (SEQ_BNO.NEXTVAL,#{zoneNo},SEQ_INO.NEXTVAL,2,#{boardTitle},#{boardContent},#{boardWriter})
 	</insert>
 	
 	<!-- 장소 정보 등록 -->
@@ -20,8 +20,8 @@
 	
 	<!-- 어태치먼트 등록 -->
 	<insert id="insertAt" parameterType="attachment">
-		INSERT INTO ATTACHMENT(FILE_NO, BOARD_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, FILE_LEVEL, WRITER)
-                		VALUES(SEQ_FNO.NEXTVAL, SEQ_BNO.CURRVAL,#{originName},#{changeName},#{filePath},#{fileLevel},#{writer})
+		INSERT INTO ATTACHMENT(FILE_NO, BOARD_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, FILE_LEVEL)
+                		VALUES(SEQ_FNO.NEXTVAL, SEQ_BNO.CURRVAL,#{originName},#{changeName},#{filePath},#{fileLevel})
 	</insert>
 	
 	<!-- 페스티벌 등록 -->

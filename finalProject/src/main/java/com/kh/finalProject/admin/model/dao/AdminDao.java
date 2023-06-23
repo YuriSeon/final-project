@@ -12,6 +12,9 @@ import org.springframework.stereotype.Repository;
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Festival;
+import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.vo.Member;
@@ -305,8 +308,168 @@ public class AdminDao {
 		return sqlSession.delete("adminMapper.delProfileImg", nickname);
 	}
 	
+	//=================================================게시글관리===========================================================
 
+	//게시글 축제 리스트 개수
+	public int festivalListCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminMapper.festivalListCount");
+	}
 	
+	//게시글 축제 리스트 조회
+	public ArrayList<Board> selectFestivalList(SqlSessionTemplate sqlSession, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("adminMapper.selectFestivalList",null,rowBounds);
+	}
+
+	//게시글 축제 검색 개수
+	public int festivalSearchCount(SqlSessionTemplate sqlSession, HashMap<String, String> map) {
+		return sqlSession.selectOne("adminMapper.festivalSearchCount",map);
+	}
+	
+	//게시글 축제 검색 리스트 개수
+	public ArrayList<Board> festivalSearchList(SqlSessionTemplate sqlSession, HashMap<String, String> map,PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("adminMapper.festivalSearchList",map,rowBounds);
+	}
+
+	//게시글 축제 삭제
+	public int festivalDelete(SqlSessionTemplate sqlSession, Integer boardNo) {
+		return sqlSession.update("adminMapper.festivalDelete",boardNo);
+	}
+	//게시글 축제 수정 조회
+	public Board festivalSelect(SqlSessionTemplate sqlSession, int boardNo) {
+		return sqlSession.selectOne("adminMapper.festivalSelect",boardNo);
+	}
+
+	//게시글 축제 수정 파일 조회
+	public ArrayList<Attachment> festivalFileSelect(SqlSessionTemplate sqlSession, int boardNo) {
+		return (ArrayList)sqlSession.selectList("adminMapper.festivalFileSelect",boardNo);
+	}
+
+	//게시글 축제 수정 축제 조회
+	public Festival festivalFesSelect(SqlSessionTemplate sqlSession, int boardNo) {
+		return sqlSession.selectOne("adminMapper.festivalFesSelect",boardNo);
+	}
+
+	//게시글 축제 수정 인포 조회
+	public Info festivalInfoSelect(SqlSessionTemplate sqlSession, int boardNo) {
+		return sqlSession.selectOne("adminMapper.festivalInfoSelect",boardNo);
+	}
+
+	//게시글 축제 보드 수정 
+	public int festivalUpdateBoard(SqlSessionTemplate sqlSession, Board b) {
+		return sqlSession.update("adminMapper.festivalUpdateBoard",b);
+	}
+
+	//게시글 축제 인포 수정
+	public int festivalUpdateInfo(SqlSessionTemplate sqlSession, Info in) {
+		return sqlSession.update("adminMapper.festivalUpdateInfo",in);
+	}
+
+	//게시글 축제 파일 수정
+	public int festivalUpdateAt(SqlSessionTemplate sqlSession, Attachment at) {
+		return sqlSession.update("adminMapper.festivalUpdateAt",at);
+	}
+
+	//게시글 축제 축제 수정
+	public int festivalUpdateFes(SqlSessionTemplate sqlSession, Festival f) {
+		return sqlSession.update("adminMapper.festivalUpdateFes",f);
+	}
+
+	//게시글 축제 수정 파일 삭제
+	public int festivalFileDel(SqlSessionTemplate sqlSession, Integer fileNo) {
+		return sqlSession.update("adminMapper.festivalFileDe", fileNo);
+	}
+
+	//게시글 테마 리스트 개수
+	public int themeListCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminMapper.themeListCount");
+	}
+
+	//게시글 테마 리스트 조회
+	public ArrayList<Board> selectThemeList(SqlSessionTemplate sqlSession, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("adminMapper.selectThemeList",null,rowBounds);
+	}
+
+	//게시글 명소 리스트 개수
+	public int attractionListCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminMapper.attractionListCount");
+	}
+
+	//게시글 명소 리스트 조회
+	public ArrayList<Board> selectAttractionList(SqlSessionTemplate sqlSession, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("adminMapper.selectAttractionList",null,rowBounds);
+	}
+
+	//게시글 피드 리스트 개수
+	public int feedListCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminMapper.feedListCount");
+	}
+
+	//게시글 피드 리스트 조회
+	public ArrayList<Board> selectFeedList(SqlSessionTemplate sqlSession, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("adminMapper.selectFeedList",null,rowBounds);
+	}
+
+	//게시글 일정자랑 리스트 개수
+	public int scheduleListCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminMapper.scheduleListCount");
+	}
+
+	//게시글 일정자랑 리스트 조회
+	public ArrayList<Board> selectScheduledList(SqlSessionTemplate sqlSession, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("adminMapper.selectScheduleList",null,rowBounds);
+	}
+
+	//게시글 함께가치 리스트 개수
+	public int togetherListCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminMapper.togetherListCount");
+	}
+
+	//게시글 함께가치 리스트 조회
+	public ArrayList<Board> selectTogetherList(SqlSessionTemplate sqlSession, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("adminMapper.selectTogetherList",null,rowBounds);
+	}
+
+	//게시글 테마 검색 개수
+	public int themeSearchCount(SqlSessionTemplate sqlSession, HashMap<String, String> map) {
+		return sqlSession.selectOne("adminMapper.themeSearchCount",map);
+	}
+
+	//게시글 테마 검색 리스트 조회
+	public ArrayList<Board> themeSearchList(SqlSessionTemplate sqlSession, HashMap<String, String> map, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("adminMapper.themeSearchList",map,rowBounds);
+	}
 
 	
 	
