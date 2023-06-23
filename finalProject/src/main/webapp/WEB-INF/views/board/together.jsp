@@ -84,6 +84,37 @@
 			height : 50px;
 			background-color: #7c838b;
 		}
+		#togetherApplyAlertDiv{
+			width:400px;
+			height:500px;
+			border:3px solid #7c838b;
+			border-radius: 20px;
+			background-color: #7c838b;
+		}
+/* 		#applyModalBody{ */
+/* 			border:none; */
+/* 		} */
+		#applyContent{
+			margin:20px;
+			width:360px;
+			height:460px;
+			border-radius: 20px;
+			background-color: white;
+		}
+		#applyTitle{
+			padding: 15px 0px 0px 20px;
+		}
+		#applyMessage{
+			width: 320px;
+			height: 150px;
+			resize: none;
+		}
+		#applyDate{
+			margin-bottom: 10px;
+		}
+		#applyBtnArea>button{
+			margin:0px 10px;
+		}
 	</style>
     <title>함께 가치</title>
 
@@ -94,6 +125,17 @@
     <link rel="stylesheet" type="text/css" href="/finalProject/resources/css/owl-carousel.css">
 
     <link rel="stylesheet" href="/finalProject/resources/css/tooplate-artxibition.css">
+    <!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+	
+	<!-- jQuery library -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+	
+	<!-- Popper JS -->
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	
+	<!-- Latest compiled JavaScript -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     </head>
     
     <body>
@@ -231,7 +273,7 @@
 																	if(d - today >0 && result[i].together - result[i].togetherCount != 0){
 										                            			<%if(request.getSession().getAttribute("loginUser") != null){%>
 // 													                            	  str += "<a href='#'>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</a>";
-													                            	  str += "<button type='button' class='togetherBtn'>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</button>";
+													                            	  str += "<button type='button' class='togetherBtn' data-toggle="modal" data-target="#applyModal">참여하기 "+result[i].togetherCount+"/"+result[i].together+"</button>";
 													                           <%}else{%>
 // 															                          str += "<a style='background-color:lightgray;''>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</a>"
 																					  str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</button>";
@@ -325,36 +367,19 @@
                 <script>
                 	$("#contentOuter").on("click","button",function(){
                 		var boardNo = $(this).parent().parent().parent().parent().children("input").val();
+                		var title = $(this).parent().siblings("h4").text().split('>');
                 		if(confirm("이 여행의 세부 일정을 확인하시겠습니까 ?")){
                 			location.href="";
                 		}else{
                 			if(confirm("세부 일정을 확인하지 않고 이 여행에 참여하시겠습니까 ?")){
 	                			if(confirm("참여하기 버튼은 하루에 한개만 누르실 수 있습니다. \n진행하시겠습니까 ?")){
-	                				/*
-	                				$.ajax({
-	                					url : "togetherApply.bo",
-	                					data : {
-	                						boardNo : boardNo,
-	                						nickname : ${loginUser.nickname},
-	                						message : 
-	                						},
-	                					success : function(result){
-	                						console.log(result);
-	                						if(result == 1){
-	                							alert("참여하기에 성공하였습니다.\n작성자의 결정을 기다려주세요.");
-	                							
-	                							
-	                							
-	                							location.reload();
-	                						}else{
-	                							alert("참여하기에 실패하였습니다. \n다시 시도해주세요.");
-	                						}
-	                					},
-	                					error : function(){
-	                						console.log("참여하기 실패!");
-	                					}
-	                				});
-	                				*/
+	                				$("#applyTermText").html($(this).parent().siblings("h5").text());
+	                				$("#applyTitleText").html(title[0]+"><br>"+title[1].trim());
+	                				$("#applyDate").html($(this).parent().siblings("ul").children().eq(0).text());
+	                				$("#applyPay").html($(this).parent().siblings("ul").children().eq(2).text());
+	                				$("#applyBoardNo").val(boardNo);
+	                				
+	                				$("#applyModal").modal('show');
 	                				
 	                			}else{
 	                				alert("참여하기를 취소합니다.")
@@ -364,6 +389,7 @@
                 			}
                 		}
                 	});
+                	
                 </script>
                 
                 <div class="col-lg-12">
@@ -438,6 +464,39 @@
             </div>
         </div>
     </div>
+
+		<div class="modal fade" id="applyModal">
+		  <div class="modal-dialog" style="width:400px; height: 500px; ">
+			<div class="modal-content" style=" border-radius: 23px; border: 1px solid #7c838b;">
+			  <!-- Modal body -->
+			  <div id="applyModalBody" style="padding: 0;">
+				<div id="togetherApplyAlertDiv" >
+					<div id="applyContent">
+							<div id="applyTitle">
+								<h5 id="applyTermText"></h5>
+								<h4 align="center" id="applyTitleText"></h4>
+							</div>
+							<div id="applyDate" align="center"></div>
+							<div id="applyPay" align="center"></div>
+							<br>
+						<form action="togetherApply.bo" method="post">
+							<input type="hidden" name="writer" id="writer" value="${loginUser.nickname }">
+							<input type="hidden" name="boardNo" id="applyBoardNo">
+							<div id="applyMessageDiv" align="center">
+								<textarea name="applyMessage" id="applyMessage" placeholder="글 작성자에게 하실 말을 적어주세요. (최대 70자)"></textarea>
+							</div>
+							<br>
+							<div id="applyBtnArea" align="center">
+								<button type="submit" id="applySubmitBtn" class="btn btn-outline-info">참여하기</button>
+								<button type="button" id="applyOutBtn" class="btn btn-outline-danger" data-dismiss="modal">취소하기</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			  </div> <!--modal-body-->
+			</div>
+		  </div>
+		</div>
 
     <!-- *** Footer *** -->
     <footer>

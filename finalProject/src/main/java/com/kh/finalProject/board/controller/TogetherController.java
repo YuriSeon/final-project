@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -105,12 +106,13 @@ public String optionSearch(String startDate, String endDate, String location, in
 	return new Gson().toJson(list);
 }
 
-@ResponseBody
-@GetMapping("togetherApply.bo")
-public int togetherApply(int boardNo) {
+@PostMapping("togetherApply.bo")
+public ModelAndView togetherApply(int boardNo, String writer, String applyMessage, ModelAndView mv) {
 	
-	int result = togetherService.togetherApply(boardNo);
+//	int result = togetherService.togetherApply(boardNo);
+//	System.out.println(boardNo+" "+writer+" "+applyMessage);
 	
-	return result;
+	
+	return mv;
 }
 }
