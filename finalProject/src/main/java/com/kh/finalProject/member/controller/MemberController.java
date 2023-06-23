@@ -758,7 +758,10 @@ public class MemberController {
 	public String loadProfile(String nickname) {
 		
 		Member m = memberService.loadProfile(nickname);
-		
+
+		if(m.getProfileImg() == null) {
+			m.setProfileImg("resources/images/기본프로필.png");
+		}
 		return new Gson().toJson(m);
 	}
 }
