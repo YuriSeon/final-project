@@ -586,7 +586,7 @@
 	<script src="/finalProject/resources/js/bootstrap.min.js"></script>
 	
 	<!-- Plugins -->
-	<<script src="/finalProject/resources/js/scrollreveal.min.js"></script>
+	<script src="/finalProject/resources/js/scrollreveal.min.js"></script>
 	<script src="/finalProject/resources/js/waypoints.min.js"></script>
 	<script src="/finalProject/resources/js/jquery.counterup.min.js"></script>
 	<script src="/finalProject/resources/js/imgfix.min.js"></script>

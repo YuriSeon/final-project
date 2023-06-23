@@ -5,25 +5,133 @@
   <head>
     <title>명소</title>
    	<style>
-   		
-		#p {
-			font-size: 25px;
-		    color: black;
-		    font-weight: 800;
-		    margin-bottom: 15px;
+		.attr *{
+			margin: auto;
+			box-sizing: border-box;
+			text-align: center;
 		}
-		b {
-			font-size : 30px;
+		.attr div {
+			border: 1px solid;
 		}
-		#like{
-			width : 20px;
+   		.attr #mainPhoto {
+			background-image: url('resources/images/main-attraction.jpg');
+			background-size: cover;
+			background-repeat: no-repeat;
+			width: 100%;
+			height: 450px;
 		}
-		#content-array {
-			float : left;
+		.attr .float, .attr #content {
+			width: 100%;
+			height: 720px;
+			margin-top: 10px;
 		}
-		#content-array div{
-			width : 100%
+		.attr #main-map{
+			width: 70%;
+			height: 100%;
+			margin-left: 5%;
 		}
+		.attr #zone-area {
+			width: 20%;
+			height: 100%;
+			margin-right: 5%;
+			margin: auto;
+		}
+		.attr #zone-area>div {
+			width: 50%;
+			height: 35px;
+			margin-top: 5px;
+			line-height: 1.8;
+			font-size: 18px;
+			font-weight: 450;
+			border: 2px solid rgb(138, 138, 138);
+		}
+		.attr #zone-area>div:hover {
+			cursor: pointer;
+			background-color: rgb(173, 173, 173);
+		}
+		.attr #zone-area>div:active {
+			font-weight: 700;
+			background-color: rgb(173, 173, 173);
+			color: white;
+		}
+		.attr #zone-area #first{
+			margin-top: 20px;
+		}
+		.attr .float>div, .attr #content-area>div, .attr .list, .attr .content_search div {
+			float: left;
+		}
+		.attr #mini-map {
+			width: 40%;
+			height: 100%;
+		}
+		.attr #content-area {
+			width: 55%;
+			height: 90%;
+			margin-right: 5%;
+		}
+		.attr .pagination {
+			width: 55%;
+			height: 10%;
+			margin-right: 5%;
+		}
+		/* 여기부터 영역 다시 보고 크기 다시 잡기  */
+		.attr .search-area { 
+			width: 100%;
+			height: 20%;
+			display: block;
+			margin: 0 auto;
+		}
+		.attr .content-title {
+			width: 100%;
+			height: 80%;
+			font-size: 20px;
+		}
+		.attr .content-title #p {
+		}
+		.attr .content-search {
+			width: 100%;
+			height: 20%;
+		}
+		.attr .search-input {
+			width: 80%;
+			height: 100%;
+		}
+		.attr .search-icon {
+			width: 20%;
+			height: 100%;
+		}
+		.attr .search-icon img, .attr .search-icon button {
+			width: 100%;
+			height: 100%;
+			max-height: 100px;
+		}
+		input#search-bar{
+			margin: 0 auto;
+			width: 100%;
+			height: 100%;
+			font-size: 1rem;
+			border: 1px solid #D0CFCE;
+			outline: none;
+			&:focus{
+				border: 1px solid #008ABF;
+				transition: 0.35s ease;
+				color: #008ABF;
+				&::-webkit-input-placeholder{
+				transition: opacity 0.45s ease; 
+				opacity: 0;
+				}
+				&::-moz-placeholder {
+				transition: opacity 0.45s ease; 
+				opacity: 0;
+				}
+				&:-ms-placeholder {
+				transition: opacity 0.45s ease; 
+				opacity: 0;
+				}    
+			}
+		}
+		
+
    	</style>
   </head>
    <body>
@@ -53,48 +161,123 @@
 	<!-- 먼저 상세페이지로 이동하기위해 만들어놓은 태그 나중에 지우기 -->
 	<a href="detail.attr">상세페이지로이동태그</a>
 	<a href="insert.attr">insert page</a>
-    <div class="page-heading-about"></div>
-    <!-- main화면의 큰 지도 들어갈 위치 -->
-    <!-- react라서 수업 진도 나가고 나서 해보기 d3 cdn은 미리 넣어둠! -->
-    <div id="main-map"></div>
-    <div id="content">
-    	<div id="content-array">
-	    	<!-- 작아진 지도 들어갈 위치 -->
-	    	<div id="mini-map"></div>
-	    	<!-- 지도에 표시된 지역으로 조회한 내역 들어갈 위치 -->
-		    <div id="content-area">
-				<div class="search_area">
-					<form action="" method="get">
-						<div class="content_title">
-							<p id="p"><b>지역명</b>으로 떠나볼까요?</p>
-						</div>
-						<div class="content_search">
-							<input type="text" id="search_input" name="search_input">
-							<button type="submit">검색</button>
-						</div>
-					</form>
-				</div>
-			
-				<div class="list-area"><!-- 양쪽과 하방에 마진주는 div -->
-					<div class="area-img">
-						<img src="" alt="여행지 이미지 크기 정해서 들어갈 곳">
+    <div class="attr">
+		<div id="mainPhoto"></div>
+		<div class="float">
+			<div id="main-map">
+				<!-- main화면의 큰 지도 들어갈 위치 -->
+			</div>
+			<div id="zone-area">
+				<div id="first"><span class="seoul">서울</span></div>
+				<div><span class="busan">부산</span></div>
+				<div><span class="">대구</span></div>
+				<div><span class="">인천</span></div>
+				<div><span class="">광주</span></div>
+				<div><span class="">대전</span></div>
+				<div><span class="">울산</span></div>
+				<div><span class="">세종</span></div>
+				<div><span class="">경기</span></div>
+				<div><span class="">충북</span></div>
+				<div><span class="">충남</span></div>
+				<div><span class="">전북</span></div>
+				<div><span class="">전남</span></div>
+				<div><span class="">경북</span></div>
+				<div><span class="">경남</span></div>
+				<div><span class="kangwoun">강원</span></div>
+				<div><span class="jeju">제주</span></div>
+			</div>
+		</div>
+		<!-- react라서 수업 진도 나가고 나서 해보기 d3 cdn은 미리 넣어둠! -->
+		<div id="content">
+			<div class="float">
+				<!-- 작아진 지도 들어갈 위치 -->
+				<div id="mini-map"></div>
+				<!-- 지도에 표시된 지역으로 조회한 내역 들어갈 위치 -->
+				<div id="content-area">
+					<div class="search-area">
+						<form action="" method="get">
+							<div class="content_title">
+								<p id="p"><b>지역명</b>으로 떠나볼까요?</p>
+							</div>
+							<div class="content_search">
+								<div class="search-input">
+									<input type="text" id="search-bar" placeholder="What can I help you with today?">
+								</div>
+								<div class="search-icon"><!--<button type="submit"><img  src="resources/images/fes_search.png"></button>--></div>
+							</div>
+						</form>
 					</div>
-					<!-- 좋아요 클릭 전 후 이미지 (조건걸고 좋아요 후 출력) -->
-					<img id="like" src="resources/images/Like-before.png"> 
-					<img id="like" src="resources/images/Like-after.png"> <br>
-					<h4>여행지 이름 들어갈 곳</h4>
+					<div class="list-area"><!-- 양쪽과 하방에 마진주는 div -->
+						<div class="list">
+							<div class="area-img">
+								<img src="" alt="여행지 이미지 크기 정해서 들어갈 곳">
+							</div>
+							<!-- 좋아요 클릭 전 후 이미지 (조건걸고 좋아요 후 출력) -->
+							<h4>여행지 이름 들어갈 곳</h4>
+							<ul>
+								<li><i class="fa fa-map-marker"></i>주소이름 들어갈 곳</li>
+							</ul>
+						</div>
+						<div class="list">
+							<div class="area-img">
+								<img src="" alt="여행지 이미지 크기 정해서 들어갈 곳">
+							</div>
+							<!-- 좋아요 클릭 전 후 이미지 (조건걸고 좋아요 후 출력) -->
+							<h4>여행지 이름 들어갈 곳</h4>
+							<ul>
+								<li><i class="fa fa-map-marker"></i>주소이름 들어갈 곳</li>
+							</ul>
+						</div>
+						<div class="list">
+							<div class="area-img">
+								<img src="" alt="여행지 이미지 크기 정해서 들어갈 곳">
+							</div>
+							<!-- 좋아요 클릭 전 후 이미지 (조건걸고 좋아요 후 출력) -->
+							<h4>여행지 이름 들어갈 곳</h4>
+							<ul>
+								<li><i class="fa fa-map-marker"></i>주소이름 들어갈 곳</li>
+							</ul>
+						</div>
+						<div class="list">
+							<div class="area-img">
+								<img src="" alt="여행지 이미지 크기 정해서 들어갈 곳">
+							</div>
+							<!-- 좋아요 클릭 전 후 이미지 (조건걸고 좋아요 후 출력) -->
+							<h4>여행지 이름 들어갈 곳</h4>
+							<ul>
+								<li><i class="fa fa-map-marker"></i>주소이름 들어갈 곳</li>
+							</ul>
+						</div>
+						<div class="list">
+							<div class="area-img">
+								<img src="" alt="여행지 이미지 크기 정해서 들어갈 곳">
+							</div>
+							<!-- 좋아요 클릭 전 후 이미지 (조건걸고 좋아요 후 출력) -->
+							<h4>여행지 이름 들어갈 곳</h4>
+							<ul>
+								<li><i class="fa fa-map-marker"></i>주소이름 들어갈 곳</li>
+							</ul>
+						</div>
+						<div class="list">
+							<div class="area-img">
+								<img src="" alt="여행지 이미지 크기 정해서 들어갈 곳">
+							</div>
+							<!-- 좋아요 클릭 전 후 이미지 (조건걸고 좋아요 후 출력) -->
+							<h4>여행지 이름 들어갈 곳</h4>
+							<ul>
+								<li><i class="fa fa-map-marker"></i>주소이름 들어갈 곳</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- 페이징바 크기수정하기 -->
+				<div class="pagination">
 					<ul>
-						<li><i class="fa fa-map-marker"></i>주소이름 들어갈 곳</li>
+						<li><a href="#">Prev</a></li>
+						<li><a href="#">1</a></li>
+						<li><a href="#">Next</a></li>
 					</ul>
 				</div>
-			</div>
-			<!-- 페이징바 크기수정하기 -->
-			<div class="pagination">
-				<ul>
-					<li><a href="#">Prev</a></li>
-					<li><a href="#">1</a></li>
-					<li><a href="#">Next</a></li>
-				</ul>
 			</div>
 		</div>
 	</div>
