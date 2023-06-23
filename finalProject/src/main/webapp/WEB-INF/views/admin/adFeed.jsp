@@ -159,7 +159,7 @@
 					    <div class="swiper-wrapper">
 					        <div class="swiper-slide"><img src="resources/images/thema/2023062314010399522.jpg" width="95%;" height="600px;"></div>
 					        <div class="swiper-slide">22</div>
-					        <div class="swiper-slide">3</div>
+					        <div class="swiper-slide">33</div>
 					        <div class="swiper-slide">4</div>
 					    </div>
 					    <div class="swiper-button-prev"></div>
