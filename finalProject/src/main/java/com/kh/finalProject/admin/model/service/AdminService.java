@@ -12,6 +12,7 @@ import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Festival;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.Theme;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.vo.Member;
 
@@ -177,8 +178,8 @@ public interface AdminService {
 	//게시글 축제 검색 리스트 조회
 	ArrayList<Board> festivalSearchList(HashMap<String, String> map, PageInfo pi);
 
-	//게시글 축제 삭제
-	int festivalDelete(Integer boardNo);
+	//게시글 축제 축제 삭제
+	int festivalDel(Integer boardNo);
 
 	//게시글 축제 수정 페이지 조회
 	Board festivalSelect(int boardNo);
@@ -248,6 +249,26 @@ public interface AdminService {
 
 	//게시글 테마 인포 삭제
 	int themeInfoDel(Integer boardNo);
+
+	//게시글 테마 수정 테마 조회
+	Theme themeSelect(int boardNo);
+
+	//게시글 테마 수정
+	int themeUpdate(Board b, Info in, ArrayList<Attachment> list, Theme m);
+
+	//게시글 명소 검색 개수
+	int attractionSearchCount(HashMap<String, String> map);
+
+	//게시글 명소 검색 리스트 조회
+	ArrayList<Board> attractionSearchList(HashMap<String, String> map, PageInfo pi);
+
+	//게시글 피드 검색 개수
+	int feedSearchCount(HashMap<String, String> map);
+
+	//게시글 피드 검색 리스트 조회
+	ArrayList<Board> feedSearchList(HashMap<String, String> map, PageInfo pi);
+
+	
 
 
 

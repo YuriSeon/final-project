@@ -81,6 +81,7 @@
 <body>
 	<%@include file="../admin/adMenubar.jsp" %>
 	<form action="festivalUpdate.ad" method="post" enctype="multipart/form-data" class="festival-form">
+	<input type="hidden" name="boardWriter" value="${loginUser.nickname}">
         <div class="fes_wrap" >
             <div class="fes_title">축제 등록</div>
             <div class="fes_text">
@@ -158,14 +159,27 @@
                 <div class="fes_input">
                     <label for="" class="photo-label">사진 등록</label><br>
                     <label for="" style="margin-right: 28px;">대표 이미지</label>
-                    <img id="titleImg">
+                    <img id="titleImg" src="${a.get(0).filePath}">
                 </div>
                 <div class="fes_input">
                     <label for="" style="margin-right: 28px;">상세 이미지</label>
-                    <img id="contentImg1">
-                    <img id="contentImg2">
-                    <img id="contentImg3">
-                    <img id="contentImg4">
+                    <c:set var="alist" value="${a}"/>
+                    <c:choose>
+                    	<c:when test="${fn:length(alist)>1}"><img id="contentImg1" src="${a.get(1).filePath}"></c:when>
+                    	<c:otherwise><img id="contentImg1"></c:otherwise>
+                    </c:choose>
+                    <c:choose>
+                    	<c:when test="${fn:length(alist)>2}"><img id="contentImg2" src="${a.get(2).filePath}"></c:when>
+                    	<c:otherwise><img id="contentImg2"></c:otherwise>
+                    </c:choose>
+                    <c:choose>
+                    	<c:when test="${fn:length(alist)>3}"><img id="contentImg3" src="${a.get(3).filePath}"></c:when>
+                    	<c:otherwise><img id="contentImg3"></c:otherwise>
+                    </c:choose>
+                    <c:choose>
+                    	<c:when test="${fn:length(alist)>4}"><img id="contentImg4" src="${a.get(4).filePath}"></c:when>
+                    	<c:otherwise><img id="contentImg4"></c:otherwise>
+                    </c:choose>
                 </div>
                 
 				<!-- 파일 첨부 영역 -->
@@ -176,14 +190,10 @@
                     <input type="file" name="upfile" id="file4" onchange="LoadImg(this,4);">
                     <input type="file" name="upfile" id="file5" onchange="LoadImg(this,5);">
                    	<input type="text" name="boardNo" value="${b.boardNo}">
-                   	<c:forEach var="alist" items="${a}">
-                   		<input type="text" class="fileNo" value="${alist.fileNo}">	
-                   		<input type="text" class="filePath" value="${alist.filePath}">	
-                   	</c:forEach>
                 </div>
             </div>
             <div class="fes_input" id="fes_btn" style="margin-bottom: 60px; ">
-                <button type="button" onclick="updateSubmit();">수정</button>
+                <button type="submit">수정</button>
                 <button type="reset">초기화</button>
                 <button type="button" onclick="history.back()">취소</button>
             </div>
@@ -301,43 +311,6 @@
         	$("#map").hide();
         }
         
-        //수정 서브밋
-        function updateSubmit() {
-        	var fileNo = [];
-        	$('.fileNo').each(function() {
-				var value = $(this).val();
-				fileNo.push(value);
-			});
-        	
-        	var filePath = [];
-        	$('.filePath').each(function() {
-				var value = $(this).val();
-				filePath.push(value);
-			});
-        	
-        	var fileData = {
-        			fileNo : fileNo,
-        			filePath : filePath
-        	};
-        	
-        	$.ajax({
-	   		 	url: 'festivalFileDel.ad', 
-	   		  	type: 'POST', 
-	   		  	contentType: 'application/json', 
-	   		  	data: JSON.stringify(fileData),
-	   		  	success: function(result) {
-		   		  	if(result=="success"){
-						$(".festival-form").submit();
-					}else{
-						alertify.message("파일 삭제 실패");
-					}
-	   		  	},
-	   		  	error: function(result) {
-	   		    	console.log("통신실패");
-	   		  	}
-   			});
-        	
-		}
     </script>
 	
 </body>

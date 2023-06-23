@@ -44,6 +44,13 @@
   		<result column="BOARD_WRITER" property="boardWriter"/>
   	</resultMap>
   	
+  	<!-- THEME RESULT MAP -->
+  	<resultMap type="theme" id="themeResultSet">
+  		<result column="BOARD_NO" property="boardNo"/>
+  		<result column="THEME_NO" property="themeNo"/>
+  		<result column="ZONE_NO" property="zoneNo"/>
+  	</resultMap>
+  	
   	<!-- FESTIVAL RESULT MAP -->
   	<resultMap type="festival" id="festivalResultSet">
   		<result column="BOARD_NO" property="boardNo"/>
@@ -219,11 +226,54 @@
 		WHERE BOARD_NO = #{boardNo}
 	</delete>
 	
-	<select id="themeFilePath">
+	<!-- 게시글 테마 파일 조회 -->
+	<select id="themeFilePath" resultMap="attachmentResultSet">
 		SELECT *
 		FROM ATTACHMENT
 		WHERE BOARD_NO = #{boardNo}
 	</select>
+	
+	<!-- 게시글 테마 수정 테마 조회 -->
+  	<select id="themeSelect" resultMap="themeResultSet">
+		SELECT BOARD_NO,THEME_NO,ZONE_NO
+		FROM THEME
+		WHERE BOARD_NO = #{boardNo}
+	</select>
+	
+	<!-- 게시글 테마 보드 수정 -->
+  	<update id="themeBoardUpdate">
+		UPDATE BOARD
+		SET ZONE_NO = #{zoneNo}
+		   ,BOARD_TITLE = #{boardTitle}
+		   ,BOARD_CONTENT = #{boardContent}
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+	
+	<!-- 게시글 테마 인포 수정 -->
+  	<update id="themeInfoUpdate">
+		UPDATE INFO
+		SET ZONE_NO = #{zoneNo}
+		   ,INFO_ADDRESS = #{infoAddress} 
+	 	   ,INFO_TIME = #{infoTime} 
+		   ,INFO_HOMEPAGE = #{infoHomepage} 
+		   ,INFO_CALL = #{infoCall} 
+		   ,DAY_OFF = #{dayOff}
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+  
+	<!-- 게시글 테마 테마 수정 -->
+  	<update id="themeUpdate">
+		UPDATE THEME
+		SET THEME_NO = #{themeNo} 
+		   ,ZONE_NO = #{zoneNo}
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+	  
+    <!-- 게시글 첨부파일 등록 -->
+    <insert id="themeFileInsert">
+    	INSERT INTO ATTACHMENT(FILE_NO,BOARD_NO,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,FILE_LEVEL)
+  		VALUES(SEQ_FNO.NEXTVAL,#{boardNo},#{originName},#{changeName},#{filePath},#{fileLevel})  
+    </insert>
 	
 	<!-- =====================게시글 축제========================= -->
 	
@@ -283,14 +333,6 @@
 		ORDER BY BOARD_NO
 	</select>
 	
-	<!-- 게시글 축제 삭제 -->
-	<update id="festivalDelete">
-		UPDATE BOARD
-		SET STATUS = 'N'
-		WHERE BOARD_NO = #{boardNo}
-		AND STATUS = 'Y'	
-	</update>
-	
 	<!-- 게시글 축제 수정 보드 조회 -->
   	<select id="festivalSelect" resultMap="boardResultSet">
 		SELECT BOARD_NO,ZONE_NO,INFO_NO,CATEGORY,BOARD_TITLE,BOARD_CONTENT
@@ -324,47 +366,35 @@
 		WHERE BOARD_NO = #{boardNo}
 	</select>
 	
-	<!-- 게시글 축제 수정 파일 삭제 -->
-	<update id="festivalFileDe">
-		UPDATE ATTACHMENT
-        SET STATUS = 'N'
-        WHERE FILE_NO = #{fileNo}
-        AND STATUS = 'Y'
-	</update>
-	
-	<!-- 게시글 축제 보드 수정 -->
-	<update id="festivalUpdateBoard">
-		UPDATE BOARD
-        SET BOARD_TITLE = #{boardTitle},
-        	BOARD_CONTENT = #{boardContent}
-        WHERE BOARD_NO = #{boardNo}
-	</update>
-
-	<!-- 게시글 축제 장소 정보 수정 -->
-	<update id="festivalUpdateInfo">
+	<!-- 게시글 축제 인포 수정 -->
+  	<update id="festivalInfoUpdate">
 		UPDATE INFO
-        SET INFO_ADDRESS = #{infoAddress},
-	        INFO_TIME = #{infoTime},
-	        INFO_HOMEPAGE = #{infoHomepage}, 
-	        INFO_CALL = #{infoCall}
-	    WHERE BOARD_NO = #{boardNo}
+		SET ZONE_NO = #{zoneNo}
+		   ,INFO_ADDRESS = #{infoAddress} 
+	 	   ,INFO_TIME = #{infoTime} 
+		   ,INFO_HOMEPAGE = #{infoHomepage} 
+		   ,INFO_CALL = #{infoCall} 
+		WHERE BOARD_NO = #{boardNo}
 	</update>
-	
-	<!-- 게시글 축제 파일 수정 -->
-	<update id="festivalUpdateAt">
-		INSERT INTO ATTACHMENT(FILE_NO, BOARD_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, FILE_LEVEL)
-		VALUES(SEQ_FNO.NEXTVAL, #{boardNo},#{originName},#{changeName},#{filePath},#{fileLevel})        		
-	</update>
-	
+  
 	<!-- 게시글 축제 축제 수정 -->
-	<update id="festivalUpdateFes">
-		UPDATE FESTIVAL
-        SET START_DATE = #{startDate},
-	        END_DATE = #{endDate},
-	        FES_CATEGORY = #{fesCategory},
-	        FES_MONEY = #{fesMoney}
-	    WHERE BOARD_NO = #{boardNo}
+  	<update id="festivalUpdate">
+		UPDATE THEME
+		SET ZONE_NO = #{zoneNo}
+		   ,START_DATE = #{startDate}
+		   ,END_DATE = #{endDate}
+		   ,FES_CATEGORY = #{fesCategory}
+		   ,FES_MONEY = #{fesMoney}
+		WHERE BOARD_NO = #{boardNo}
 	</update>
+	
+	<!-- 게시글 축제 축제 삭제 -->
+	<delete id="festivalDel">
+		DELETE FROM FESTIVAL
+		WHERE BOARD_NO = #{boardNo}
+	</delete>
+	
+	<!-- =====================게시글 명소========================= -->
 	
 	<!-- 게시글 명소 리스트 개수 -->
   	<select id="attractionListCount" resultType="_int">
@@ -385,6 +415,44 @@
 		AND CATEGORY = 3
 		ORDER BY BOARD_NO
   	</select>
+	
+	<!-- 게시글 명소 검색 개수-->
+  	<select id="attractionSearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM BOARD
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 3
+		<if test="status == 'title'">
+		AND BOARD_TITLE
+		</if>
+		<if test="status == 'content'">
+		AND BOARD_CONTENT
+		</if>
+		 LIKE '%'||#{keyword}||'%'
+	</select>
+		 
+	<!-- 게시글 명소 검색 리스트-->
+  	<select id="attractionSearchList" resultMap="boardResultSet">
+		SELECT BOARD_NO,ZONE_NO,INFO_NO,CATEGORY,BOARD_TITLE,BOARD_CONTENT
+  			  ,TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE
+			  ,TO_CHAR(MODIFY_DATE, 'YYYY-MM-DD') MODIFY_DATE
+  			  ,GOOD,REPORT,COUNT,STATUS,BOARD_WRITER 
+		FROM BOARD
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 3
+		<choose>
+			<when test="status=='title'">
+				AND BOARD_TITLE
+			</when>
+			<otherwise>
+				AND BOARD_CONTENT
+			</otherwise>
+		</choose>
+		LIKE '%'||#{keyword}||'%'
+		ORDER BY BOARD_NO
+	</select>
+
+	<!-- =====================게시글 피드========================= -->
 
 	<!-- 게시글 피드 리스트 개수 -->
   	<select id="feedListCount" resultType="_int">
@@ -406,6 +474,76 @@
 		ORDER BY BOARD_NO
   	</select>
   	
+  	<!-- 게시글 피드 검색 개수-->
+  	<select id="feedSearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM BOARD
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 4
+		<if test="status == 'title'">
+		AND (ZONE_NO = 11 AND '서울' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 23 AND '인천' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 21 AND '부산' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 22 AND '대구' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 24 AND '광주' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 25 AND '대전' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 26 AND '울산' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 31 AND '경기' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 32 AND '강원' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 33 AND '충북' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 34 AND '충남' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 37 AND '경북' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 38 AND '경남' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 35 AND '전북' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 36 AND '전남' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 39 AND '제주' LIKE '%'||#{keyword}||'%')
+		</if>
+		<if test="status == 'content'">
+		AND BOARD_CONTENT LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="status == 'writer'">
+		AND BOARD_WRITER LIKE '%'||#{keyword}||'%'
+		</if>
+	</select>
+		 
+	<!-- 게시글 피드 검색 리스트-->
+  	<select id="feedSearchList" resultMap="boardResultSet">
+		SELECT BOARD_NO,ZONE_NO,INFO_NO,CATEGORY,BOARD_TITLE,BOARD_CONTENT
+  			  ,TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE
+			  ,TO_CHAR(MODIFY_DATE, 'YYYY-MM-DD') MODIFY_DATE
+  			  ,GOOD,REPORT,COUNT,STATUS,BOARD_WRITER 
+		FROM BOARD
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 4
+		<if test="status == 'title'">
+		AND (ZONE_NO = 11 AND '서울' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 23 AND '인천' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 21 AND '부산' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 22 AND '대구' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 24 AND '광주' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 25 AND '대전' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 26 AND '울산' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 31 AND '경기' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 32 AND '강원' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 33 AND '충북' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 34 AND '충남' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 37 AND '경북' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 38 AND '경남' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 35 AND '전북' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 36 AND '전남' LIKE '%'||#{keyword}||'%')
+		 OR (ZONE_NO = 39 AND '제주' LIKE '%'||#{keyword}||'%')
+		</if>
+		<if test="status == 'content'">
+		AND BOARD_CONTENT LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="status == 'writer'">
+		AND BOARD_WRITER LIKE '%'||#{keyword}||'%'
+		</if>
+		ORDER BY BOARD_NO
+	</select>
+  	
+  	<!-- =====================게시글 일정자랑========================= -->
+  	
   	<!-- 게시글 일정자랑 리스트 개수 -->
   	<select id="scheduleListCount" resultType="_int">
   		SELECT COUNT(*)
@@ -425,6 +563,8 @@
 		AND CATEGORY = 5 
 		ORDER BY BOARD_NO
   	</select>
+
+	<!-- =====================게시글 함께가치========================= -->
 
 	<!-- 게시글 함께가치 리스트 개수 -->
   	<select id="togetherListCount" resultType="_int">

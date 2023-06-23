@@ -23,6 +23,98 @@
 		height:14px;
 		margin-right:10px;
 	}
+	
+	   #searchDiv{
+			width:1110px;
+			height: 105px;
+			background-color: #7c838b;
+		}
+		#searchDiv>div{
+			float: left;
+		}
+		#titleMsg{
+			width: 25%;
+			color: white;
+			font-size: 22px;
+			font-weight: 500;
+			margin: 37px 15px 37px 15px;
+		}
+		select{
+			width: 130px;
+			height: 25px;
+			color: white;
+			background-color: #7c838b;
+			border: none;
+			border-bottom: 1px solid white;
+			text-align:center;
+		}
+		#searchOption1,#searchOption2{
+			width: 13%;
+			margin: 37px 3px;
+		}
+		#searchOption3,#searchOption4{
+			width: 15%;
+			margin: 39px 2.5px;
+		}
+		#search-Btn{
+			background-color: black;
+			width: 90px;
+			height: 35px;
+			color: white;
+			border: none;
+			margin-top: 37px;
+		}
+		input[type=date]{
+			border:none;
+			background-color : #7c838b;
+			color : white;
+			border-bottom : 1px solid white;
+			margin:0px;
+			padding:0px;
+		}
+		#contentOuter{
+			width:1110px;
+		}
+		#contentOuter>div{
+			float:left;
+		}
+		.togetherBtn{
+			border : none;
+			width : 150px;
+			height : 50px;
+			background-color: #7c838b;
+		}
+		#togetherApplyAlertDiv{
+			width:400px;
+			height:500px;
+			border:3px solid #7c838b;
+			border-radius: 20px;
+			background-color: #7c838b;
+		}
+/* 		#applyModalBody{ */
+/* 			border:none; */
+/* 		} */
+		#applyContent{
+			margin:20px;
+			width:360px;
+			height:460px;
+			border-radius: 20px;
+			background-color: white;
+		}
+		#applyTitle{
+			padding: 15px 0px 0px 20px;
+		}
+		#applyMessage{
+			width: 320px;
+			height: 150px;
+			resize: none;
+		}
+		#applyDate{
+			margin-bottom: 10px;
+		}
+		#applyBtnArea>button{
+			margin:0px 10px;
+		}
 	</style>
     <title>함께 가치</title>
 
@@ -33,6 +125,17 @@
     <link rel="stylesheet" type="text/css" href="/finalProject/resources/css/owl-carousel.css">
 
     <link rel="stylesheet" href="/finalProject/resources/css/tooplate-artxibition.css">
+    <!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+	
+	<!-- jQuery library -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+	
+	<!-- Popper JS -->
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	
+	<!-- Latest compiled JavaScript -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     </head>
     
     <body>
@@ -60,7 +163,7 @@
 			});
 		});
 	</script>
-    <!-- ***** About Us Page ***** -->
+	
     <div class="page-heading-shows-events">
         <div class="container">
             <div class="row">
@@ -76,82 +179,130 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="search-box">
-                        <form id="subscribe" action="" method="get">
-                            <div class="row">
-                                <div class="col-lg-5">
-                                    <div class="search-heading">
-                                        <h4>원하는 조건을 입력 해보세요  </h4>
-                                    </div>
-                                </div>
-                                <div class="col-lg-7">
-                                    <div class="row">
-                                        <div class="col-lg-3">
-                                            <select value="month">
-                                            			<option value="">월</option>
-                                                        <option value="0">전체</option>
-												        <option value="1">1월</option>
-												        <option value="2">2월</option>
-												        <option value="3">3월</option>
-												        <option value="4">4월</option>
-												        <option value="5">5월</option>
-												        <option value="6">6월</option>
-												        <option value="7">7월</option>
-												        <option value="8">8월</option>
-												        <option value="9">9월</option>
-												        <option value="10">10월</option>
-												        <option value="11">11월</option>
-												        <option value="12">12월</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <select value="location">
-                                                <option value="">지역</option>
-					                            <option value='0'>전체</option>
-					                            <option value='서울'>서울특별시</option>
-					                            <option value='부산'>부산광역시</option>
-					                            <option value='대구'>대구광역시</option>
-					                            <option value='인천'>인천광역시</option>
-					                            <option value='광주'>광주광역시</option>
-					                            <option value='대전'>대전광역시</option>
-					                            <option value='울산'>울산광역시</option>
-					                            <option value='경기'>경기도</option>
-					                            <option value='강원'>강원도</option>
-					                            <option value='충북'>충청북도</option>
-					                            <option value='충남'>충청남도</option>
-					                            <option value='전북'>전라북도</option>
-					                            <option value='전남'>전라남도</option>
-					                            <option value='경북'>경상북도</option>
-					                            <option value='경남'>경상남도</option>
-					                            <option value='제주'>제주도</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <select value="pay">
-                                                <option value="">경비</option>
-                                                <option value="0">전체</option>
-                                                <option value="1">100,000원 이하</option>
-                                                <option value="2">200,000원 이하</option>
-                                                <option value="3">300,000원 이하</option>
-                                                <option value="4">400,000원 이하</option>
-                                                <option value="5">500,000원 이하</option>
-                                                <option value="10">1,000,000원 이하</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <fieldset>
-                                            <button type="submit" id="form-submit" class="main-dark-button">검색 </button>
-                                            </fieldset>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+ 					<br>
+					 <div id="searchDiv">
+							<div id="titleMsg">원하는 조건을 입력해보세요</div>
+							<div id="searchOption1">
+								<input type="date" id="startDate">
+							</div>
+							 <div style="color:white; margin:37px 7px 37px 0px;">~</div>
+							<div id="searchOption2">
+								<input type="date" id="endDate">
+							</div>
+							<div id="searchOption3">
+								<select  id="location">
+									<option value="">지역</option>
+									<option value='all'>전체</option>
+									<option value='서울'>서울특별시</option>
+									<option value='부산'>부산광역시</option>
+									<option value='대구'>대구광역시</option>
+									<option value='인천'>인천광역시</option>
+									<option value='광주'>광주광역시</option>
+									<option value='대전'>대전광역시</option>
+									<option value='울산'>울산광역시</option>
+									<option value='경기'>경기도</option>
+									<option value='강원'>강원도</option>
+									<option value='충북'>충청북도</option>
+									<option value='충남'>충청남도</option>
+									<option value='전북'>전라북도</option>
+									<option value='전남'>전라남도</option>
+									<option value='경북'>경상북도</option>
+									<option value='경남'>경상남도</option>
+									<option value='제주'>제주도</option>
+								</select>
+							</div>
+							<div id="searchOption4">
+								<select id="pay">
+									<option value="">경비</option>
+									<option value="0">전체</option>
+									<option value="100000">100,000원 이하</option>
+									<option value="200000">200,000원 이하</option>
+									<option value="300000">300,000원 이하</option>
+									<option value="400000">400,000원 이하</option>
+									<option value="500000">500,000원 이하</option>
+									<option value="1000000">1,000,000원 이하</option>
+								</select>
+							</div>
+							<div id="searchBtn">
+								<button type="button" id="search-Btn" onclick="goOptionSearch();">검색 </button>
+							</div>
+							
+							<script>
+								function goOptionSearch(){
+									var startDate = $("#startDate").val();
+									var endDate = $("#endDate").val();
+									var location = $("#location").val();
+									var pay = $("#pay").val();
+									
+									$.ajax({
+										url : "optionSearch.bo",
+										data : {
+											startDate : startDate,
+											endDate : endDate,
+											location : location,
+											pay : pay
+										},
+										success : function(result){
+											
+												$("#contentOuter").children().remove();
+												var str = "";
+												var today = new Date().getTime();
+												for(var i in result){
+													str += "<div class='col-lg-4'>"
+										                +"<input type='hidden' name='boardNo'  class='togetherBoardNo' value="+result[i].boardNo+">"
+										                    +"<div class='ticket-item'>"
+										                        +"<div class='thumb'>"
+										                            +"<img src=/finalProject"+result[i].filePath+" alt=></div>"
+										                        +"<div class='down-content'>"
+										                        	+"<h5>["+result[i].totalDate+"박 "+ (result[i].totalDate +1)+"일]</h3>"
+										                            +"<h4>&lt;"+result[i].zoneName+" "+result[i].concept+" 여행&gt; <br> "+result[i].boardTitle+"</h4>"
+										                            +"<ul id='optionIcons'>"
+										                                +"<li><i class='fa fa-clock-o'></i>"+result[i].startDate+" ~ "+result[i].endDate+"</li>"
+										                                +"<li><i class='fa fa-map-marker'></i>"+result[i].zoneName+"</li>"
+										                                +"<li><img src='/finalProject/resources/images/together_won.png'>"+result[i].totalPay+"원 이하</li>";
+										                                if(result[i].profilePath){
+										                                	console.log("profle")
+									                               		    str += "<li><img src='/finalProject/"+result[i].profilePath+"' style='border-radius:50%;''> <a id='nicknameHover' onclick='whoareyou();''>"+result[i].boardWriter+"</a></li>";
+										                                }else{
+										                                	console.log("profle no")
+										                                	str += "<li><img src='/finalProject/resources/images/기본프로필.png' style='border-radius:50%;''> <a id='nicknameHover' onclick='whoareyou();''>"+result[i].boardWriter+"</a></li>";
+										                                }
+										                                str += "<li>작성일 : "+result[i].createDate+"</li></ul>"
+										                            +"<div class='main-dark-button' id='applyBtn'>";
+																	var d = new Date("20"+result[i].endDate).getTime();
+																	if(d - today >0 && result[i].together - result[i].togetherCount != 0){
+										                            			<%if(request.getSession().getAttribute("loginUser") != null){%>
+// 													                            	  str += "<a href='#'>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</a>";
+													                            	  str += "<button type='button' class='togetherBtn' data-toggle="modal" data-target="#applyModal">참여하기 "+result[i].togetherCount+"/"+result[i].together+"</button>";
+													                           <%}else{%>
+// 															                          str += "<a style='background-color:lightgray;''>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</a>"
+																					  str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</button>";
+															                           		+"<p>참여하려면 로그인을 해주세요.</p>";
+													                           <%}%>
+																	}else{
+// 										                            		str += "<a  style='background-color:lightgray;' disabled>마감되었습니다.</a>";
+										                            		str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>마감되었습니다.</button>";
+																	}
+																	str += "</div></div></div></div></div>";
+												}
+												$("#contentOuter").append(str);
+										},
+										error : function(){
+											console.log("옵션 검색 실패");
+										}
+									});
+									
+								}
+							</script>
+						</div>
+						
                 </div>
+                
                 <div class="col-lg-12">
                 <br><br>
                 </div>
+                
+       <div id="contentOuter">         
                 <jsp:useBean id="now" class="java.util.Date" />
                 <fmt:parseNumber value="${now.time / (1000*60*60*24)}" integerOnly="true" var="today" scope="request"/>
                 <c:choose>
@@ -171,7 +322,7 @@
 					                            <ul id="optionIcons">
 					                                <li><i class="fa fa-clock-o"></i>${i.startDate} ~ ${i.endDate }</li>
 					                                <li><i class="fa fa-map-marker"></i>${i.zoneName }</li>
-					                                <li><img src="/finalProject/resources/images/together_won.png">${i.totalPay } 이하</li>
+					                                <li><img src="/finalProject/resources/images/together_won.png">${i.totalPay }원 이하</li>
 					                                <c:choose>
 					                                <c:when test="${not empty i.profilePath }">
 				                               		    <li><img src="/finalProject/${i.profilePath }" style="border-radius:50%;"> <a id="nicknameHover" onclick="whoareyou();">${i.boardWriter }</a></li>
@@ -180,14 +331,26 @@
 					                                	<li><img src="/finalProject/resources/images/기본프로필.png" style="border-radius:50%;"> <a id="nicknameHover" onclick="whoareyou();">${i.boardWriter }</a></li>
 					                                </c:otherwise>
 					                                </c:choose>
+					                                <li>작성일 : ${i.createDate }</li>
 					                            </ul>
 					                            <div class="main-dark-button" id="applyBtn">
 					                            <c:choose>
-					                            <c:when test="${endDate-today >0 and i.together - i.togetherCount != 0 }">
-					                            	    <a href="#">참여하기 ${i.togetherCount}/${i.together }</a>
+					                            <c:when test="${endDate-today >0 and i.together - i.togetherCount != 0}">
+					                            		<c:choose>
+					                            			<c:when test="${not empty loginUser }">
+<%-- 								                            	    <a href="#">참여하기 ${i.togetherCount}/${i.together }</a> --%>
+								                            	    <button type="button" class="togetherBtn">참여하기 ${i.togetherCount}/${i.together }</button>
+					                            			</c:when>
+					                            			<c:otherwise>
+<%-- 					                            				    <a style="background-color:lightgray;">참여하기 ${i.togetherCount}/${i.together }</a> --%>
+ 																	<button type="button" class="togetherBtn" style="background-color:lightgray;">참여하기 ${i.togetherCount}/${i.together }</button>
+					                            				    <p>참여하려면 로그인을 해주세요.</p>
+					                            			</c:otherwise>
+					                            		</c:choose>
 					                            </c:when>
 					                            <c:otherwise>
-					                            		<a  style="background-color:lightgray;" disabled>마감되었습니다.</a>
+					                            		<button type="button" class="togetherBtn" style="background-color:lightgray;"disabled>마감되었습니다.</button>
+<!-- 					                            		<a  style="background-color:lightgray;" disabled>마감되었습니다.</a> -->
 					                            </c:otherwise>
 					                            </c:choose>
 					                            </div>
@@ -200,6 +363,34 @@
                 			<div>조회된 게시물이 없습니다. </div>
                 	</c:otherwise>
                 </c:choose>
+                
+                <script>
+                	$("#contentOuter").on("click","button",function(){
+                		var boardNo = $(this).parent().parent().parent().parent().children("input").val();
+                		var title = $(this).parent().siblings("h4").text().split('>');
+                		if(confirm("이 여행의 세부 일정을 확인하시겠습니까 ?")){
+                			location.href="";
+                		}else{
+                			if(confirm("세부 일정을 확인하지 않고 이 여행에 참여하시겠습니까 ?")){
+	                			if(confirm("참여하기 버튼은 하루에 한개만 누르실 수 있습니다. \n진행하시겠습니까 ?")){
+	                				$("#applyTermText").html($(this).parent().siblings("h5").text());
+	                				$("#applyTitleText").html(title[0]+"><br>"+title[1].trim());
+	                				$("#applyDate").html($(this).parent().siblings("ul").children().eq(0).text());
+	                				$("#applyPay").html($(this).parent().siblings("ul").children().eq(2).text());
+	                				$("#applyBoardNo").val(boardNo);
+	                				
+	                				$("#applyModal").modal('show');
+	                				
+	                			}else{
+	                				alert("참여하기를 취소합니다.")
+	                			}
+                			}else{
+                				alert("참여하기를 취소합니다.");
+                			}
+                		}
+                	});
+                	
+                </script>
                 
                 <div class="col-lg-12">
                     <div class="pagination" align="center">
@@ -239,8 +430,10 @@
 							<a href="togetherEnroll.bo?nickname=${loginUser.nickname}" class="btn btn-secondary">글 쓰기</a>	                   
 	                   </div>
                     </c:if>
-                </div>
-            </div>
+            	</div> <!-- pagination col-lg-12 -->
+             </div>  <!-- content outer -->
+        </div>
+        
         </div>
     </div>
 
@@ -271,6 +464,39 @@
             </div>
         </div>
     </div>
+
+		<div class="modal fade" id="applyModal">
+		  <div class="modal-dialog" style="width:400px; height: 500px; ">
+			<div class="modal-content" style=" border-radius: 23px; border: 1px solid #7c838b;">
+			  <!-- Modal body -->
+			  <div id="applyModalBody" style="padding: 0;">
+				<div id="togetherApplyAlertDiv" >
+					<div id="applyContent">
+							<div id="applyTitle">
+								<h5 id="applyTermText"></h5>
+								<h4 align="center" id="applyTitleText"></h4>
+							</div>
+							<div id="applyDate" align="center"></div>
+							<div id="applyPay" align="center"></div>
+							<br>
+						<form action="togetherApply.bo" method="post">
+							<input type="hidden" name="writer" id="writer" value="${loginUser.nickname }">
+							<input type="hidden" name="boardNo" id="applyBoardNo">
+							<div id="applyMessageDiv" align="center">
+								<textarea name="applyMessage" id="applyMessage" placeholder="글 작성자에게 하실 말을 적어주세요. (최대 70자)"></textarea>
+							</div>
+							<br>
+							<div id="applyBtnArea" align="center">
+								<button type="submit" id="applySubmitBtn" class="btn btn-outline-info">참여하기</button>
+								<button type="button" id="applyOutBtn" class="btn btn-outline-danger" data-dismiss="modal">취소하기</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			  </div> <!--modal-body-->
+			</div>
+		  </div>
+		</div>
 
     <!-- *** Footer *** -->
     <footer>
@@ -370,6 +596,8 @@
     
     <!-- Global Init -->
     <script src="/finalProject/resources/js/custom.js"></script>
+
+	
 
   </body>
 </html>

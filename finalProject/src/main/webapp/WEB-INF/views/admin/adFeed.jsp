@@ -17,7 +17,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <!-- css -->
+    <!-- swiper -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css"/>
+	<!-- swiper -->
+	<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
     <title>게시글관리-피드</title>
 </head>
 <body>
@@ -35,8 +38,9 @@
                 	<form action="feedSearch.ad" method="get">
                 	<input type="hidden" name="currentPage" value="1">
 	                    <select name="type" id="searchCate">
-	                        <option value="title" ${type == 'title' ? 'selected="selected"': ''}>제목</option>
+	                        <option value="title" ${type == 'title' ? 'selected="selected"': ''}>지역</option>
 	                        <option value="content" ${type == 'content' ? 'selected="selected"': ''}>내용</option>
+	                        <option value="writer" ${type == 'writer' ? 'selected="selected"': ''}>작성자</option>
 	                    </select>
 	                    <input type="text" name="keyword" id="searchBar">
 	                    <button class="btn btn-default" id="searchBtn">검색</button>
@@ -46,7 +50,6 @@
                 <!-- 버튼 시작 -->
                 <div>
                     <button class="btn btn-danger" onclick="chkDelete();">선택삭제</button>
-<!--                     <button class="btn btn-info" onclick="location.href='insert.fd'">게시물 등록</button> -->
                 </div>
                 <!-- 버튼 끝 -->
             </div>
@@ -57,12 +60,12 @@
                         <tr>
                             <th style="width: 5%"><input type="checkbox" id="chkAll"></th>
                             <th style="width: 5%">번호</th>
-                            <th style="width: 40%">제목</th>
+                            <th style="width: 10%">지역</th>
+                            <th style="width: 40%">내용</th>
                             <th style="width: 10%">작성자</th>
                             <th style="width: 10%">작성시각</th>
                             <th style="width: 10%">수정시각</th>
                             <th style="width: 10%">좋아요</th>
-                            <th style="width: 10%">조회수</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,23 +73,33 @@
                     		<tr>
 	                            <td class="table-chk"><input type="checkbox" class="check" name="chk" id=""></td>
 	                            <td>${b.boardNo}</td>
-	                            <td>${b.boardTitle}</td>
+	                            <td>
+	                            	<c:choose>
+	                            		<c:when test="${b.zoneNo == 11}">서울</c:when>
+	                            		<c:when test="${b.zoneNo == 23}">인천</c:when>
+	                            		<c:when test="${b.zoneNo == 21}">부산</c:when>
+	                            		<c:when test="${b.zoneNo == 22}">대구</c:when>
+	                            		<c:when test="${b.zoneNo == 24}">광주</c:when>
+	                            		<c:when test="${b.zoneNo == 25}">대전</c:when>
+	                            		<c:when test="${b.zoneNo == 26}">울산</c:when>
+	                            		<c:when test="${b.zoneNo == 31}">경기</c:when>
+	                            		<c:when test="${b.zoneNo == 32}">강원</c:when>
+	                            		<c:when test="${b.zoneNo == 33}">충북</c:when>
+	                            		<c:when test="${b.zoneNo == 34}">충남</c:when>
+	                            		<c:when test="${b.zoneNo == 37}">경북</c:when>
+	                            		<c:when test="${b.zoneNo == 38}">경남</c:when>
+	                            		<c:when test="${b.zoneNo == 35}">전북</c:when>
+	                            		<c:when test="${b.zoneNo == 36}">전남</c:when>
+	                            		<c:otherwise>제주</c:otherwise>
+	                            	</c:choose>
+	                            </td>
+	                            <td>${b.boardContent}</td>
 	                            <td>${b.boardWriter}</td>
 	                            <td>${b.createDate}</td>
 	                            <td>${b.modifyDate}</td>
-	                            <td>${b.count}</td>
 	                            <td>${b.good}</td>
                         	</tr>
                     	</c:forEach>
-<!--                <tr> -->
-<!--                    <td class="table-chk"><input type="checkbox" name="chk" id=""></th> -->
-<!--                    <td>1</td> -->
-<!--                	<td>추천! 웰니스 관광지</td> -->
-<!--                	<td>관리자</td> -->
-<!--                	<td>2023.06.03</td> -->
-<!--                	<td>2</td> -->
-<!--                	<td>5</td> -->
-<!--                </tr> -->
                     </tbody>
                 </table>
             </div>
@@ -131,7 +144,37 @@
         </div>
     </div><!-- container-fluid -->
 </div>
-
+<!-- Modal 시작 -->
+<div class="feed-modal">
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title" id="exampleModalLabel"></h2>
+<!-- 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+					<button type="button" class="close" data-dismiss="modal" style="margin-right: 10px;">X</button>
+				</div>
+				<div class="modal-body" style="height: 600px;">
+					<div class="swiper-container" id="my-swiper">
+					    <div class="swiper-wrapper">
+					        <div class="swiper-slide"><img src="resources/images/thema/2023062314010399522.jpg" width="95%;" height="600px;"></div>
+					        <div class="swiper-slide">2</div>
+					        <div class="swiper-slide">3</div>
+					        <div class="swiper-slide">4</div>
+					    </div>
+					    <div class="swiper-button-prev"></div>
+					    <div class="swiper-button-next"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+<!-- 					<button type="button" class="btn btn-primary">Save changes</button> -->
+<!-- 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal 끝 -->
 <script>
     
     //체크박스 전체선택
@@ -153,13 +196,33 @@
         
     });
    
-  	//클릭 시 상세페이지 이동
+  	//클릭 시 사진 모달로 띄우기
     $(function () {
-		$(".theme-table>tbody>tr>td").not(":first-child").click(function () {
+		$(".theme-table>tbody>tr>td").not(":first-child").click(function modal() {
 			var bno = $(this).parent().children().eq(1).text();
-			location.href = 'feedSelect.ad?boardNo='+bno;
+			var content = $(this).parent().children().eq(3).text();
+			$(".modal-title").text(content);
+			$("#exampleModal").modal("show");
+			
 		});
 	});
+  	
+  	//모달 안의 스와이퍼
+    const slide = new Swiper('#my-swiper', {
+	    slidesPerView : 'auto', // 한 슬라이드에 보여줄 갯수
+	    spaceBetween : 5, // 슬라이드 사이 여백
+	    loop : false, // 슬라이드 반복 여부
+	    loopAdditionalSlides : 1, // 슬라이드 반복 시 마지막 슬라이드에서 다음 슬라이드가 보여지지 않는 현상 수정
+	    pagination : false, // pager 여부
+	    autoplay : {  // 자동 슬라이드 설정 , 비 활성화 시 false
+		    delay : 3000,   // 시간 설정
+		    disableOnInteraction : false,  // false로 설정하면 스와이프 후 자동 재생이 비활성화 되지 않음
+	    },
+	    navigation: {   // 버튼 사용자 지정
+		    nextEl: '.swiper-button-next',
+		    prevEl: '.swiper-button-prev',
+	    },
+    })
     
     //체크박스 선택한 항목 삭제
     function chkDelete() {

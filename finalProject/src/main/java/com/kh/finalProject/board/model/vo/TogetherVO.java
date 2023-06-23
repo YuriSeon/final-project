@@ -25,5 +25,6 @@ public class TogetherVO {
 	private int totalDate;
 	private int totalPay;
 	private String profilePath;
+	private String createDate;
 	
 }
