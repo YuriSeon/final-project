@@ -541,6 +541,32 @@ transform : scale(1.4);
   cursor: pointer;
 }
 
+/* ================= 게시판관리 - 피드 =================== */
+
+.feed-modal .modal{
+}
+.feed-modal .modal-dialog{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.feed-modal .modal-content{
+	width: 1000px;
+}
+.feed-modal .modal-header{
+	display: block;
+}
+.feed-modal .modal-title{
+	float: left;
+}
+.feed-modal .btn-close{
+	float: right;
+}
+.feed-modal .modal-body{
+	width: 1000px;
+}
+
+
 /* =================회원 관리=================== */
 
 .member-board{
@@ -709,17 +735,17 @@ transform : scale(1.4);
 }
 
 /* 프로필 사진 변경 모달 */
-.modal-content{
+#memberCon .modal-content{
     background-color: #022c6c !important;
     color: white !important;
 }
-.close{
+#memberCon .close{
     color: white;
     position: relative;
     top: -40px;
     left: -10px;
 }
-.modal-body2 button{
+#memberCon .modal-body2 button{
 	margin-bottom: 10px;
 }
 #imgChange{

@@ -32,17 +32,20 @@
             <div class="search-btn" id="searchBtn">
                 <!-- 검색 시작 -->
                 <div class="search-section">
-                    <select name="searchCate" id="searchCate">
-                        <option value="title">제목</option>
-                        <option value="writer">작성자</option>
-                    </select>
-                    <input type="text" name="searchBar" id="searchBar" >
-                    <button class="btn btn-default" id="searchBtn">검색</button>
+                	<form action="festivalSearch.ad" method="get">
+                	<input type="hidden" name="currentPage" value="1">
+	                    <select name="type" id="searchCate">
+	                        <option value="title" ${type == 'title' ? 'selected="selected"': ''}>제목</option>
+	                        <option value="content" ${type == 'content' ? 'selected="selected"': ''}>내용</option>
+	                    </select>
+	                    <input type="text" name="keyword" id="searchBar">
+	                    <button class="btn btn-default" id="searchBtn">검색</button>
+                	</form>
                 </div>
                 <!-- 검색 끝 -->
                 <!-- 버튼 시작 -->
                 <div>
-                    <button class="btn btn-danger">선택삭제</button>
+                    <button class="btn btn-danger" onclick="chkDelete();">선택삭제</button>
                     <button class="btn btn-info" onclick="location.href='fesEnrollForm.fe'">게시물 등록</button>
                 </div>
                 <!-- 버튼 끝 -->
@@ -52,186 +55,76 @@
                 <table class="theme-table" border="1">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" id="chkAll"></th>
-                            <th style="width: 60px">번호</th>
-                            <th>제목</th>
-                            <th>작성자</th>
-                            <th>작성시각</th>
-                            <th>좋아요</th>
-                            <th>조회수</th>
+                            <th style="width: 5%"><input type="checkbox" id="chkAll"></th>
+                            <th style="width: 5%">번호</th>
+                            <th style="width: 40%">제목</th>
+                            <th style="width: 10%">작성자</th>
+                            <th style="width: 10%">작성시각</th>
+                            <th style="width: 10%">수정시각</th>
+                            <th style="width: 10%">좋아요</th>
+                            <th style="width: 10%">조회수</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>1</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>2</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>3</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>4</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>5</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>6</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>7</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>8</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>9</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>10</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>11</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>12</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>13</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>14</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td class="table-chk"><input type="checkbox" name="chk" id=""></th>
-                            <td>15</td>
-                            <td>추천! 웰니스 관광지</td>
-                            <td>관리자</td>
-                            <td>2023.06.03</td>
-                            <td>2</td>
-                            <td>5</td>
-                        </tr>
-                        
+                    	<c:forEach var="b" items="${list}">
+                    		<tr>
+	                            <td class="table-chk"><input type="checkbox" class="check" name="chk" id=""></td>
+	                            <td>${b.boardNo}</td>
+	                            <td>${b.boardTitle}</td>
+	                            <td>${b.boardWriter}</td>
+	                            <td>${b.createDate}</td>
+	                            <td>${b.modifyDate}</td>
+	                            <td>${b.count}</td>
+	                            <td>${b.good}</td>
+                        	</tr>
+                    	</c:forEach>
+<!--                <tr> -->
+<!--                    <td class="table-chk"><input type="checkbox" name="chk" id=""></th> -->
+<!--                    <td>1</td> -->
+<!--                	<td>추천! 웰니스 관광지</td> -->
+<!--                	<td>관리자</td> -->
+<!--                	<td>2023.06.03</td> -->
+<!--                	<td>2</td> -->
+<!--                	<td>5</td> -->
+<!--                </tr> -->
                     </tbody>
                 </table>
             </div>
             <!-- 결과 테이블 끝 -->
             <!-- 페이징 시작 -->
             <div id="pagingArea" align="center">
-                <!-- <ul class="pagination">
+                <ul class="pagination">
                 	<c:choose>
                 		<c:when test="${pi.currentPage eq 1}">
-                   			 <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                   			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
                 		</c:when>
                 		<c:otherwise>
-                			 <li class="page-item"><a class="page-link" href="list.bo?currentPage=${pi.currentPage - 1 }">Previous</a></li>
+                			 <li class="page-item"><a class="page-link" href="festival.ad?currentPage=${pi.currentPage - 1 }">&lt;</a></li>
                 		</c:otherwise>
                 	</c:choose>
                 	
                     <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
-	                    <li class="page-item"><a class="page-link" href="list.bo?currentPage=${p}">${p}</a></li>
+                    	<c:choose>
+                    		<c:when test="${p eq pi.currentPage}">
+                   				<li class="page-item disabled"><a class="page-link" href="festival.ad?currentPage=${p}">${p}</a></li>
+	                		</c:when>
+	                		<c:otherwise>
+	                			<li class="page-item"><a class="page-link" href="festival.ad?currentPage=${p}">${p}</a></li>
+	                		</c:otherwise>
+                    	</c:choose>
                     </c:forEach>
                     
                     <c:choose>
                     	<c:when test="${pi.currentPage eq pi.maxPage}">
-		                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
+                    	</c:when>
+                    	<c:when test="${pi.listCount eq 0}">
+		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
                     	</c:when>
                     	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="list.bo?currentPage=${pi.currentPage + 1}">Next</a></li>
+                    		<li class="page-item"><a class="page-link" href="festival.ad?currentPage=${pi.currentPage + 1}">&gt;</a></li>
                     	</c:otherwise>
                     </c:choose>
-                </ul> -->
-                <ul class="pagination">
-                    <li class="page-item"><a class="page-link" href="#">&lt;</a></li>
-                    <li class="page-item"><a class="page-link" href="list.bo?currentPage=${p}">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">&gt;</a></li>
-
                 </ul>
             </div> 
             <!-- 페이징 끝 -->
@@ -240,7 +133,6 @@
 </div>
 
 <script>
-    
     
     //체크박스 전체선택
     $(function() {
@@ -261,6 +153,41 @@
         
     });
    
+  	//클릭 시 상세페이지 이동
+    $(function () {
+		$(".theme-table>tbody>tr>td").not(":first-child").click(function () {
+			var bno = $(this).parent().children().eq(1).text();
+			location.href = 'festivalSelect.ad?boardNo='+bno;
+		});
+	});
+    
+    //체크박스 선택한 항목 삭제
+    function chkDelete() {
+    	var list = [];
+    	
+    	$(".check:checked").each(function() {
+			var chk = $(this).closest("tr").find("td:eq(1)").text();
+			list.push(chk);
+			$(this).closest("tr").remove();
+		});
+    	
+    	$.ajax({
+    		type: "post",
+    		url: "festivalChkDelete.ad",
+    		data: {	list : list },
+    		dataType: 'json',
+			success: function(result) {
+				if(result=="success"){
+					location.href="festival.ad";
+				}else{
+					alertify.message("게시글 삭제 실패");
+				}
+			},
+			error: function(request,status,error) {
+				console.log("code = "+ request.status + " message = " + request.responseText + " error = " + error);
+			}
+    	});
+	}
     
 </script>
 </body>
