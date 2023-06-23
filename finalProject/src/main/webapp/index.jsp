@@ -8,7 +8,6 @@
 </head>
     
     <body>
-    
     <!-- ***** Preloader Start ***** -->
     <div id="js-preloader" class="js-preloader">
       <div class="preloader-inner">
@@ -310,7 +309,7 @@
     </div>
 	
 	<%@include file="WEB-INF/views/common/footer.jsp" %>
-
+    <script src="resources/js/custom.js"></script>
 
   </body>
 </html>
