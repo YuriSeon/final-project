@@ -12,6 +12,7 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Theme;
+import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Service
 public class ThemaServiceImpl implements ThemaService{
@@ -50,6 +51,41 @@ public class ThemaServiceImpl implements ThemaService{
 		int result = themaDao.selectListCount(sqlSession);
 		return result;
 	}
-	
+
+	//최신순 테마
+	@Override
+	public ArrayList<Board> selectThemaList(PageInfo pi) {
+		ArrayList<Board> list = themaDao.selectThemaList(sqlSession,pi);
+		return list;
+	}
+
+	//인기순 테마
+	@Override
+	public ArrayList<Board> selectRankingThemaList(PageInfo pi) {
+		ArrayList<Board> list = themaDao.selectRankingThemaList(sqlSession,pi);
+		return list;
+	}
+
+	//조회수 올리기
+	@Override
+	public int increaseCount(int boardNo) {
+		int result = themaDao.increaseCount(sqlSession,boardNo);
+		return result;
+	}
+
+	//상세페이지
+	@Override
+	public Board selectBoard(int boardNo) {
+		Board b = themaDao.selectBoard(sqlSession,boardNo);
+		return b;
+	}
+
+	//상세페이지 at
+	@Override
+	public ArrayList<Attachment> selectAttachment(int boardNo) {
+		ArrayList<Attachment> list = themaDao.selectAttachment(sqlSession,boardNo);
+		return list;
+	}
+
 
 }

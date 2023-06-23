@@ -3,6 +3,42 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="themaMapper">
+  
+  <!--보드   -->
+  <resultMap type="board" id="boardResultSet">
+  		<result column="BOARD_NO" property="boardNo"/>
+  		<result column="BOARD_WRITER" property="boardWriter"/>
+  		<result column="BOARD_TITLE" property="boardTitle"/>
+  		<result column="BOARD_CONTENT" property="boardContent"/>
+  		<result column="CREATE_DATE" property="createDate"/>
+  		<result column="GOOD" property="good"/>
+		<result column="COUNT" property="count"/>
+		
+		<collection property="info" resultMap="infoResultSet"></collection>
+		<collection property="theme" resultMap="themeResultSet"></collection>
+		<collection property="attachment" resultMap="attResultSet"></collection>
+		<collection property="zone" resultMap="zoneResultSet"></collection>
+  	</resultMap>
+  	
+  	<resultMap type="info" id="infoResultSet">
+		<result property="infoAddress" column="INFO_ADDRESS"/>
+		<result property="infoTime" column="INFO_TIME"/>
+		<result property="infoHomepage" column="INFO_HOMEPAGE"/>
+		<result property="infoCall" column="INFO_CALL"/>
+		<result property="infoName" column="INFO_NAME"/>
+	</resultMap>
+	
+	<resultMap type="theme" id="themeResultSet">
+		<result property="themeNo" column="THEME_NO"/>
+	</resultMap>
+	
+	<resultMap type="attachment" id="attResultSet">
+		<result property="filePath" column="FILE_PATH"/>
+	</resultMap>
+	
+	<resultMap type="zone" id="zoneResultSet">
+		<result property="zoneName" column="ZONE_NAME"/>
+	</resultMap>
   	
   	<!-- 보드등록 -->
   	<insert id="insertBoard">
@@ -11,7 +47,7 @@
   	</insert>
   	<!-- 장소등록 -->
   	<insert id="insertInfo">
-  		INSERT INTO INFO(INFO_NO,BOARD_NO,ZONE_NO,INFO_ADDRESS,INFO_TIME,INFO_HOMEPAGE,INFO_CALL,INFO_TYPE,DAY_OFF)
+  		INSERT INTO INFO(INFO_NO,BOARD_NO,ZONE_NO,INFO_ADDRESS,INFO_TIME,INFO_HOMEPAGE,INFO_CALL,INFO_NAME,INFO_TYPE,DAY_OFF)
   		VALUES(SEQ_INO.CURRVAL,SEQ_BNO.CURRVAL,#{zoneNo},#{infoAddress},#{infoTime},#{infoHomepage},#{infoCall},1,#{dayOff})
   	</insert>
   
@@ -27,10 +63,78 @@
     	VALUES(SEQ_BNO.CURRVAL,#{themeNo},#{zoneNo})
     </insert>
     
+    <!-- 리스트 카운트 -->
     <select id="selectListCount" resultType="_int">
     	SELECT COUNT(*)
   		FROM BOARD
   		WHERE STATUS = 'Y'
   		AND CATEGORY = 1
     </select>
+    
+    <!-- 최신순 테마 -->
+    <select id="selectThemaList" resultMap="boardResultSet">
+    	SELECT BOARD_NO,ZONE_NAME,BOARD_WRITER,BOARD_TITLE,BOARD_CONTENT
+        ,COUNT,FILE_PATH
+        ,INFO_HOMEPAGE,INFO_CALL
+		FROM BOARD B
+        JOIN THEME USING (BOARD_NO)
+        JOIN ZONE Z ON (Z.ZONE_NO = B.ZONE_NO)
+        JOIN ATTACHMENT USING(BOARD_NO)
+        JOIN INFO USING(BOARD_NO)
+		WHERE B.STATUS = 'Y'
+        AND CATEGORY = 1
+        AND THEME_NO = 3
+        AND FILE_LEVEL = 1
+		ORDER BY CREATE_DATE DESC
+    </select>
+    
+    <!-- 인기순 테마 -->
+    <select id="selectRankingThemaList" resultMap="boardResultSet">
+    	SELECT BOARD_NO,ZONE_NAME,BOARD_WRITER,BOARD_TITLE,BOARD_CONTENT
+        ,COUNT,FILE_PATH
+        ,INFO_HOMEPAGE,INFO_CALL
+		FROM BOARD B
+        JOIN THEME USING (BOARD_NO)
+        JOIN ZONE Z ON (Z.ZONE_NO = B.ZONE_NO)
+        JOIN ATTACHMENT USING(BOARD_NO)
+        JOIN INFO USING(BOARD_NO)
+		WHERE B.STATUS = 'Y'
+        AND CATEGORY = 1
+        AND THEME_NO = 3
+        AND FILE_LEVEL = 1
+		ORDER BY COUNT DESC
+    </select>
+    
+    <!-- 조회수 올리기 -->
+    <update id="increaseCount">
+    	UPDATE BOARD
+    	SET COUNT = COUNT+1
+    	WHERE BOARD_NO = #{boardNo}
+    	AND STATUS = 'Y'
+    	AND CATEGORY = 1
+    </update>
+    
+    <!-- 상세페이지 -->
+    <select id="selectBoard" resultMap="boardResultSet">
+    	SELECT BOARD_NO,INFO_ADDRESS,BOARD_TITLE,BOARD_CONTENT,COUNT,ZONE_NAME
+        ,INFO_HOMEPAGE,INFO_CALL,INFO_NAME,DAY_OFF,INFO_TIME
+		FROM BOARD B
+        JOIN THEME USING (BOARD_NO)
+        JOIN ZONE Z ON (Z.ZONE_NO=B.ZONE_NO)
+        JOIN INFO USING(BOARD_NO)
+		WHERE B.STATUS = 'Y'
+        AND CATEGORY = 1
+        AND THEME_NO = 3
+        AND BOARD_NO = #{boardNo}
+    </select>
+    
+    <!-- 상세페이지 at -->
+    <select id="selectAttachment" resultMap="attResultSet">
+    	SELECT FILE_PATH
+    	FROM ATTACHMENT
+    	WHERE BOARD_NO = #{boardNo}
+    	AND FILE_LEVEL = 2
+    </select>
+    
+    
   </mapper>

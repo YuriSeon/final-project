@@ -94,15 +94,19 @@
                         <option value="0">카테고리</option>
                         <option value="1">별보러 가지 않을래?</option>
                         <option value="2">소원을 말해봐</option>
-                        <option value="3">힐링</option>
+                        <option value="3">평생 친구와 함께</option>
                         <option value="4">계곡</option>
-                        <option value="5">평생 친구와 함께</option>
+                        <option value="5">힐링</option>
                         <option value="6">전시회</option>
                     </select>
                 </div>
                 <div class="the_input">
+                    <label for="boardTitle">제목</label>
+                    <input type="text" name="boardTitle" id="boardTitle" style="margin-left: 72px;" required>
+                </div>
+                <div class="the_input">
                     <label for="boardTitle">장소이름</label>
-                    <input type="text" name="boardTitle" id="boardTitle" style="margin-left: 47px;" required>
+                    <input type="text" name="infoName" id="infoName" style="margin-left: 47px;" required>
                 </div>
                 <div class="the_input">
                     <label for="infoCall">전화번호</label>
