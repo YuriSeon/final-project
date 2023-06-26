@@ -161,7 +161,8 @@
             </div>
             <div class="fes_input" id="fes_btn" style="margin-bottom: 60px; ">
                 <button type="submit">등록</button>
-                <button type="reset">취소</button>
+                <button type="reset">초기화</button>
+                <button type="button" onclick="history.back()">취소</button>
             </div>
         </div>
     </form>
