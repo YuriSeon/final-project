@@ -153,7 +153,7 @@ public class BoardController {
 		
 		mv.addObject("pi",pi);
 		
-		mv.setViewName("board/together");
+		mv.setViewName("board/together/together");
 		
 		return mv;
 	}

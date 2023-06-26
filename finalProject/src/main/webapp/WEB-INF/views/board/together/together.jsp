@@ -115,6 +115,14 @@
 		#applyBtnArea>button{
 			margin:0px 10px;
 		}
+		#contentOuter .col-lg-4:hover{
+			cursor : pointer;
+			background-color:lightgray; 
+			border-radius : 15px;
+		}
+		.col-lg-4>.ticket-item{
+			margin-top:10px;
+		}
 	</style>
     <title>함께 가치</title>
 
@@ -152,7 +160,7 @@
       </div>
     </div>
     <!-- ***** Preloader End ***** -->
-	<%@include file="../common/menubar.jsp" %>
+	<%@include file="../../common/menubar.jsp" %>
     <!-- ***** Header Area End ***** -->
 	<script>
 		$(function(){
@@ -227,7 +235,32 @@
 								<button type="button" id="search-Btn" onclick="goOptionSearch();">검색 </button>
 							</div>
 							
+							<c:if test="${not empty loginUser and not empty cookie.applyCheck }">
+									<script>
+											$(function(){
+												var applyCheck = "${cookie.applyCheck.value}";
+												var applyBoardNo = applyCheck.split("/")[0];
+												var applyWriter = applyCheck.split("/")[1];
+												var loginUser = "${loginUser.nickname}";
+													$(".togetherBoardNo").each(function(){
+														if(loginUser == applyWriter){
+																if($(this).val() == applyBoardNo){
+																	var $applyBtn = $(this).siblings().eq(0).children().eq(1).children("div").children("button");
+																	$applyBtn.text("작성자 승인 대기중").attr("disabled",true).css("color","white").css("background-color","lightgreen");																
+																}else{
+																	var $elseBtns = $(this).siblings().eq(0).children().eq(1).children("div").children("button");
+																		if($elseBtns.text() != "마감되었습니다."){
+																			$elseBtns.text("중복 참여 불가").attr("disabled",true).css("color","black").css("background-color","lightgray");
+																		}
+																}														
+														}
+													});
+											});
+									</script>
+							</c:if>							
+							
 							<script>
+							
 								function goOptionSearch(){
 									var startDate = $("#startDate").val();
 									var endDate = $("#endDate").val();
@@ -244,48 +277,60 @@
 										},
 										success : function(result){
 											
-												$("#contentOuter").children().remove();
-												var str = "";
-												var today = new Date().getTime();
-												for(var i in result){
-													str += "<div class='col-lg-4'>"
-										                +"<input type='hidden' name='boardNo'  class='togetherBoardNo' value="+result[i].boardNo+">"
-										                    +"<div class='ticket-item'>"
-										                        +"<div class='thumb'>"
-										                            +"<img src=/finalProject"+result[i].filePath+" alt=></div>"
-										                        +"<div class='down-content'>"
-										                        	+"<h5>["+result[i].totalDate+"박 "+ (result[i].totalDate +1)+"일]</h3>"
-										                            +"<h4>&lt;"+result[i].zoneName+" "+result[i].concept+" 여행&gt; <br> "+result[i].boardTitle+"</h4>"
-										                            +"<ul id='optionIcons'>"
-										                                +"<li><i class='fa fa-clock-o'></i>"+result[i].startDate+" ~ "+result[i].endDate+"</li>"
-										                                +"<li><i class='fa fa-map-marker'></i>"+result[i].zoneName+"</li>"
-										                                +"<li><img src='/finalProject/resources/images/together_won.png'>"+result[i].totalPay+"원 이하</li>";
-										                                if(result[i].profilePath){
-										                                	console.log("profle")
-									                               		    str += "<li><img src='/finalProject/"+result[i].profilePath+"' style='border-radius:50%;''> <a id='nicknameHover' onclick='whoareyou();''>"+result[i].boardWriter+"</a></li>";
-										                                }else{
-										                                	console.log("profle no")
-										                                	str += "<li><img src='/finalProject/resources/images/기본프로필.png' style='border-radius:50%;''> <a id='nicknameHover' onclick='whoareyou();''>"+result[i].boardWriter+"</a></li>";
-										                                }
-										                                str += "<li>작성일 : "+result[i].createDate+"</li></ul>"
-										                            +"<div class='main-dark-button' id='applyBtn'>";
-																	var d = new Date("20"+result[i].endDate).getTime();
-																	if(d - today >0 && result[i].together - result[i].togetherCount != 0){
-										                            			<%if(request.getSession().getAttribute("loginUser") != null){%>
-// 													                            	  str += "<a href='#'>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</a>";
-													                            	  str += "<button type='button' class='togetherBtn' data-toggle="modal" data-target="#applyModal">참여하기 "+result[i].togetherCount+"/"+result[i].together+"</button>";
-													                           <%}else{%>
-// 															                          str += "<a style='background-color:lightgray;''>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</a>"
-																					  str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</button>";
-															                           		+"<p>참여하려면 로그인을 해주세요.</p>";
-													                           <%}%>
+											$("#contentOuter").children().remove();
+											var str = "";
+											var today = new Date().getTime();
+											for(var i in result[0]){
+												str += "<div class='col-lg-4' onclick='goTogetherDetail("+result[0][i].boardNo+");'>"
+									                +"<input type='hidden' name='boardNo'  class='togetherBoardNo' value="+result[0][i].boardNo+">"
+									                    +"<div class='ticket-item'>"
+									                        +"<div class='thumb'>"
+									                            +"<img src=/finalProject"+result[0][i].filePath+" alt=></div>"
+									                        +"<div class='down-content'>"
+									                        	+"<h5>["+result[0][i].totalDate+"박 "+ (result[0][i].totalDate +1)+"일]</h3>"
+									                            +"<h4>&lt;"+result[0][i].zoneName+" "+result[0][i].concept+" 여행&gt; <br> "+result[0][i].boardTitle+"</h4>"
+									                            +"<ul id='optionIcons'>"
+									                                +"<li><i class='fa fa-clock-o'></i>"+result[0][i].startDate+" ~ "+result[0][i].endDate+"</li>"
+									                                +"<li><i class='fa fa-map-marker'></i>"+result[0][i].zoneName+"</li>"
+									                                +"<li><img src='/finalProject/resources/images/together_won.png'>"+result[0][i].totalPay+"원 이하</li>";
+									                                if(result[0][i].profilePath){
+								                               		    str += "<li><img src='/finalProject/"+result[0][i].profilePath+"' style='border-radius:50%;''> <a id='nicknameHover' onclick='whoareyou();''>"+result[0][i].boardWriter+"</a></li>";
+									                                }else{
+									                                	str += "<li><img src='/finalProject/resources/images/기본프로필.png' style='border-radius:50%;''> <a id='nicknameHover' onclick='whoareyou();''>"+result[0][i].boardWriter+"</a></li>";
+									                                }
+									                                str += "<li>작성일 : "+result[0][i].createDate+"</li></ul>"
+									                            +"<div class='main-dark-button' id='applyBtn'>";
+																var d = new Date("20"+result[0][i].endDate).getTime();
+																if(d - today >0 && result[0][i].together - result[0][i].togetherCount != 0){
+									                            			<%if(request.getSession().getAttribute("loginUser") != null){%>
+												                            	  str += "<button type='button' class='togetherBtn' data-toggle="modal" data-target="#applyModal">참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>";
+												                           <%}else{%>
+																				  str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>";
+														                           		+"<p>참여하려면 로그인을 해주세요.</p>";
+												                           <%}%>
+																}else{
+									                            		str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>마감되었습니다.</button>";
+																}
+																str += "</div></div></div></div></div>";
+											}
+											$('#contentOuter').append(str);
+											
+											var paging = "<div class='col-lg-12'><div class='pagination' align='center'><ul>";
+																if(result[1].currentPage != 1){
+																	paging += "<li class='page-item'><a class='page-link' href='together.bo?currentPage="+result[1].currentPage -1+"'>Previous</a></li>";
+																}
+																for(var i = result[1].startPage; i<=result[1].endPage; i++){
+																	if(i != result[1].currentPage){
+																		paging += "<li class='page-item'><a class='page-link' href='together.bo?currentPage="+i+"'>"+i+"</a></li>";
 																	}else{
-// 										                            		str += "<a  style='background-color:lightgray;' disabled>마감되었습니다.</a>";
-										                            		str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>마감되었습니다.</button>";
+																		paging += "<li class='page-item disabled'><a class='page-link' href='together.bo?currentPage="+i+"'>"+i+"</a></li>";
 																	}
-																	str += "</div></div></div></div></div>";
-												}
-												$("#contentOuter").append(str);
+																}
+																if(result[1].currentPage != result[1].endPage){
+																	paging += "<li class='page-item'><a class='page-link' href='together.bo?currentPage="+result[1].currentPage +1 +"'>Next</a></li></ul></div>";
+																}
+											
+											$("#contentOuter").append(paging);
 										},
 										error : function(){
 											console.log("옵션 검색 실패");
@@ -310,7 +355,7 @@
 			                <c:forEach var="i" items="${list }">
 			                	<fmt:parseDate value="${i.endDate }" pattern="yy/MM/dd" var="end" scope="request"/>
 			                	<fmt:parseNumber value="${end.time / (1000*60*60*24)}" integerOnly="true" var="endDate" scope="request"/>
-					                <div class="col-lg-4">
+					                <div class="col-lg-4" onclick="goTogetherDetail(${i.boardNo});">
 					                <input type="hidden" name="boardNo"  class="togetherBoardNo" value="${i.boardNo }">
 					                    <div class="ticket-item">
 					                        <div class="thumb">
@@ -390,6 +435,9 @@
                 		}
                 	});
                 	
+                	function goTogetherDetail(boardNo){
+							location.href="togetherDetail.bo?boardNo="+boardNo;                		
+                	}
                 </script>
                 
                 <div class="col-lg-12">

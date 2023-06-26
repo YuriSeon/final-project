@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,7 +25,10 @@ import com.kh.finalProject.board.model.service.TogetherService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Plan;
+import com.kh.finalProject.board.model.vo.TogetherApplyVO;
 import com.kh.finalProject.board.model.vo.TogetherVO;
+import com.kh.finalProject.common.model.vo.PageInfo;
+import com.kh.finalProject.common.template.Pagination;
 
 @Controller
 public class TogetherController {
@@ -34,7 +40,7 @@ public class TogetherController {
 	public ModelAndView togetherEnroll(ModelAndView mv, String nickname) { 
 		
 		mv.addObject("nickname", nickname);
-		mv.setViewName("board/togetherEnrollForm");
+		mv.setViewName("board/together/togetherEnrollForm");
 		return mv;
 	}
 	
@@ -87,10 +93,7 @@ public String saveFile(MultipartFile upfile, HttpSession session) {
 
 @ResponseBody
 @GetMapping(value="optionSearch.bo",produces="application/json; charset=utf-8")
-public String optionSearch(String startDate, String endDate, String location, int pay) {
-	
-	//지정 안함 지정 안함 대구 400000
-	//2023-06-13 2023-06-16 대구 400000
+public String optionSearch(@RequestParam(value="currentPage", defaultValue="1") int currentPage,String startDate, String endDate, String location, int pay) {
 	
 	if(startDate.equals("")) {
 		startDate = null;
@@ -101,18 +104,57 @@ public String optionSearch(String startDate, String endDate, String location, in
 	
 	TogetherVO t = TogetherVO.builder().startDate(startDate).endDate(endDate).totalPay(pay).zoneName(location).build();
 	
-	ArrayList<TogetherVO> list = togetherService.optionSearch(t);
+	int listCount = togetherService.selectOptionListCount(t);
+	
+	int pageLimit = 5;
+	
+	int boardLimit = 6;
+	
+	PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+	
+	ArrayList<TogetherVO> list = togetherService.optionSearch(t, pi);
+	
+	ArrayList<Object> total = new ArrayList<>();
+	
+	total.add(list);
+	total.add(pi);
 
-	return new Gson().toJson(list);
+	return new Gson().toJson(total);
 }
 
 @PostMapping("togetherApply.bo")
-public ModelAndView togetherApply(int boardNo, String writer, String applyMessage, ModelAndView mv) {
+public ModelAndView togetherApply(int boardNo, String writer, String applyMessage, ModelAndView mv, HttpServletResponse response) {
+
+	Cookie cookie = null;
+	TogetherApplyVO ta = TogetherApplyVO.builder().refBno(boardNo).nickname(writer).message(applyMessage).build();
+	int result = togetherService.togetherApply(ta);
 	
-//	int result = togetherService.togetherApply(boardNo);
-	System.out.println(boardNo+" "+writer+" "+applyMessage);
-	
+	if(result>0) {
+		
+		cookie = new Cookie("applyCheck",Integer.toString(boardNo)+"/"+writer);
+		cookie.setMaxAge(60*60*24);
+		response.addCookie(cookie);
+		
+		mv.addObject("alertMsg", "참여하기에 성공하였습니다. 작성자의 승인을 기다려주세요.");
+		mv.setViewName("redirect:/together.bo");
+	}else {
+		mv.addObject("errorMsg", "참여하기에 실패하였습니다. 다시 시도해주세요.");
+		mv.setViewName("common/errorPage");
+	}
 	
 	return mv;
 }
+
+@GetMapping("togetherDetail.bo")
+public ModelAndView togetherDetail(int boardNo, ModelAndView mv) {
+	
+	TogetherVO t = togetherService.togetherDetail(boardNo);
+	
+	mv.addObject("t",t);
+	mv.setViewName("board/together/togetherDetail");
+	
+	return mv;
+}
+
+
 }
