@@ -13,6 +13,7 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Festival;
 import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Service
@@ -23,6 +24,23 @@ public class FestivalServiceImpl implements FestivalService{
 	
 	@Autowired
 	private FestivalDao festivalDao;
+	
+	//축제 페이지 로드시 찜 리스트
+	@Override
+	public ArrayList<choice> choiList() {
+		return festivalDao.choiList(sqlSession);
+	}
+
+	//축제 페이지 로드시 축제기간이 아닌 db는 상태값 N으로 바꿔주기
+	@Override
+	public int endFes() {
+		return festivalDao.endFes(sqlSession);
+	}
+	//축제 페이지 로드시 축제 기간이면 상태값 y로 바꿔주기(예정 축제도 N으로 바뀌어져있기때문)
+	@Override
+	public int FesIng() {
+		return festivalDao.fesIng(sqlSession);
+	}
 	
 	//축제 총 게시글
 	@Override
@@ -36,10 +54,21 @@ public class FestivalServiceImpl implements FestivalService{
 		return festivalDao.fesList(sqlSession, pi);
 	}
 	
+	//마우스 올렸을시 축제 개수(날짜에 따른)
+	@Override
+	public int mouCount(String nowDay) {
+		return festivalDao.mouCount(sqlSession, nowDay);
+	}
+	
 	//게시글 검색시 게시글 수
 	@Override
 	public int selectSearchCount(HashMap<String, String> keyword) {
 		return festivalDao.searchCount(sqlSession, keyword);
+	}
+	//게시글 검색시 게시글 리스트
+	@Override
+	public ArrayList<Festival> selectSearchList(HashMap<String, String> keyword, PageInfo pi) {
+		return festivalDao.searchList(sqlSession, keyword, pi);
 	}
 	
 	//축제 등록
@@ -111,5 +140,4 @@ public class FestivalServiceImpl implements FestivalService{
 	public int choiAllCount(HashMap<String, String> info) {
 		return festivalDao.choiAllCount(sqlSession, info);
 	}
-	
 }

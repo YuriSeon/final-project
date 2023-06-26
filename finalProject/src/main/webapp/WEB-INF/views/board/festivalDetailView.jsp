@@ -321,6 +321,7 @@
 		</div>
         
         <div class="titleType1">
+        	<input type="hidden" class="boardNo" id="boardNo" value="${b.boardNo }">
 			<h2 id="topTitle">${b.boardTitle }</h2>
             <div class="area_address" id="topAddr" style="color: rgb(135, 135, 135); position: relative; top: -18px;">${b.zone.zoneName }</div>
     
@@ -454,6 +455,36 @@ ${b.boardContent }
     </div>
 
    <jsp:include page="../common/footer.jsp"/>
+   
+   <!-- 로그인 정보 있을시 축제 찜 이미지 있으면 띄워주기 -->
+	<c:choose>
+		<c:when test="${not empty loginUser }">
+			<script>
+				$(function(){
+					var boardNo = $("#boardNo").val();
+						boardNo = parseInt(boardNo);
+					var choiceImg = $("#choice_img");
+					var writer = "${loginUser.nickname}";
+					var like = false;
+					var choiceList = ${choiceList};
+					
+					for(var i=0; i<choiceList.length; i++){
+						var choice = choiceList[i];
+						
+						if(choice.boardNo === boardNo && choice.writer === writer){
+							like = true;
+						}
+					}
+					
+					if(like){
+						choiceImg.attr("src","/finalProject/resources/images/Like-after.png");
+					}else{
+						choiceImg.attr("src","/finalProject/resources/images/Like-before.png");
+					}
+				});
+			</script>
+		</c:when>
+	</c:choose>
    
 	<script>
         //주소로 지도 띄워주기

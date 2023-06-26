@@ -7,18 +7,32 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Festival;
 import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 
 public interface FestivalService {
+	
+	//축제 페이지 로드시 찜 리스트
+	ArrayList<choice> choiList();
+
+	//축제 페이지 로드시 축제기간이 아닌 db는 상태값 N으로 바꿔주기
+	int endFes();
+	//축제 페이지 로드시 축제 기간이면 상태값 y로 바꿔주기(예정 축제도 N으로 바뀌어져있기때문)
+	int FesIng();
 
 	//축제 총 게시글 수
 	int fesCount();
 
 	//축제 리스트
 	ArrayList<Board> fesList(PageInfo pi);
+	
+	//마우스 올렸을시 축제 개수
+	int mouCount(String nowDay);
 
 	//게시글 검색 시 게시글 수
 	int selectSearchCount(HashMap<String, String> keyword);
+	//게시글 검색시 게시글 리스트
+	ArrayList<Festival> selectSearchList(HashMap<String, String> keyword, PageInfo pi);
 
 	/* 축제 등록 */
 	int insertFes(Board b, Info in, ArrayList<Attachment> list, Festival f);
@@ -39,6 +53,4 @@ public interface FestivalService {
 	int choiceDel(HashMap<String, String> info);
 	//게시글의 총 찜 수 조회
 	int choiAllCount(HashMap<String, String> info);
-
-
 }
