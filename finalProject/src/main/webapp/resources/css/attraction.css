@@ -410,6 +410,7 @@
 	font-size: 13px;
 	font-weight: 500;
 	width: 100%;
+	text-align : left;
 }
 
 .attrInsert hr {
@@ -473,6 +474,9 @@
 
 .attrInsert table #img-area {
 	height: 300px;
+}
+.attrInsert table #boardContent2 {
+	height : 200px;
 }
 
 .attrInsert .btn-area {
