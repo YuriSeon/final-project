@@ -8,7 +8,11 @@ import java.util.Map;
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Festival;
+import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.Theme;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.vo.Member;
 
@@ -159,7 +163,116 @@ public interface AdminService {
 
 	//회원 프로필 이미지 수정
 	int memberUpdateImg(Attachment a);
+
+	//==================================================게시판관리===========================================================
+
+	//게시글 축제 리스트 개수
+	int festivalListCount();
+
+	//게시글 축제 리스트 조회
+	ArrayList<Board> selectFestivalList(PageInfo pi);
+
+	//게시글 축제 검색 개수
+	int festivalSearchCount(HashMap<String, String> map);
 	
+	//게시글 축제 검색 리스트 조회
+	ArrayList<Board> festivalSearchList(HashMap<String, String> map, PageInfo pi);
+
+	//게시글 축제 축제 삭제
+	int festivalDel(Integer boardNo);
+
+	//게시글 축제 수정 페이지 조회
+	Board festivalSelect(int boardNo);
+
+	//게시글 축제 수정 페이지 파일 조회
+	ArrayList<Attachment> festivalFileSelect(int boardNo);
+
+	//게시글 축제 수정 페이지 축제 조회
+	Festival festivalFesSelect(int boardNo);
+
+	//게시글 축제 수정 페이지 인포 조회
+	Info festivalInfoSelect(int boardNo);
+
+	//게시글 축제 수정
+	int festivalUpdate(Board b, Info in, ArrayList<Attachment> list, Festival f);
+
+	//게시글 축제 수정 파일 삭제
+	int festivalFileDel(Integer fileNo);
+
+	//게시글 테마 리스트 개수
+	int themeListCount();
+
+	//게시글 테마 리스트 조회
+	ArrayList<Board> selectThemeList(PageInfo pi);
+
+	//게시글 명소 리스트 개수
+	int attractionListCount();
+
+	//게시글 명소 리스트 조회
+	ArrayList<Board> selectAttractionList(PageInfo pi);
+
+	//게시글 피드 리스트 개수
+	int feedListCount();
+	
+	//게시글 피드 리스트 조회
+	ArrayList<Board> selectFeedList(PageInfo pi);
+
+	//게시글 일정자랑 리스트 개수
+	int scheduleListCount();
+
+	//게시글 일정자랑 리스트 조회
+	ArrayList<Board> selectScheduleList(PageInfo pi);
+
+	//게시글 함께가치 리스트 개수
+	int togetherListCount();
+
+	//게시글 함께가치 리스트 조회
+	ArrayList<Board> selectTogetherList(PageInfo pi);
+
+	//게시글 축제 검색 개수
+	int themeSearchCount(HashMap<String, String> map);
+
+	//게시글 축제 검색 리스트 조회
+	ArrayList<Board> themeSearchList(HashMap<String, String> map, PageInfo pi);
+
+	//게시글 테마 보드 삭제
+	int themeBoardDel(Integer boardNo);
+
+	//게시글 테마 파일 조회
+	ArrayList<Attachment> themeFilePath(Integer boardNo);
+	
+	//게시글 테마 파일 삭제
+	int themeFileDel(Integer boardNo);
+
+	//게시글 테마 테마 삭제
+	int themeDel(Integer boardNo);
+
+	//게시글 테마 인포 삭제
+	int themeInfoDel(Integer boardNo);
+
+	//게시글 테마 수정 테마 조회
+	Theme themeSelect(int boardNo);
+
+	//게시글 테마 수정
+	int themeUpdate(Board b, Info in, ArrayList<Attachment> list, Theme m);
+
+	//게시글 명소 검색 개수
+	int attractionSearchCount(HashMap<String, String> map);
+
+	//게시글 명소 검색 리스트 조회
+	ArrayList<Board> attractionSearchList(HashMap<String, String> map, PageInfo pi);
+
+	//게시글 피드 검색 개수
+	int feedSearchCount(HashMap<String, String> map);
+
+	//게시글 피드 검색 리스트 조회
+	ArrayList<Board> feedSearchList(HashMap<String, String> map, PageInfo pi);
+
+	
+
+
+
+
 	
 
 

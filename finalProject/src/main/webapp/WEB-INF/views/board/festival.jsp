@@ -74,9 +74,6 @@
 		border-radius: 50%;
 		height: 6em;								/* 일 수 높이 */
 	}
-	.calendar tbody td:hover{
-		background-color: #93dda4;							/* 동그라미 색깔 */
-	}
 	.btn-prev,
 	.btn-next {
 		border: 2px solid #cbd1d2;
@@ -190,6 +187,14 @@
 		left: 310px;
 		top: 25px;
 	}
+	.col-lg-4:hover{
+		background-color: rgb(154, 154, 154, 0.3);
+		border-radius: 10px;
+		cursor: pointer;
+	}
+	.ticket-item{
+		margin-top: 14px;
+	}
 	
 	/* 페이지네이션 */
 	.page_list{
@@ -221,8 +226,6 @@
 	    </div>
 	  </div>
 	</div>
-	<!-- ***** Preloader End ***** -->
-	<!-- ***** Header Area End ***** -->
 	<script>
 	$(function(){
 		$(".nav>li>a").each(function(){
@@ -245,8 +248,6 @@
 						<!-- ***** 달력 ***** -->
 						<br>
 						<div class="fes_container calendar" id="fes_con">
-					        <!-- <button onclick="prevMonth();">이전 달</button>
-					        <button onclick="nextMonth();">다음 달</button> -->
 					        <header>
 					        
 					    		<h6 style="position: relative; left: -60px; top: 10px;">2023년</h6>
@@ -270,12 +271,12 @@
         <!-- 검색 -->
         <div class="search_slide_wrap">
             <div class="inner">
-                <form name="festivalSearch" id="festivalSearch" class="festival_search" onsubmit="return false;">
+                <form action="search.fe" name="festivalSearch" id="festivalSearch" class="festival_search">
                     <fieldset>
                         <div class="search_box_wrap">
-                            <div class="select_box select_date">
+                            <div class="select_box select_date" id="date">
                                 <select name="searchDate" id="searchDate" title="시기 선택">
-                                    <option value="">시기</option>
+                                    <option value="00">시기</option>
                                     <option value="01">01월</option>
                                     <option value="02">02월</option>
                                     <option value="03">03월</option>
@@ -290,38 +291,41 @@
                                     <option value="12">12월</option>
                                 </select>
                             </div>
-                            <div class="select_box select_area">
+                            <div class="select_box select_area" id="area">
                                 <select name="searchArea" id="searchArea" title="지역 선택">
-                                    <option value="location">지역</option>
-										<option name="1" id="Brazil">서울특별시</option>
-										<option name="2" id="Europe">경기도</option>
-										<option name="3" id="US">충청도</option>
-										<option name="4" id="Asia">전라도</option>
-										<option name="5" id="Asia">경상도</option>
-										<option name="Asia" id="Asia">강원도</option>
-										<option name="Asia" id="Asia">제주도</option>
-										<option name="Brazil" id="Brazil">부산광역시</option>
-										<option name="Brazil" id="Brazil">대구광역시</option>
-										<option name="Brazil" id="Brazil">인천광역시</option>
-										<option name="Brazil" id="Brazil">광주광역시</option>
-										<option name="Brazil" id="Brazil">대전광역시</option>
-										<option name="Brazil" id="Brazil">울산광역시</option>
+                                    <option value="all">지역</option>
+										<option value="서울">서울특별시</option>
+										<option value="부산">부산광역시</option>
+										<option value="대구">대구광역시</option>
+										<option value="인천">인천광역시</option>
+										<option value="광주">광주광역시</option>
+										<option value="대전">대전광역시</option>
+										<option value="울산">울산광역시</option>
+										<option value="경기">경기도</option>
+										<option value="강원">강원도</option>
+										<option value="충북">충청북도</option>
+										<option value="충남">충청남도</option>
+										<option value="전북">전라북도</option>
+										<option value="전남">전라남도</option>
+										<option value="경북" id="Asia">경상북도</option>
+										<option value="경남" id="Asia">경상남도</option>
+										<option value="제주" id="Asia">제주도</option>
                                 </select>
                             </div>
-                            <div class="select_box select_cate">
+                            <div class="select_box select_cate" id="cate">
                                 <select name="searchCate" id="searchCate" title="카테고리 선택">
-                                    <option value="">카테고리</option>
-                                    <option value="공연">공연</option>
-                                    <option value="문화관광">문화관광</option>
-                                    <option value="자연">자연</option>
-                                    <option value="환경">환경</option>
-                                    <option value="꽃">꽃</option>
-                                    <option value="가족과함께">가족과함께</option>
+                                    <option value="0">카테고리</option>
+                                    <option value="1">공연</option>
+                                    <option value="2">문화관광</option>
+                                    <option value="3">자연</option>
+                                    <option value="4">먹거리</option>
+                                    <option value="5">꽃</option>
+                                    <option value="6">가족과함께</option>
                                 </select>
                             </div>
                             <div class="btn_box">
-                              <button class="btn_search" id="btnSearch" onclick="" style="background-color: #c4edcd; border: 1px solid #2cab49;"><img src="/finalProject/resources/images/fes_search.png" style="width: 30px; height: 25px;"></button>
-                              <button class="btn_reset" onclick="" ><img src="/finalProject/resources/images/circular.png" style="width: 30px; height: 25px;"></button>
+                              <button type="submit" class="btn_search" id="btnSearch" style="background-color: #c4edcd; border: 1px solid #2cab49;"><img src="/finalProject/resources/images/fes_search.png" style="width: 30px; height: 25px;"></button>
+                              <button type="button" class="btn_reset" onclick="btnReset()"><img src="/finalProject/resources/images/circular.png" style="width: 30px; height: 25px;"></button>
                             </div>
                         </div>
                     </fieldset>
@@ -329,25 +333,52 @@
         </div>
         </div>
     </div>
-	
-	
+    
+    <c:if test="${not empty date }">
+    	<script>
+    		$(function(){
+    			$("#date option[value=${date}]").attr("selected",true);
+    		});
+    	</script>
+    </c:if>
+	<c:if test="${not empty area }">
+    	<script>
+    		$(function(){
+    			$("#area option[value=${area}]").attr("selected",true);
+    		});
+    	</script>
+    </c:if>
+	<c:if test="${not empty cate }">
+    	<script>
+    		$(function(){
+    			$("#cate option[value=${cate}]").attr("selected",true);
+    		});
+    	</script>
+    </c:if>
 	
 	<div class="tickets-page">
 	    <div class="container">
 	        <div class="row">
 	        	<c:forEach var="b" items="${list }">
-		            <div class="col-lg-4" id="fes_div" onclick="location.href='fesDetail.fe?boardNo=${b.boardNo}'">
+		            <div class="col-lg-4" id="fes_div" onclick="location.href='fesDetail.fe?boardNo=${b.boardNo}'" style="height: 508px;">
 		                <div class="ticket-item">
-		                	<%-- <input type="hidden" class="boardNoList" id="boardNo" value="${b.boardNo }"> --%>
 		                    <div class="thumb">
+		                    	<input type="hidden" class="boardNo" name="boardNo" value="${b.boardNo }">
 		                        <img src="${b.attachment.filePath }" alt="" style="height: 300px;">
-		                        <div class="price" id="fes_go">
+		                        <!-- <div class="price" id="fes_go">
 		                            <span>개최중</span>
-		                        </div>
+		                        </div> -->
 		                    </div>
-		                    <div id="good_div"><img<%--  name="${b.boardNo }" --%> src="/finalProject/resources/images/Like-before.png" id="good_img" onclick="goodCk(event, '${b.boardNo}', this)"></div>
+		                    <div id="good_div"><img src="/finalProject/resources/images/Like-before.png" id="good_img" onclick="goodCk(event, '${b.boardNo}', this)"></div>
 		                    <div class="down-content">
-		                        <h4>${b.boardTitle }</h4>
+								<c:choose>
+									<c:when test="${fn:length(b.boardTitle) < 12 }">
+										<h4>${b.boardTitle }</h4>									
+									</c:when>
+									<c:otherwise>
+										<h4>${fn:substring (b.boardTitle, 0,11) }...</h4>
+									</c:otherwise>
+								</c:choose>
 		                        <ul>
 		                            <li><i class="fa fa-clock-o"></i> ${b.festival.startDate } - ${b.festival.endDate }</li>
 		                            <li><i class="fa fa-map-marker"></i>${b.info.infoAddress }</li>
@@ -356,6 +387,11 @@
 		                </div>
 		            </div>	
 	        	</c:forEach>
+	        	<c:if test="${empty list }">
+	        		<div style="margin: auto; cursor: default; color: rgb(169, 169, 169);">
+	        			개최중인 축제가 없습니다.
+	        		</div>
+	        	</c:if>
 	            <div class="col-lg-12">
 	                <div class="pagination">
 	                    <ul>
@@ -388,32 +424,38 @@
 	</div>
 	<button type="button" onclick="location.href='fesEnrollForm.fe'">축제 등록</button>
 	
-	<!-- 로그인 정보 있을시 -->
-<%-- 	<c:choose>
+	<!-- 로그인 정보 있을시 축제 찜 이미지 있으면 띄워주기 -->
+	<c:choose>
 		<c:when test="${not empty loginUser }">
 			<script>
 				$(function(){
-					var boardNos = [];
-					
-					$(".boardNoList").each(function(){
-						var boardNo = $(this).val(); // boardNo 값을 가져옵니다.
-				        boardNos.push(boardNo);
+					$("#fes_div > .ticket-item").each(function(){
+						var boardNo = $(this).find(".thumb .boardNo").val(); //모든 boardNo가져오기
+							boardNo = parseInt(boardNo);
+						var choiceImg = $(this).find("#good_img");
+						var writer = "${loginUser.nickname}";
+						var like = false;
+						var choiceList = ${choiceList};
 						
-						// 찜하기 정보 불러오기
-				    	$.ajax({
-				    		url : "choice.fe",
-				    		data : {boardNo : boardNos},
-				    		success : function(){
-				    			console.log("에젝성공");
-				    		},complete : function(){
-				    			console.log("에젝 성공만함");
-				    		}
-				    	});
+						for(var i=0; i<choiceList.length; i++){
+							var choice = choiceList[i];
+							
+							if(choice.boardNo === boardNo && choice.writer === writer){
+								like = true;
+							}
+						}
+						
+						if(like){
+							choiceImg.attr("src","/finalProject/resources/images/Like-after.png");
+						}else{
+							choiceImg.attr("src","/finalProject/resources/images/Like-before.png");
+						}
+											
 					});
 				});
 			</script>
 		</c:when>
-	</c:choose> --%>
+	</c:choose>
 	
 	<script>
 
@@ -427,7 +469,7 @@
 	
 	    //온로드로 페이지 열자마자
 	    $(function(){
-	    //오늘 날짜 넣어서 달력 생성
+	    	//오늘 날짜 넣어서 달력 생성
 	    	monthVal.text(nowMonth+'월');
 	    	yearVal.text(nowYear+'년');
 	        createCalendar(nowYear,nowMonth);
@@ -502,7 +544,7 @@
 	            while (day <= lastDate) {
 	                // 일자 표시
 	                for (var i = firstDay; i < 7 && day <= lastDate; i++) {
-	                var cell = "<td onclick='getDate(this)'>" + day + "</td>";
+	                var cell = "<td id='dateCk' onclick='getDate(this)'>" + day + "</td>";
 	        
 	                str += cell;
 	                day++;
@@ -532,12 +574,14 @@
 	            // 달력을 HTML 요소에 추가
 	            $("#calendar_div").html(str)
 	    }
-	
-	    function getDate(cell) {
-	        //클릭한 일
-	        var clickDate = cell.innerHTML;
-	
-	        //한자리일때 0붙여주기
+	    
+	    var now = ""; // 날짜 저장위해 전역변수 선언
+		//마우스 올렸을시 축제 개수 출력
+	    $(document).on('mouseover', '#dateCk', function() {
+	    	//클릭한 일수
+	        var clickDate = this.innerHTML;
+
+	    	//한자리일때 0붙여주기
 	        var monthStr = nowMonth.toString(); // nowMonth가 숫자이므로 문자열로 변환
 	        if(monthStr.length==1){
 	            nowMonth = '0'+nowMonth;
@@ -545,8 +589,29 @@
 	        if(clickDate.length ==1){
 	            clickDate = '0'+clickDate;
 	        }
-	        console.log("클릭한 날짜:", nowYear+'-'+nowMonth+'-'+clickDate);
-	    }
+	        var nowDay = nowYear+'-'+nowMonth+'-'+clickDate;
+	        
+	        $.ajax({
+	        	url : "mouCount.fe",
+	        	data :	{nowDay : nowDay},
+	        	success : function(count){
+	        		now = $(this).text(); //날짜 저장 먼저 하기
+	        		$(this).text(count+'개의 축제보기').css({"font-size":"13px","width":"115px","height":"90px","cursor":"pointer",
+	        											"transition":"0.5s","background-color":"#93dda4"});
+	        		$(this).on('click',function(){
+	        			location.href="search.fe?nowDay="+nowDay;
+	        		})
+	        		
+	        	}.bind(this),
+	        	error : function(){
+	        		console.log("카운트 에이젝스 오류");
+	        	}
+	        });
+	    });
+	 	// 마우스 치웠을 때 원래 일자로
+	    $(document).on('mouseout', '#dateCk', function() {
+	      $(this).text(now).css({"font-size":"17px","background-color":"#f6fff8"}); //저장한 일 수 다시 되돌리기
+	    });
 	    
 	    //찜하기 기능
 	    function goodCk(event, boardNo, img){
@@ -579,6 +644,14 @@
 	    	}
 
 	    }
+	    
+	    //검색 리셋으로 돌리기
+	    function btnReset(){
+	    	console.log("dd");
+	    	$("#searchDate").val("00").prop("selected",true);
+	    	$("#searchArea").val("all").prop("selected",true);
+	    	$("#searchCate").val("0").prop("selected",true);
+	    };
 	    
 	    
 	</script>

@@ -4,9 +4,9 @@
 <html lang="en">
 <!-- 지도띄우기 -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=944eea4bf318a38d2df62b60e838db52&libraries=services"></script>
-
 	<style>
-	/* 사진 슬라이드 부트스트랩 */
+	/* 부트스트랩 */
+	/* 사진 슬라이드 */
 	@import url(https://fonts.googleapis.com/css?family=Varela+Round);
 
 	html, body { background: #333 url("https://codepen.io/images/classy_fabric.png"); }
@@ -58,7 +58,6 @@
 	    position: absolute;
 	    border-radius: 8px;
 	
-		/* opacity: 0; */
 	    z-index: 9;
 	    cursor: pointer;
 	
@@ -124,13 +123,84 @@
 	.next{
 		left : 609px;
 	}
+	
+	/* 명소 css */
+	#M-container {
+	  margin: 0 auto;
+	  padding-right: .8em;
+	  padding-left: .8em;
+	  width: 100%;
+	  height: auto;
+	  max-width: 1260px;
+	  background: #fff;
+	  margin-bottom: -50px;
+	 }
+	#M-header {
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	  margin-top: 30px;
+	  margin-bottom: -10px;
+	}
+	#M-name {
+	  text-transform:uppercase;
+	  font-weight: 800;
+	  font-size: 2em;
+	  line-height: 1;
+	  margin: 0 0 1.5em;
+	}
+	#M-list-wrap img {
+	   max-width: 100%;
+	}
+	#photo-list {
+	  border: 1px solid rgb(200, 200, 200);
+	  margin-bottom: 3em;
+	  text-align: center;
+	  margin-left: .8em;
+	  margin-right: .8em;
+	}
+	
+	#photo-list h2 {
+	  text-transform:uppercase;
+	  font-size: 1.5em;
+	  line-height: .4;
+	  font-weight: 550;
+	  color: rgb(76, 76, 76);
+	  margin-top: 25px;
+	}
+	#photo-list p {
+	  font-size: .9375em;
+	  margin: 0 0 1.5em;
+	  line-height: 1.4;
+	  margin-top: 20px;
+	  margin-bottom: 30px;
+	}
+	#M-list-wrap img {
+	  transition: transform .5s cubic-bezier(.7,-0.39,.31,1.38);
+	}
+	#M-list-wrap img:hover {
+	  transform: rotate(-5deg) scale(1.1);
+	}
+	
+	@media (min-width: 1024px) {
+		#M-list-wrap {
+		  display: flex;
+		  flex-direction: row;
+		  flex-wrap: wrap;
+		  justify-content: center;
+		}
+	}
+	@media (min-width: 1600px) {
+		#photo-list {
+		  margin-bottom: 4em;
+		  width: 30%;
+		}
+	}
+     /* ======================================================================= */
           
 	/* 디테일 헤더 */
 	#title_menu{
 		font-size: 28px;
-		/* position: relative; */
-		/* top: -15px; */
-		/* left: 21%; */
 		padding: 0px 0px 0px 400px;
 		width:1000px;
 	}
@@ -152,7 +222,6 @@
 	.titleType1 {
 		text-align: center;
 	          position: relative;
-		/* background-color : green; */
 	}
 	.titleType1 .area_tag {
 	    text-align: left;
@@ -197,34 +266,12 @@
 	#fes-infor dl, #map-infor dl{
 		position: relative;
 	    padding: 0px 0px 0px 200px;
-	   /*  text-align: left; */
-	    /* margin: 0; */
-	    
-	    /* display: block; */
 	    margin-block-start: 1em;
-	    /* margin-inline-start: 0px; */
-	    /* margin-inline-end: 0px; */
 	}
 	#fes-infor dt, #map-infor dt{
 		position: absolute;
 	    left: 0px;
-	    /* top: 10px; */
-	    /* z-index: 1; */
-	    /* width: 200px; */
 	    font-size: 18px;
-	    /* color: #222; */
-	    /* font-weight: 700; */
-	    
-	    /* margin: 0; */
-	    /* padding: 0; */
-	    
-	    /* display: block; */
-	}
-	#fes-infor dd, #map-infor dd{
-	   	/* margin: 0; */
-	    /* padding: 0; */
-	    
-	    /* display: block; */
 	}
 	
 	/* 지도 */
@@ -236,79 +283,6 @@
 		width: 800px;
 		height: 400px;
 		margin: auto;
-	}
-	
-	/* 명소 css */
-	#M-container {
-	  margin: 0 auto;
-	  padding-right: .8em;
-	  padding-left: .8em;
-	  width: 100%;
-	  height: auto;
-	  max-width: 1260px;
-	  background: #fff;
-	  margin-bottom: -50px;
-	 }
-	#M-header {
-	  display: flex;
-	  flex-direction: column;
-	  align-items: center;
-	  margin-top: 30px;
-	  margin-bottom: -10px;
-	}
-	#M-name {
-	  text-transform:uppercase;
-	  font-weight: 800;
-	  font-size: 2em;
-	  line-height: 1;
-	  margin: 0 0 1.5em;
-	}
-	#M-list-wrap img {
-	   max-width: 100%;
-	}
-	#photo-list {
-	  border: 1px solid rgb(200, 200, 200);
-	  margin-bottom: 3em;
-	  text-align: center;
-	  margin-left: .8em;    /* these margins depend on the .photo-container width in @media */
-	  margin-right: .8em;
-	}
-	
-	#photo-list h2 {
-	  text-transform:uppercase;
-	  font-size: 1.5em;
-	  line-height: .4;
-	  font-weight: 550;
-	  color: rgb(76, 76, 76);
-	  margin-top: 25px;
-	}
-	#photo-list p {
-	  font-size: .9375em;
-	  margin: 0 0 1.5em;
-	  line-height: 1.4;
-	  margin-top: 20px;
-	  margin-bottom: 30px;
-	}
-	#M-list-wrap img {
-	  transition: transform .5s cubic-bezier(.7,-0.39,.31,1.38);
-	}
-	#M-list-wrap img:hover {
-	  transform: rotate(-5deg) scale(1.1);
-	}
-	
-	@media (min-width: 1024px) {
-		#M-list-wrap {
-		  display: flex;
-		  flex-direction: row;
-		  flex-wrap: wrap;
-		  justify-content: center;
-		}
-	}
-	@media (min-width: 1600px) {
-		#photo-list {
-		  margin-bottom: 4em;
-		  width: 30%;
-		}
 	}
 	</style>
 
@@ -342,11 +316,12 @@
 	<div id="fesDe_wrap">
 		<div>
 			<div id="title_menu" >
-				<a href=""><img src="resources/images/home.png" alt="" style="width:23px; height:23px; position: relative; top: -7px;"></a> > <a href="festival.fe" style="position: relative; top: -3px; left: -3px;">축제</a>
+				<a href="/finalProject/"><img src="resources/images/home.png" alt="" style="width:23px; height:23px; position: relative; top: -7px;"></a> > <a href="festival.fe" style="position: relative; top: -3px; left: -3px;">축제</a>
 			</div>
 		</div>
         
         <div class="titleType1">
+        	<input type="hidden" class="boardNo" id="boardNo" value="${b.boardNo }">
 			<h2 id="topTitle">${b.boardTitle }</h2>
             <div class="area_address" id="topAddr" style="color: rgb(135, 135, 135); position: relative; top: -18px;">${b.zone.zoneName }</div>
     
@@ -395,7 +370,11 @@
 					        </div>
 					    </li>
 					</c:forEach>
-					
+					<li class="nav-dots">
+						<c:forEach var="at" items="${at }" varStatus="status">
+						    <label for="${status.count}" class="nav-dot" id="${status.count }"></label>
+						</c:forEach>
+					</li>
 				</ul>
         	</div>
         	
@@ -435,8 +414,6 @@ ${b.boardContent }
 			      	<dl>
 			        	<dt>주소</dt>
 			        	<dd>${b.info.infoAddress }</dd>
-			        	<input type="hidden" id="x">
-			        	<input type="hidden" id="y">
 			      	</dl>
 			      	<dl>
 		        	<dt>웹사이트</dt>
@@ -479,79 +456,64 @@ ${b.boardContent }
 
    <jsp:include page="../common/footer.jsp"/>
    
+   <!-- 로그인 정보 있을시 축제 찜 이미지 있으면 띄워주기 -->
+	<c:choose>
+		<c:when test="${not empty loginUser }">
+			<script>
+				$(function(){
+					var boardNo = $("#boardNo").val();
+						boardNo = parseInt(boardNo);
+					var choiceImg = $("#choice_img");
+					var writer = "${loginUser.nickname}";
+					var like = false;
+					var choiceList = ${choiceList};
+					
+					for(var i=0; i<choiceList.length; i++){
+						var choice = choiceList[i];
+						
+						if(choice.boardNo === boardNo && choice.writer === writer){
+							like = true;
+						}
+					}
+					
+					if(like){
+						choiceImg.attr("src","/finalProject/resources/images/Like-after.png");
+					}else{
+						choiceImg.attr("src","/finalProject/resources/images/Like-before.png");
+					}
+				});
+			</script>
+		</c:when>
+	</c:choose>
+   
 	<script>
-		//지도
-		//좌표 값 가져오기
-		/* var geocoder = new kakao.maps.services.Geocoder();
-		var callback = function(result, status) {
-		    if (status === kakao.maps.services.Status.OK) {
-		    	console.log(result);
-		    }
-		};
-		geocoder.addressSearch('전북 고창군 상하면 석남갈산길 34-2', callback);
-		
-		//지도 생성
-		var container = document.getElementById('map');
-		var options = { //지도를 생성시 필요한 기본 옵션
-			center: new kakao.maps.LatLng($("#y").val(),$("#x").val()),
-			level: 5
-		};
-		var map = new kakao.maps.Map(container, options);
-		//마커 생성
-	    var marker = new daum.maps.Marker({
-	        position: new daum.maps.LatLng(37.537187, 127.005476),
-	        map: map
-	    }); */
-		
-	    /* 지도 */
-        var mapContainer = document.getElementById('map'),
-	        mapOption = {
-	            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도 중심좌표
-	            level: 5 // 지도 확대 레벨
-	        };
+        //주소로 지도 띄워주기
+        //주소-좌표 변환 객체 생성
+        var geocoder = new kakao.maps.services.Geocoder();
 
-	    //지도 생성
-	    var map = new daum.maps.Map(mapContainer, mapOption);
-	    
-	    //주소-좌표 변환 객체를 생성
-	    var geocoder = new daum.maps.services.Geocoder();
-	    //마커 미리 생성
-	    var marker = new daum.maps.Marker({
-	        position: new daum.maps.LatLng(37.537187, 127.005476),
-	        map: map
-	    });
-	    
-        $(function(){
-	        /* 우편번호 서비스  API*/
-	        new daum.Postcode({
-	            oncomplete: function(data) {
-	            	var addr = data.address; // 검색한 주소 정보
-	                document.getElementById("address").value = addr;
-	            	
-	                // 주소로 좌표 검색
-	                geocoder.addressSearch("${b.info.infoAddress}", function(results, status) {
-	                    // 정상적으로 검색이 완료됐으면
-	                    if (status === daum.maps.services.Status.OK) {
+        var callback = function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                //console.log(result);
+                
+				/* 지도 */
+		        var mapContainer = document.getElementById('map'),
+			        mapOption = {
+			            center: new daum.maps.LatLng(result[0].y, result[0].x), // 지도 중심좌표
+			            level: 5 // 지도 확대 레벨
+			        };
 
-	                        var result = results[0]; //첫번째 결과의 값을 활용
-
-	                        // 해당 주소에 대한 좌표를 받아서
-	                        var coords = new daum.maps.LatLng(result.y, result.x);
-	                        // 지도를 보여준다.
-	                        mapContainer.style.display = "block";
-	                        map.relayout();
-	                        // 지도 위치 변경
-	                        map.setCenter(coords);
-	                        // 마커 다시 잡기
-	                        marker.setPosition(coords)
-	                    }
-	                });
-	            }
-	        }).open();
-        });
+			    //지도 생성
+			    var map = new daum.maps.Map(mapContainer, mapOption);
+			    
+			    //마커 생성
+			    var marker = new daum.maps.Marker({
+			        position: new daum.maps.LatLng(result[0].y, result[0].x),
+			        map: map
+			    });
+            }
+        };
+        geocoder.addressSearch('${b.info.infoAddress}', callback);
         
-        
-	    
 		//찜하기 기능
 		function choiceCk(event, boardNo){
 			

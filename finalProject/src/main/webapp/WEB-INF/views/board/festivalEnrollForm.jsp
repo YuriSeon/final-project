@@ -91,7 +91,7 @@
                         <option value="1">공연</option>
                         <option value="2">문화관광</option>
                         <option value="3">자연</option>
-                        <option value="4">환경</option>
+                        <option value="4">먹거리</option>
                         <option value="5">꽃</option>
                         <option value="6">가족과함께</option>
                     </select>
@@ -161,7 +161,8 @@
             </div>
             <div class="fes_input" id="fes_btn" style="margin-bottom: 60px; ">
                 <button type="submit">등록</button>
-                <button type="reset">취소</button>
+                <button type="reset">초기화</button>
+                <button type="button" onclick="history.back()">취소</button>
             </div>
         </div>
     </form>
