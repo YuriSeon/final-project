@@ -18,7 +18,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.remote.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +34,11 @@ import com.kh.finalProject.admin.model.vo.Criteria;
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Festival;
+import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.Theme;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
 import com.kh.finalProject.member.model.vo.Member;
@@ -98,18 +101,499 @@ public class AdminController {
 		return new Gson().toJson(list);
 	}
 	
-//==================================================게시판관리===========================================================
+//==================================================게시판관리-테마===========================================================
 	
 	//테마 페이지로 이동
 	@RequestMapping("theme.ad")
-	public String goAdminTheme() {
-		return "admin/adTheme";
+	public ModelAndView goAdminTheme(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
+		int listCount = adminService.themeListCount();
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Board> list = adminService.selectThemeList(pi);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.setViewName("admin/adTheme");
+		
+		return mv;
 	}
+	
+	//선택한 게시글 테마 삭제
+	@ResponseBody
+	@RequestMapping(value = "themeChkDelete.ad",produces = "application/json; charset=UTF-8")
+	public String themeChkDelete(@RequestParam(value = "list[]") int[] list, HttpSession session) {
+		
+		int result1 = 0;
+		int result2 = 0;
+		int result3 = 0;
+		int result4 = 0;
+		
+		for (Integer i : list) {
+			
+			ArrayList<Attachment> a = adminService.themeFilePath(i);
+			
+			for (Attachment file : a) {
+				new File(ServletContext.getRealPath("/"+file.getFilePath())).delete();
+			}
+			
+			result1 = adminService.themeBoardDel(i);
+			result2 = adminService.themeFileDel(i);
+			result3 = adminService.themeDel(i);
+			result4 = adminService.themeInfoDel(i);
+		}
+		
+		if(result1*result2*result3*result4>0) {
+			session.setAttribute("alertMsg","게시글 삭제 완료");
+		}
+		
+		return (result1*result2*result3*result4>0)?new Gson().toJson("success"):new Gson().toJson("fail");
+	}
+	
+	//게시글 테마 검색
+	@GetMapping("themeSearch.ad")
+	public ModelAndView themeSearch(Criteria cri
+					 			   ,ModelAndView mv
+								   ,HttpSession session) {
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map.put("keyword", cri.getKeyword());
+		map.put("status", cri.getType());
+		
+		int searchCount = adminService.themeSearchCount(map);
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(searchCount, cri.getCurrentPage(), pageLimit, boardLimit);
+		
+		ArrayList<Board> list = adminService.themeSearchList(map,pi);
+		
+		mv.addObject("pi", pi);
+		mv.addObject("list", list);
+		mv.addObject("keyword", cri.getKeyword());
+		mv.addObject("type", cri.getType());
+		mv.setViewName("admin/adTheme");
+		
+		return mv;
+	}
+	
+	//게시글 테마 수정 페이지 이동
+	@RequestMapping("themeSelect.ad")
+	public ModelAndView themeSelect(@RequestParam(value="boardNo") int boardNo
+					 											  ,ModelAndView mv) {
+
+		Board b = adminService.festivalSelect(boardNo);
+		ArrayList<Attachment> a = adminService.festivalFileSelect(boardNo);
+		Theme t = adminService.themeSelect(boardNo);
+		Info i = adminService.festivalInfoSelect(boardNo);
+
+		mv.addObject("b", b);
+		mv.addObject("a", a);
+		mv.addObject("t", t);
+		mv.addObject("i", i).setViewName("admin/adThemeUpdate");
+		
+		return mv;
+	}
+	
+	//게시글 테마 수정
+	@RequestMapping("themeUpdate.ad")
+	public ModelAndView themeUpdate(Board b
+								   ,ModelAndView mv
+								   ,HttpSession session
+								   ,MultipartFile[] upfile
+								   ,Info in
+								   ,Theme m) {
+		
+		//파일 이름 바꾸기
+		ArrayList<Attachment> list = new ArrayList<>();
+		
+		for(int i=0; i<upfile.length; i++) {
+			
+			if(!upfile[i].getOriginalFilename().equals("")) {//파일이 있으면
+				
+				ArrayList<Attachment> a = adminService.themeFilePath(b.getBoardNo());
+				
+				//기존 파일 삭제
+				for (Attachment file : a) {
+					adminService.themeFileDel(b.getBoardNo());
+					new File(ServletContext.getRealPath("/"+file.getFilePath())).delete();
+				}
+				
+				String originName = upfile[i].getOriginalFilename();
+				String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+				int ranNum = (int) (Math.random()*90000+10000);
+				//확장자명 추출
+				String ext = originName.substring(originName.lastIndexOf("."));
+				//추출한 문자열 합쳐서 changeName만들기
+				String changeName = currentTime+ranNum+ext;
+				//업로드하는 경로
+				String filePath = session.getServletContext().getRealPath("/resources/images/thema/");
+				
+				//경로와 수정파일명 합쳐서 파일 업로드
+				try {
+					upfile[i].transferTo(new File(filePath+changeName));
+				} catch (IllegalStateException | IOException e) {
+					e.printStackTrace();
+				}
+				
+				Attachment at = new Attachment();
+				at.setBoardNo(b.getBoardNo());
+				at.setOriginName(originName);
+				at.setChangeName(changeName);
+				at.setFilePath("resources/images/thema/"+changeName);
+				//파일 레벨 나누기
+				if(i==0) {
+					at.setFileLevel(1);
+				}else {
+					at.setFileLevel(2);
+				}
+				list.add(at);
+			}
+		}
+		
+		int result = adminService.themeUpdate(b,in,list,m);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg", "게시글 수정 완료");
+			mv.setViewName("redirect:theme.ad");
+		}else {//실패시 파일도 지워주기
+			for(int i=0; i<list.size(); i++) {
+				new File(session.getServletContext().getRealPath("/"+list.get(i).getFilePath())).delete();
+			}
+			mv.addObject("errorMsg", "게시글 수정에 실패하였습니다.").setViewName("common/errorPage");
+		}
+		
+		return mv;	
+	}
+	
+//==================================================게시판관리-축제===========================================================
 	
 	//축제 페이지로 이동
 	@RequestMapping("festival.ad")
-	public String goAdminFestival() {
-		return "admin/adFestival";
+	public ModelAndView goAdminFestival(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
+		int listCount = adminService.festivalListCount();
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Board> list = adminService.selectFestivalList(pi);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.setViewName("admin/adFestival");
+		
+		return mv;
+	}
+	
+	//게시글 축제 검색
+	@GetMapping("festivalSearch.ad")
+	public ModelAndView festivalSearch(Criteria cri
+									  ,ModelAndView mv
+									  ,HttpSession session) {
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map.put("keyword", cri.getKeyword());
+		map.put("status", cri.getType());
+		
+		int searchCount = adminService.festivalSearchCount(map);
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(searchCount, cri.getCurrentPage(), pageLimit, boardLimit);
+		
+		ArrayList<Board> list = adminService.festivalSearchList(map,pi);
+		
+		mv.addObject("pi", pi);
+		mv.addObject("list", list);
+		mv.addObject("keyword", cri.getKeyword());
+		mv.addObject("type", cri.getType());
+		mv.setViewName("admin/adFestival");
+		
+		return mv;
+	}
+	
+	//선택한 게시글 축제 삭제
+	@ResponseBody
+	@RequestMapping(value = "festivalChkDelete.ad",produces = "application/json; charset=UTF-8")
+	public String festivalChkDelete(@RequestParam(value = "list[]") int[] list, HttpSession session) {
+		
+		int result1 = 0;
+		int result2 = 0;
+		int result3 = 0;
+		int result4 = 0;
+		
+		for (Integer i : list) {
+			
+			ArrayList<Attachment> a = adminService.themeFilePath(i);
+			
+			for (Attachment file : a) {
+				new File(ServletContext.getRealPath("/"+file.getFilePath())).delete();
+			}
+			
+			result1 = adminService.themeBoardDel(i);
+			result2 = adminService.themeFileDel(i);
+			result3 = adminService.festivalDel(i);
+			result4 = adminService.themeInfoDel(i);
+		}
+		
+		if(result1*result2*result3*result4>0) {
+			session.setAttribute("alertMsg","게시글 삭제 완료");
+		}
+		
+		return (result1*result2*result3*result4>0)?new Gson().toJson("success"):new Gson().toJson("fail");
+	}
+	
+	//게시글 축제 수정 페이지 이동
+	@RequestMapping("festivalSelect.ad")
+	public ModelAndView festivalSelect(@RequestParam(value="boardNo") int boardNo
+						 											 ,ModelAndView mv) {
+
+		Board b = adminService.festivalSelect(boardNo);
+		ArrayList<Attachment> a = adminService.festivalFileSelect(boardNo);
+		Festival f = adminService.festivalFesSelect(boardNo);
+		Info i = adminService.festivalInfoSelect(boardNo);
+
+		mv.addObject("b", b);
+		mv.addObject("a", a);
+		mv.addObject("f", f);
+		mv.addObject("i", i).setViewName("admin/adFestivalUpdate");
+		
+		return mv;
+	}
+	
+	//게시글 테마 수정
+	@RequestMapping("festivalUpdate.ad")
+	public ModelAndView festivalUpdate(Board b
+								      ,ModelAndView mv
+								      ,HttpSession session
+								      ,MultipartFile[] upfile
+								      ,Info in
+								      ,Festival f) {
+		
+		//파일 이름 바꾸기
+		ArrayList<Attachment> list = new ArrayList<>();
+		
+		for(int i=0; i<upfile.length; i++) {
+			
+			if(!upfile[i].getOriginalFilename().equals("")) {//파일이 있으면
+				
+				ArrayList<Attachment> a = adminService.themeFilePath(b.getBoardNo());
+				
+				//기존 파일 삭제
+				for (Attachment file : a) {
+					adminService.themeFileDel(b.getBoardNo());
+					new File(ServletContext.getRealPath("/"+file.getFilePath())).delete();
+				}
+				
+				String originName = upfile[i].getOriginalFilename();
+				String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+				int ranNum = (int) (Math.random()*90000+10000);
+				//확장자명 추출
+				String ext = originName.substring(originName.lastIndexOf("."));
+				//추출한 문자열 합쳐서 changeName만들기
+				String changeName = currentTime+ranNum+ext;
+				//업로드하는 경로
+				String filePath = session.getServletContext().getRealPath("/resources/images/festivalImg/");
+				
+				//경로와 수정파일명 합쳐서 파일 업로드
+				try {
+					upfile[i].transferTo(new File(filePath+changeName));
+				} catch (IllegalStateException | IOException e) {
+					e.printStackTrace();
+				}
+				
+				Attachment at = new Attachment();
+				at.setBoardNo(b.getBoardNo());
+				at.setOriginName(originName);
+				at.setChangeName(changeName);
+				at.setFilePath("resources/images/festivalImg/"+changeName);
+				//파일 레벨 나누기
+				if(i==0) {
+					at.setFileLevel(1);
+				}else {
+					at.setFileLevel(2);
+				}
+				list.add(at);
+			}
+		}
+		
+		int result = adminService.festivalUpdate(b,in,list,f);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg", "게시글 수정 완료");
+			mv.setViewName("redirect:festival.ad");
+		}else {//실패시 파일도 지워주기
+			for(int i=0; i<list.size(); i++) {
+				new File(session.getServletContext().getRealPath("/"+list.get(i).getFilePath())).delete();
+			}
+			mv.addObject("errorMsg", "게시글 수정에 실패하였습니다.").setViewName("common/errorPage");
+		}
+		
+		return mv;	
+	}
+
+//==================================================게시판관리-명소===========================================================
+	
+	//명소 페이지로 이동
+	@RequestMapping("attraction.ad")
+	public ModelAndView goAdminAttraction(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
+		int listCount = adminService.attractionListCount();
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Board> list = adminService.selectAttractionList(pi);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.setViewName("admin/adAttraction");
+		
+		return mv;
+	}
+
+	//게시글 명소 검색
+	@GetMapping("attractionSearch.ad")
+	public ModelAndView attractionSearch(Criteria cri
+									  ,ModelAndView mv
+									  ,HttpSession session) {
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map.put("keyword", cri.getKeyword());
+		map.put("status", cri.getType());
+		
+		int searchCount = adminService.attractionSearchCount(map);
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(searchCount, cri.getCurrentPage(), pageLimit, boardLimit);
+		
+		ArrayList<Board> list = adminService.attractionSearchList(map,pi);
+		
+		mv.addObject("pi", pi);
+		mv.addObject("list", list);
+		mv.addObject("keyword", cri.getKeyword());
+		mv.addObject("type", cri.getType());
+		mv.setViewName("admin/adAttraction");
+		
+		return mv;
+	}
+	
+	//선택한 게시글 명소 삭제
+	@ResponseBody
+	@RequestMapping(value = "attractionChkDelete.ad",produces = "application/json; charset=UTF-8")
+	public String attractionChkDelete(@RequestParam(value = "list[]") int[] list, HttpSession session) {
+		
+		int result1 = 0;
+		int result2 = 0;
+		int result3 = 0;
+		int result4 = 0;
+		
+		for (Integer i : list) {
+			
+			ArrayList<Attachment> a = adminService.themeFilePath(i);
+			
+			for (Attachment file : a) {
+				new File(ServletContext.getRealPath("/"+file.getFilePath())).delete();
+			}
+			
+			result1 = adminService.themeBoardDel(i);
+			result2 = adminService.themeFileDel(i);
+			result4 = adminService.themeInfoDel(i);
+		}
+		
+		if(result1*result2*result3*result4>0) {
+			session.setAttribute("alertMsg","게시글 삭제 완료");
+		}
+		
+		return (result1*result2*result3*result4>0)?new Gson().toJson("success"):new Gson().toJson("fail");
+	}
+//==================================================게시판관리-피드===========================================================
+	
+	//피드 페이지로 이동
+	@RequestMapping("feed.ad")
+	public ModelAndView goAdminFeed(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
+		int listCount = adminService.feedListCount();
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Board> list = adminService.selectFeedList(pi);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.setViewName("admin/adFeed");
+		
+		return mv;
+	}
+	
+	//게시글 피드 검색
+	@GetMapping("feedSearch.ad")
+	public ModelAndView feedSearch(Criteria cri
+								  ,ModelAndView mv
+								  ,HttpSession session) {
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map.put("keyword", cri.getKeyword());
+		map.put("status", cri.getType());
+		
+		int searchCount = adminService.feedSearchCount(map);
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(searchCount, cri.getCurrentPage(), pageLimit, boardLimit);
+		
+		ArrayList<Board> list = adminService.feedSearchList(map,pi);
+		
+		mv.addObject("pi", pi);
+		mv.addObject("list", list);
+		mv.addObject("keyword", cri.getKeyword());
+		mv.addObject("type", cri.getType());
+		mv.setViewName("admin/adFeed");
+		
+		return mv;
+	}
+	
+//==================================================게시판관리-일정자랑===========================================================
+	
+	//일정자랑 페이지로 이동
+	@RequestMapping("schedule.ad")
+	public ModelAndView goAdminSchedule(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
+		int listCount = adminService.scheduleListCount();
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Board> list = adminService.selectScheduleList(pi);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.setViewName("admin/adSchedule");
+		
+		return mv;
+	}
+	
+//==================================================게시판관리-함께가치===========================================================
+	
+	//함께가치 페이지로 이동
+	@RequestMapping("together.ad")
+	public ModelAndView goAdminTogether(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
+		int listCount = adminService.togetherListCount();
+		int pageLimit = 10;
+		int boardLimit = 15;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Board> list = adminService.selectTogetherList(pi);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.setViewName("admin/adTogether");
+		
+		return mv;
 	}
 	
 //==================================================회원관리===========================================================
@@ -132,7 +616,7 @@ public class AdminController {
 	}
 	
 	//회원 검색
-	@GetMapping("memberSearch.ad" )
+	@GetMapping("memberSearch.ad")
 	public ModelAndView memberSearch(Criteria cri
 									,ModelAndView mv
 									,HttpSession session) {
@@ -810,7 +1294,7 @@ public class AdminController {
 		return (result>0)?"success":"fail";
 	}
 	
-	//선택한 FAQ 삭제
+	//선택한 Q&A 삭제
 	@ResponseBody
 	@RequestMapping(value = "qnaChkDelete.ad",produces = "application/json; charset=UTF-8")
 	public String qnaChkDelete(@RequestParam(value = "list[]") int[] list

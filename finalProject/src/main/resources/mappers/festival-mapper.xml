@@ -156,7 +156,7 @@
 	<!-- 보드(게시글) 등록 -->
 	<insert id="insertBoard" parameterType="board" >
 		INSERT INTO BOARD (BOARD_NO, ZONE_NO, INFO_NO, CATEGORY, BOARD_TITLE, BOARD_CONTENT, BOARD_WRITER)
-            		VALUES (SEQ_BNO.NEXTVAL,#{zoneNo},SEQ_INO.NEXTVAL,6,#{boardTitle},#{boardContent},#{boardWriter})
+            		VALUES (SEQ_BNO.NEXTVAL,#{zoneNo},SEQ_INO.NEXTVAL,2,#{boardTitle},#{boardContent},#{boardWriter})
 	</insert>
 	<!-- 장소 정보 등록 -->
 	<insert id="insertInfo" parameterType="info">
