@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -22,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -39,17 +36,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
 import com.kh.finalProject.member.model.service.MemberService;
 import com.kh.finalProject.member.model.vo.Member;
-
-import lombok.val;
-
-import com.kh.finalProject.admin.model.vo.Notice;
 
 @Controller
 public class MemberController {
@@ -96,6 +90,163 @@ public class MemberController {
 		return "member/myPage/mypage";
 	}
 	
+	//마이페이지 작성글 보기 이동
+	@RequestMapping("myWriting.me")
+	public ModelAndView goMyWriting(@RequestParam(value="currentPage", defaultValue="1") int currentPage
+																				  		,ModelAndView mv
+																				  		,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		
+		int listCount = memberService.myWritingCount(nick);
+		int pageLimit = 5;
+		int boardLimit = 5;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Board> list = memberService.myWritingList(pi,nick);
+		
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageWriting");
+		
+		return mv;
+	}
+	
+	//마이페이지 작성글 게시판 종류 선택
+	@RequestMapping("selectBoard.me")
+	public ModelAndView selectBoard(@RequestParam(value="currentPage", defaultValue="1") int currentPage
+																						,int category
+																						,ModelAndView mv
+																						,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Board b = Board.builder()
+				.category(category)
+				.boardWriter(nick).build();
+		int listCount = memberService.selectBoardCount(b);
+		int pageLimit = 5;
+		int boardLimit = 5;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Board> list = memberService.selectBoardList(b,pi);
+		
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.addObject("category", category).setViewName("member/myPage/mypageWriting");
+		return mv;
+	}
+	
+	//마이페이지 댓글 보기 이동
+	@RequestMapping("myReply.me")
+	public ModelAndView goMyReply(@RequestParam(value="currentPage", defaultValue="1") int currentPage
+																				  	  ,ModelAndView mv
+																				  	  ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		
+		int listCount = memberService.myReplyCount(nick);
+		int pageLimit = 5;
+		int boardLimit = 5;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Reply> list = memberService.myReplyList(pi,nick);
+		
+		int writingCount = memberService.myWritingCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.addObject("w",writingCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageReply");
+		
+		return mv;
+	}
+	
+	//마이페이지 찜 목록 이동
+	@RequestMapping("myChoice.me")
+	public ModelAndView goMyChoice(@RequestParam(value="currentPage", defaultValue="1") int currentPage
+																		  	     ,ModelAndView mv
+																		  	     ,HttpSession session) {
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		
+		int listCount = memberService.myChoiceCount(nick);
+		int pageLimit = 5;
+		int boardLimit = 5;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Board> list = memberService.myChoiceList(pi,nick);
+		
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageChoice");
+		
+		return mv;
+	}
+	
+	//마이페이지 수정요청 이동
+	@RequestMapping("myRequest.me")
+	public ModelAndView goMyRequest(@RequestParam(value="currentPage", defaultValue="1") int currentPage
+																				  		,ModelAndView mv
+																				  		,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		
+		int listCount = memberService.myRequestCount(nick);
+		int pageLimit = 5;
+		int boardLimit = 5;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Notice> list = memberService.myRequestList(pi,nick);
+		
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageRequest");
+		
+		return mv;
+	}
+	
 	//마이페이지 Q&A 이동
 	@RequestMapping("myQna.me")
 	public ModelAndView goMyQna(@RequestParam(value="currentPage", defaultValue="1") int currentPage
@@ -105,19 +256,23 @@ public class MemberController {
 		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
 		
 		int listCount = memberService.myQnaCount(nick);
-		
 		int pageLimit = 5;
-		
 		int boardLimit = 5;
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-		
 		ArrayList<Notice> list = memberService.myQnaList(pi,nick);
 		
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		
 		mv.addObject("list",list);
-		
 		mv.addObject("pi",pi);
-		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
 		mv.setViewName("member/myPage/mypageQna");
 		
 		return mv;
@@ -249,8 +404,6 @@ public class MemberController {
 	@GetMapping("/surveyResult.me")
 	@ResponseBody
 	public String surveyResult(String result, String userId) {
-		
-		System.out.println(userId);
 		
 		int countEI = 0;
 		int countSN = 0;

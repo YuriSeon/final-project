@@ -562,6 +562,11 @@ public class AdminDao {
 		return (ArrayList)sqlSession.selectList("adminMapper.feedSearchList",map,rowBounds);
 	}
 
+	//게시글 피드 사진 출력
+	public ArrayList<Attachment> feedSelectFile(SqlSessionTemplate sqlSession, int boardNo) {
+		return (ArrayList)sqlSession.selectList("adminMapper.themeFilePath",boardNo);
+	}
+
 
 	
 	

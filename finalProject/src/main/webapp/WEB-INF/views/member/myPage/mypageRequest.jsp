@@ -16,7 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <title>마이페이지 Q&amp;A</title>
+    <title>마이페이지 정보 수정/신규 요청</title>
     <style type="text/css">
    	.snb_mypage ul li.on a {
 		background: url(resources/images/ico_mypagemenu.png) 0 0 no-repeat;
@@ -35,8 +35,8 @@
 	        <div class="area_tag">
 				<span class="name5"><a href="mypage.me"><span class="ico">My</span>마이페이지</a></span>
 	        </div>
-	        <h2>Q&amp;A</h2>
-	        <a href="myQnaEnroll.me" class="btn_apply btn_greyS">질문등록</a>
+	        <h2>관광정보 수정/신규 요청</h2>
+	        <a href="myQnaEnroll.me" class="btn_apply btn_greyS">요청등록</a>
 	    </div>
 	
 	    <div class="wrap_contView clfix">
@@ -93,7 +93,7 @@
 												<span class="ans ing">접수확인중</span>	
 											</c:when>
 											<c:otherwise>
-												<span class="ans ing" style="color: green;">답변완료</span>
+												<span class="ans ing" style="color: green;">수정완료</span>
 											</c:otherwise>
 										</c:choose>
 										
@@ -165,19 +165,19 @@
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <c:choose>
-	                    	<c:when test="${rq == 0 }">
-	                    		<li><a href="myRequest.me">관광정보 수정 / 신규 요청</a></li>
+	                    	<c:when test="${pi.listCount == 0 }">
+	                    		<li class="on"><a href="myRequest.me">관광정보 수정 / 신규 요청</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<li><a href="myRequest.me">관광정보 수정 / 신규 요청(${rq})</a></li>
+	                    		<li class="on"><a href="myRequest.me">관광정보 수정 / 신규 요청(${pi.listCount})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <c:choose>
-	                    	<c:when test="${pi.listCount == 0 }">
-	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A</a></li>
+	                    	<c:when test="${q == 0 }">
+	                    		<li><a href="myQna.me" id="qna">Q&amp;A</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A(${pi.listCount})</a></li>
+	                    		<li><a href="myQna.me" id="qna">Q&amp;A(${q})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <li id="stampEnabled"><a href="myFoot.me" id="stamp">발도장</a></li>

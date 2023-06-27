@@ -16,9 +16,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <title>마이페이지 Q&amp;A</title>
+    <title>마이페이지 찜 목록</title>
     <style type="text/css">
-   	.snb_mypage ul li.on a {
+    .snb_mypage ul li.on a {
 		background: url(resources/images/ico_mypagemenu.png) 0 0 no-repeat;
 		background-size: 4px 100%;
 		color: #333;
@@ -35,8 +35,7 @@
 	        <div class="area_tag">
 				<span class="name5"><a href="mypage.me"><span class="ico">My</span>마이페이지</a></span>
 	        </div>
-	        <h2>Q&amp;A</h2>
-	        <a href="myQnaEnroll.me" class="btn_apply btn_greyS">질문등록</a>
+	        <h2>찜 목록</h2>
 	    </div>
 	
 	    <div class="wrap_contView clfix">
@@ -54,66 +53,57 @@
                     </c:choose>
 	            </div>
 	            <!-- 명소,추천,코스,축제 -->
-	            <ul class="list_board1 flnon">
+	            <ul class="list_thumType flnon">
 <!-- 					<li class="bdr_nor"> -->
+<!-- 						<div class="photo"> -->
+<!-- 							<a href=""> -->
+<!-- 								<div class="dim"> -->
+<!-- 									<span class="txt_mid">여행지</span> -->
+<!-- 								</div> -->
+<!-- 								<img src="https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&amp;id=d9b979fe-7f35-4e19-864f-7fc411e72e2d" alt="[서울둘레길 4코스] 대모·우면산코스"> -->
+<!-- 							</a> -->
+<!-- 						</div> -->
 <!-- 						<div class="area_txt"> -->
-<!-- 							<strong class="tit on"> -->
-<!-- 								<a href="#">죄송합니다만 질문 하나 하겠습니다.</a> -->
-<!-- 							</strong> -->
-<!-- 							<div class="date"> -->
-<!-- 								<em class="line">JASMINE</em> -->
-<!-- 								<span class="line">2023. 6. 15.</span> -->
-<!-- 								<span class="ans ing">접수확인중</span> -->
+<!-- 							<div class="tit"> -->
+<!-- 								<a href="">[서울둘레길 4코스] 대모·우면산코스</a> -->
+<!-- 								<p>내 위치에서 18.6km - 서울 강남구</p> -->
+<!-- 								<p class="tag"><span>#구룡산</span><span>#대모산</span><span>#레포츠</span><span>#서울트래킹</span><span>#시민의숲</span><span>#트래킹</span></p> -->
+<!-- 							</div> -->
+<!-- 							<button type="button" title="내용 더보기" class="btn_view">더보기</button> -->
+<!-- 							<div class="cho_subMenu"> -->
+<!-- 								<ul> -->
+<!-- 									<li class="btn_share" id=""><a href="javascript:" onclick="">공유하기</a></li> -->
+<!-- 									<li class="btn_del" id=""><a href="javascript:">삭제</a></li> -->
+<!-- 								</ul> -->
 <!-- 							</div> -->
 <!-- 						</div> -->
-<!-- 						<button type="button" title="열기" class="btn_view">더보기</button> -->
-<!-- 						<div class="qna_subMenu" tabindex="0"> -->
-<!-- 							<ul> -->
-<!-- 								<li class="btn_mod" id="" statusid="0"> -->
-<!-- 									<a href="javascript:">수정</a> -->
-<!-- 								</li> -->
-<!-- 								<li class="btn_del" id="" statusid="0"> -->
-<!-- 									<a href="javascript:">삭제</a> -->
-<!-- 								</li> -->
-<!-- 							</ul> -->
-<!-- 						</div> -->
 <!-- 					</li> -->
-					<c:forEach var="qna" items="${list}">
-                    		<li class="bdr_nor">
-								<div class="area_txt">
-									<strong class="tit on">
-										<a href="#">${qna.serviceTitle}</a>
-									</strong>
-									<div class="date">
-										<em class="line">${qna.writer}</em>
-										<span class="line">${qna.createDate}</span>
-										
-										<c:choose>
-											<c:when test="${qna.answerStatus == 'N' }">
-												<span class="ans ing">접수확인중</span>	
-											</c:when>
-											<c:otherwise>
-												<span class="ans ing" style="color: green;">답변완료</span>
-											</c:otherwise>
-										</c:choose>
-										
-										
+					<c:forEach var="c" items="${list}">
+						<li class="bdr_nor">
+							<div class="photo">
+								<a href="">
+									<div class="dim">
+										<span class="txt_mid">여행지</span>
 									</div>
+									<img src="${c.filePath}" alt="${c.boardTitle}">
+								</a>
+							</div>
+							<div class="area_txt">
+								<div class="tit">
+									<a href="">${c.boardTitle}</a>
+									<p>내 위치에서 18.6km - 서울 강남구</p>
+									<p class="tag"><span>#구룡산</span><span>#대모산</span><span>#레포츠</span><span>#서울트래킹</span><span>#시민의숲</span><span>#트래킹</span></p>
 								</div>
-								<button type="button" title="열기" class="btn_view">더보기</button>
-								<div class="qna_subMenu" tabindex="0">
+								<button type="button" title="내용 더보기" class="btn_view">더보기</button>
+								<div class="cho_subMenu">
 									<ul>
-										<li class="btn_mod" id="" statusid="0">
-											<a href="javascript:">수정</a>
-										</li>
-										<li class="btn_del" id="" statusid="0">
-											<a href="javascript:">삭제</a>
-										</li>
+										<li class="btn_share" id=""><a href="javascript:" onclick="">공유하기</a></li>
+										<li class="btn_del" id=""><a href="javascript:">삭제</a></li>
 									</ul>
 								</div>
-							</li>
-                    	</c:forEach>
-					
+							</div>
+						</li>
+                   	</c:forEach>
 				</ul>
 				
 
@@ -157,11 +147,11 @@
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <c:choose>
-	                    	<c:when test="${c == 0 }">
-	                    		<li><a href="myChoice.me">찜 목록</a></li>
+	                    	<c:when test="${pi.listCount == 0 }">
+	                    		<li class="on"><a href="myChoice.me">찜 목록</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<li><a href="myChoice.me">찜 목록(${c})</a></li>
+	                    		<li class="on"><a href="myChoice.me">찜 목록(${pi.listCount})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <c:choose>
@@ -173,11 +163,11 @@
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <c:choose>
-	                    	<c:when test="${pi.listCount == 0 }">
-	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A</a></li>
+	                    	<c:when test="${q == 0 }">
+	                    		<li><a href="myQna.me" id="qna">Q&amp;A</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A(${pi.listCount})</a></li>
+	                    		<li><a href="myQna.me" id="qna">Q&amp;A(${q})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <li id="stampEnabled"><a href="myFoot.me" id="stamp">발도장</a></li>

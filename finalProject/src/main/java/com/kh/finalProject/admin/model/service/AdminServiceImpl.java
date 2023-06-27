@@ -588,6 +588,12 @@ public class AdminServiceImpl implements AdminService {
 		return adminDao.feedSearchList(sqlSession,map,pi);
 	}
 
+	//게시글 피드 사진 출력
+	@Override
+	public ArrayList<Attachment> feedSelectFile(int boardNo) {
+		return adminDao.feedSelectFile(sqlSession,boardNo);
+	}
+
 	
 	
 	

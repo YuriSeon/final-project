@@ -123,23 +123,23 @@
                         <div class="inr">
                             <ul>
                                 <li>
-                                    <a href="../mypage/mypage_list_fav.do" class="icon1"><img src="resources/images/edit.png" alt="" width="50px" height="50px"></a>
+                                    <a href="myWriting.me" class="icon1"><img src="resources/images/edit.png" alt="" width="50px" height="50px"></a>
                                     <span>작성글 보기</span>
                                 </li>
                                 <li>
-                                    <a href="../mypage/mypage_list_fav.do" class="icon2"><img src="resources/images/star.png" alt="" width="50px" height="50px"></a>
+                                    <a href="myChoice.me" class="icon2"><img src="resources/images/star.png" alt="" width="50px" height="50px"></a>
                                     <span>찜 목록</span>
                                 </li>
                                 <li>
-                                    <a href="../mypage/mypage_list_reply.do" class="icon3"><img src="resources/images/email.png" alt="" width="50px" height="50px"></a>
+                                    <a href="myChat.me" class="icon3"><img src="resources/images/email.png" alt="" width="50px" height="50px"></a>
                                     <span>쪽지</span>
                                 </li>
                                 <li>
-                                    <a href="/mypage/mypage_list_stamp.do" class="icon4"><img src="resources/images/compass.png" alt="" width="50px" height="50px"></a>
+                                    <a href="myFoot.me" class="icon4"><img src="resources/images/compass.png" alt="" width="50px" height="50px"></a>
                                     <span>발도장</span>
                                 </li>
                                 <li>
-                                    <a href="../mypage/mypage_list_cos.do" class="icon5"><img src="resources/images/padlock.png" alt="" width="50px" height="50px"></a>
+                                    <a href="myCertification.me" class="icon5"><img src="resources/images/padlock.png" alt="" width="50px" height="50px"></a>
                                     <span>동행 인증</span>
                                 </li>
                                 <li>
@@ -147,7 +147,7 @@
                                     <span>설문지</span>
                                 </li>
                                 <li>
-                                    <a href="../mypage/mypage_list_qna.do" class="icon7"><img src="resources/images/location.png" alt="" width="50px" height="50px"></a>
+                                    <a href="mySchedule.me" class="icon7"><img src="resources/images/location.png" alt="" width="50px" height="50px"></a>
                                     <span>일정등록</span>
                                 </li>
                                 <li>
@@ -217,7 +217,7 @@
     
     <script>
     	
-    	//슬라이드
+    	//최근 본 게시물 슬라이드
         const mySwiper = new Swiper('.swiper-container',{
             loop: false,
             speed: 500,
@@ -228,6 +228,7 @@
             },
         });
 
+    	//프로필 박스 스크롤 따라오기
         $(window).scroll(function(){
             var scrollTop = $(document).scrollTop();
             

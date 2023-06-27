@@ -16,9 +16,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <title>마이페이지 Q&amp;A</title>
+    <title>마이페이지 작성글 보기</title>
     <style type="text/css">
-   	.snb_mypage ul li.on a {
+    .snb_mypage ul li.on a {
 		background: url(resources/images/ico_mypagemenu.png) 0 0 no-repeat;
 		background-size: 4px 100%;
 		color: #333;
@@ -35,8 +35,7 @@
 	        <div class="area_tag">
 				<span class="name5"><a href="mypage.me"><span class="ico">My</span>마이페이지</a></span>
 	        </div>
-	        <h2>Q&amp;A</h2>
-	        <a href="myQnaEnroll.me" class="btn_apply btn_greyS">질문등록</a>
+	        <h2>작성글 보기</h2>
 	    </div>
 	
 	    <div class="wrap_contView clfix">
@@ -52,71 +51,77 @@
                     		<strong>총<span>${pi.listCount}</span>건</strong>
                     	</c:otherwise>
                     </c:choose>
+                    <div class="btn_txt2 type1">
+                    	<c:choose>
+                    		<c:when test="${category == 4}">
+                    			<button type="button" id="feed" onclick="location.href='selectBoard.me?category=4';" class="on">피드</button>|
+								<button type="button" id="schedule" onclick="location.href='selectBoard.me?category=6';" class="">일정자랑</button>|
+								<button type="button" id="together" onclick="location.href='selectBoard.me?category=5';" class="">함께가치</button>
+                    		</c:when>
+                    		<c:when test="${category == 5}">
+                    			<button type="button" id="feed" onclick="location.href='selectBoard.me?category=4';" class="">피드</button>|
+								<button type="button" id="schedule" onclick="location.href='selectBoard.me?category=6';" class="">일정자랑</button>|
+								<button type="button" id="together" onclick="location.href='selectBoard.me?category=5';" class="on">함께가치</button>
+                    		</c:when>
+                    		<c:when test="${category == 6}">
+                    			<button type="button" id="feed" onclick="location.href='selectBoard.me?category=4';" class="">피드</button>|
+								<button type="button" id="schedule" onclick="location.href='selectBoard.me?category=6';" class="on">일정자랑</button>|
+								<button type="button" id="together" onclick="location.href='selectBoard.me?category=5';" class="">함께가치</button>
+                    		</c:when>
+                    		<c:otherwise>
+								<button type="button" id="feed" onclick="location.href='selectBoard.me?category=4';" class="">피드</button>|
+								<button type="button" id="schedule" onclick="location.href='selectBoard.me?category=6';" class="">일정자랑</button>|
+								<button type="button" id="together" onclick="location.href='selectBoard.me?category=5';" class="">함께가치</button>
+                    		</c:otherwise>
+                    	</c:choose>
+					</div>
 	            </div>
 	            <!-- 명소,추천,코스,축제 -->
-	            <ul class="list_board1 flnon">
-<!-- 					<li class="bdr_nor"> -->
-<!-- 						<div class="area_txt"> -->
-<!-- 							<strong class="tit on"> -->
-<!-- 								<a href="#">죄송합니다만 질문 하나 하겠습니다.</a> -->
-<!-- 							</strong> -->
-<!-- 							<div class="date"> -->
-<!-- 								<em class="line">JASMINE</em> -->
-<!-- 								<span class="line">2023. 6. 15.</span> -->
-<!-- 								<span class="ans ing">접수확인중</span> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
-<!-- 						<button type="button" title="열기" class="btn_view">더보기</button> -->
-<!-- 						<div class="qna_subMenu" tabindex="0"> -->
-<!-- 							<ul> -->
-<!-- 								<li class="btn_mod" id="" statusid="0"> -->
-<!-- 									<a href="javascript:">수정</a> -->
-<!-- 								</li> -->
-<!-- 								<li class="btn_del" id="" statusid="0"> -->
-<!-- 									<a href="javascript:">삭제</a> -->
-<!-- 								</li> -->
-<!-- 							</ul> -->
-<!-- 						</div> -->
-<!-- 					</li> -->
-					<c:forEach var="qna" items="${list}">
-                    		<li class="bdr_nor">
-								<div class="area_txt">
-									<strong class="tit on">
-										<a href="#">${qna.serviceTitle}</a>
-									</strong>
-									<div class="date">
-										<em class="line">${qna.writer}</em>
-										<span class="line">${qna.createDate}</span>
-										
-										<c:choose>
-											<c:when test="${qna.answerStatus == 'N' }">
-												<span class="ans ing">접수확인중</span>	
-											</c:when>
-											<c:otherwise>
-												<span class="ans ing" style="color: green;">답변완료</span>
-											</c:otherwise>
-										</c:choose>
-										
-										
-									</div>
-								</div>
-								<button type="button" title="열기" class="btn_view">더보기</button>
-								<div class="qna_subMenu" tabindex="0">
-									<ul>
-										<li class="btn_mod" id="" statusid="0">
-											<a href="javascript:">수정</a>
-										</li>
-										<li class="btn_del" id="" statusid="0">
-											<a href="javascript:">삭제</a>
-										</li>
-									</ul>
-								</div>
-							</li>
-                    	</c:forEach>
-					
-				</ul>
-				
-
+	          	<div class="replyWrap mypage">
+		          	<div class="wrap_reply">
+		          		<div class="list_reply">
+							<ul>
+								<c:forEach var="w" items="${list}">
+									<li>
+										<div class="profile">
+											<div class="photo" icid="">
+												<c:choose>
+													<c:when test="${not empty loginUser.profileImg}"><img src="${loginUser.profileImg}" alt="프로필 사진"></c:when>
+													<c:otherwise><img src="https://ssl.pstatic.net/static/pwe/address/img_profile.png" alt="프로필 사진"></c:otherwise>
+												</c:choose>
+											</div>
+											<span class="ico">
+												<img src="resources/images/ico_naver.png" alt="네이버">
+											</span>
+										</div>
+										<div class="txt_reply">
+											<c:choose>
+												<c:when test="${w.category == 4}"><strong><a href="">[피드]</a></strong></c:when>
+												<c:when test="${w.category == 5}"><strong><a href="">[함께가치] ${w.boardTitle}</a></strong></c:when>
+												<c:otherwise><strong><a href="">[일정자랑] ${w.boardTitle}</a></strong></c:otherwise>
+											</c:choose>
+											<p><a href="">${w.boardContent }</a></p>
+											<div class="date">
+												<em class="name">${w.boardWriter}</em><span>${w.createDate}</span>
+											</div>
+										</div>
+										<button type="button" title="내용 더보기" class="btn_view">더보기</button>
+										<div class="wri_subMenu">
+											<ul>
+												<li class="btn_upd" id="" cotid="">
+													<a href="javascript:">수정</a>
+												</li>
+												<li class="btn_del" id="" cotid="">
+													<a href="javascript:">삭제</a>
+												</li>
+											</ul>
+										</div>
+									</li>
+		                    	</c:forEach>
+							</ul>		          		
+		          		</div>
+		          	</div>
+	          	</div>
 	            <!-- //명소,추천,코스,축제 -->
 	
 	            <!-- paging -->
@@ -124,10 +129,10 @@
 			            <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
 			            	<c:choose>
 				            	<c:when test="${p eq pi.currentPage}">
-	                   				<a class="off" title="선택됨" href="myQna.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
+	                   				<a class="off" title="선택됨" href="myWriting.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
 		                		</c:when>
 		                		<c:otherwise>
-		                			<a class="on" title="선택됨" href="myQna.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
+		                			<a class="on" title="선택됨" href="myWriting.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
 		                		</c:otherwise>
 	                		</c:choose>
         		        </c:forEach>
@@ -141,15 +146,15 @@
 	            <div class="snb_mypage">
 	                <ul>
 	                    <c:choose>
-	                    	<c:when test="${w == 0 }">
-	                    		<li><a href="myWriting.me">작성글 보기</a></li>
+	                    	<c:when test="${pi.listCount == 0 }">
+	                    		<li class="on"><a href="myWriting.me">작성글 보기</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<li><a href="myWriting.me">작성글 보기(${w})</a></li>
+	                    		<li class="on"><a href="myWriting.me">작성글 보기(${pi.listCount})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <c:choose>
-	                    	<c:when test="${r == 0}">
+	                    	<c:when test="${r == 0 }">
 	                    		<li><a href="myReply.me">댓글 보기</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
@@ -173,11 +178,11 @@
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <c:choose>
-	                    	<c:when test="${pi.listCount == 0 }">
-	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A</a></li>
+	                    	<c:when test="${q == 0 }">
+	                    		<li><a href="myQna.me" id="qna">Q&amp;A</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A(${pi.listCount})</a></li>
+	                    		<li><a href="myQna.me" id="qna">Q&amp;A(${q})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <li id="stampEnabled"><a href="myFoot.me" id="stamp">발도장</a></li>

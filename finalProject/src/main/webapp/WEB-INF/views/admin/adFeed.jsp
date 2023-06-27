@@ -22,6 +22,18 @@
 	<!-- swiper -->
 	<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
     <title>게시글관리-피드</title>
+    <style type="text/css">
+
+	.swiper-slide {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.off{
+		display: none;
+	}
+    
+    </style>
 </head>
 <body>
 <%@include file="adMenubar.jsp" %>
@@ -154,13 +166,9 @@
 <!-- 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
 					<button type="button" class="close" data-dismiss="modal" style="margin-right: 10px;">X</button>
 				</div>
-				<div class="modal-body" style="height: 600px;">
-					<div class="swiper-container" id="my-swiper">
+				<div class="modal-body" style="height: 600px; overflow: hidden;">
+					<div class="swiper-container">
 					    <div class="swiper-wrapper">
-					        <div class="swiper-slide"><img src="resources/images/thema/2023062314010399522.jpg" width="95%;" height="600px;"></div>
-					        <div class="swiper-slide">22</div>
-					        <div class="swiper-slide">33</div>
-					        <div class="swiper-slide">4</div>
 					    </div>
 					    <div class="swiper-button-prev"></div>
 					    <div class="swiper-button-next"></div>
@@ -201,28 +209,51 @@
 		$(".theme-table>tbody>tr>td").not(":first-child").click(function modal() {
 			var bno = $(this).parent().children().eq(1).text();
 			var content = $(this).parent().children().eq(3).text();
-			$(".modal-title").text(content);
-			$("#exampleModal").modal("show");
 			
+			$.ajax({
+	    		type: "get",
+	    		url: "feedSelectFile.ad",
+	    		data: {	boardNo : bno },
+				success: function(list) {
+					var str = "";
+					for(var i in list){
+						str +='<div class="swiper-slide"><img src="'+list[i].filePath+'" width="95%;" height="580px;"></div>';
+					}
+					$(".modal-title").text(content);
+					$(".swiper-wrapper").html(str);
+					$("#exampleModal").modal("show");			
+				},
+				error: function(request,status,error) {
+					console.log(error);
+				}
+	    	});
 		});
 	});
   	
   	//모달 안의 스와이퍼
-    const slide = new Swiper('#my-swiper', {
-	    slidesPerView : 'auto', // 한 슬라이드에 보여줄 갯수
-	    spaceBetween : 5, // 슬라이드 사이 여백
-	    loop : false, // 슬라이드 반복 여부
-	    loopAdditionalSlides : 1, // 슬라이드 반복 시 마지막 슬라이드에서 다음 슬라이드가 보여지지 않는 현상 수정
-	    pagination : false, // pager 여부
-	    autoplay : {  // 자동 슬라이드 설정 , 비 활성화 시 false
-		    delay : 3000,   // 시간 설정
-		    disableOnInteraction : false,  // false로 설정하면 스와이프 후 자동 재생이 비활성화 되지 않음
-	    },
-	    navigation: {   // 버튼 사용자 지정
-		    nextEl: '.swiper-button-next',
-		    prevEl: '.swiper-button-prev',
-	    },
-    })
+  	$(function() {
+	    const swiper = new Swiper('.swiper-container', {
+		    slidesPerView : 1, // 한 슬라이드에 보여줄 갯수
+		    spaceBetween : 10, // 슬라이드 사이 여백
+		    loop : false, // 슬라이드 반복 여부
+		    centeredSlides : true,
+		    watchOverflow : true,
+//	 	    loopAdditionalSlides : 1, // 슬라이드 반복 시 마지막 슬라이드에서 다음 슬라이드가 보여지지 않는 현상 수정
+		    pagination : false, // pager 여부
+//	 	    autoplay : {  // 자동 슬라이드 설정 , 비 활성화 시 false
+//	 		    delay : 3000,   // 시간 설정
+//	 		    disableOnInteraction : false,  // false로 설정하면 스와이프 후 자동 재생이 비활성화 되지 않음
+//	 	    },
+		    navigation: {   // 버튼 사용자 지정
+			    nextEl: '.swiper-button-next',
+			    prevEl: '.swiper-button-prev',
+		    },
+			observer: true,
+			observeParents : true,
+	    });
+	});
+  	
+  	
     
     //체크박스 선택한 항목 삭제
     function chkDelete() {

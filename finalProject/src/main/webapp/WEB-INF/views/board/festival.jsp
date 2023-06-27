@@ -600,7 +600,7 @@
 	<script src="/finalProject/resources/js/imgfix.min.js"></script>
 	<script src="/finalProject/resources/js/mixitup.js"></script>
 	<script src="/finalProject/resources/js/accordions.js"></script>
-	<!-- <script src="/finalProject/resources/js/owl-carousel.js"></script> -->
+	<script src="/finalProject/resources/js/owl-carousel.js"></script>
 	
 	<!-- Global Init -->
 	<script src="/finalProject/resources/js/custom.js"></script>
