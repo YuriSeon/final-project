@@ -11,7 +11,7 @@
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 
 	<properties>
-		<java-version>11</java-version>
+		<java-version>1.8</java-version>
 		<org.springframework-version>5.3.27</org.springframework-version>
 		<org.aspectj-version>1.9.19</org.aspectj-version>
 		<org.slf4j-version>2.0.6</org.slf4j-version><!-- debug 도와주는 slf4j 버전정보 -->
@@ -286,11 +286,11 @@
 			<version>5.2.3</version>
 		</dependency>
 
-		<!-- 메일 발송 -->
+		<!-- 이메일 관련 라이브러리 -->
 		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			<version>1.6.2</version>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4.7</version>
 		</dependency>
 
 		<dependency>
@@ -299,6 +299,8 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 
+		
+		
 	</dependencies>
 	<build>
 		<plugins>
