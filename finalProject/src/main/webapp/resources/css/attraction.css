@@ -412,6 +412,9 @@
 	width: 100%;
 	text-align : left;
 }
+.attrInsert mark {
+	background-color: #ffced7ad;
+}
 
 .attrInsert hr {
 	border: 0;
@@ -466,14 +469,75 @@
 	border: 2px solid darkgray;
 }
 
-.attrInsert table input {
+.attrInsert table input{
 	width: 100%;
 	height: 100%;
 	border: none;
 }
+.attrInsert table textarea {
+	width : 100%
+	height: 97%;
+	border: none;
+	resize: none;
+}
 
 .attrInsert table #img-area {
 	height: 300px;
+	position: relative;
+}
+.attrInsert #wrapSlide {
+	width: 100%;
+	height: 100%;
+}
+
+.attrInsert #float {
+	width: 100%;
+	height: 90%;
+}
+
+.attrInsert #slideArea {
+	width: 60%;
+	height: 100%;
+}
+/* 
+.attrInsert #slideImage{
+	width: 100%;
+	height: 100%;
+} */
+
+.attrInsert #slideImage{
+	width: auto;
+	max-height: 405px;
+	height: 100%;
+}
+
+.attrInsert #float>div {
+	float: left;
+}
+
+.attrInsert .float-img {
+	width: 20%;
+	height: 100%;
+}
+
+.attrInsert #prev, .attrInsert #next {
+	position: relative;
+	opacity: 0.3;
+	width: 60%;
+	height: auto;
+	margin-top: 65%;
+	opacity: calc(0.1);
+	cursor: pointer;
+}
+
+.attrInsert #dotArea {
+	position: relative;
+	margin-top: 5px;
+	height: 5%;
+}
+
+.attrInsert #dotArea * {
+	margin-right: 10px;
 }
 .attrInsert table #boardContent2 {
 	height : 200px;

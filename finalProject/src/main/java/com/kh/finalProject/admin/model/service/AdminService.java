@@ -3,7 +3,6 @@ package com.kh.finalProject.admin.model.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.admin.model.vo.Report;
