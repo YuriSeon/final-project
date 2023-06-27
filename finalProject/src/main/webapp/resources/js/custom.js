@@ -30,8 +30,6 @@
 	let countDown = new Date('Mar 31, 2022 09:30:00').getTime(),
     x = setInterval(function() {    
 
-      let now = new Date().getTime(),
-          distance = countDown - now;
 	
 		// 여기쯤 수정함 innerText 값이 있을때만 찾는 조건문 넣음
       let daysElement = document.getElementById('days'),
@@ -39,6 +37,9 @@
           minutesElement = document.getElementById('minutes'),
           secondsElement = document.getElementById('seconds');
 
+      let now = new Date().getTime(),
+          distance = countDown - now;
+          
       if (daysElement) {
         daysElement.innerText = Math.floor(distance / (day));
       }

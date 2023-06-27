@@ -19,14 +19,14 @@
                 <img src="resources/images/attr2.png">
                 <img src="resources/images/attr1.png">
             </div>
-            <pre> 아래에 검색하여 정보를 먼저 가져온 뒤 비어있는 입력사항을 채워넣어주세요 </pre>
+            <pre> 아래에 검색하여 정보를 먼저 가져온 뒤 비어있는 입력사항을 채워넣어주세요 <br> !! 정보를 검색해오는데 시간이 걸리니까 지도 클릭 후 조금만 기다려주세요 !!</pre>
         </div>
         <div class="serach-area">
             <input type="search" name="title" id="search-input" placeholder="등록을 원하는 관광지를 입력해주세요">
             <button onclick="mapSearch();">검색</button>
         </div>
         <hr>
-        <form action="insert.attr" method="post" id="insert-form">
+        <form action="insert.attr" method="post" id="insert-form" enctype="multipart/form-data" onsubmit="submitForm();">
             <table>
                 <thead>
                     <tr>
@@ -40,7 +40,11 @@
                     </tr>
                     <tr>
                         <th>핵심 소개 문구</th>
-                        <td colspan="3"><input type="text" name="infoName" id="introduce" placeholder="30자까지만 작성해주세요"></td>
+                        <td colspan="3"><input type="text" name="boardContent" id="boardContent1" placeholder="30자까지만 작성해주세요"></td>
+                    </tr>
+                    <tr>
+                        <th>상세 설명 문구</th>
+                        <td colspan="3" id="boardContent2"><input type="text" name="boardContent" id="boardContent2" placeholder="게시글에 넣을 세부 내용을 작성해주세요 "></td>
                     </tr>
                     <tr>
                         <th>주소 (도로명 주소)</th>
@@ -114,7 +118,7 @@
     <script type="text/javascript" src="resources/js/listmap.js"></script>  
         <script>
             $(function(){
-                // $("#insert-form").css("display", "none");
+                $("#insert-form").css("display", "none");
             });
 
             /* 지도로 검색어 넘기는 이벤트 */
@@ -140,11 +144,14 @@
                         infoName : infoName,
                         infoAddress : infoAddress
                     },
+                   	method: "POST",
                     success : function(result){
                         console.log("성공");
-                        if(result!=null){
+                        console.log(result);
+                        if(!result){
+                        	var boardContent = result.boardContent.split("||");
                             $("#infoName").prop("value",result.infoName);
-                            $("#introduce").prop("value",result); // 여기 가져오는 키값 작성하기
+                            $("#boardContent2").prop("value",boardContent[1]);
                             $("#infoAddress").prop("value", result.infoAddress);
                             $("#infoHomepage").prop("value", result.infoHomepage);
                             $("#infoTime").prop("value", result.infoTime);
@@ -152,18 +159,29 @@
                             $("infoCall").prop("value",result.infoCall);
                             $("#parking").prop("value",result.parking);
                             $("#infoType").prop("value", result.infoType);
-                            $("#img-area").append(makeTag("img", {"src":""})); // 이미지 가져오는거 마저작성하기
+                            $("#img-area").append(makeTag("img", {"src":boardContent[0],"name":"upfile"}));
                         } else {
-                            alert("맞는 정보가 없어서 가져오지 못했습니다 직접 작성해서 정보를 제공해주세요");
+                        	console.log("빈값으로 들어옴");
+                            alert("맞는 정보가 없어서 가져오지 못했습니다 직접 작성해서 게시물을 작성해주세요");
                         }
-
-                        $("#insert-form").css("display", "none");
-                    },
-                    complete : function(){
-                        console.log("일단 되긴 함");
+                        $("#insert-form").css("display", "block");
                     }
                 });
             });
+            
+            function submitForm(){
+            	var imgSrc = $("input[name=upfile]").attr("src");
+            	if(imgSrc.contains("http")){
+            		var text = document.getElementsByName("text").value;
+                    var filename = "output.txt";
+	                var element = document.createElement('a');
+	                element.setAttribute('href','data:text/plain;charset=utf-8, ' + encodeURIComponent());
+	                element.setAttribute('download', );
+	                document.body.appendChild(element);
+	                element.click();
+	                //document.body.removeChild(element);
+            	}
+            }
         </script>
     </body>
 </html>

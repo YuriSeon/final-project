@@ -6,15 +6,20 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.kh.finalProject.board.model.service.AttractionService;
+import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Selenium;
 
@@ -63,29 +68,46 @@ public class AttractionController {
 		return responseText;
 	}
 	
+	// 디테일뷰 페이지로 이동
 	@GetMapping("detail.attr")
 	public String detailAttr() {
 		return "board/attraction/attractionDetail";
 	}
 	
+	// 게시물 수정페이지 이동
 	@GetMapping("update.attr")
 	public String updateAttr() {
 		return "board/attraction/attractionUpdate";
 	}
 	
+	// 게시물 등록페이지 이동
 	@GetMapping("insert.attr")
 	public String insertAttr() {
 		return "board/attraction/attractionInsert";
 	}
 	
-	@GetMapping("modify.attr")
-	public String modifyRequestAttr() {
-		return "board/attraction/attrModifyRequest";
-	}
-	// 나중에 값 넣기 
-	@PostMapping("searchInfo.attr")
+	// 게시물 등록전 정보조회해오는 메소드 
+	@ResponseBody
+	@PostMapping(value="searchInfo.attr", produces ="json/application; charset=UTF-8")
 	public Info searchInfo(Info in) {
 		Info info = new Selenium().infoDataGet(in);
 		return info;
+	}
+	
+	@PostMapping("insert.attr")
+	public ModelAndView insertAttr(HttpSession session, ModelAndView mv, Attachment at, Info info, MultipartFile upfile) {
+		if(!upfile.getOriginalFilename().equals("")) {
+			String changeName = BoardController.saveFile(upfile, session);
+			at.setOriginName(upfile.getOriginalFilename());
+			at.setChangeName(changeName);
+		}
+		return mv;
+	}
+	
+	
+	// 게시물 내용 수정 요청 페이지로 이동
+	@GetMapping("modify.attr")
+	public String modifyRequestAttr() {
+		return "board/attraction/attrModifyRequest";
 	}
 }
