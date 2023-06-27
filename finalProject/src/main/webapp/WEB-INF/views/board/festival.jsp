@@ -381,7 +381,14 @@
 								</c:choose>
 		                        <ul>
 		                            <li><i class="fa fa-clock-o"></i> ${b.festival.startDate } - ${b.festival.endDate }</li>
-		                            <li><i class="fa fa-map-marker"></i>${b.info.infoAddress }</li>
+		                            <c:choose>
+		                            	<c:when test="${fn:length(b.info.infoAddress) < 20 }">		                            	
+				                            <li><i class="fa fa-map-marker"></i>${b.info.infoAddress }</li>
+		                            	</c:when>
+		                            	<c:otherwise>
+		                            		<li><i class="fa fa-map-marker"></i>${fn:substring(b.info.infoAddress,0,15) }...</li>
+		                            	</c:otherwise>
+		                            </c:choose>
 		                        </ul>
 		                    </div>
 		                </div>
