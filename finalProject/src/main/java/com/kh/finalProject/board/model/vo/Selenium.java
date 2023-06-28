@@ -134,18 +134,19 @@ public class Selenium {
 			// 검색결과창에서 첫번째 나오는 게시물 선택
 			WebElement searchResult = wd.findElement(By.className("card-style-wrap")); 
 			searchResult.click();
+			// 게시물내의 info data key, value형태로 저장시키기
+			List<WebElement> culomnList = (wd.findElements(By.className("label"))); // info table에 저장할 컬럼명
+			List<WebElement> valueList = (wd.findElements(By.className("cont-txt"))); // 컬럼명에 일치하는 value값
 			// 이미지 가져오기 
 			List<WebElement> imgEl = wd.findElements(By.className("related-img-button"));
 			String imgPath = "";
 			for(int i=0; i<imgEl.size(); i++) {
 				imgPath += imgEl.get(i).getAttribute("src"); // 이미지 경로 변수에 담기
+				System.out.println(imgEl.get(i).getAttribute("src"));
 				if(i != imgEl.size()-1) {
 					imgPath += "|"; // String타입에 담아서 전달하기위해서 구분자 넣음
 				}
 			}
-			// 게시물내의 info data key, value형태로 저장시키기
-			List<WebElement> culomnList = (wd.findElements(By.className("label"))); // info table에 저장할 컬럼명
-			List<WebElement> valueList = (wd.findElements(By.className("cont-txt"))); // 컬럼명에 일치하는 value값
 			for (int i = 0; i < culomnList.size(); i++) {
 				String culomn = culomnList.get(i).getText();
 				String value = valueList.get(i).getText();
@@ -164,6 +165,7 @@ public class Selenium {
 					case "개요": in.setBoardContent(imgPath+"||"+value); break;
 				}
 			}
+			System.out.println(in.getBoardContent());
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("오류로 인해 크롤링실패");
@@ -172,7 +174,6 @@ public class Selenium {
 			quitDriver();
 		}
 		return in;
-		
 	}
 	
 	// 새탭의 타이틀을 이용해서 창 전환하는 메소드
