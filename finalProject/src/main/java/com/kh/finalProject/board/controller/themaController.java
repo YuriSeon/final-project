@@ -24,7 +24,6 @@ import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Theme;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
-import com.kh.finalProject.member.model.vo.Member;
 
 @Controller
 public class themaController {
