@@ -23,6 +23,42 @@
 		background-size: 4px 100%;
 		color: #333;
 	}
+	.modal{
+		text-align: center;
+	}
+	@media screen and (min-width: 768px) { 
+	    .modal:before {
+		    display: inline-block;
+		    vertical-align: middle;
+		    content: " ";
+		    height: 100%;
+	    }
+	}
+	.modal-dialog{
+		display: inline-block;
+	    text-align: left;
+	    vertical-align: middle;
+	}
+	.modal-header2{
+		padding-left: 10px;
+		padding-top: 10px;
+	}
+	.modal-body2{
+		padding: 10px;
+	}
+	.reply-form{
+		display: flex;
+	}
+	.reply-form textarea{
+		margin-bottom: 20px;
+		height: 100px;
+		width: 500px;
+		resize: none; 	
+	}
+	.reply-form button{
+		height: 100px;
+	}
+	
     </style>
 </head>
 <body>
@@ -59,6 +95,7 @@
 							<ul>
 								<c:forEach var="r" items="${list}">
 									<li>
+									<input type="text" value="${r.replyNo}" class="replyNo" hidden>
 										<div class="profile">
 											<div class="photo" icid="">
 												<c:choose>
@@ -80,11 +117,11 @@
 										<button type="button" title="내용 더보기" class="btn_view">더보기</button>
 										<div class="wri_subMenu">
 											<ul>
-												<li class="btn_upd" id="" cotid="">
-													<a href="javascript:">수정</a>
+												<li class="btn_upd modify">
+													<a href="javascript:void(0);">수정</a>
 												</li>
-												<li class="btn_del" id="" cotid="">
-													<a href="javascript:">삭제</a>
+												<li class="btn_del delete">
+													<a href="javascript:void(0);">삭제</a>
 												</li>
 											</ul>
 										</div>
@@ -95,16 +132,35 @@
 		          	</div>
 	          	</div>
 	            <!-- //명소,추천,코스,축제 -->
-	
+	            <!-- 댓글 수정 모달 -->
+	            <div class="modal fade" id="followModal" role="dialog"> 
+                 	<div class="modal-dialog">
+                    	<!-- Modal content-->   
+                    	<div class="modal-content">
+	                      	<div class="modal-header2">
+		                        <h4 class="modal-title"></h4>
+		                        <button type="button" class="close" data-dismiss="modal" style="color: white;">×</button>
+	                      	</div>
+                      		<div class="modal-body2">
+	                      		<form action="myReplyUpdate.me" method="post" class="reply-form">
+	                      			<input type="text" name="replyNo" class="reply-number" hidden>
+	                      			<textarea name="content"></textarea>
+	                      			<button type="submit" class="btn btn-info">수정</button>
+	                      		</form>
+                     		</div>
+                   		</div>
+                 	</div>
+               	</div>
+				<!-- //댓글 수정 모달 -->
 	            <!-- paging -->
 		            <div class="page_box">
 			            <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
 			            	<c:choose>
 				            	<c:when test="${p eq pi.currentPage}">
-	                   				<a class="off" title="선택됨" href="myWriting.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
+	                   				<a class="off" title="선택됨" href="myReply.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
 		                		</c:when>
 		                		<c:otherwise>
-		                			<a class="on" title="선택됨" href="myWriting.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
+		                			<a class="on" title="선택됨" href="myReply.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
 		                		</c:otherwise>
 	                		</c:choose>
         		        </c:forEach>
@@ -183,6 +239,47 @@
 			});
 		});
     	
+    	//댓글 수정
+        $(function () {
+    		$(".list_reply>ul>li>.wri_subMenu>ul>.modify").click(function () {
+    			var rno = $(this).parents("li").find(".replyNo").val();
+    			replyModifyModal(rno)
+    		});
+    	});
+    	
+      	//댓글 수정 모달
+        function replyModifyModal(rno){
+            $('#followModal').modal(); //id가 "followModal"인 모달창을 열어준다. 
+            $('.modal-title').text("댓글 수정"); //modal 의 header 부분에 값을 넣어준다.
+            $('.modal-title').css("font-size","30px");
+            $(".reply-number").attr("value",rno);
+        }
+    	
+      	//댓글 삭제
+        $(function () {
+    		$(".list_reply>ul>li>.wri_subMenu>ul>.delete").click(function () {
+    			var $select = $(this); 
+    			var rno = $(this).parents("li").find(".replyNo").val();
+   				$.ajax({
+		            url: "replyDelete.me",
+		            type: "POST",
+		            data: {
+		                replyNo: rno
+		            },
+		            success: function(result) {
+		            	if (result == "success") {
+		            		$select.parents("li").remove();
+		            		location.reload();
+						}else{
+							alertify.message("댓글 삭제 실패");
+						}
+		            },
+		            error: function() {
+		                console.log("error");
+		            }
+		        });	
+    		});
+    	});
     </script>
     
     <%@include file="../../common/footer.jsp" %>

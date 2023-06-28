@@ -83,6 +83,8 @@
 							<ul>
 								<c:forEach var="w" items="${list}">
 									<li>
+									<input type="text" value="${w.boardNo}" class="boardNo" hidden>
+									<input type="text" value="${w.category}" class="category" hidden>
 										<div class="profile">
 											<div class="photo" icid="">
 												<c:choose>
@@ -108,11 +110,11 @@
 										<button type="button" title="내용 더보기" class="btn_view">더보기</button>
 										<div class="wri_subMenu">
 											<ul>
-												<li class="btn_upd" id="" cotid="">
-													<a href="javascript:">수정</a>
+												<li class="btn_upd modify">
+													<a href="javascript:void(0);">수정</a>
 												</li>
-												<li class="btn_del" id="" cotid="">
-													<a href="javascript:">삭제</a>
+												<li class="btn_del delete">
+													<a href="javascript:void(0);">삭제</a>
 												</li>
 											</ul>
 										</div>
@@ -146,11 +148,11 @@
 	            <div class="snb_mypage">
 	                <ul>
 	                    <c:choose>
-	                    	<c:when test="${pi.listCount == 0 }">
+	                    	<c:when test="${w == 0 }">
 	                    		<li class="on"><a href="myWriting.me">작성글 보기</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<li class="on"><a href="myWriting.me">작성글 보기(${pi.listCount})</a></li>
+	                    		<li class="on"><a href="myWriting.me">작성글 보기(${w})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <c:choose>
@@ -211,6 +213,53 @@
 			});
 		});
     	
+    	//수정페이지 이동
+        $(function () {
+    		$(".list_reply>ul>li>.wri_subMenu>ul>.modify").click(function () {
+    			var bno = $(this).parents("li").find(".boardNo").val();
+    			var cate = $(this).parents("li").find(".category").val();
+    			if (cate == 4) {
+    				location.href = 'updateEnroll.fo?boardNo='+bno;	
+				}else if (cate == 5) {
+// 					location.href = '='+bno;
+				}else{
+// 					location.href = '='+bno;
+				}
+    		});
+    	});
+    	
+    	//작성글 삭제
+        $(function () {
+    		$(".list_reply>ul>li>.wri_subMenu>ul>.delete").click(function () {
+    			var $select = $(this); 
+    			var bno = $(this).parents("li").find(".boardNo").val();
+    			var cate = $(this).parents("li").find(".category").val();
+    			if (cate == 4) {
+    				$.ajax({
+			            url: "deleteFeed.me",
+			            type: "POST",
+			            data: {
+			                boardNo: bno
+			            },
+			            success: function(result) {
+			            	if (result == "success") {
+			            		$select.parents("li").remove();
+			            		location.reload();
+							}else{
+								alertify.message("게시글 삭제 실패");
+							}
+			            },
+			            error: function() {
+			                console.log("error");
+			            }
+			        });	
+				}else if (cate == 5) {
+// 					location.href = '='+bno;
+				}else{
+// 					location.href = '='+bno;
+				}
+    		});
+    	});
     </script>
     
     <%@include file="../../common/footer.jsp" %>

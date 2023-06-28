@@ -15,7 +15,7 @@
   		<result column="AGE" property="age"/>
   		<result column="EMAIL" property="email"/>
   		<result column="PHONE" property="phone"/>
-  		<result column="MBTI" property="mbti"/>
+  		<result column="MBTI" property="MBTI"/>
   		<result column="SURVEY" property="survey"/>
   		<result column="STYLE" property="style"/>
   		<result column="REPORT" property="report"/>

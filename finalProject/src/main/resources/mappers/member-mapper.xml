@@ -149,6 +149,28 @@
 		AND NICKNAME = #{nickname}
 	</select>
 	
+	<!-- 마이페이지 개인정보 수정 -->
+	<update id="updateMember">
+		UPDATE MEMBER
+		SET NICKNAME = #{nickname}
+		   <if test="userPwd != null and userPwd != ''">
+		   ,USER_PWD = #{userPwd}
+		   </if>
+		   ,EMAIL = #{email}
+		   ,PHONE = #{phone}
+		   ,MBTI = #{MBTI}
+		   ,STYLE = #{style}
+		   ,INTEREST = #{interest}
+		WHERE USER_NO = #{userNo}
+	</update>
+	
+	<!-- 마이페이지 회원 탈퇴 -->
+	<update id="deleteMember">
+		UPDATE MEMBER
+		SET STATUS = 'N'
+		WHERE USER_ID = #{userId}
+	</update>
+	
 	<!-- 마이페이지 작성글 개수 -->
   	<select id="myWritingCount" resultType="_int">
   		SELECT COUNT(*)
@@ -185,6 +207,14 @@
 		ORDER BY CREATE_DATE DESC
   	</select>
 	
+  	<!-- 마이페이지 게시판 파일 조회 -->
+  	<select id="fileSelect" resultMap="attachmentResultSet">
+  		SELECT FILE_NO,BOARD_NO,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,UPLOAD_DATE,FILE_LEVEL,STATUS,WRITER
+  		FROM ATTACHMENT
+  		WHERE STATUS = 'Y'
+  		AND BOARD_NO = #{boardNo}
+  	</select>
+	
 	<!-- 마이페이지 댓글 개수 -->
   	<select id="myReplyCount" resultType="_int">
   		SELECT COUNT(*)
@@ -199,8 +229,25 @@
 		FROM REPLY R
 		JOIN BOARD B ON (BOARD_NO=REF_QNO)
 		WHERE REPLY_WRITER = #{nick}
+		AND R.STATUS = 'Y'
 		ORDER BY CREATE_DATE DESC
   	</select>
+  	
+  	<!-- 마이페이지 댓글 수정 -->
+  	<update id="replyUpdate">
+		UPDATE REPLY
+		SET CONTENT = #{content}
+		WHERE REPLY_NO = #{replyNo}
+		AND STATUS = 'Y'
+	</update>
+  	
+  	<!-- 마이페이지 댓글 삭제 -->
+  	<update id="replyDelete">
+		UPDATE REPLY
+		SET STATUS = 'N'
+		WHERE REPLY_NO = #{replyNo}
+		AND STATUS = 'Y'
+	</update>
   	
   	<!-- 마이페이지 찜 목록 개수 -->
   	<select id="myChoiceCount" resultType="_int">
@@ -211,7 +258,7 @@
   	
   	<!-- 마이페이지 찜 목록 리스트 조회 -->
   	<select id="myChoiceList" resultMap="boardResultSet">
-		SELECT C.BOARD_NO,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,FILE_PATH
+		SELECT C.BOARD_NO,CATEGORY,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,FILE_PATH
 		FROM CHOICE C
 		JOIN BOARD B ON(C.BOARD_NO = B.BOARD_NO)
 		JOIN ATTACHMENT A ON (B.BOARD_NO=A.BOARD_NO)

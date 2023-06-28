@@ -165,4 +165,29 @@ public class MemberDao {
 		return (ArrayList)sqlSession.selectList("adminMapper.myRequestList",nick,rowBounds);
 	}
 
+	//마이페이지 개인정보 수정
+	public int updateMember(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.update("memberMapper.updateMember",m);
+	}
+
+	//마이페이지 회원 탈퇴
+	public void deleteMember(SqlSessionTemplate sqlSession, Member m) {
+		sqlSession.update("memberMapper.deleteMember",m);
+	}
+
+	//마이페이지 게시글 파일 조회
+	public ArrayList<Attachment> fileSelect(SqlSessionTemplate sqlSession, int boardNo) {
+		return (ArrayList)sqlSession.selectList("memberMapper.fileSelect",boardNo);
+	}
+
+	//마이페이지 댓글 수정
+	public int replyUpdate(SqlSessionTemplate sqlSession, Reply r) {
+		return sqlSession.update("memberMapper.replyUpdate",r);
+	}
+
+	//마이페이지 댓글 삭제
+	public int replyDelete(SqlSessionTemplate sqlSession, int replyNo) {
+		return sqlSession.update("memberMapper.replyDelete",replyNo);
+	}
+
 }

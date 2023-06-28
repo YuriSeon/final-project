@@ -30,6 +30,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +38,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.kh.finalProject.admin.model.vo.Notice;
+import com.kh.finalProject.board.model.service.FeedService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
@@ -50,6 +52,9 @@ public class MemberController {
 	
 	@Autowired
 	public MemberService memberService;
+	
+	@Autowired
+	public FeedService feedService;
 	
 	@Autowired
 	private ServletContext ServletContext;
@@ -90,6 +95,62 @@ public class MemberController {
 		return "member/myPage/mypage";
 	}
 	
+	//마이페이지 개인정보 수정 이동
+	@RequestMapping("goInfoUpdate.me")
+	public String goMyInfoUpdate() {
+		return "member/myPage/myInfoUpdate";
+	}
+	
+	//마이페이지 개인정보 수정
+	@RequestMapping("myInfoUpdate.me")
+	public ModelAndView myInfoUpdate(Member m
+									,ModelAndView mv
+									,HttpSession session) throws IOException, ParseException {
+		
+		if (!m.getUserPwd().equals("")) {
+			//비밀번호 암호화
+			String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
+			m.setUserPwd(encPwd);
+		}
+		
+		int result = memberService.updateMember(m);
+
+		Member loginUser = memberService.loginMember(m);
+		
+		if(result>0) {
+			session.setAttribute("loginUser", loginUser);
+			session.setAttribute("alertMsg", "개인정보 수정 완료");
+			mv.setViewName("redirect:mypage.me");
+		}else {
+			mv.addObject("errorMsg", "개인정보 수정에 실패하였습니다.").setViewName("common/errorPage");
+		}
+		return mv;
+	}
+	
+	//마이페이지 회원 탈퇴 이동
+	@RequestMapping("goInfoDelete.me")
+	public String goMyInfoDelete() {
+		return "member/myPage/myInfoDelete";
+	}
+	
+	//마이페이지 회원 탈퇴
+	@ResponseBody
+	@RequestMapping(value="myInfoDelete.me",produces = "application/json; charset=utf-8")
+	public String myInfoDelete(Member m
+							  ,ModelAndView mv
+							  ,HttpSession session) throws IOException, ParseException {
+		Member loginUser = memberService.loginMember(m);
+		memberService.deleteMember(m);
+		
+		if (loginUser!=null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {
+			session.setAttribute("alertMsg2", "회원탈퇴가 완료되었습니다.<br>이용해주시고 사랑해주셔서 감사합니다.<br>더욱더 노력하고 발전하겠습니다.");
+			session.removeAttribute("loginUser");
+			return new Gson().toJson("success");
+		}else {
+			return new Gson().toJson("fail");
+		}
+	}
+	
 	//마이페이지 작성글 보기 이동
 	@RequestMapping("myWriting.me")
 	public ModelAndView goMyWriting(@RequestParam(value="currentPage", defaultValue="1") int currentPage
@@ -105,14 +166,15 @@ public class MemberController {
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		ArrayList<Board> list = memberService.myWritingList(pi,nick);
 		
+		int writingCount = memberService.myWritingCount(nick);
 		int replyCount = memberService.myReplyCount(nick);
 		int choiceCount = memberService.myChoiceCount(nick);
 		int requestCount = memberService.myRequestCount(nick);
 		int qnaCount = memberService.myQnaCount(nick);
 		
-		
 		mv.addObject("list",list);
 		mv.addObject("pi",pi);
+		mv.addObject("w",writingCount);
 		mv.addObject("r",replyCount);
 		mv.addObject("c",choiceCount);
 		mv.addObject("rq",requestCount);
@@ -140,6 +202,7 @@ public class MemberController {
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		ArrayList<Board> list = memberService.selectBoardList(b,pi);
 		
+		int writingCount = memberService.myWritingCount(nick);
 		int replyCount = memberService.myReplyCount(nick);
 		int choiceCount = memberService.myChoiceCount(nick);
 		int requestCount = memberService.myRequestCount(nick);
@@ -147,12 +210,39 @@ public class MemberController {
 		
 		mv.addObject("list",list);
 		mv.addObject("pi",pi);
+		mv.addObject("w",writingCount);
 		mv.addObject("r",replyCount);
 		mv.addObject("c",choiceCount);
 		mv.addObject("rq",requestCount);
 		mv.addObject("q",qnaCount);
 		mv.addObject("category", category).setViewName("member/myPage/mypageWriting");
 		return mv;
+	}
+	
+	//마이페이지 게시글 피드 삭제
+	@ResponseBody
+	@RequestMapping(value = "deleteFeed.me", method = RequestMethod.POST)
+	public String deleteFeed(@RequestParam("boardNo") int boardNo
+												     ,HttpSession session) {
+		
+		ArrayList<Attachment> a = memberService.fileSelect(boardNo);
+		int result = feedService.deleteFeed(boardNo);
+		String resultString = "";
+		if (result > 0) {
+            if (!a.isEmpty()) {
+                for (Attachment path : a) {
+                    new File(session.getServletContext().getRealPath("/"+path.getFilePath())).delete();
+                }
+                session.setAttribute("alertMsg", "게시글 삭제 성공");
+                resultString = "success";
+            }else {
+            	resultString = "fail";
+			}
+        }else {
+        	resultString = "fail";
+		}
+		return resultString;
+    
 	}
 	
 	//마이페이지 댓글 보기 이동
@@ -184,6 +274,42 @@ public class MemberController {
 		mv.setViewName("member/myPage/mypageReply");
 		
 		return mv;
+	}
+	
+	//마이페이지 댓글 수정
+	@RequestMapping("myReplyUpdate.me")
+	public ModelAndView myReplyUpdate(Reply r
+									 ,ModelAndView mv
+									 ,HttpSession session){
+		
+		int result = memberService.replyUpdate(r);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg", "댓글 수정 완료");
+			mv.setViewName("redirect:myReply.me");
+		}else {
+			mv.addObject("errorMsg", "댓글 수정에 실패하였습니다.").setViewName("common/errorPage");
+		}
+		return mv;
+	}
+	
+	//마이페이지 댓글 삭제
+	@ResponseBody
+	@RequestMapping(value = "replyDelete.me", method = RequestMethod.POST)
+	public String replyDelete(@RequestParam("replyNo") int replyNo
+												     ,HttpSession session) {
+		
+		int result = memberService.replyDelete(replyNo);
+		String resultString = "";
+		if (result>0) {
+			session.setAttribute("alertMsg", "댓글 삭제 성공");
+			resultString = "success";
+			
+		}else {
+			resultString = "fail";
+		}
+
+		return resultString;
 	}
 	
 	//마이페이지 찜 목록 이동
@@ -917,4 +1043,6 @@ public class MemberController {
 		}
 		return new Gson().toJson(m);
 	}
+	
+	    
 }

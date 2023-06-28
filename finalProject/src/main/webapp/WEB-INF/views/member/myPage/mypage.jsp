@@ -45,9 +45,9 @@
                                     	<span class="fas fa-bars" id="menubtn"></span>
 										<div class="pop_subMenu pop_myPage" tabindex="0">
 											<ul id="profileMenu">
-												<li class="btn_info01"><a href="#">개인정보 변경</a></li>
+												<li class="btn_info01"><a href="goInfoUpdate.me">개인정보 변경</a></li>
 												<li class="btn_logout"><a href="logout.me">로그아웃</a></li>
-												<li class="btn_out"><a href="javascript:memberLeave();">회원탈퇴</a></li>
+												<li class="btn_out"><a href="goInfoDelete.me">회원탈퇴</a></li>
 											</ul>
 										</div>
 									</div>
@@ -72,7 +72,10 @@
 	                                            <span style="font-size: 20px; font-weight: 540;">${loginUser.age}대</span>
 	                                        </div>
 	                                        <div id="p_style" align="center">
-	                                            <span style="font-size: 20px; font-weight: 540;">여행스타일 넣을곳</span>
+		                                        <c:choose>
+		                                        	<c:when test="${loginUser.style == null}"><span style="font-size: 20px; font-weight: 540;">여행스타일을 정해주세요.</span></c:when>
+		                                        	<c:otherwise><span style="font-size: 20px; font-weight: 540;">${loginUser.style }</span></c:otherwise>
+		                                        </c:choose>
 	                                        </div>
                                     	</div>
 				                        <div class="profile-update">

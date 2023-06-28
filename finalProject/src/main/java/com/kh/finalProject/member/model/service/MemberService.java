@@ -79,4 +79,19 @@ public interface MemberService {
 
 	//마이페이지 수정요청 리스트
 	ArrayList<Notice> myRequestList(PageInfo pi, String nick);
+
+	//마이페이지 개인정보 수정
+	int updateMember(Member m);
+
+	//마이페이지 회원 탈퇴
+	void deleteMember(Member m);
+
+	//마이페이지 게시글 파일 조회
+	ArrayList<Attachment> fileSelect(int boardNo);
+
+	//마이페이지 댓글 수정
+	int replyUpdate(Reply r);
+
+	//마이페이지 댓글 삭제
+	int replyDelete(int replyNo);
 }

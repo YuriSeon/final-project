@@ -180,5 +180,35 @@ public class MemberServiceImpl implements MemberService{
 	public ArrayList<Notice> myRequestList(PageInfo pi, String nick) {
 		return memberDao.mymyRequestList(sqlSession,nick,pi);
 	}
+
+	//마이페이지 개인정보 수정
+	@Override
+	public int updateMember(Member m) {
+		return memberDao.updateMember(sqlSession,m);
+	}
+
+	//마이페이지 회원 탈퇴
+	@Override
+	public void deleteMember(Member m) {
+		memberDao.deleteMember(sqlSession,m);
+	}
+
+	//마이페이지 게시글 파일 조회
+	@Override
+	public ArrayList<Attachment> fileSelect(int boardNo) {
+		return memberDao.fileSelect(sqlSession,boardNo);
+	}
+
+	//마이페이지 댓글 수정
+	@Override
+	public int replyUpdate(Reply r) {
+		return memberDao.replyUpdate(sqlSession,r);
+	}
+
+	//마이페이지 댓글 삭제
+	@Override
+	public int replyDelete(int replyNo) {
+		return memberDao.replyDelete(sqlSession,replyNo);
+	}
 	
 }

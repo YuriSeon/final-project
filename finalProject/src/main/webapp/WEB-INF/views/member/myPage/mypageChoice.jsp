@@ -90,15 +90,24 @@
 							</div>
 							<div class="area_txt">
 								<div class="tit">
-									<a href="">${c.boardTitle}</a>
-									<p>내 위치에서 18.6km - 서울 강남구</p>
+									<a href="">
+										<c:if test="${c.category==1}">[테마]</c:if>
+										<c:if test="${c.category==2}">[축제]</c:if>
+										<c:if test="${c.category==3}">[명소]</c:if>
+										<c:if test="${c.category==4}">[피드]</c:if>
+										<c:if test="${c.category==5}">[함께가치]</c:if>
+										<c:if test="${c.category==6}">[일정자랑]</c:if>
+										${c.boardTitle}
+									</a>
+									<p>서울 강남구</p>
 									<p class="tag"><span>#구룡산</span><span>#대모산</span><span>#레포츠</span><span>#서울트래킹</span><span>#시민의숲</span><span>#트래킹</span></p>
 								</div>
 								<button type="button" title="내용 더보기" class="btn_view">더보기</button>
 								<div class="cho_subMenu">
 									<ul>
-										<li class="btn_share" id=""><a href="javascript:" onclick="">공유하기</a></li>
-										<li class="btn_del" id=""><a href="javascript:">삭제</a></li>
+										<li class="btn_del">
+											<a href="javascript:void(0);">삭제</a>
+										</li>
 									</ul>
 								</div>
 							</div>
@@ -114,10 +123,10 @@
 			            <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
 			            	<c:choose>
 				            	<c:when test="${p eq pi.currentPage}">
-	                   				<a class="off" title="선택됨" href="myQna.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
+	                   				<a class="off" title="선택됨" href="myChoice.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
 		                		</c:when>
 		                		<c:otherwise>
-		                			<a class="on" title="선택됨" href="myQna.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
+		                			<a class="on" title="선택됨" href="myChoice.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
 		                		</c:otherwise>
 	                		</c:choose>
         		        </c:forEach>
