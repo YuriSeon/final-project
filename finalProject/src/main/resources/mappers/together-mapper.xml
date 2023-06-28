@@ -26,13 +26,14 @@
   		
   		<select id="selectTogetherList" resultMap="togetherResultSet">
 				SELECT B.BOARD_NO,ZONE_NAME,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,(FILE_PATH || CHANGE_NAME) FILE_PATH,TOGETHER,TOGETHER_COUNT,CONCEPT,TO_CHAR(START_DATE,'YY/MM/DD') START_DATE,TO_CHAR(END_DATE,'YY/MM/DD') END_DATE,TOTAL_DATE,TOTAL_PAY
-								,(SELECT (FILE_PATH || CHANGE_NAME)
-								    FROM ATTACHMENT
-								    WHERE WRITER = BOARD_WRITER) PROFILE_PATH,TO_CHAR(B.CREATE_DATE,'YY/MM/DD') CREATE_DATE
+				                ,(SELECT (FILE_PATH || CHANGE_NAME)
+				                    FROM ATTACHMENT
+				                    WHERE WRITER = BOARD_WRITER) PROFILE_PATH,TO_CHAR(B.CREATE_DATE,'YY/MM/DD') CREATE_DATE,SURVEY
 				FROM BOARD B
 				JOIN ZONE USING (ZONE_NO)
 				JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
 				JOIN PLAN P ON (B.BOARD_NO = P.BOARD_NO)
+				LEFT JOIN MEMBER ON (BOARD_WRITER = NICKNAME)
 				WHERE B.CATEGORY = 5
 				AND B.STATUS = 'Y'
 				ORDER BY B.CREATE_DATE DESC
@@ -54,6 +55,7 @@
   				<result column="TOTAL_PAY" property="totalPay"/>
   				<result column="PROFILE_PATH" property="profilePath"/>
   				<result column="CREATE_DATE" property="createDate"/>
+  				<result column="SURVEY" property="survey"/>
   		</resultMap>
   		
   		<select id="selectOptionListCount" resultType="_int">

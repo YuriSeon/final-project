@@ -144,6 +144,13 @@
         	margin-left: 90px;
         	border-radius: 50%;
       	}  
+      	#nicknameHover{
+      		text-decoration:none;
+      		color:black;
+      	}
+      	#nicknameHover:hover{
+      		cursor:pointer;
+      	}
     </style>
 
 </head>
@@ -191,6 +198,8 @@
                 		<c:when test="${not empty loginUser and loginUser.status eq 'Y' }">
                 			<!-- 일반 회원 로그인 후 -->
 		                    <div class="text-button">
+		                    <input type="checkbox" id="mbtiCheckBox" style="margin-right:3px; display:none;">
+		                    <label for="mbtiCheckBox" id="mbtiCheckBoxLabel" style="margin-right:5px; display:none;">여행 계획 추천 받기</label>
 							 <c:choose>
 	                                        		<c:when test="${not empty loginUser.profileImg}">
 			                                            <!--프로필 있으면-->
@@ -236,7 +245,7 @@
                             <li><a href="attraction.bo">명소</a></li> 
                             <li><a href="feed.bo">피드</a></li> 
                             <li><a href="schedule.bo">일정 자랑</a></li> 
-                            <li><a href="together.bo">함께 가치</a></li> 
+                            <li><a href="#" onclick="mbtiQuestion();">함께 가치</a></li> 
                         </ul>        
                         <a class='menu-trigger'>
                             <span>Menu</span>
@@ -246,6 +255,37 @@
                 </div>
             </div>
         </div>
+        
+        <script>
+        		function mbtiQuestion(){
+        			
+        			var survey = "${loginUser.survey}";
+        			var nickname = "${loginUser.nickname}";
+
+        			var mbtiCheck = decodeURI("${cookie.mbtiCheck.value}");
+        			console.log(mbtiCheck);
+        			
+								<%if (request.getSession().getAttribute("loginUser") != null) {%>
+									if (mbtiCheck == "null") {
+											if (confirm("회원님의 여행 취향과 맞는 일정을 추천 받으시겠습니까 ?")) {
+												if (survey == "") {
+													alert("여행 취향 추천을 위해 설문 페이지로 이동합니다.");
+													location.href = "survey.me";
+												} else {
+													location.href = "together.bo?currentPage=1&mbtiCheck="+ nickname+ " "+ survey;
+												}
+											} else {
+												location.href = "together.bo?currentPage=1";
+											}
+										} else {
+											location.href = "together.bo?currentPage=1";
+										}
+								<%} else {%>
+									location.href = "together.bo?currentPage=1";
+								<%}%>
+									}
+								</script>
+        
     </header>
     
     <!-- 로그인 모달 -->
@@ -383,6 +423,8 @@
 
     <script>
         function whoareyou() {
+        	
+        		event.stopImmediatePropagation();
         		var nickname = event.target.text;
         		
         		$.ajax({

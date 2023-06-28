@@ -2,11 +2,15 @@ package com.kh.finalProject.board.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,8 +140,34 @@ public class BoardController {
 		return "board/schedule/schedule";
 	}
 	
+	public String getCookie(HttpServletRequest request){
+	    Cookie[] cookies=request.getCookies(); // 모든 쿠키 가져오기
+	    if(cookies!=null){
+	        for (Cookie c : cookies) {
+	            String name = c.getName(); // 쿠키 이름 가져오기
+	            String value = c.getValue(); // 쿠키 값 가져오기
+	            if (name.equals("mbtiCheck")) {
+	                return value;
+	            }
+	        }
+	    }
+	    return null;
+	}
+	
 	@RequestMapping("together.bo")
-	public ModelAndView goTogether(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv) {
+	public ModelAndView goTogether(@RequestParam(value="currentPage", defaultValue="1") int currentPage, ModelAndView mv, 
+																@RequestParam(value="mbtiCheck", defaultValue="null") String mbtiCheck, HttpServletResponse response
+																,HttpServletRequest request) throws UnsupportedEncodingException {
+		
+		Cookie cookie = null;
+
+		if(getCookie(request) != null && getCookie(request).equals("null") && mbtiCheck != null) {
+//			System.out.println("check");
+			mbtiCheck = URLEncoder.encode(mbtiCheck, "UTF-8");
+			cookie = new Cookie("mbtiCheck",mbtiCheck);
+			cookie.setMaxAge(60*60*24*3);
+			response.addCookie(cookie);
+		}
 		
 		int listCount = togetherService.selectListCount();
 		
@@ -154,6 +184,8 @@ public class BoardController {
 		mv.addObject("pi",pi);
 		
 		mv.setViewName("board/together/together");
+		
+//		System.out.println(getCookie(request));
 		
 		return mv;
 	}

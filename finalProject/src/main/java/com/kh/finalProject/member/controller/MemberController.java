@@ -250,8 +250,6 @@ public class MemberController {
 	@ResponseBody
 	public String surveyResult(String result, String userId) {
 		
-		System.out.println(userId);
-		
 		int countEI = 0;
 		int countSN = 0;
 		int countTF = 0;

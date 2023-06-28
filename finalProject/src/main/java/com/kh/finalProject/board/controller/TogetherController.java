@@ -49,7 +49,7 @@ public class TogetherController {
 		
 		if(!upfile.getOriginalFilename().equals(" ")) {
 			Board b = Board.builder().boardTitle(boardTitle).boardContent(boardContent).boardWriter(nickname).address(city+" "+country).build();
-			Attachment at = Attachment.builder().originName(upfile.getOriginalFilename()).changeName(saveFile(upfile,session)).filePath("/resources/togetherFiles/").fileLevel(1).writer(nickname).build();
+			Attachment at = Attachment.builder().originName(upfile.getOriginalFilename()).changeName(saveFile(upfile,session)).filePath("/resources/images/togetherFiles/").fileLevel(1).writer(nickname).build();
 			Plan p = Plan.builder().startDate(dateIn).endDate(dateOut).totalDate(totalDate).together(togetherCount).concept(concept).totalPay(pay).writer(nickname).build();
 			
 			int result = togetherService.insertBoard(b,at,p);
@@ -78,7 +78,7 @@ public String saveFile(MultipartFile upfile, HttpSession session) {
 		
 		String changeName = currentTime + ranNum + ext;
 		
-		String savePath = session.getServletContext().getRealPath("/resources/togetherFiles/");
+		String savePath = session.getServletContext().getRealPath("/resources/images/togetherFiles/");
 		
 		try {
 			upfile.transferTo(new File(savePath+changeName));

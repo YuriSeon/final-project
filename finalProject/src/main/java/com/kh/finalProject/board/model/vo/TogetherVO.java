@@ -26,5 +26,6 @@ public class TogetherVO {
 	private int totalPay;
 	private String profilePath;
 	private String createDate;
+	private String survey;
 	
 }
