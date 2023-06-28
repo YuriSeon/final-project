@@ -25,4 +25,6 @@ public class Reply {
 	private int refQno;
 	private int refRno;
 	private String status;
+	
+	private String boardTitle;
 }

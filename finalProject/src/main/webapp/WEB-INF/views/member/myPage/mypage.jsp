@@ -45,9 +45,9 @@
                                     	<span class="fas fa-bars" id="menubtn"></span>
 										<div class="pop_subMenu pop_myPage" tabindex="0">
 											<ul id="profileMenu">
-												<li class="btn_info01"><a href="#">개인정보 변경</a></li>
+												<li class="btn_info01"><a href="goInfoUpdate.me">개인정보 변경</a></li>
 												<li class="btn_logout"><a href="logout.me">로그아웃</a></li>
-												<li class="btn_out"><a href="javascript:memberLeave();">회원탈퇴</a></li>
+												<li class="btn_out"><a href="goInfoDelete.me">회원탈퇴</a></li>
 											</ul>
 										</div>
 									</div>
@@ -72,7 +72,10 @@
 	                                            <span style="font-size: 20px; font-weight: 540;">${loginUser.age}대</span>
 	                                        </div>
 	                                        <div id="p_style" align="center">
-	                                            <span style="font-size: 20px; font-weight: 540;">여행스타일 넣을곳</span>
+		                                        <c:choose>
+		                                        	<c:when test="${loginUser.style == null}"><span style="font-size: 20px; font-weight: 540;">여행스타일을 정해주세요.</span></c:when>
+		                                        	<c:otherwise><span style="font-size: 20px; font-weight: 540;">${loginUser.style }</span></c:otherwise>
+		                                        </c:choose>
 	                                        </div>
                                     	</div>
 				                        <div class="profile-update">
@@ -123,23 +126,23 @@
                         <div class="inr">
                             <ul>
                                 <li>
-                                    <a href="../mypage/mypage_list_fav.do" class="icon1"><img src="resources/images/edit.png" alt="" width="50px" height="50px"></a>
+                                    <a href="myWriting.me" class="icon1"><img src="resources/images/edit.png" alt="" width="50px" height="50px"></a>
                                     <span>작성글 보기</span>
                                 </li>
                                 <li>
-                                    <a href="../mypage/mypage_list_fav.do" class="icon2"><img src="resources/images/star.png" alt="" width="50px" height="50px"></a>
+                                    <a href="myChoice.me" class="icon2"><img src="resources/images/star.png" alt="" width="50px" height="50px"></a>
                                     <span>찜 목록</span>
                                 </li>
                                 <li>
-                                    <a href="../mypage/mypage_list_reply.do" class="icon3"><img src="resources/images/email.png" alt="" width="50px" height="50px"></a>
+                                    <a href="myChat.me" class="icon3"><img src="resources/images/email.png" alt="" width="50px" height="50px"></a>
                                     <span>쪽지</span>
                                 </li>
                                 <li>
-                                    <a href="/mypage/mypage_list_stamp.do" class="icon4"><img src="resources/images/compass.png" alt="" width="50px" height="50px"></a>
+                                    <a href="myFoot.me" class="icon4"><img src="resources/images/compass.png" alt="" width="50px" height="50px"></a>
                                     <span>발도장</span>
                                 </li>
                                 <li>
-                                    <a href="../mypage/mypage_list_cos.do" class="icon5"><img src="resources/images/padlock.png" alt="" width="50px" height="50px"></a>
+                                    <a href="myCertification.me" class="icon5"><img src="resources/images/padlock.png" alt="" width="50px" height="50px"></a>
                                     <span>동행 인증</span>
                                 </li>
                                 <li>
@@ -147,7 +150,7 @@
                                     <span>설문지</span>
                                 </li>
                                 <li>
-                                    <a href="../mypage/mypage_list_qna.do" class="icon7"><img src="resources/images/location.png" alt="" width="50px" height="50px"></a>
+                                    <a href="mySchedule.me" class="icon7"><img src="resources/images/location.png" alt="" width="50px" height="50px"></a>
                                     <span>일정등록</span>
                                 </li>
                                 <li>
@@ -217,7 +220,7 @@
     
     <script>
     	
-    	//슬라이드
+    	//최근 본 게시물 슬라이드
         const mySwiper = new Swiper('.swiper-container',{
             loop: false,
             speed: 500,
@@ -228,6 +231,7 @@
             },
         });
 
+    	//프로필 박스 스크롤 따라오기
         $(window).scroll(function(){
             var scrollTop = $(document).scrollTop();
             

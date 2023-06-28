@@ -181,7 +181,7 @@
                         <div class="info-title">인증 여부</div>
                         <div>
                         	<c:choose>
-                        		<c:when test="${m.certification eq 0}">미인증</c:when>
+                        		<c:when test="${m.certification eq 0}">비인증</c:when>
                         		<c:when test="${m.certification eq 1}">카카오</c:when>
                         		<c:otherwise>네이버</c:otherwise>
                         	</c:choose>
