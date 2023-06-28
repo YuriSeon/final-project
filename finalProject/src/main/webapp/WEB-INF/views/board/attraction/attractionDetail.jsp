@@ -456,6 +456,7 @@
 	    let currentIndex = slideIndex[0];
 	    const imagePath = 'resources/images/';
 	    const dotPath = 'resources/images/dot.png';
+	    
 	    $(function(){
 	        $("#slideImage").prop("src", imagePath + slideIndex[0]);
 	        slideIndex.forEach(function(item, index, array){

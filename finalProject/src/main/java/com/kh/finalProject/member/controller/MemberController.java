@@ -13,7 +13,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -630,12 +638,12 @@ public class MemberController {
 		
 	//회원가입 메소드
 	@RequestMapping("insert.me")
-	public ModelAndView insertMember(Member m,String birthDay, String kakaoId, String access_token, ModelAndView mv, HttpSession session) throws IOException, ParseException {
+	public ModelAndView insertMember(Member m,String birthDay, @RequestParam(value = "certification", defaultValue = "0")int certification, String kakaoId, String access_token, ModelAndView mv, HttpSession session) throws IOException, ParseException {
 		//비밀번호 암호화
 		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
 		//System.out.println(encPwd);
 		m.setUserPwd(encPwd);
-		
+		System.out.println(certification);
 		//연령대 계산
 		//입력한 나이
 		int birYear = Integer.parseInt(birthDay.substring(0, 4));
@@ -672,38 +680,51 @@ public class MemberController {
 			
 			session.setAttribute("alertMsg", "회원가입을 성공하였습니다.");
 			
+			//일반 회원가입시
+			if(certification==0) {
+				mv.setViewName("redirect:/");
+			}
+			
 			//카카오 인증 회원가입
 			if(m.getCertification()==1) {
-				//카카오 로그아웃 도시켜주기
-					String url = "https://kauth.kakao.com/oauth/logout";
-					url += "?client_id="+appKey;
-					url += "&logout_redirect_uri=http://localhost:8888/finalProject/";
-					
-					mv.setViewName("redirect:"+url);
+				System.out.println("카카오로 들어옴");
+				String kakaoSe = session.getId();
+				System.out.println(kakaoSe);
+//				session.removeAttribute("kakaoSe");
+				//모든 세션 값 삭제
+				session.invalidate();
+				//카카오 계정 로그아웃 도시켜주기
+//				String url = "https://kauth.kakao.com/oauth/logout";
+//				url += "?client_id="+appKey;
+//				url += "&logout_redirect_uri=http://localhost:8888/finalProject/";
+//				
+//				mv.setViewName("redirect:"+url);
 					
 //				카카오 로그아웃
-//				String url = "https://kapi.kakao.com/v1/user/logout";
-//				
-//				URL requestUrl = new URL(url);
-//				HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
-//				urlCon.setRequestMethod("POST");
-//				urlCon.setRequestProperty("Authorization", "Bearer "+access_token);
-//		
-//				BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
-//				
-//				String text = "";
-//				String line;
-//				
-//				while((line=br.readLine())!=null) {
-//					text += line;
-//				}
-//				
-//				System.out.println(text);
-//				
-//				mv.setViewName("redirect:/");
+				String url = "https://kapi.kakao.com/v1/user/logout";
+				
+				URL requestUrl = new URL(url);
+				HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
+				urlCon.setRequestMethod("POST");
+				urlCon.setRequestProperty("Authorization", "Bearer "+access_token);
+		
+				BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+				
+				String text = "";
+				String line;
+				
+				while((line=br.readLine())!=null) {
+					text += line;
+				}
+				
+				//System.out.println(text);
+				
+				mv.setViewName("redirect:/");
 			}
 			//네이버 인증 후 회원가입 시
 			if(m.getCertification()==2) {
+				System.out.println("네이버로 들어옴");
+				
 				String clientId = "xezYicDH1SzVKNokPSX2";
 				String ClientSecret = "h48MxFzhpW";
 				//네이버 탈퇴 요청
@@ -738,7 +759,7 @@ public class MemberController {
 				
 				String resultNaver = (String) jsonObj.get("result");
 				
-				mv.setViewName("redirect:/index");
+				mv.setViewName("redirect:/");
 			}
 		}else {
 			mv.addObject("errorMsg", "회원가입 실패").setViewName("common/errorPage");
@@ -874,6 +895,7 @@ public class MemberController {
 			kakaoInfo.put("gender", gender);
 			kakaoInfo.put("id",idd);
 			kakaoInfo.put("access_token",access_token);
+			kakaoInfo.put("certification",certification);
 			
 			session.setAttribute("kakaoInfo",kakaoInfo);
 		}
@@ -970,6 +992,46 @@ public class MemberController {
 		}
 		
 		return "member/memberEnrollForm";
+	}
+	
+	//이메일 인증번호 쏴주기
+	@ResponseBody
+	@RequestMapping("emailCk.fe")
+	public int emailCk(@RequestParam("email")String userMail) {
+		System.out.println("인증메일 보내는중...");
+		String host = "smtp.naver.com";
+		String user = "cjj3845@naver.com";
+		String password = "1s2s3s4s";
+		
+		int ranNum = (int)(Math.random()*9000+1000);
+		
+		Properties props = new Properties();
+			props.put("mail.smtp.host", host);
+			props.put("mail.smtp.port", 587);
+			props.put("mail.smtp.auth", "true");
+		
+		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(user, password);
+			}
+		});
+			
+		try {
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(user));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(userMail));
+			
+			message.setSubject("여행가보자고의 인증 메일이 도착하였습니다.");
+			message.setText("인증번호 : "+ranNum);
+			
+			Transport.send(message);
+			System.out.println(userMail+"로 인증메일 발송 완료, 인증번호 : "+ranNum);
+			
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ranNum;
 	}
 	
 	//로그인 메소드

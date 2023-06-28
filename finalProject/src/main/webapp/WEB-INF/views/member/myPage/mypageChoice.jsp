@@ -80,6 +80,7 @@
 <!-- 					</li> -->
 					<c:forEach var="c" items="${list}">
 						<li class="bdr_nor">
+						<input type="text" class="board-no" value="${c.boardNo}" hidden="hidden">
 							<div class="photo">
 								<a href="">
 									<div class="dim">
@@ -204,6 +205,7 @@
 				}
 			});
 		});
+    	
     	
     </script>
     
