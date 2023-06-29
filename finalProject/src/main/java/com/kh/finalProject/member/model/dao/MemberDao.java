@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.vo.Member;
 
@@ -100,5 +102,101 @@ public class MemberDao {
 		
 		RowBounds rowBounds = new RowBounds(offset,limit);
 		return (ArrayList)sqlSession.selectList("adminMapper.myQnaList",nick,rowBounds);
+	}
+
+	//마이페이지 작성글 개수
+	public int myWritingCount(SqlSessionTemplate sqlSession, String nick) {
+		return sqlSession.selectOne("memberMapper.myWritingCount",nick);
+	}
+
+	//마이페이지 작성글 리스트 조회
+	public ArrayList<Board> myWritingList(SqlSessionTemplate sqlSession, String nick, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("memberMapper.myWritingList",nick,rowBounds);
+	}
+
+	
+	//마이페이지 작성글 게시판 종류 선택 개수
+	public int selectBoardCount(SqlSessionTemplate sqlSession, Board b) {
+		return sqlSession.selectOne("memberMapper.selectBoardCount",b);
+	}
+
+	//마이페이지 작성글 게시판 종류 선택 리스트
+	public ArrayList<Board> selectBoardList(SqlSessionTemplate sqlSession, Board b, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("memberMapper.selectBoardList",b,rowBounds);
+	}
+
+	//마이페이지 댓글 개수
+	public int myReplyCount(SqlSessionTemplate sqlSession, String nick) {
+		return sqlSession.selectOne("memberMapper.myReplyCount",nick);
+	}
+
+	//마이페이지 댓글 리스트
+	public ArrayList<Reply> myReplyList(SqlSessionTemplate sqlSession, String nick, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("memberMapper.myReplyList",nick,rowBounds);
+	}
+
+	//마이페이지 찜 목록 개수
+	public int myChoiceCount(SqlSessionTemplate sqlSession, String nick) {
+		return sqlSession.selectOne("memberMapper.myChoiceCount",nick);
+	}
+
+	//마이페이지 찜 목록 리스트
+	public ArrayList<Board> myChoiceList(SqlSessionTemplate sqlSession, String nick, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("memberMapper.myChoiceList",nick,rowBounds);
+	}
+
+	//마이페이지 수정요청 개수
+	public int myRequestCount(SqlSessionTemplate sqlSession, String nick) {
+		return sqlSession.selectOne("adminMapper.myRequestCount",nick);
+	}
+
+	//마이페이지 수정요청 리스트
+	public ArrayList<Notice> mymyRequestList(SqlSessionTemplate sqlSession, String nick, PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("adminMapper.myRequestList",nick,rowBounds);
+	}
+
+	//마이페이지 개인정보 수정
+	public int updateMember(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.update("memberMapper.updateMember",m);
+	}
+
+	//마이페이지 회원 탈퇴
+	public void deleteMember(SqlSessionTemplate sqlSession, Member m) {
+		sqlSession.update("memberMapper.deleteMember",m);
+	}
+
+	//마이페이지 게시글 파일 조회
+	public ArrayList<Attachment> fileSelect(SqlSessionTemplate sqlSession, int boardNo) {
+		return (ArrayList)sqlSession.selectList("memberMapper.fileSelect",boardNo);
+	}
+
+	//마이페이지 댓글 수정
+	public int replyUpdate(SqlSessionTemplate sqlSession, Reply r) {
+		return sqlSession.update("memberMapper.replyUpdate",r);
+	}
+
+	//마이페이지 댓글 삭제
+	public int replyDelete(SqlSessionTemplate sqlSession, int replyNo) {
+		return sqlSession.update("memberMapper.replyDelete",replyNo);
 	}
 }

@@ -3,5 +3,40 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="attractionMapper">
-  
+  	<select id="selectZoneNo" resultMap="boardMapper.zoneResultSet">
+  		SELECT ZONE_NO
+  		FROM ZONE 
+  		WHERE ZONE_NAME LIKE '%'||#{zoneName}||'%'
+  	</select>
+  	<insert id="insertInfo">
+  		INSERT ALL
+  			INTO BOARD(BOARD_NO, ZONE_NO, INFO_NO, BOARD_WRITER, CATEGORY, BOARD_TITLE, BOARD_CONTENT)
+  				VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, SEQ_INO.NEXTVAL, 'admin', 3, #{infoName}, #{boardContent})
+  			INTO INFO VALUES(SEQ_INO.CURRVAL, SEQ_BNO.CURRVAL, #{zoneNo}, #{infoAddress}, #{infoTime}, #{infoHomepage}, #{infoCall}, #{parking}, #{infoName}, #{infoType}, #{dayOff})
+  		SELECT * FROM DUAL
+  	</insert>
+  	<insert id="insertAttachment">
+  		INSERT INTO ATTACHMENT (FILE_NO, BOARD_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, FILE_LEVEL)
+  						 VALUES(SEQ_FNO.NEXTVAL, SEQ_BNO.CURRVAL, #{originName}, #{changeName}, #{filePath}, #{fileLevel})
+  	</insert>
+  	<update id="increaseCount" parameterType="_int">
+  		UPDATE BOARD
+  		SET COUNT = COUNT +1
+  		WHERE BOARD_NO = #{boardNo}
+  	</update>
+  	<select id="selectBoard" resultMap="boardMapper.boardResultSet">
+  		SELECT *
+  		FROM BOARD
+  		WHERE BOARD_NO = #{boardNo}
+  	</select>
+  	<select id="selectInfo" resultMap="adminMapper.infoResultSet">
+  		SELECT *
+  		FROM INFO
+  		WHERE BOARD_NO = #{boardNo}
+  	</select>
+  	<select id="selectAttachment" resultMap="adminMapper.attachmentResultSet">
+  		SELECT *
+  		FROM ATTACHMENT
+  		WHERE BOARD_NO = #{boardNo}
+  	</select>
   </mapper>

@@ -18,4 +18,8 @@
   		<result column="COUNT" property="count"/>
   		<result column="STATUS" property="status"/>
   	</resultMap>
+  	<resultMap type="zone" id="zoneResultSet">
+  		<result property="zoneNo" column="ZONE_NO"/>
+		<result property="zoneName" column="ZONE_NAME"/>
+	</resultMap>
   </mapper>

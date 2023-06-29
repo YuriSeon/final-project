@@ -10,7 +10,6 @@
 <style type="css/text"></style>
 </head>
 <body>
-    <!-- 작성하기 연결이랑 제출버튼만 수정하면 끝! -->
     <%@include file="../../common/menubar.jsp" %>
 	<div class="modifyRequest">
         <div class="title-area">
@@ -131,31 +130,30 @@
             $(document).on("keyup",input, function(){
                 var changeImg = $(this).parents().eq(3).children().eq(0).children(); // 변경할 이미지 변수처리
                 /* 수정사항 null 아닐시 체크아이콘 색상 변경 */
-                if($(input).val()){
+                if($(this).val()){
                     changeImg.css("content", "url('resources/images/check-green.png')");
                 } else {
                     changeImg.css("content", "url('resources/images/check-red.png')");
                 }
-
-                // /* 작성할 영역이 비어있지 않으면 제출버튼 넣기 */
-                // if($(".conwrap").length!=0 && $(input).val()){
-                //     btn.show();   
-                // } else {
-                //     btn.hide();
-                // }
             });
 
             /* 제출버튼 인풋창 모두 작성됐을때만 나오도록 설정 마저하기 */
             $(document).on("input", input, function(){
-                var arr = Array($(input).length).fill(0);
-                console.log(arr);
-               $(input).each(function(index){
-                    if(!$(this).val()){
-                        arr[index] = 1;
-                    } else {
-                        return;
-                    }
-               });
+            	var allInputsFilled = true; // 모든 인풋창
+
+                // 비어있는지 확인
+                $(".modifyRequest input.after").each(function() {
+                  if ($(this).val() === "") {
+                    allInputsFilled = false;
+                    return false; // 하나라도 비어있으면 루프 종료
+                  }
+                });
+             	// 인풋창 비었는지 확인 후 제출버튼 숨김 or 보이기
+                if (allInputsFilled) {
+                  $("#submit").show();
+                } else {
+                  $("#submit").hide();
+                }
             });
         });
 

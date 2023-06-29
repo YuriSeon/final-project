@@ -172,6 +172,13 @@
 		</script>
 		<c:remove var="alertMsg" scope="session"/>
 	</c:if>
+	<c:if test="${not empty alertMsg2 }">
+		<script>
+			alertMessage = "${alertMsg2}";
+			alert(alertMessage.replace(/<br>/g,'\n'));
+		</script>
+		<c:remove var="alertMsg2" scope="session"/>
+	</c:if>
 
    <div class="pre-header">
         <div class="container">

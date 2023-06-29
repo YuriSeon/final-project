@@ -3,7 +3,6 @@ package com.kh.finalProject.admin.model.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.admin.model.vo.Report;
@@ -267,6 +266,9 @@ public interface AdminService {
 
 	//게시글 피드 검색 리스트 조회
 	ArrayList<Board> feedSearchList(HashMap<String, String> map, PageInfo pi);
+
+	//게시글 피드 사진 출력
+	ArrayList<Attachment> feedSelectFile(int boardNo);
 
 	
 

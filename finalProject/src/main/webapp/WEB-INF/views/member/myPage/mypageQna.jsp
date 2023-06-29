@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="resources/css/mypage.css?v=1">
+    <link rel="stylesheet" type="text/css" href="resources/css/mypage.css?v=2">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -18,6 +18,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <title>마이페이지 Q&amp;A</title>
     <style type="text/css">
+   	.snb_mypage ul li.on a {
+		background: url(resources/images/ico_mypagemenu.png) 0 0 no-repeat;
+		background-size: 4px 100%;
+		color: #333;
+	}
     </style>
 </head>
 <body>
@@ -39,7 +44,14 @@
 	        <!-- 썸네일 리스트 -->
 	        <div class="box_leftType1">
 	            <div class="total_check">
-	                <strong>총<span>${pi.listCount}</span>건</strong>
+	                <c:choose>
+                    	<c:when test="${pi.listCount == 0 }">
+                    		<strong>총<span>0</span>건</strong>
+                    	</c:when>
+                    	<c:otherwise>
+                    		<strong>총<span>${pi.listCount}</span>건</strong>
+                    	</c:otherwise>
+                    </c:choose>
 	            </div>
 	            <!-- 명소,추천,코스,축제 -->
 	            <ul class="list_board1 flnon">
@@ -128,21 +140,47 @@
 	            <!-- snb -->
 	            <div class="snb_mypage">
 	                <ul>
-	                    <li><a href="/mypage/mypage_list_fav.do">즐겨찾기</a></li>
-	                    <li><a href="/mypage/mypage_list_cos.do">코스</a></li>
-	                    <li><a href="/mypage/mypage_list_reply.do">댓글</a></li>
-	                    <li><a href="/mypage/tourist_info_list.do">관광정보 수정/신규 요청</a></li>
+	                    <c:choose>
+	                    	<c:when test="${w == 0 }">
+	                    		<li><a href="myWriting.me">작성글 보기</a></li>
+	                    	</c:when>
+	                    	<c:otherwise>
+	                    		<li><a href="myWriting.me">작성글 보기(${w})</a></li>
+	                    	</c:otherwise>
+	                    </c:choose>
+	                    <c:choose>
+	                    	<c:when test="${r == 0}">
+	                    		<li><a href="myReply.me">댓글 보기</a></li>
+	                    	</c:when>
+	                    	<c:otherwise>
+	                    		<li><a href="myReply.me">댓글 보기(${r})</a></li>
+	                    	</c:otherwise>
+	                    </c:choose>
+	                    <c:choose>
+	                    	<c:when test="${c == 0 }">
+	                    		<li><a href="myChoice.me">찜 목록</a></li>
+	                    	</c:when>
+	                    	<c:otherwise>
+	                    		<li><a href="myChoice.me">찜 목록(${c})</a></li>
+	                    	</c:otherwise>
+	                    </c:choose>
+	                    <c:choose>
+	                    	<c:when test="${rq == 0 }">
+	                    		<li><a href="myRequest.me">관광정보 수정 / 신규 요청</a></li>
+	                    	</c:when>
+	                    	<c:otherwise>
+	                    		<li><a href="myRequest.me">관광정보 수정 / 신규 요청(${rq})</a></li>
+	                    	</c:otherwise>
+	                    </c:choose>
 	                    <c:choose>
 	                    	<c:when test="${pi.listCount == 0 }">
 	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A (${pi.listCount})</a></li>
+	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A(${pi.listCount})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
-
-	                    <!-- <li><a href="/mypage/mypage_list_event.do" id="event"></a></li> -->
-	                    <li id="stampEnabled"><a href="/mypage/mypage_list_stamp.do" id="stamp">발도장</a></li>
+	                    <li id="stampEnabled"><a href="myFoot.me" id="stamp">발도장</a></li>
 	                </ul>
 	            </div>
 	            <!-- //snb -->
@@ -156,10 +194,14 @@
     	//버튼 클릭시 수정 삭제 나타남
     	$(function() {
 			$(".btn_view").click(function() {
-				if ($(this).next("div").css("display") === "block") {
-					$(this).next("div").css("display","none");
+				var targetDiv = $(this).next("div");
+				
+				$(".wri_subMenu").not(targetDiv).css("display","none");
+				
+				if (targetDiv.css("display") === "block") {
+					targetDiv.css("display","none");
 				}else{
-					$(this).next("div").css("display","block");
+					targetDiv.css("display","block");
 				}
 			});
 		});

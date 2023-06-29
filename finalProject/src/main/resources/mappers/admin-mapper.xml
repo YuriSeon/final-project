@@ -15,7 +15,7 @@
   		<result column="AGE" property="age"/>
   		<result column="EMAIL" property="email"/>
   		<result column="PHONE" property="phone"/>
-  		<result column="MBTI" property="mbti"/>
+  		<result column="MBTI" property="MBTI"/>
   		<result column="SURVEY" property="survey"/>
   		<result column="STYLE" property="style"/>
   		<result column="REPORT" property="report"/>
@@ -1013,6 +1013,7 @@
   		WHERE STATUS = 'Y'
   		AND CATEGORY = 3
   		AND WRITER = #{nick}
+  		AND SERVICE_TITLE NOT LIKE '[요청]%'
   	</select>
   	
   	<!-- 마이페이지 Q&A 리스트 조회 -->
@@ -1022,6 +1023,29 @@
 		WHERE STATUS = 'Y'
         AND CATEGORY = 3
         AND WRITER = #{nick}
+        AND SERVICE_TITLE NOT LIKE '[요청]%'
+		ORDER BY CREATE_DATE DESC
+  	</select>
+  	
+  	<!-- 마이페이지 수정요청 개수 -->
+  	<select id="myRequestCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM SERVICE
+  		WHERE STATUS = 'Y'
+  		AND CATEGORY = 3
+  		AND WRITER = #{nick}
+  		AND SERVICE_TITLE LIKE '[요청]%'
+  		
+  	</select>
+  	
+  	<!-- 마이페이지 수정요청 리스트 조회 -->
+  	<select id="myRequestList" resultMap="serviceResultSet">
+  		SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+        AND CATEGORY = 3
+        AND WRITER = #{nick}
+        AND SERVICE_TITLE LIKE '[요청]%'
 		ORDER BY CREATE_DATE DESC
   	</select>
   	
