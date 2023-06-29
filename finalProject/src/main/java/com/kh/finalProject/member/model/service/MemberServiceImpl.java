@@ -2,6 +2,7 @@ package com.kh.finalProject.member.model.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 
@@ -37,6 +38,17 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public Member loginMember(Member m) {
 		return memberDao.loginMember(sqlSession, m);
+	}
+	
+	//아이디 찾기 조회(인증번호 발송)
+	@Override
+	public int searchId(HashMap<String, String> info) {
+		return memberDao.searchId(sqlSession, info);
+	}
+	//아이디 찾기 진행시 아이디 리스트
+	@Override
+	public Member searchIdMem(HashMap<String, String> info) {
+		return memberDao.searchIdMem(sqlSession, info);
 	}
 
 	@Override
@@ -117,5 +129,4 @@ public class MemberServiceImpl implements MemberService{
 	public ArrayList<Notice> myQnaList(PageInfo pi,String nick) {
 		return memberDao.myQnaList(sqlSession,pi,nick);
 	}
-	
 }

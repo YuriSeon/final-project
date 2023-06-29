@@ -54,6 +54,20 @@
 		AND M.STATUS IN ('Y','A')
 	</select>
 	
+	<!-- 아이디찾기 (인증번호 발송) -->
+	<select id="searchId" resultType="_int">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE USER_NAME = #{emailNm}
+		AND EMAIL = #{email}
+	</select>
+	<select id="searchIdMem" parameterType="member" resultType="member" resultMap="memberResultSet">
+		SELECT USER_ID
+		FROM MEMBER
+		WHERE USER_NAME = #{emailNm}
+		AND EMAIL = #{email}
+	</select>
+	
 	<!-- 프로필용 조회 -->
 	<select id="loginMemberNo" parameterType="member" resultMap="memberResultSet">
 		SELECT *

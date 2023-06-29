@@ -1,6 +1,7 @@
 package com.kh.finalProject.member.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -17,6 +18,15 @@ public class MemberDao {
 	//로그인
 	public Member loginMember(SqlSessionTemplate sqlSession, Member m) {
 		return sqlSession.selectOne("memberMapper.loginMember", m);
+	}
+	
+	//아이디 찾기 조회 (인증번호 발송)
+	public int searchId(SqlSessionTemplate sqlSession, HashMap<String, String> info) {
+		return sqlSession.selectOne("memberMapper.searchId",info);
+	}
+	//아이디 찾기 진행시 아이디 리스트
+	public Member searchIdMem(SqlSessionTemplate sqlSession, HashMap<String, String> info) {
+		return sqlSession.selectOne("memberMapper.searchIdMem", info);
 	}
 
 	//아이디 중복 확인
@@ -91,5 +101,4 @@ public class MemberDao {
 		RowBounds rowBounds = new RowBounds(offset,limit);
 		return (ArrayList)sqlSession.selectList("adminMapper.myQnaList",nick,rowBounds);
 	}
-
 }
