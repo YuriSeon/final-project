@@ -40,7 +40,7 @@
                     </tr>
                     <tr>
                         <th>핵심 소개 문구</th>
-                        <td colspan="3"><input type="text" name="boardContent" id="boardContent1" placeholder="30자까지만 작성해주세요"></td>
+                        <td colspan="3"><input type="text" id="boardContent1" placeholder="30자까지만 작성해주세요"></td>
                     </tr>
                     <tr>
                         <th>상세 설명 문구</th>
@@ -246,36 +246,18 @@
     	    
     	 	/* 게시물 등록전 할 작업 */ 
             function submitForm(){ 
+	            // 사진 경로가 웹주소라면 이미지 url 컨트롤러로 넘겨주기
             	var imageURL = slideIndex;
-//             	var fileName = (imageURL.split("/")).slice(-1); // 경로 마지막 / 뒷부분 파일명 추출
 				for(var i in imageURL){
-	            		alert(imageURL[i]);
-	            	if(imageURL[i].includes("http")){ // 사진 경로가 웹주소라면 이미지 url 컨트롤러로 넘겨주기
-		            	/* // 파일명 랜덤으로 바꿔주기 위한 작업
-		            	var currentTime = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14); 
-		            	var ranNum = Math.floor(Math.random() * 90000) + 10000; 
-		            	var ext = fileName.substring(fileName.lastIndexOf(".")); // 확장자명 추출
-		            	var changeName = currentTime+ranNum+ext;
-		            		imgDownload(imageURL, changeName); */
-		            	$("#insert-form").append(makeTag("input",{"type":"hidden","name":"imageURL","value":imageURL[i]}));
+	            	if(imageURL[i].includes("https:")){ 
+	            		var hidden = makeTag("input",{"type":"hidden","name":"imageURL","value":imageURL[i]});
+		            	$("#insert-form").append(hidden);
 	            	}
-					
 				}
+				// boardConten에 소개문구 더해넣어주기(상세설명||소개문구)
+				var boardContent = $("#boardContent2").text()+'||'+$("boardContent1").val();
+				$("#boardContent2").prop("value", boardContent);
             }
-            /* // 사진경로가 url이면 다운받아주는 함수 
-            function imgDownload(imageURL, fileName) {
-            	var img = new Image();
-	            	img.crossOrigin = "Anonymous";
-	                img.id = "get";
-	                img.src = imageURL;
-	                document.body.appendChild(img);
-                
-	            var a = document.createElement("a");
-	                a.href = get.src;
-	                a.download = fileName;
-	                a.click();
-	                document.body.removeChild(img);
-          	} */
         </script>
     </body>
 </html>

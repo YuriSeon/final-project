@@ -1,23 +1,25 @@
 package com.kh.finalProject.board.controller;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,19 +44,19 @@ public class AttractionController {
 	
 	// file upload전 changeName생성 
 	public static String getChangeName(String originName) {
-		
+		String changeName = ""; 
 		// 1. 시간형식 문자열로 뽑아내기
 		String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-		
 		// 2. 뒤에 붙은 5자리 랜덤값 뽑아주기
 		int ranNum = (int)(Math.random()*90000+10000); // 5자리 랜덤값
-		
-		// 3. 확장자명 추출하기
-		String ext = originName.substring(originName.lastIndexOf("."));
-		
-		// 4. 추출한 문자열들 다 합쳐서 changeName 만들기
-		String changeName = currentTime+ranNum+ext;
-		
+		if(originName.lastIndexOf(".")!=-1) { // 확장자명이 있다면
+			// 3. 확장자명 추출하기
+			String ext = originName.substring(originName.lastIndexOf("."));
+			// 4. 추출한 문자열들 다 합쳐서 changeName 만들기
+			changeName = currentTime+ranNum+ext;
+		} else {// 확장자명이 없다면
+			changeName = currentTime+ranNum;
+		}
 		return changeName;
 	}
 	
@@ -95,13 +97,18 @@ public class AttractionController {
 	
 	// 디테일뷰 페이지로 이동
 	@GetMapping("detail.attr")
-	public String detailAttr() {
+	public String detailAttr(int boardNo, Model model) {
+		// 게시물 클릭시 조회수 증가
+		int count = atService.increaseCount(boardNo);
+		// 게시물 데이터 조회
+		HashMap<String, Object> dataMap = atService.attrDetail(boardNo);
+		model.addAttribute("dataMap", dataMap);
 		return "board/attraction/attractionDetail";
 	}
 	
 	// 게시물 수정페이지 이동
 	@GetMapping("update.attr")
-	public String updateAttr() {
+	public String updateAttr(int boardNo) {
 		return "board/attraction/attractionUpdate";
 	}
 	
@@ -121,12 +128,15 @@ public class AttractionController {
 	
 	// 게시물 등록 메소드 
 	@PostMapping("insert.attr")
-	public ModelAndView insertAttr(HttpSession session, ModelAndView mv, Info info, int mainImg, ArrayList<MultipartFile> upfile, ArrayList<String> imageURL) {
+	public ModelAndView insertAttr(HttpSession session, ModelAndView mv, Info info, int mainImg, ArrayList<MultipartFile> upfile, 
+									@RequestParam("imageURL") ArrayList<String> imageURL) {
 		String savePath = session.getServletContext().getRealPath("/resources/infoImg");
 		String originName = "";
 		String changeName = "";
+		InputStream inputStream = null;
+		ByteArrayOutputStream outputStream = null;
+		FileOutputStream fileOutputStream = null;
 		ArrayList<Attachment> atArr = new ArrayList<>();
-		System.out.println(imageURL.toString());
 		
 		if(!imageURL.isEmpty()) { // 웹에서 다운받아야한다면
 			for(int i=0; i<imageURL.size(); i++) {
@@ -134,19 +144,36 @@ public class AttractionController {
 				String[] strArr = imageURL.get(i).split("/"); // 기존이름과 확장자명 추출위해 배열 변수처리
 				originName = strArr[strArr.length-1]; // 마지막 인덱스가 파일명
 				changeName = getChangeName(originName);
+				
 				try {
 					URL url = new URL(imageURL.get(i));
-					try (InputStream in = url.openStream();
-							OutputStream out = new FileOutputStream(savePath + changeName)) {
-						byte[] buffer = new byte[1024];
-						int bytesRead;
-						while ((bytesRead = in.read(buffer)) != -1) {
-							out.write(buffer, 0, bytesRead);
-						}
-						out.close();
+					URLConnection conn = url.openConnection();
+					inputStream = conn.getInputStream();
+
+					// 이미지 파일을 바이트 배열로 읽어오기
+					outputStream = new ByteArrayOutputStream();
+					byte[] buffer = new byte[4096];
+					int bytesRead;
+					while ((bytesRead = inputStream.read(buffer)) != -1) {
+					    outputStream.write(buffer, 0, bytesRead);
 					}
+
+					byte[] imageBytes = outputStream.toByteArray();
+
+					// 이미지 파일로 저장하기
+					fileOutputStream = new FileOutputStream(savePath);// 파일 저장 경로 설정
+					fileOutputStream.write(imageBytes);
+					
 				} catch (IOException e) {
 					e.printStackTrace();
+				} finally {
+					try {
+						outputStream.close();
+						inputStream.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				if(i==(mainImg-1)) {
 					at.setFileLevel(1);
@@ -156,9 +183,7 @@ public class AttractionController {
 				at.setOriginName(originName);
 				at.setChangeName(changeName);
 				at.setFilePath(savePath);
-				
 				atArr.add(at);
-				
 			}
 		} else { // 직접 올린 파일이라면
 			for(int i=0; i<upfile.size(); i++) {
@@ -192,14 +217,12 @@ public class AttractionController {
 		} else {
 			mv.addObject("errorMsg", "게시물 등록 실패").setViewName("common/errorPage");
 		}
-		
 		return mv;
 	}
 	
-	
 	// 게시물 내용 수정 요청 페이지로 이동
 	@GetMapping("modify.attr")
-	public String modifyRequestAttr() {
+	public String modifyRequestAttr(int boardNo) {
 		return "board/attraction/attrModifyRequest";
 	}
 }
