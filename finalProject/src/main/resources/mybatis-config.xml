@@ -24,9 +24,4 @@
   		<typeAlias type="com.kh.finalProject.board.model.vo.Theme" alias="theme"/>
   		<typeAlias type="com.kh.finalProject.board.model.vo.choice" alias="choice"/>
   	</typeAliases>
-  	
-  	<mappers>
-  		
-  	</mappers>
-  	
   </configuration>
