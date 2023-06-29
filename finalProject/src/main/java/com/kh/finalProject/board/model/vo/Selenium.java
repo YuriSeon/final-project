@@ -142,7 +142,6 @@ public class Selenium {
 			String imgPath = "";
 			for(int i=0; i<imgEl.size(); i++) {
 				imgPath += imgEl.get(i).getAttribute("src"); // 이미지 경로 변수에 담기
-				System.out.println(imgEl.get(i).getAttribute("src"));
 				if(i != imgEl.size()-1) {
 					imgPath += "|"; // String타입에 담아서 전달하기위해서 구분자 넣음
 				}
@@ -165,7 +164,6 @@ public class Selenium {
 					case "개요": in.setBoardContent(imgPath+"||"+value); break;
 				}
 			}
-			System.out.println(in.getBoardContent());
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("오류로 인해 크롤링실패");

@@ -1,6 +1,7 @@
 package com.kh.finalProject.board.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
@@ -14,5 +15,9 @@ public interface AttractionService {
 	ArrayList<Board> selectBoardList(PageInfo pi);
 
 	int insertAttr(Info info, ArrayList<Attachment> atArr);
+
+	int increaseCount(int boardNo);
+
+	HashMap<String, Object> attrDetail(int boardNo);
 
 }
