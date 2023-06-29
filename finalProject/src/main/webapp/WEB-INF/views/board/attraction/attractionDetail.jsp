@@ -36,7 +36,7 @@
                         <img class="choice" src="resources/images/star-before.png">
                     </span>
                     <!-- 스크립트 부분에서 사용하기위해서 숨겨둠 -->
-                    <input type="hidden" name="boardNo" value="${dataMap.board.boardNo}"> 
+                    <input type="hidden" id="boardNo" name="boardNo" value="${dataMap.board.boardNo}"> 
                 </div>
             </div>
             <hr>
@@ -127,7 +127,7 @@
             <div>
                 <div id="reply-back">
                     <input type="text" id="reply-content" placeholder="지금 보고계신 명소에 대해 댓글을 작성해주세요!">
-                    <button onclick="insertReply();">작성</button>
+                    <button class="insertReply">작성</button>
                 </div>
             </div>
             <div id="content-pack"></div>
@@ -207,10 +207,10 @@
                 iconChange(this);
             });
             // 4. 로그인 확인 후 댓글 비활성화
-            if("${empty loginUser}"){
-                $("#reply-back").children().siblings().attr("disabled", "true"); // 비활성화 시키기
-            	$("#reply-back input").attr("placeholder", "로그인하셔야 댓글작성이 가능합니다.");
-            }
+//             if("${empty loginUser}"){
+//                 $("#reply-back").children().siblings().attr("disabled", "true"); // 비활성화 시키기
+//             	$("#reply-back input").attr("placeholder", "로그인하셔야 댓글작성이 가능합니다.");
+//             }
             // 5. 장소 상세정보 출력
             var list = ['infoAddress','infoTime','infoHomepage','infoCall','parking','infoType','dayOff']; // 출력할 내용 배열에 담기
             	//key로 꺼내 사용할 수 있도록 객체형식으로 변경
@@ -228,7 +228,6 @@
 	            	case 'parking' : label = '주차장'; break;
 	            	case 'dayOff' : label = '휴무일';
             	}
-            	console.log(infoObj[list[i]]);
             	if(infoObj[list[i]]!="null"){ // 정규표현식으로 ""전부 감싸줬기에 이렇게 비교
             		$("#infoDetail").append($("<tr>").append($("<th>").append(label),$("<td>").append(infoObj[list[i]])));
             	}
@@ -313,7 +312,7 @@
             var replyDiv = $("#content-pack"); // 댓글 넣을 영역
             $.ajax({
                 url : "replyList.attr",
-                data : { boardNo : "${board.boardNo}" },
+                data : { boardNo : "${dataMap.board.boardNo}" },
                 success : function(result){
                  /*     <div class="reply">
                             <div class="pro">프로필</div>
@@ -327,7 +326,7 @@
                                     <img class="choice" src="resources/images/bell-before.png">
                                 </span>
                                 <input type="text" id="reReply-content" placeholder="댓글을 작성해주세요!">
-                                <button onclick="reReplyinsert();"></button>
+                                <button onclick="replyinsert();"></button>
                                 <input type="hidden" id="replyNo" value="">
                             </div>
                             대댓글 영역 조건문 걸기 있을때만 생성
@@ -354,8 +353,8 @@
                             good : makeTag("span",{"class":"ico"}).append(makeTag("img",{"class":"good","src":"resources/images/Like-before.png"})),
                             choice : makeTag("span",{"class":"ico"}).append(makeTag("img",{"class":"choice","src":"resources/images/star-before.png"})),
                             reReplyinput : makeTag("intup",{"type":"text","id":"reReply-content","placeholder":"댓글을 작성해주세요!"}),
-                            reReplyBtn : makeTag("button", {"onclick":"reReplyinsert();"}),
-                            replyNo : makeTag("input",{"type":"hidden","class":"replyNo","value":"/*댓글번호넣어주기*/"}),
+                            reReplyBtn : makeTag("button", {"class":"replyinsert"}),
+                            replyNo : makeTag("input",{"type":"hidden", "id":"replyNo","class":"replyNo","value":"/*댓글번호넣어주기*/"}),
                             reReplyNo : makeTag("input",{"type":"hidden","class":"reReplyNo","value":"/*댓글번호넣어주기*/"})
                         }
                         var replyBtn = makeTag("div",{"class":"reply-btn"}).append(r.good, r.choice, r.reReplyinput, r.reReplyBtn, r.replyNo);
@@ -385,19 +384,20 @@
         }
 
         /* 댓글 등록 */
-        function insertReply(){
+        $(".insertReply").on("click",function(){
             $.ajax({
                 url : "insertReply.attr",
                 data : {
-                    content : $("#reply-content"),
-                    replyWriter : "${loginUser.nickName}",
-                    refQno : $("#boardNo")
+                    content : $(this).prev().val(),
+                    replyWriter : "abc"/* "${loginUser.nickName}" */,
+                    refQno : "${dataMap.board.boardNo}",
+	                replyNo : $(this).next().val()
                 },
                 success : function(result){
                     if(result>0){
                         alert("댓글 등록 성공");
-                        selectReplyList(); // 리스트 추가됐으니 다시 조회
-                        $("#reply-content").val() = ""; // 댓글 등록됐으니 비워주기 
+//                         selectReplyList(); // 리스트 추가됐으니 다시 조회
+                        $(this).prev().val() = ""; // 댓글 등록됐으니 비워주기 
                     } else {
                         alert("댓글 등록 실패")
                     }
@@ -406,7 +406,7 @@
                     console.log("등록 실패");
                 }
             });
-        }
+        });
 
          /* 좋아요 찜 버튼 클릭 이벤트 */
          $(".ico").click(function(){

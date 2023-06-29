@@ -39,4 +39,12 @@
   		FROM ATTACHMENT
   		WHERE BOARD_NO = #{boardNo}
   	</select>
+  	<insert id="insertReplyList">
+  		INSERT INTO REPLY (REPLY_NO, CONTENT, REPLY_WRITER, REF_QNO)
+  					VALUES(SEQ_RNO.NEXTVAL, #{content}, #{replyWriter}, #{refQno})
+  	</insert>
+  	<insert id="insertRereplyList">
+  		INSERT INTO REREPLY (REF_RNO, CONTENT, REPLY_WRITER, REF_QNO,REPLY_NO)
+  					  VALUES(SEQ_RRO.NEXTVAL, #{content}, #{replyWriter}, #{refQno}, #{replyNo})
+  	</insert>
   </mapper>

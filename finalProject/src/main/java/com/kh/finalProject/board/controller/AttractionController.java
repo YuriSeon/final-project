@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,7 @@ import com.google.gson.Gson;
 import com.kh.finalProject.board.model.service.AttractionService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.board.model.vo.Selenium;
 
 @Controller
@@ -231,5 +233,11 @@ public class AttractionController {
 	@GetMapping("modify.attr")
 	public String modifyRequestAttr(int boardNo) {
 		return "board/attraction/attrModifyRequest";
+	}
+	
+	@ResponseBody
+	@PostMapping(value="insertReply.attr", produces ="application/json; charset=UTF-8")
+	public int insertReply(Rereply r){
+		return atService.insertReply(r);
 	}
 }

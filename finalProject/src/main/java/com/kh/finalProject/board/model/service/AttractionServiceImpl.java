@@ -12,6 +12,7 @@ import com.kh.finalProject.board.model.dao.AttractionDao;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Service
@@ -58,14 +59,29 @@ public class AttractionServiceImpl implements AttractionService {
 	// 디테일뷰 페이지
 	@Override
 	public HashMap<String, Object> attrDetail(int boardNo) {
-		HashMap<String, Object> dataMap = new HashMap<String, Object>(); // 조회해온 값 담을 map
+		HashMap<String, Object> dataMap = new HashMap<>(); // 조회해온 값 담을 map
 		// board 조회
 		dataMap.put("board", atDao.selectBoard(sqlSession, boardNo));
 		// info 조회
 		dataMap.put("info", atDao.selectInfo(sqlSession, boardNo));
 		// attachment 조회
 		dataMap.put("at", atDao.selectAttachment(sqlSession, boardNo));
+		
 		return dataMap;
+	}
+
+	// 댓글 등록
+	@Override
+	public int insertReply(Rereply r) {
+		int result = 0;
+		if(r.getReplyNo()==0) { // 참조게시글 번호가 없다면 댓글
+			// reply 조회
+			result = atDao.insertReplyList(sqlSession, r);
+		} else {
+			// reReply 조회
+			result = atDao.insertRereplyList(sqlSession, r);
+		}
+		return result;
 	}
 
 }
