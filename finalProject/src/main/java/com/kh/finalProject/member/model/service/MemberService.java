@@ -1,6 +1,7 @@
 package com.kh.finalProject.member.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.board.model.vo.Attachment;
@@ -16,6 +17,11 @@ public interface MemberService {
 	
 	//로그인
 	Member loginMember(Member m);
+	
+	//아이디 찾기 조회(인증번호 발송)
+	int searchId(HashMap<String, String> info);
+	//아이디 찾기 진행시 아이디 리스트
+	Member searchIdMem(HashMap<String, String> info);
 		
 	//설문 결과 업데이트
 	int updateSurvey(Member m);
