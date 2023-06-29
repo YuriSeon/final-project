@@ -9,6 +9,7 @@
 .attracDetail, .attrInsert {
 	width: 75%;
 	margin: auto;
+	min-height: 450px;
 }
 
 .attracDetail * {
@@ -485,6 +486,9 @@
 	height: 300px;
 	position: relative;
 }
+.attrInsert table #img-area *{
+	border : none;
+}
 .attrInsert #wrapSlide {
 	width: 100%;
 	height: 100%;
@@ -498,12 +502,8 @@
 .attrInsert #slideArea {
 	width: 60%;
 	height: 100%;
+	text-align: center;
 }
-/* 
-.attrInsert #slideImage{
-	width: 100%;
-	height: 100%;
-} */
 
 .attrInsert #slideImage{
 	width: auto;
@@ -525,15 +525,17 @@
 	opacity: 0.3;
 	width: 60%;
 	height: auto;
-	margin-top: 65%;
+	margin-top: 50%;
 	opacity: calc(0.1);
 	cursor: pointer;
+	margin-left: 25%;
 }
 
 .attrInsert #dotArea {
 	position: relative;
-	margin-top: 5px;
+	margin-top: 1px;
 	height: 5%;
+	text-align: center;
 }
 
 .attrInsert #dotArea * {
@@ -692,6 +694,7 @@
 .modifyRequest {
 	width: 75%;
 	margin: auto;
+	min-height: 450px;
 }
 
 .modifyRequest * {

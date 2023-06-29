@@ -10,6 +10,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.servlet.http.HttpSession;
@@ -39,7 +41,7 @@ public class AttractionController {
 	private AttractionService atService;
 	
 	// file upload전 changeName생성 
-	public static String changeName(String originName) {
+	public static String getChangeName(String originName) {
 		
 		// 1. 시간형식 문자열로 뽑아내기
 		String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -55,6 +57,7 @@ public class AttractionController {
 		
 		return changeName;
 	}
+	
 	@ResponseBody
 	@GetMapping(value="searchKeyword1", produces = "application/json; charset=UTF-8")
 	public String ListSelectApi(@RequestParam(value="currentPage", defaultValue ="1") int currentPage,
@@ -116,49 +119,79 @@ public class AttractionController {
 		return new Gson().toJson(info);
 	}
 	
+	// 게시물 등록 메소드 
 	@PostMapping("insert.attr")
-	public ModelAndView insertAttr(HttpSession session, ModelAndView mv, Attachment at, Info info, MultipartFile upfile, String imageURL) {
-		// 다수인지 확인하고 수정하기
+	public ModelAndView insertAttr(HttpSession session, ModelAndView mv, Info info, int mainImg, ArrayList<MultipartFile> upfile, ArrayList<String> imageURL) {
 		String savePath = session.getServletContext().getRealPath("/resources/infoImg");
 		String originName = "";
 		String changeName = "";
-		if(imageURL != null) { // 웹에서 다운받아야한다면
-			String[] strArr = imageURL.split("/"); // 기존이름과 확장자명 추출위해 배열 변수처리
-			originName = strArr[strArr.length-1]; // 마지막 인덱스가 파일명
-			changeName = changeName(originName);
-			try {
-				URL url = new URL(imageURL);
-				try (InputStream in = url.openStream();
-		                 OutputStream out = new FileOutputStream(savePath + changeName)) {
-		                byte[] buffer = new byte[1024];
-		                int bytesRead;
-		                while ((bytesRead = in.read(buffer)) != -1) {
-		                    out.write(buffer, 0, bytesRead);
-		                }
-		                out.close();
-		            }
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        }
-			
-		} else if(!upfile.getOriginalFilename().equals("")) { // 직접 올린 파일이라면
-			originName = upfile.getOriginalFilename();
-			changeName = changeName(originName);
-			
-			// 경로와 수정파일명을 합쳐 파일 업로드
-			try {
-				upfile.transferTo(new File(savePath+changeName)); //파일 업로드 구문
+		ArrayList<Attachment> atArr = new ArrayList<>();
+		System.out.println(imageURL.toString());
+		
+		if(!imageURL.isEmpty()) { // 웹에서 다운받아야한다면
+			for(int i=0; i<imageURL.size(); i++) {
+				Attachment at = new Attachment();
+				String[] strArr = imageURL.get(i).split("/"); // 기존이름과 확장자명 추출위해 배열 변수처리
+				originName = strArr[strArr.length-1]; // 마지막 인덱스가 파일명
+				changeName = getChangeName(originName);
+				try {
+					URL url = new URL(imageURL.get(i));
+					try (InputStream in = url.openStream();
+							OutputStream out = new FileOutputStream(savePath + changeName)) {
+						byte[] buffer = new byte[1024];
+						int bytesRead;
+						while ((bytesRead = in.read(buffer)) != -1) {
+							out.write(buffer, 0, bytesRead);
+						}
+						out.close();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				if(i==(mainImg-1)) {
+					at.setFileLevel(1);
+				} else {
+					at.setFileLevel(2);
+				}
+				at.setOriginName(originName);
+				at.setChangeName(changeName);
+				at.setFilePath(savePath);
 				
-			} catch (IllegalStateException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				atArr.add(at);
+				
+			}
+		} else { // 직접 올린 파일이라면
+			for(int i=0; i<upfile.size(); i++) {
+				Attachment at = new Attachment();
+				originName = upfile.get(i).getOriginalFilename();
+				if(!originName.equals("")) { 
+					changeName = getChangeName(originName);
+					// 경로와 수정파일명을 합쳐 파일 업로드
+					try {
+						upfile.get(i).transferTo(new File(savePath+changeName)); //파일 업로드 구문
+					} catch (IllegalStateException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				if(i==(mainImg-1)) {
+					at.setFileLevel(1);
+				} else {
+					at.setFileLevel(2);
+				}
+				at.setOriginName(originName);
+				at.setChangeName(changeName);
+				at.setFilePath(savePath);
+				atArr.add(at);
 			}
 		}
-		at.setOriginName(originName);
-		at.setChangeName(changeName);
-		at.setFilePath(savePath);
-		
-		// controller로 넘기는거 작성하기
+		int result = atService.insertAttr(info, atArr);
+		if(result==(atArr.size()+1)) { // 파일개수 + 데이터삽입수의 합
+			session.setAttribute("alertMsg", "게시물등록 성공");
+			mv.setViewName("redirect:attraction.bo");
+		} else {
+			mv.addObject("errorMsg", "게시물 등록 실패").setViewName("common/errorPage");
+		}
 		
 		return mv;
 	}
