@@ -45,11 +45,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+import com.kh.finalProject.admin.model.service.AdminService;
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.board.model.service.FeedService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
 import com.kh.finalProject.member.model.service.MemberService;
@@ -63,6 +65,9 @@ public class MemberController {
 	
 	@Autowired
 	public FeedService feedService;
+	
+	@Autowired
+	public AdminService adminService;
 	
 	@Autowired
 	private ServletContext ServletContext;
@@ -350,6 +355,27 @@ public class MemberController {
 		return mv;
 	}
 	
+	//마이페이지 찜 목록 삭제
+	@ResponseBody
+	@RequestMapping(value = "choiceDelete.me", method = RequestMethod.POST)
+	public String choiceDelete(@RequestParam("boardNo") int boardNo
+												       ,HttpSession session) {
+
+		String writer = ((Member)session.getAttribute("loginUser")).getNickname();
+		choice c = choice.builder().boardNo(boardNo).writer(writer).build();
+		
+		int result = memberService.choiceDelete(c);
+		String resultString = "";
+		if (result>0) {
+			session.setAttribute("alertMsg", "찜 목록 삭제 성공");
+			resultString = "success";
+		}else {
+			resultString = "fail";
+		}
+
+		return resultString;
+	}
+	
 	//마이페이지 수정요청 이동
 	@RequestMapping("myRequest.me")
 	public ModelAndView goMyRequest(@RequestParam(value="currentPage", defaultValue="1") int currentPage
@@ -378,6 +404,27 @@ public class MemberController {
 		mv.addObject("q",qnaCount);
 		mv.setViewName("member/myPage/mypageRequest");
 		
+		return mv;
+	}
+	
+	//마이페이지 수정요청 등록 이동
+	@RequestMapping("myRequestEnroll.me")
+	public ModelAndView goMyRequestEnroll(ModelAndView mv
+	  								 	 ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageRequestEnroll");
 		return mv;
 	}
 	
@@ -414,8 +461,23 @@ public class MemberController {
 	
 	//마이페이지 Q&A 질문등록 이동
 	@RequestMapping("myQnaEnroll.me")
-	public String goMyQnaEnroll() {
-		return "member/myPage/mypageQnaEnroll";
+	public ModelAndView goMyQnaEnroll(ModelAndView mv
+	  								 ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageQnaEnroll");
+		return mv;
 	}
 	
 	//마이페이지 Q&A 질문 등록
@@ -434,8 +496,6 @@ public class MemberController {
 			model.addAttribute("errorMsg","질문 등록 실패");
 			return "common/errorPage";
 		}
-		
-		
 	}
 	
 	//마이페이지 Q&A 질문 파일 등록
@@ -464,6 +524,51 @@ public class MemberController {
 		
 		return (result>0)?"1":"0";
 	}
+	
+	//마이페이지 Q&A 수정 이동
+	@RequestMapping("goServiceUpdate.me")
+	public ModelAndView goServiceUpdate(@RequestParam(value="serviceNo") int serviceNo
+																	    ,ModelAndView mv
+																	    ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Notice n  = memberService.selectQna(serviceNo);
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.addObject("n", n);
+		mv.addObject("a", a).setViewName("member/myPage/mypageQnaUpdate");
+		return mv;
+	}
+	
+	//마이페이지 Q&A 수정
+	@ResponseBody
+	@RequestMapping("myQnaUpdate.me")
+	public ModelAndView myQnaUpdate(Notice n
+								   ,ModelAndView mv
+								   ,HttpSession session) {
+		
+		int result = memberService.myQnaUpdate(n);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","질문 수정 완료");
+			mv.setViewName("member/myPage/mypageQna");
+		}else {
+			mv.addObject("errorMsg","질문 수정 실패").setViewName("common/errorPage");
+		}
+		
+		return mv;
+	}
+	
 
 	//프로필 사진 업데이트
 	@PostMapping("/updateImg.me")

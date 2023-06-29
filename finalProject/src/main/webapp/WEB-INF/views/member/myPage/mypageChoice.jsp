@@ -100,8 +100,8 @@
 										<c:if test="${c.category==6}">[일정자랑]</c:if>
 										${c.boardTitle}
 									</a>
-									<p>서울 강남구</p>
-									<p class="tag"><span>#구룡산</span><span>#대모산</span><span>#레포츠</span><span>#서울트래킹</span><span>#시민의숲</span><span>#트래킹</span></p>
+									<p>서울 강남구(예시)</p>
+									<p class="tag"><span>#구룡산</span><span>#대모산</span><span>#레포츠</span><span>#서울트래킹</span><span>#시민의숲</span><span>#트래킹</span>(예시)</p>
 								</div>
 								<button type="button" title="내용 더보기" class="btn_view">더보기</button>
 								<div class="cho_subMenu">
@@ -196,7 +196,7 @@
 			$(".btn_view").click(function() {
 				var targetDiv = $(this).next("div");
 				
-				$(".wri_subMenu").not(targetDiv).css("display","none");
+				$(".cho_subMenu").not(targetDiv).css("display","none");
 				
 				if (targetDiv.css("display") === "block") {
 					targetDiv.css("display","none");
@@ -206,7 +206,32 @@
 			});
 		});
     	
-    	
+    	//찜 목록 삭제
+        $(function () {
+    		$(".list_thumType>li>.area_txt>.cho_subMenu>ul>li").click(function () {
+    			var $select = $(this); 
+    			var bno = $(this).closest(".bdr_nor").find(".board-no").val();
+    			
+   				$.ajax({
+		            url: "choiceDelete.me",
+		            type: "POST",
+		            data: {
+		                boardNo: bno
+		            },
+		            success: function(result) {
+		            	if (result == "success") {
+		            		$select.parents("li").remove();
+		            		location.reload();
+						}else{
+							alertify.message("찜 목록 삭제 실패");
+						}
+		            },
+		            error: function() {
+		                console.log("error");
+		            }
+		        });	
+    		});
+    	});
     </script>
     
     <%@include file="../../common/footer.jsp" %>

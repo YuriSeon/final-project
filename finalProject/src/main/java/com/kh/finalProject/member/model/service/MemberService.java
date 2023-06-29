@@ -6,6 +6,7 @@ import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.vo.Member;
 
@@ -94,4 +95,13 @@ public interface MemberService {
 
 	//마이페이지 댓글 삭제
 	int replyDelete(int replyNo);
+
+	//마이페이지 찜 목록 삭제
+	int choiceDelete(choice c);
+
+	//마이페이지 Q&A 수정 조회
+	Notice selectQna(int serviceNo);
+
+	//마이페이지 Q&A 수정
+	int myQnaUpdate(Notice n);
 }

@@ -130,13 +130,28 @@
 		            <div class="page_box">
 			            <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
 			            	<c:choose>
-				            	<c:when test="${p eq pi.currentPage}">
-	                   				<a class="off" title="선택됨" href="myWriting.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
-		                		</c:when>
-		                		<c:otherwise>
-		                			<a class="on" title="선택됨" href="myWriting.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
-		                		</c:otherwise>
-	                		</c:choose>
+			            		<c:when test="${category != null}">
+			            			<c:choose>
+						            	<c:when test="${p eq pi.currentPage}">
+			                   				<a class="off" title="선택됨" href="selectBoard.me?currentPage=${p}&category=${category}" id="1">${p}<span class="blind">현재 위치</span></a>
+				                		</c:when>
+				                		<c:otherwise>
+				                			<a class="on" title="선택됨" href="selectBoard.me?currentPage=${p}&category=${category}" id="1">${p}<span class="blind">현재 위치</span></a>
+				                		</c:otherwise>
+			                		</c:choose>
+			            		</c:when>
+			            		<c:otherwise>
+			            			<c:choose>
+						            	<c:when test="${p eq pi.currentPage}">
+			                   				<a class="off" title="선택됨" href="myWriting.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
+				                		</c:when>
+				                		<c:otherwise>
+				                			<a class="on" title="선택됨" href="myWriting.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
+				                		</c:otherwise>
+			                		</c:choose>
+			            		</c:otherwise>
+			            	</c:choose>
+					            	
         		        </c:forEach>
 		            </div>
 	            <!-- //paging -->

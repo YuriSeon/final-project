@@ -968,6 +968,14 @@
 		ORDER BY SERVICE_NO
 	</select>
   	
+  	<!-- 마이페이지 Q&A 수정 조회 -->
+  	<select id="selectQna" resultMap="serviceResultSet">
+		SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+		FROM SERVICE
+		WHERE SERVICE_NO = #{serviceNo}
+		AND STATUS = 'Y'
+  	</select>
+  	
   	<!-- Q&A 답변 조회 -->
   	<select id="qnaReplyList" resultMap="replyResultSet">
   		SELECT REPLY_NO,CONTENT,TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE,REPLY_WRITER,REF_QNO,REF_RNO,STATUS

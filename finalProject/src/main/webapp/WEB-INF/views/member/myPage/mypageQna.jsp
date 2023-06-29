@@ -80,6 +80,7 @@
 <!-- 					</li> -->
 					<c:forEach var="qna" items="${list}">
                     		<li class="bdr_nor">
+                    			<input type="text" value="${qna.serviceNo}" class="serviceNo" hidden>
 								<div class="area_txt">
 									<strong class="tit on">
 										<a href="#">${qna.serviceTitle}</a>
@@ -103,11 +104,11 @@
 								<button type="button" title="열기" class="btn_view">더보기</button>
 								<div class="qna_subMenu" tabindex="0">
 									<ul>
-										<li class="btn_mod" id="" statusid="0">
-											<a href="javascript:">수정</a>
+										<li class="btn_mod">
+											<a href="javascript:void(0)">수정</a>
 										</li>
-										<li class="btn_del" id="" statusid="0">
-											<a href="javascript:">삭제</a>
+										<li class="btn_del">
+											<a href="javascript:void(0)">삭제</a>
 										</li>
 									</ul>
 								</div>
@@ -196,7 +197,7 @@
 			$(".btn_view").click(function() {
 				var targetDiv = $(this).next("div");
 				
-				$(".wri_subMenu").not(targetDiv).css("display","none");
+				$(".qna_subMenu").not(targetDiv).css("display","none");
 				
 				if (targetDiv.css("display") === "block") {
 					targetDiv.css("display","none");
@@ -206,6 +207,13 @@
 			});
 		});
     	
+    	//질문 수정 페이지 이동
+        $(function () {
+    		$(".list_board1>li>.qna_subMenu>ul>.btn_mod").click(function () {
+    			var sno = $(this).parents("li").find(".serviceNo").val();
+    			location.href = 'goServiceUpdate.me?serviceNo='+sno;
+    		});
+    	});
     </script>
     
     <%@include file="../../common/footer.jsp" %>

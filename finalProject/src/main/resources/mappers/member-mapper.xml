@@ -266,6 +266,13 @@
 		AND FILE_LEVEL = 1
   	</select>
 	
+	<!-- 마이페이지 찜 목록 삭제 -->
+  	<delete id="choiceDelete">
+		DELETE FROM CHOICE
+		WHERE BOARD_NO = #{boardNo}
+		AND WRITER = #{writer}
+	</delete>
+	
 	<!-- 마이페이지 Q&A 질문 등록 -->
 	<insert id="myQnaInsert">
 	  	INSERT INTO SERVICE(SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,WRITER)
@@ -278,5 +285,12 @@
 	  	VALUES(SEQ_FNO.NEXTVAL,SEQ_BNO.CURRVAL,#{originName},#{changeName},#{filePath},2)
   	</insert>
   	
-	
+  	<!-- 마이페이지 Q&A 수정 -->
+	<update id="myQnaUpdate">
+	  	UPDATE SERVICE
+	  	SET SERVICE_TITLE = #{serviceTitle}
+	  	   ,SERVICE_CONTENT = #{serviceContent}
+	  	WHERE SERVICE_NO = #{serviceNo}
+  	</update>
+  	
 </mapper>

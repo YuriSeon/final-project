@@ -13,6 +13,7 @@ import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.dao.MemberDao;
 import com.kh.finalProject.member.model.vo.Member;
@@ -209,6 +210,24 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public int replyDelete(int replyNo) {
 		return memberDao.replyDelete(sqlSession,replyNo);
+	}
+
+	//마이페이지 찜 목록 삭제
+	@Override
+	public int choiceDelete(choice c) {
+		return memberDao.choiceDelete(sqlSession,c);
+	}
+
+	//마이페이지 Q&A 수정 조회
+	@Override
+	public Notice selectQna(int serviceNo) {
+		return memberDao.selectQna(sqlSession,serviceNo);
+	}
+
+	//마이페이지 Q&A 수정
+	@Override
+	public int myQnaUpdate(Notice n) {
+		return memberDao.myQnaUpdate(sqlSession,n);
 	}
 	
 }

@@ -36,7 +36,7 @@
 				<span class="name5"><a href="mypage.me"><span class="ico">My</span>마이페이지</a></span>
 	        </div>
 	        <h2>관광정보 수정/신규 요청</h2>
-	        <a href="myQnaEnroll.me" class="btn_apply btn_greyS">요청등록</a>
+	        <a href="myRequestEnroll.me" class="btn_apply btn_greyS">요청등록</a>
 	    </div>
 	
 	    <div class="wrap_contView clfix">

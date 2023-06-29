@@ -10,6 +10,7 @@ import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.vo.Member;
 
@@ -188,6 +189,21 @@ public class MemberDao {
 	//마이페이지 댓글 삭제
 	public int replyDelete(SqlSessionTemplate sqlSession, int replyNo) {
 		return sqlSession.update("memberMapper.replyDelete",replyNo);
+	}
+
+	//마이페이지 찜 목록 삭제
+	public int choiceDelete(SqlSessionTemplate sqlSession, choice c) {
+		return sqlSession.delete("memberMapper.choiceDelete",c);
+	}
+
+	//마이페이지 Q&A 수정 조회
+	public Notice selectQna(SqlSessionTemplate sqlSession, int serviceNo) {
+		return sqlSession.selectOne("adminMapper.selectQna",serviceNo);
+	}
+
+	//마이페이지 Q&A 수정
+	public int myQnaUpdate(SqlSessionTemplate sqlSession, Notice n) {
+		return sqlSession.update("memberMapper.myQnaUpdate",n);
 	}
 
 }
