@@ -256,7 +256,7 @@
 				}
 				// boardConten에 소개문구 더해넣어주기(상세설명||소개문구)
 				var boardContent = $("#boardContent2").text()+'||'+$("boardContent1").val();
-				$("#boardContent2").prop("value", boardContent);
+				$("#boardContent2").attr("value", boardContent);
             }
         </script>
     </body>
