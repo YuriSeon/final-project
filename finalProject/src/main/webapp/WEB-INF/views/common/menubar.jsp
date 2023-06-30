@@ -294,7 +294,7 @@
 	          <!-- Modal footer -->
 	          <div class="modal-footer">
 	            <a href="searchIdForm.me">아이디 찾기</a> |
-	            <a href="searchPwd.me">비밀번호 찾기</a> |
+	            <a href="searchPwdForm.me">비밀번호 찾기</a> |
 	            <a href="enrollListForm.me">회원가입</a>
 	          </div>
 	  

@@ -22,6 +22,11 @@ public interface MemberService {
 	int searchId(HashMap<String, String> info);
 	//아이디 찾기 진행시 아이디 리스트
 	Member searchIdMem(HashMap<String, String> info);
+	
+	//비밀번호 찾기 조회(인증번호 발송)
+	int searchPwd(HashMap<String, String> info);
+	//비밀번호 재설정
+	int pwdRe(HashMap<String, String> info);
 		
 	//설문 결과 업데이트
 	int updateSurvey(Member m);
