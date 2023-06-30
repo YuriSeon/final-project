@@ -96,7 +96,7 @@
 	                            			네이버인증
 	                            		</c:when>
 	                            		<c:otherwise>
-	                            			미인증
+	                            			비인증
 	                            		</c:otherwise>
 	                            	</c:choose>
 	       	                    </td>

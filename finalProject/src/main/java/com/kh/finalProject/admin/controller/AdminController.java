@@ -558,6 +558,15 @@ public class AdminController {
 		return mv;
 	}
 	
+	//게시글 피드 사진 출력
+	@ResponseBody
+	@RequestMapping(value = "feedSelectFile.ad",produces = "application/json; charset=UTF-8")
+	public String feedSelectFile(int boardNo) {
+		
+		ArrayList<Attachment> list = adminService.feedSelectFile(boardNo);
+		return new Gson().toJson(list);
+	}
+	
 //==================================================게시판관리-일정자랑===========================================================
 	
 	//일정자랑 페이지로 이동

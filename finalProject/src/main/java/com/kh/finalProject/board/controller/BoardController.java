@@ -160,9 +160,27 @@ public class BoardController {
 																,HttpServletRequest request) throws UnsupportedEncodingException {
 		
 		Cookie cookie = null;
-
-		if(getCookie(request) != null && getCookie(request).equals("null") && mbtiCheck != null) {
-//			System.out.println("check");
+		
+		String loginMbti = null;
+		
+		if(request.getSession().getAttribute("loginUser") != null) {
+			loginMbti = ((Member)(request.getSession().getAttribute("loginUser"))).getSurvey().split(" ")[0];
+		}
+		
+		if(getCookie(request) != null && !getCookie(request).equals("null") && !getCookie(request).split("\\+")[1].equals(loginMbti) && mbtiCheck != null) {
+			System.out.println("check");
+			mbtiCheck = URLEncoder.encode(mbtiCheck, "UTF-8");
+			cookie = new Cookie("mbtiCheck",mbtiCheck);
+			cookie.setMaxAge(60*60*24*3);
+			response.addCookie(cookie);
+		}else if(getCookie(request) != null && getCookie(request).equals("null")) {
+			System.out.println("check2");
+			mbtiCheck = URLEncoder.encode(mbtiCheck, "UTF-8");
+			cookie = new Cookie("mbtiCheck",mbtiCheck);
+			cookie.setMaxAge(60*60*24*3);
+			response.addCookie(cookie);
+		}else if(getCookie(request) == null ) {
+			System.out.println("check3");
 			mbtiCheck = URLEncoder.encode(mbtiCheck, "UTF-8");
 			cookie = new Cookie("mbtiCheck",mbtiCheck);
 			cookie.setMaxAge(60*60*24*3);
@@ -184,8 +202,6 @@ public class BoardController {
 		mv.addObject("pi",pi);
 		
 		mv.setViewName("board/together/together");
-		
-//		System.out.println(getCookie(request));
 		
 		return mv;
 	}

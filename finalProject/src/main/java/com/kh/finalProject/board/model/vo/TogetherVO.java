@@ -27,5 +27,6 @@ public class TogetherVO {
 	private String profilePath;
 	private String createDate;
 	private String survey;
+	private int certification;
 	
 }

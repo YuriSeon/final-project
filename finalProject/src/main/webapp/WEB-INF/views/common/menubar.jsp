@@ -179,6 +179,13 @@
 		</script>
 		<c:remove var="alertMsg" scope="session"/>
 	</c:if>
+	<c:if test="${not empty alertMsg2 }">
+		<script>
+			alertMessage = "${alertMsg2}";
+			alert(alertMessage.replace(/<br>/g,'\n'));
+		</script>
+		<c:remove var="alertMsg2" scope="session"/>
+	</c:if>
 
    <div class="pre-header">
         <div class="container">
@@ -257,15 +264,19 @@
         </div>
         
         <script>
+        		
+        			
+        		
         		function mbtiQuestion(){
         			
         			var survey = "${loginUser.survey}";
         			var nickname = "${loginUser.nickname}";
 
         			var mbtiCheck = decodeURI("${cookie.mbtiCheck.value}");
-        			console.log(mbtiCheck);
+        			var cookieNickname = mbtiCheck.split("+")[0];
         			
 								<%if (request.getSession().getAttribute("loginUser") != null) {%>
+								if(nickname == cookieNickname){
 									if (mbtiCheck == "null") {
 											if (confirm("회원님의 여행 취향과 맞는 일정을 추천 받으시겠습니까 ?")) {
 												if (survey == "") {
@@ -280,10 +291,24 @@
 										} else {
 											location.href = "together.bo?currentPage=1";
 										}
+								}else{
+									if (confirm("회원님의 여행 취향과 맞는 일정을 추천 받으시겠습니까 ?")) {
+										if (survey == "") {
+											alert("여행 취향 추천을 위해 설문 페이지로 이동합니다.");
+											location.href = "survey.me";
+										} else {
+											location.href = "together.bo?currentPage=1&mbtiCheck="+ nickname+ " "+ survey;
+										}
+									} else {
+										location.href = "together.bo?currentPage=1";
+									}								
+								}
 								<%} else {%>
 									location.href = "together.bo?currentPage=1";
 								<%}%>
+								
 									}
+        	
 								</script>
         
     </header>

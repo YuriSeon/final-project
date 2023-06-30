@@ -964,6 +964,7 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		console.log('${naverInfo.certification}');
 		console.log('${kakaoInfo.certification}');
 		console.log($("#certification").val());
+		
 		//카카오 회원번호 넘어오면 정보 담아주기
 		if('${kakaoInfo.certification}'!=""){
 			$("#kakaoId").val('${kakaoInfo.id}');

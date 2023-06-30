@@ -173,6 +173,7 @@
 	<%@include file="../../common/menubar.jsp" %>
     <!-- ***** Header Area End ***** -->
 	<script>
+
 		$(function(){
 			$(".nav>li>a").each(function(){
 				if($(this).text() == $("title").eq(0).text()){
@@ -247,40 +248,53 @@
 							
 							<c:if test="${not empty loginUser and cookie.mbtiCheck != null }">
 								<script>
-								$(function(){
-									$("#mbtiCheckBox").attr("checked",true);
-									$("#mbtiCheckBox").css("display","inline-block");
-									$("#mbtiCheckBoxLabel").css("display","inline-block");
-									
-									$("#mbtiCheckBox").on("change",function(){
-										if($(this).prop("checked")){
-											$("#mbtiRecommend").css("display","block");
-										}else{
-											$("#mbtiRecommend").css("display","none");
-										}
-									});
-									
-								});
 								
 								$(function(){
-									
 										var mbtiCheck = decodeURI("${cookie.mbtiCheck.value}");
 										var nickname = mbtiCheck.split("+")[0];
 										var plusMbti = mbtiCheck.split("+")[2];
 										var minusMbti = mbtiCheck.split("+")[3];
 										
+							
 										$("input[name=survey]").each(function(){
+										
 												var boardMbti = $(this).val().split(" ")[0];
 												
 												if(boardMbti == plusMbti){
-													$("#mbtiRecommend").css("background-color","lightgreen").html("회원님과 잘 맞을 것 같아요!").css("color","white").css("display","block");
+													$(this).siblings().eq(1).children().children().eq(0).css("background-color","lightgreen").html("회원님과 잘 맞을 것 같아요!").css("color","white").css("display","block");
 												}
 												
 												if(boardMbti == minusMbti){
-													$("#mbtiRecommend").css("background-color","yellow").html("잘 안맞을 수도 있어요..").css("color","gray").css("display","block");	
+													$(this).siblings().eq(1).children().children().eq(0).css("background-color","yellow").html("잘 안맞을 수도 있어요..").css("color","gray").css("display","block");	
 												}
 										});
-								})
+										$("#mbtiCheckBox").attr("checked",true);
+										$("#mbtiCheckBox").css("display","inline-block");
+										$("#mbtiCheckBoxLabel").css("display","inline-block");
+										
+										$("#mbtiCheckBox").on("change",function(){
+											if($(this).prop("checked")){
+												$("#mbtiRecommend").css("display","block");
+											}else{
+												$("#mbtiRecommend").css("display","none");
+											}
+										});
+								});
+								
+// 								$(function(){
+// 									$("#mbtiCheckBox").attr("checked",true);
+// 									$("#mbtiCheckBox").css("display","inline-block");
+// 									$("#mbtiCheckBoxLabel").css("display","inline-block");
+									
+// 									$("#mbtiCheckBox").on("change",function(){
+// 										if($(this).prop("checked")){
+// 											$("#mbtiRecommend").css("display","block");
+// 										}else{
+// 											$("#mbtiRecommend").css("display","none");
+// 										}
+// 									});
+									
+// 								});
 									
 								</script>
 							</c:if>
@@ -357,8 +371,11 @@
 									                            			<%if(request.getSession().getAttribute("loginUser") != null){%>
 									                            				if("${loginUser.nickname}" == result[0][i].boardWriter){
 																						str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>내가 작성한 글입니다.</button>";								                            					
+									                            				}else if("${loginUser.certification}" != 0){
+												                            		    str += "<button type='button' class='togetherBtn' data-toggle='modal' data-target='#applyModal'>참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>";
 									                            				}else{
-												                            		    str += "<button type='button' class='togetherBtn' data-toggle="modal" data-target="#applyModal">참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>";
+									                            					str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>";
+													                           		+"<p>참여하려면 본인 인증을 해주세요.</p>";
 									                            				}
 												                           <%}else{%>
 																				  str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>";
@@ -409,8 +426,8 @@
                 <c:choose>
                 	<c:when test="${not empty list }">
 			                <c:forEach var="i" items="${list }">
-			                	<fmt:parseDate value="${i.endDate }" pattern="yy/MM/dd" var="end" scope="request"/>
-			                	<fmt:parseNumber value="${end.time / (1000*60*60*24)}" integerOnly="true" var="endDate" scope="request"/>
+			                	<fmt:parseDate value="${i.startDate }" pattern="yy/MM/dd" var="start" scope="request"/>
+			                	<fmt:parseNumber value="${start.time / (1000*60*60*24)}" integerOnly="true" var="startDate" scope="request"/>
 					                <div class="col-lg-4" onclick="goTogetherDetail(${i.boardNo});">
 					                <input type="hidden" name="boardNo"  class="togetherBoardNo" value="${i.boardNo }">
 					                <input type="hidden" name="survey"  class="survey" value="${i.survey }">
@@ -438,12 +455,16 @@
 					                            </ul>
 					                            <div class="main-dark-button" id="applyBtn">
 					                            <c:choose> 
-					                            <c:when test="${endDate-today >0 and i.together - i.togetherCount != 0}">
+					                            <c:when test="${startDate-today >0 and i.together - i.togetherCount != 0}">
 					                            		<c:choose>
 					                            			<c:when test="${not empty loginUser }">
 					                            				<c:choose>
 					                            						<c:when test="${i.boardWriter == loginUser.nickname }">
 					                            								<button type="button" class="togetherBtn" style="background-color:lightgray;">내가 작성한 글입니다.</button>
+					                            						</c:when>
+					                            						<c:when test="${loginUser.certification eq 0 }">
+					                            								<button type="button" class="togetherBtn" style="background-color:lightgray;">참여하기 ${i.togetherCount}/${i.together }</button>
+					                            				    			<p>참여하려면 본인 인증을 해주세요.</p>
 					                            						</c:when>
 					                            						<c:otherwise>
 											                            	    <button type="button" class="togetherBtn">참여하기 ${i.togetherCount}/${i.together }</button>

@@ -3,7 +3,6 @@ package com.kh.finalProject.admin.model.dao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -560,6 +559,11 @@ public class AdminDao {
 		
 		RowBounds rowBounds = new RowBounds(offset,limit);
 		return (ArrayList)sqlSession.selectList("adminMapper.feedSearchList",map,rowBounds);
+	}
+
+	//게시글 피드 사진 출력
+	public ArrayList<Attachment> feedSelectFile(SqlSessionTemplate sqlSession, int boardNo) {
+		return (ArrayList)sqlSession.selectList("adminMapper.themeFilePath",boardNo);
 	}
 
 

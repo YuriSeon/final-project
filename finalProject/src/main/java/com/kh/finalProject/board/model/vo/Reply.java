@@ -1,7 +1,5 @@
 package com.kh.finalProject.board.model.vo;
 
-import java.sql.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,4 +25,6 @@ public class Reply {
 	private int refQno;
 	private int refRno;
 	private String status;
+	
+	private String boardTitle;
 }
