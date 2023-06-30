@@ -272,5 +272,11 @@ public class MemberServiceImpl implements MemberService{
 	public int deleteFile(int serviceNo) {
 		return memberDao.deleteFile(sqlSession, serviceNo);
 	}
+
+	//마이페이지 피드 보기
+	@Override
+	public Board selectFeed(int boardNo) {
+		return memberDao.selectFeed(sqlSession,boardNo);
+	}
 	
 }

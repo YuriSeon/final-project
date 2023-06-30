@@ -58,6 +58,7 @@ import com.kh.finalProject.common.template.Pagination;
 import com.kh.finalProject.member.model.service.MemberService;
 import com.kh.finalProject.member.model.vo.Member;
 
+import lombok.Data;
 import oracle.net.aso.m;
 
 @Controller
@@ -235,6 +236,31 @@ public class MemberController {
 		return mv;
 	}
 	
+	//마이페이지 게시글 피드 보기
+	@ResponseBody
+	@RequestMapping(value = "selectFeed.me",produces = "application/json; charset=UTF-8")
+	public feedResponse selectFeed(@RequestParam("boardNo") int boardNo
+					        	  ,HttpSession session) {
+		
+		Board feed = memberService.selectFeed(boardNo);
+		ArrayList<Attachment> a = memberService.fileSelect(boardNo);
+		
+		feedResponse response = new feedResponse(feed, a);
+		return response;
+	}
+	
+	//마이페이지 피드 보기 객체 2개 보낼때 사용
+	@Data
+	private static class feedResponse {
+	    private Board b;
+	    private ArrayList<Attachment> a;
+	    
+	    public feedResponse(Board b, ArrayList<Attachment> a) {
+	      this.b = b;
+	      this.a = a;
+	    }
+	}
+	
 	//마이페이지 게시글 피드 삭제
 	@ResponseBody
 	@RequestMapping(value = "deleteFeed.me", method = RequestMethod.POST)
@@ -258,7 +284,6 @@ public class MemberController {
         	resultString = "fail";
 		}
 		return resultString;
-    
 	}
 	
 	//마이페이지 댓글 보기 이동
@@ -867,6 +892,16 @@ public class MemberController {
 		}
 		
 		return "";
+	}
+	
+	//회원가입리트스 폼 이동 메소드
+	@RequestMapping("myCertification.me")
+	public String myCertification(Member m
+								 ,String birthDay
+								 ,ModelAndView mv
+								 ,HttpSession session) {
+		
+		return "member/myPage/certiPopup";
 	}
 	
 	

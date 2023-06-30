@@ -81,8 +81,9 @@
 					<c:forEach var="c" items="${list}">
 						<li class="bdr_nor">
 						<input type="text" class="board-no" value="${c.boardNo}" hidden="hidden">
+						<input type="text" class="category" value="${c.category}" hidden="hidden">
 							<div class="photo">
-								<a href="">
+								<a href="javascript:void(0);">
 									<div class="dim">
 										<span class="txt_mid">여행지</span>
 									</div>
@@ -91,7 +92,7 @@
 							</div>
 							<div class="area_txt">
 								<div class="tit">
-									<a href="">
+									<a href="javascript:void(0);">
 										<c:if test="${c.category==1}">[테마]</c:if>
 										<c:if test="${c.category==2}">[축제]</c:if>
 										<c:if test="${c.category==3}">[명소]</c:if>
@@ -205,6 +206,25 @@
 				}
 			});
 		});
+    	
+    	//상세페이지 이동
+    	$(function () {
+    		$(".box_leftType1>ul>li>.area_txt>.tit>a").click(function () {
+    			var bno = $(this).parents("li").find(".board-no").val();
+    			var cate = $(this).parents("li").find(".category").val();
+	   			if (cate == 1) {
+	   				location.href = 'detailTheme.bo?boardNo='+bno;	
+				}else if (cate == 2) {
+					location.href = 'fesDetail.fe?boardNo='+bno;
+				}else if (cate == 3) {
+// 					location.href = '?boardNo='+bno;
+				}else if (cate == 5) {
+// 					location.href = '?boardNo='+bno;
+				}else{
+// 					location.href = 'boardNo='+bno;
+				}
+    		});
+    	});
     	
     	//찜 목록 삭제
         $(function () {

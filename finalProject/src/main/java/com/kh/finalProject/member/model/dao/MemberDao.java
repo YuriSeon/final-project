@@ -241,4 +241,9 @@ public class MemberDao {
 		return sqlSession.update("memberMapper.qnaDelete",serviceNo);
 	}
 
+	//마이페이지 피드 보기
+	public Board selectFeed(SqlSessionTemplate sqlSession, int boardNo) {
+		return sqlSession.selectOne("memberMapper.selectFeed",boardNo);
+	}
+
 }

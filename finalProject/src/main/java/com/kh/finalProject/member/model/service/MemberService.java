@@ -125,4 +125,7 @@ public interface MemberService {
 
 	//마이페이지 Q&A 파일 삭제(serviceNo)
 	int deleteFile(int serviceNo);
+
+	//마이페이지 피드 보기
+	Board selectFeed(int boardNo);
 }
