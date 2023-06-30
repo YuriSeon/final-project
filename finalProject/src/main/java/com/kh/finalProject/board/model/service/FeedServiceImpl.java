@@ -229,6 +229,14 @@ public class FeedServiceImpl implements FeedService{
 		return result;
 	}
 
+	//게시물 신고
+	@Override
+	public int reportBoard(Report re, String nickname) {
+		int result = feedDao.reportBoard(sqlSession,nickname);
+		int result2 = feedDao.insertReport(sqlSession,re);
+		return result * result2;
+	}
+
 
 	
 

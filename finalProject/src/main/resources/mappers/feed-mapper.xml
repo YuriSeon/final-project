@@ -357,5 +357,19 @@
   		AND ZONE_NO LIKE  CONCAT(#{city}, '%')
   	</select>
   	
+  	<!-- 게시물신고 멤버업데이트 -->
+  	 <update id="updateMember">
+  		UPDATE MEMBER
+  		SET REPORT = REPORT+1
+  		WHERE NICKNAME = #{nickname}
+  		AND STATUS = 'Y'
+  	</update>
+  	
+  	<!-- 게시물신고 신고insert -->
+  	<insert id="insertReportBoard"> 		
+  		INSERT INTO REPORT(BOARD_NO,WRITER,REPORT_REASON)
+    	VALUES(#{boardNo},#{writer},#{reportReason})
+  	</insert> 
+  	
   	
   </mapper>

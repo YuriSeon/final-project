@@ -267,6 +267,18 @@ public class FeedDao {
 		return sqlSession.selectOne("feedMapper.selectCityCount", city);
 	}
 
+	//게시물 신고업데이트
+	public int reportBoard(SqlSessionTemplate sqlSession, String nickname) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("feedMapper.updateMember", nickname);
+	}
+
+	//게시물 신고
+	public int insertReport(SqlSessionTemplate sqlSession, Report re) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("feedMapper.insertReportBoard", re);
+	}
+
 	
 
 	
