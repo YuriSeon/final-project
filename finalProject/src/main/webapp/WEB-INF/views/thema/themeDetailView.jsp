@@ -154,15 +154,8 @@
 	<div class="bii">
 		<ul>
 			<li>
-				<button type="button" style="border: solid white; background-color: white;" onclick="goChoice();">
-					<c:choose>
-						<c:when test="${not empty loginUser and loginUser.nickname eq c.writer }">
-							<img alt="" src="resources/images/star-after.png" style="width: 50px;height: 50px;" id="star">
-						</c:when>
-						<c:otherwise>
-							<img alt="" src="resources/images/star-before.png" style="width: 50px;height: 50px;" id="star">
-						</c:otherwise>
-					</c:choose>
+				<button type="button" style="border: solid white; background-color: white;" onclick="goChoice();">																		
+					<img alt="" src="resources/images/star-before.png" style="width: 50px;height: 50px;" id="star">							
 				</button>
 				<b>찜하기</b>
 			</li>
@@ -440,6 +433,8 @@
 						console.log("error");
 					}
 				})
+			}else{
+				alert("신고내용을 입력해 주세요");
 			}
 		}
 	    
@@ -469,6 +464,30 @@
 	    		alert("로그인 후 이용 가능합니다.");
 	    	}
 	    }
+	    
+	    //찜하기 보여주기
+	    $(function(){
+	    	var boardNo = "${b.boardNo}";
+	    		boardNo = parseInt(boardNo);
+	    	var img = $("#star");
+	    	var writer = "${loginUser.nickname}";
+	    	var like = false;
+	    	var clist = ${clist};
+	    	
+	    	for(var i=0; i<clist.length; i++){
+	    		var c=clist[i];
+	    		
+	    		if(c.boardNo === boardNo && c.writer === writer){
+	    			like = true;
+	    		}
+	    	}
+	    	
+	    	if(like){
+	    		img.attr("src","resources/images/star-after.png");
+	    	}else{
+	    		img.attr("src","resources/images/star-before.png");
+	    	}
+	    });
 	    	    	    
 	   
 	    //사용자 정보수정 요청

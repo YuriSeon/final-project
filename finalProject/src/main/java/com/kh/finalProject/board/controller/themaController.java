@@ -141,7 +141,7 @@ public class themaController {
 	}
 	
 	@RequestMapping("detailTheme.bo")
-	public ModelAndView detailTheme(int boardNo,ModelAndView mv,HttpServletRequest request) {
+	public ModelAndView detailTheme(int boardNo,ModelAndView mv) {
 		
 		
 		//조회수 올리기
@@ -153,7 +153,7 @@ public class themaController {
 			//상세페이지 at
 			ArrayList<Attachment> at = themaService.selectAttachment(boardNo);
 			//찜하기			
-			choice c = themaService.selectChoice(boardNo);
+			ArrayList<choice> clist = themaService.selectChoice(boardNo);
 			//신고리스트
 			ArrayList<Report> rlist = themaService.selectReportList(); 
 			//댓글 갯수
@@ -161,12 +161,12 @@ public class themaController {
 						
 			mv.addObject("b", b);
 			mv.addObject("at", at);
-			mv.addObject("c", c);
+			mv.addObject("clist", new Gson().toJson(clist));
 			mv.addObject("rlist", new Gson().toJson(rlist));
 			mv.addObject("reply", reply);
 			mv.setViewName("thema/themeDetailView");
 		}else {
-			mv.addObject("errorMsg", "테마 게시글 등록에 실패하였습니다.").setViewName("common/errorPage");
+			mv.addObject("errorMsg", "테마 게시글 조회에 실패하였습니다.").setViewName("common/errorPage");
 		}
 		return mv;
 	}
@@ -269,8 +269,13 @@ public class themaController {
 	
 	//사용자 요청페이지 이동
 	@RequestMapping("askUpdate.mo")
-	public String askUpdate(int boardNo) {
-		return "";
+	public ModelAndView askUpdate(int boardNo,ModelAndView mv) {
+		Board b = themaService.selectBoard(boardNo);
+		
+		mv.addObject("b", b);		
+		mv.setViewName("thema/modifyRequest");
+	
+	return mv;
 	}
 	
 }

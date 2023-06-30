@@ -148,9 +148,9 @@ public class ThemaDao {
 	}
 
 	//찜하기이미지바꾸기
-	public choice selectChoice(SqlSession sqlSession, int boardNo) {
+	public ArrayList<choice> selectChoice(SqlSession sqlSession, int boardNo) {
 
-		return sqlSession.selectOne("themaMapper.selectChoice", boardNo);
+		return (ArrayList)sqlSession.selectList("themaMapper.selectChoice", boardNo);
 	}
 
 	//신고리스트

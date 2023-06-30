@@ -98,6 +98,9 @@ public interface FeedService {
 	//도시선택갯수
 	int selectListCount(int city);
 
+	//게시물 신고
+	int reportBoard(Report re, String nickname);
+
 	
 
 	
