@@ -26,6 +26,7 @@
 		<result property="infoHomepage" column="INFO_HOMEPAGE"/>
 		<result property="infoCall" column="INFO_CALL"/>
 		<result property="infoName" column="INFO_NAME"/>
+		<result property="dayOff" column="DAY_OFF"/>
 	</resultMap>
 	
 	<resultMap type="theme" id="themeResultSet">
@@ -39,6 +40,31 @@
 	<resultMap type="zone" id="zoneResultSet">
 		<result property="zoneName" column="ZONE_NAME"/>
 	</resultMap>
+	<resultMap type="reply" id="ReplyResultMap">
+  		<result column="REPLY_NO" property="replyNo"/>
+  		<result column="CONTENT" property="content"/>
+  		<result column="CREATE_DATE" property="createDate"/>
+  		<result column="REPLY_WRITER" property="replyWriter"/>
+  		<result column="REF_QNO" property="refQno"/>
+  		<result column="REF_RNO" property="refRno"/>
+  		<result column="STATUS" property="status"/>
+  		<result column="PROFILEIMG" property="profileImg"/>
+  	</resultMap>
+  	
+  	<resultMap type="choice" id="choiceResultSet">
+  		<result column="BOARD_NO" property="boardNo"/>
+  		<result column="WRITER" property="writer"/>
+  	</resultMap>
+  	  	
+  	<resultMap type="report" id="reportResultSet">
+  		<result column="REPLY_NO" property="replyNo"/>
+  		<result column="WRITER" property="writer"/>
+  	</resultMap>
+  	
+  	<resultMap type="member" id="memberResultMap">
+  		<result column="NICKNAME" property="nickname"/>
+  		<result column="PROFILEIMG" property="profileImg"/>
+  	</resultMap>
   	
   	<!-- 보드등록 -->
   	<insert id="insertBoard">
@@ -48,7 +74,7 @@
   	<!-- 장소등록 -->
   	<insert id="insertInfo">
   		INSERT INTO INFO(INFO_NO,BOARD_NO,ZONE_NO,INFO_ADDRESS,INFO_TIME,INFO_HOMEPAGE,INFO_CALL,INFO_NAME,INFO_TYPE,DAY_OFF)
-  		VALUES(SEQ_INO.CURRVAL,SEQ_BNO.CURRVAL,#{zoneNo},#{infoAddress},#{infoTime},#{infoHomepage},#{infoCall},1,#{dayOff})
+  		VALUES(SEQ_INO.CURRVAL,SEQ_BNO.CURRVAL,#{zoneNo},#{infoAddress},#{infoTime},#{infoHomepage},#{infoCall},#{infoName},1,#{dayOff})
   	</insert>
   
     <!-- 첨부파일등록 -->
@@ -136,5 +162,159 @@
     	AND FILE_LEVEL = 2
     </select>
     
+    <!-- 댓글입력 -->
+    <insert id="insertReply">
+    	INSERT INTO REPLY(REPLY_NO,REPLY_WRITER,CONTENT,REF_QNO)
+    	VALUES(SEQ_RNO.NEXTVAL,#{replyWriter},#{content},#{refQno})
+    </insert>
+    
+    <!-- 댓글불러오기 -->
+    <select id="selectReply" resultMap="ReplyResultMap">
+    	SELECT REPLY_NO,CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",REPLY_WRITER,REF_QNO,
+        (FILE_PATH || CHANGE_NAME) PROFILEIMG
+  		FROM REPLY R
+        LEFT JOIN ATTACHMENT A ON(REPLY_WRITER = WRITER)
+  		WHERE R.REF_QNO = #{boardNo}
+  		AND R.STATUS = 'Y'
+  		ORDER BY CREATE_DATE DESC
+    </select>
+    
+    <!-- 댓글삭제 -->
+    <delete id="deleteReply">
+    	DELETE FROM REPLY
+  		WHERE REPLY_NO = #{replyNo}
+  		AND STATUS = 'Y'
+    </delete>
+    
+    <!-- 댓글수정 -->
+    <update id="updateReply">
+    	UPDATE REPLY
+  		SET CONTENT = #{content}
+  		WHERE REPLY_NO = #{replyNo}
+  		AND STATUS = 'Y'
+    </update>
+    
+    <!-- 댓글신고 -신고테이블 -->
+    <insert id="reportReply">
+    	INSERT INTO REPORT(REPLY_NO,WRITER,REPORT_REASON)
+    	VALUES(#{replyNo},#{writer},#{reportReason})
+    </insert>
+    
+    <!-- 댓글신고-멤버테이블 -->
+    <update id="reportUpdateMember">
+    	UPDATE MEMBER
+  		SET REPORT = REPORT+1
+  		WHERE NICKNAME = #{nickname}
+  		AND STATUS = 'Y'
+    </update>
+    
+    <!-- 찜하기 테이블 확인 -->
+    <select id="ckChoice" resultType="_int">
+    	SELECT COUNT(*) 
+    	FROM CHOICE
+        WHERE BOARD_NO = #{boardNo} 
+        AND WRITER = #{writer}
+    </select>
+    
+    <!-- 테이블 있으면 없애기 -->
+    <delete id="deleteChoice">
+    	DELETE FROM CHOICE
+  		WHERE BOARD_NO = #{boardNo}
+  		AND WRITER = #{writer}
+    </delete>
+    
+    <!-- 보드테이블 업데이트 -->
+    <update id="updateChoice">
+    	UPDATE BOARD
+		SET CHOICE = CHOICE-1
+		WHERE BOARD_NO = #{boardNo}
+		AND STATUS = 'Y'
+		AND CATEGORY = 1	
+    </update>
+    
+    <!-- 테이블 없으면 넣기 -->
+    <insert id="insertChoice">
+    	INSERT INTO CHOICE
+  		VALUES(#{boardNo},#{writer})
+    </insert>
+    
+    <!-- 보드테이블업데이트2 -->
+    <update id="choiceUpdate">
+    	UPDATE BOARD
+  		SET CHOICE = CHOICE+1
+  		WHERE BOARD_NO = #{boardNo}
+		AND STATUS = 'Y'
+		AND CATEGORY = 1	
+    </update>
+    
+    <!-- 찜하기이미지바꾸기 -->
+    <select id="selectChoice" resultMap="choiceResultSet">
+    	SELECT BOARD_NO,WRITER
+  		FROM CHOICE
+  		WHERE BOARD_NO = #{boardNo}
+    </select>
+    
+    <!-- 신고리스트 -->
+    <select id="selectReportList" resultMap="reportResultSet">
+    	SELECT REPLY_NO,WRITER
+    	FROM REPORT
+    </select>
+    
+    <!-- 검색리스트 -->
+    <select id="selectSearchListCount" resultType="_int">
+    	SELECT COUNT(*)
+  		FROM BOARD
+        JOIN ZONE USING (ZONE_NO)
+  		WHERE STATUS = 'Y'
+  		AND CATEGORY = 1
+        AND ZONE_NAME = #{zoneName}
+    </select>
+    
+    <!-- 검색 최신순 -->
+    <select id="searchThemaList" resultMap="boardResultSet">
+    	SELECT BOARD_NO,ZONE_NAME,BOARD_WRITER,BOARD_TITLE,BOARD_CONTENT
+        ,COUNT,FILE_PATH
+        ,INFO_HOMEPAGE,INFO_CALL
+		FROM BOARD B
+        JOIN THEME USING (BOARD_NO)
+        JOIN ZONE Z ON (Z.ZONE_NO = B.ZONE_NO)
+        JOIN ATTACHMENT USING(BOARD_NO)
+        JOIN INFO USING(BOARD_NO)
+		WHERE B.STATUS = 'Y'
+        AND CATEGORY = 1
+        AND THEME_NO = 3
+        AND FILE_LEVEL = 1
+        AND ZONE_NAME = #{zoneName}
+		ORDER BY CREATE_DATE DESC
+    </select>
+    
+    <!-- 검색 인기순 -->
+    <select id="searchRankingThemaList" resultMap="boardResultSet">
+    	SELECT BOARD_NO,ZONE_NAME,BOARD_WRITER,BOARD_TITLE,BOARD_CONTENT
+        ,COUNT,FILE_PATH
+        ,INFO_HOMEPAGE,INFO_CALL
+		FROM BOARD B
+        JOIN THEME USING (BOARD_NO)
+        JOIN ZONE Z ON (Z.ZONE_NO = B.ZONE_NO)
+        JOIN ATTACHMENT USING(BOARD_NO)
+        JOIN INFO USING(BOARD_NO)
+		WHERE B.STATUS = 'Y'
+        AND CATEGORY = 1
+        AND THEME_NO = 3
+        AND FILE_LEVEL = 1
+        <if test="zoneName!=null">
+        	AND ZONE_NAME = #{zoneName}
+        </if>
+		ORDER BY COUNT DESC
+    </select>
+    
+    <!-- 댓글갯수 -->
+    <select id="selectReplyCount" resultType="_int">
+    	SELECT COUNT(*) 
+    	FROM REPLY
+        WHERE REF_QNO = #{boardNo} 
+    </select>
+    
+   
     
   </mapper>
