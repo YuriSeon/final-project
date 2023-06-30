@@ -7,37 +7,38 @@
   				INSERT INTO BOARD(BOARD_NO,ZONE_NO,CATEGORY,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER)
   				VALUES(SEQ_BNO.NEXTVAL,(SELECT ZONE_NO FROM ZONE WHERE ZONE_NAME=#{address}),5,#{boardTitle},#{boardContent},#{boardWriter})
   		</insert>
-  		
+
   		<insert id="insertAttachment">
   				INSERT INTO ATTACHMENT VALUES(SEQ_FNO.NEXTVAL,SEQ_BNO.CURRVAL,#{originName},#{changeName},#{filePath},SYSDATE,#{fileLevel},'Y',NULL)
   		</insert>
-  		
+
   		<insert id="insertPlan">
   				INSERT INTO PLAN(BOARD_NO,TOGETHER,CONCEPT,START_DATE,END_DATE,TOTAL_DATE,TOTAL_PAY,WRITER)
   				VALUES(SEQ_BNO.CURRVAL,#{together},#{concept},#{startDate},#{endDate},#{totalDate},#{totalPay},#{writer})
   		</insert>
-  		
+
   		<select id="selectListCount" resultType="_int">
   				SELECT COUNT(*)
 				FROM BOARD 
 				WHERE CATEGORY = 5
 				AND STATUS = 'Y'
   		</select>
-  		
+
   		<select id="selectTogetherList" resultMap="togetherResultSet">
 				SELECT B.BOARD_NO,ZONE_NAME,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,(FILE_PATH || CHANGE_NAME) FILE_PATH,TOGETHER,TOGETHER_COUNT,CONCEPT,TO_CHAR(START_DATE,'YY/MM/DD') START_DATE,TO_CHAR(END_DATE,'YY/MM/DD') END_DATE,TOTAL_DATE,TOTAL_PAY
-								,(SELECT (FILE_PATH || CHANGE_NAME)
-								    FROM ATTACHMENT
-								    WHERE WRITER = BOARD_WRITER) PROFILE_PATH,TO_CHAR(B.CREATE_DATE,'YY/MM/DD') CREATE_DATE
+				                ,(SELECT (FILE_PATH || CHANGE_NAME)
+				                    FROM ATTACHMENT
+				                    WHERE WRITER = BOARD_WRITER) PROFILE_PATH,TO_CHAR(B.CREATE_DATE,'YY/MM/DD') CREATE_DATE,SURVEY,CERTIFICATION
 				FROM BOARD B
 				JOIN ZONE USING (ZONE_NO)
 				JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
 				JOIN PLAN P ON (B.BOARD_NO = P.BOARD_NO)
+				LEFT JOIN MEMBER ON (BOARD_WRITER = NICKNAME)
 				WHERE B.CATEGORY = 5
 				AND B.STATUS = 'Y'
 				ORDER BY B.CREATE_DATE DESC
   		</select>
-  		
+
   		<resultMap type="together" id="togetherResultSet">
   				<result column="BOARD_NO" property="boardNo"/>
   				<result column="ZONE_NAME" property="zoneName"/>
@@ -54,17 +55,49 @@
   				<result column="TOTAL_PAY" property="totalPay"/>
   				<result column="PROFILE_PATH" property="profilePath"/>
   				<result column="CREATE_DATE" property="createDate"/>
+  				<result column="SURVEY" property="survey"/>
+  				<result column="CERTIFICATION" property="certification"/>
   		</resultMap>
-  		
+
+  		<select id="selectOptionListCount" resultType="_int">
+				 SELECT COUNT(*)
+			  	 FROM(SELECT A.*
+						     FROM   (SELECT B.BOARD_NO,ZONE_NAME,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,(FILE_PATH || CHANGE_NAME) FILE_PATH,TOGETHER,TOGETHER_COUNT,CONCEPT,TO_CHAR(START_DATE,'YY/MM/DD') START_DATE,TO_CHAR(END_DATE,'YY/MM/DD') END_DATE,TOTAL_DATE,TOTAL_PAY
+						                            ,(SELECT (FILE_PATH || CHANGE_NAME)
+						                                FROM ATTACHMENT
+						                                WHERE WRITER = BOARD_WRITER) PROFILE_PATH,TO_CHAR(B.CREATE_DATE,'YY/MM/DD') CREATE_DATE,SURVEY,CERTIFICATION
+						            FROM BOARD B
+						            JOIN ZONE USING (ZONE_NO)
+						            JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
+						            JOIN PLAN P ON (B.BOARD_NO = P.BOARD_NO)
+						            LEFT JOIN MEMBER ON (BOARD_WRITER = NICKNAME)
+						            WHERE B.CATEGORY = 5
+						            AND B.STATUS = 'Y'
+						            <if test="startDate != null">
+										<![CDATA[AND START_DATE >  ]]> #{startDate}
+									</if>
+									<if test="endDate != null">
+										<![CDATA[AND END_DATE <  ]]> #{endDate}
+									</if>
+									<if test="totalPay != 0">
+										<![CDATA[AND TOTAL_PAY<= ]]> #{totalPay} 
+									</if>
+									<if test="zoneName != 'all'">
+										AND ZONE_NAME LIKE '%'||#{zoneName}||'%'
+									</if>
+									ORDER BY B.CREATE_DATE DESC) A) 				
+  		</select>
+
  		<select id="optionSearch" resultMap="togetherResultSet">
   				SELECT B.BOARD_NO,ZONE_NAME,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,(FILE_PATH || CHANGE_NAME) FILE_PATH,TOGETHER,TOGETHER_COUNT,CONCEPT,TO_CHAR(START_DATE,'YY/MM/DD') START_DATE,TO_CHAR(END_DATE,'YY/MM/DD') END_DATE,TOTAL_DATE,TOTAL_PAY
 				                ,(SELECT (FILE_PATH || CHANGE_NAME)
 				                    FROM ATTACHMENT
-				                    WHERE WRITER = BOARD_WRITER) PROFILE_PATH,TO_CHAR(B.CREATE_DATE,'YY/MM/DD') CREATE_DATE
+				                    WHERE WRITER = BOARD_WRITER) PROFILE_PATH,TO_CHAR(B.CREATE_DATE,'YY/MM/DD') CREATE_DATE,SURVEY,CERTIFICATION
 				FROM BOARD B
 				JOIN ZONE USING (ZONE_NO)
 				JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
 				JOIN PLAN P ON (B.BOARD_NO = P.BOARD_NO)
+				LEFT JOIN MEMBER ON (BOARD_WRITER = NICKNAME)
 				WHERE B.CATEGORY = 5
 				AND B.STATUS = 'Y'
 				<if test="startDate != null">
@@ -81,4 +114,23 @@
 				</if>
 				ORDER BY B.CREATE_DATE DESC
   		</select> 		
+
+  		<insert id="togetherApply">
+  				INSERT INTO TOGETHER_APPLY VALUES(#{refBno},#{nickname},#{message},DEFAULT,DEFAULT)
+  		</insert>
+
+  		<select id="togetherDetail" resultMap="togetherResultSet">
+   				SELECT B.BOARD_NO,ZONE_NAME,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,(FILE_PATH || CHANGE_NAME) FILE_PATH,TOGETHER,TOGETHER_COUNT,CONCEPT,TO_CHAR(START_DATE,'YY/MM/DD') START_DATE,TO_CHAR(END_DATE,'YY/MM/DD') END_DATE,TOTAL_DATE,TOTAL_PAY
+				                ,(SELECT (FILE_PATH || CHANGE_NAME)
+				                    FROM ATTACHMENT
+				                    WHERE WRITER = BOARD_WRITER) PROFILE_PATH,TO_CHAR(B.CREATE_DATE,'YY/MM/DD') CREATE_DATE,SURVEY,CERTIFICATION
+				FROM BOARD B
+				JOIN ZONE USING (ZONE_NO)
+				JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
+				JOIN PLAN P ON (B.BOARD_NO = P.BOARD_NO)
+				LEFT JOIN MEMBER ON (BOARD_WRITER = NICKNAME)
+				WHERE B.CATEGORY = 5
+				AND B.STATUS = 'Y'
+				AND B.BOARD_NO = #{boardNo} 				
+  		</select>
   </mapper>
