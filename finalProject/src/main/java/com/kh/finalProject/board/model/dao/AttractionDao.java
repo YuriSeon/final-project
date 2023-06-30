@@ -10,6 +10,8 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Zone;
+import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.Rereply;
 
 @Repository
 @SuppressWarnings({"unchecked", "rawtypes"})
@@ -57,6 +59,16 @@ public class AttractionDao {
 	// board에 해당하는 첨부파일 조회
 	public ArrayList<Attachment> selectAttachment(SqlSession sqlSession, int boardNo) {
 		return (ArrayList)sqlSession.selectList("attractionMapper.selectAttachment", boardNo);
+	}
+	
+	// 댓글등록
+	public int insertReplyList(SqlSession sqlSession, Rereply r) {
+		return sqlSession.insert("attractionMapper.insertReplyList", r);
+	}
+
+	// 대댓글 등록
+	public int insertRereplyList(SqlSession sqlSession, Rereply r) {
+		return sqlSession.insert("attractionMapper.insertRereplyList", r);
 	}
 	
 

@@ -16,7 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <title>마이페이지 Q&amp;A 요청수정</title>
+    <title>마이페이지 정보 수정/신규 요청 수정</title>
     <style type="text/css">
     	#QNAcontents{
     		min-height: 70vh;
@@ -38,7 +38,7 @@
 	        <div class="area_tag">
 				<span class="name5"><a href="mypage.me"><span class="ico">My</span>마이페이지</a></span>
 	        </div>
-	        <h2>요청수정</h2>
+	        <h2>정보 수정/신규 요청 수정</h2>
 	    </div>
 	
 	    <div class="wrap_contView clfix">
@@ -49,7 +49,8 @@
 	            
 					<form name="tform" id="tform" action="myQnaUpdate.me" method="post" enctype="multipart/form-data">           
 	                	<h3 class="tit_write">제목 <em>(필수)</em></h3>
-						<input type="text" class="inp_write" id="title" name="serviceTitle" title="제목" value="${n.serviceTitle}">
+						<input type="text" class="inp_write" id="title" name="serviceTitle" title="제목" value="${fn:split(n.serviceTitle,']')[1]}">
+<%-- 						<input type="text" class="inp_write" id="title" name="serviceTitle" title="제목" value="${n.serviceTitle}"> --%>
 						<h3 class="tit_write">내용 <em>(필수)</em></h3>
 						<textarea name="serviceContent" id="desc" class="inp_textarea" title="내용">${n.serviceContent}</textarea>
 						<input type="hidden" name="category" id="fileuploadlist" value="3">
@@ -124,18 +125,18 @@
 	                    </c:choose>
 	                    <c:choose>
 	                    	<c:when test="${rq == 0 }">
-	                    		<li><a href="myRequest.me">관광정보 수정 / 신규 요청</a></li>
+	                    		<li class="on"><a href="myRequest.me">관광정보 수정 / 신규 요청</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<li><a href="myRequest.me">관광정보 수정 / 신규 요청(${rq})</a></li>
+	                    		<li class="on"><a href="myRequest.me">관광정보 수정 / 신규 요청(${rq})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <c:choose>
 	                    	<c:when test="${q == 0 }">
-	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A</a></li>
+	                    		<li><a href="myQna.me" id="qna">Q&amp;A</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A(${q})</a></li>
+	                    		<li><a href="myQna.me" id="qna">Q&amp;A(${q})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <li id="stampEnabled"><a href="myFoot.me" id="stamp">발도장</a></li>
@@ -236,7 +237,6 @@
 	      	var formData = new FormData();
 	      	var result1 = 0;
 	      	var result2 = 1;
-	      	
 	      	var parentDiv = $("#addfile");
 	      	var fileInput = parentDiv.find("input");
 	      	var values = []; 
@@ -246,61 +246,84 @@
 				values.push(value);
 			});
 	      	
-	      	
-	      	$.ajax({
-   		        url: "myQnaUpdate.me",
-   		        type: "POST",
-   		        data: {
-   		        	serviceNo : $("input[name=serviceNo]").val(),
-   		        	category : $("input[name=category]").val(),
-   		        	serviceTitle : $("input[name=serviceTitle]").val(),
-   		        	serviceContent : $("textarea[name=serviceContent]").val(),
-   		        	writer : $("input[name=writer]").val(),
-   		        	fileNames : values
-   		        	},
-   		        success: function(response) {
-   		        	if (response == 1) {
-						result1 = 1;
-					}
-   		        	console.log("등록 성공");
-   		        	if (fileArr != null && fileArr.length > 0) {
-   		   		    	for (var i = 0; i < fileArr.length; i++) {
-   			   		      	formData.append("file", fileArr[i]);
-	   		   		    	console.log(formData);
-   		   		    	}
-   		   		    	formData.append("serviceNo", $("input[name=serviceNo]").val());
-   		   		    	$.ajax({
-   			   		        url: "myQnaFileUpdate.me",
-   			   		        type: "POST",
-   			   		        enctype: 'multipart/form-data',
-   			   		        data: formData,
-   			   		        processData: false,
-   			   		        contentType: false,
-   			   		        success: function(response) {
-   			   		        	if (response == 1) {
-   									result1 = 1;
-   								}
-   			   		        	console.log("파일 등록 성공");
-   			   		        },
-   			   		        error: function(response) {
-   			   		        	if (response == 0) {
-   									result1 = 0;
-   								}
-   			   		        	console.log("파일 등록 실패");
-   			   		        }
-   			   		    });
-   		   		 	}
-   		        	if (result1*result2 == 1) {
-   						location.href = "myQna.me";
-   					}
-   		        },
-   		        error: function(response) {
-   		        	if (response == 0) {
-						result1 = 0;
-					}
-   		        	console.log("등록 실패");
-   		        }
-   		    });
+	      	//파일이 있을때
+	      	if (values.length>0) {
+	      		$.ajax({
+	   		        url: "myQnaUpdate.me",
+	   		        type: "POST",
+	   		        data: {
+	   		        	serviceNo : $("input[name=serviceNo]").val(),
+	   		        	category : $("input[name=category]").val(),
+	   		        	serviceTitle : "[요청]"+$("input[name=serviceTitle]").val(),
+	   		        	serviceContent : $("textarea[name=serviceContent]").val(),
+	   		        	writer : $("input[name=writer]").val(),
+	   		        	fileNames : values
+	   		        	},
+	   		        success: function(response) {
+	   		        	if (response == 1) {
+							result1 = 1;
+						}
+	   		        	console.log("등록 성공");
+	   		        	if (fileArr != null && fileArr.length > 0) {
+	   		   		    	for (var i = 0; i < fileArr.length; i++) {
+	   			   		      	formData.append("file", fileArr[i]);
+		   		   		    	console.log(formData);
+	   		   		    	}
+	   		   		    	formData.append("serviceNo", $("input[name=serviceNo]").val());
+	   		   		    	$.ajax({
+	   			   		        url: "myQnaFileUpdate.me",
+	   			   		        type: "POST",
+	   			   		        enctype: 'multipart/form-data',
+	   			   		        data: formData,
+	   			   		        processData: false,
+	   			   		        contentType: false,
+	   			   		        success: function(response) {
+	   			   		        	if (response == 1) {
+	   									result1 = 1;
+	   								}
+	   			   		        	console.log("파일 등록 성공");
+	   			   		        },
+	   			   		        error: function(response) {
+	   			   		        	if (response == 0) {
+	   									result1 = 0;
+	   								}
+	   			   		        	console.log("파일 등록 실패");
+	   			   		        }
+	   			   		    });
+	   		   		 	}
+	   		        	if (result1*result2 == 1) {
+	   						location.href = "myRequest.me";
+	   					}
+	   		        },
+	   		        error: function(response,error) {
+	   		        	if (response == 0) {
+							result1 = 0;
+						}
+	   		        	console.log("등록 실패");
+	   		        	console.log(error);
+	   		        }
+	   		    });
+	      	//파일이 없을때
+			}else{
+		      	$.ajax({
+	   		        url: "myQnaUpdateNf.me",
+	   		        type: "POST",
+	   		        data: {
+	   		        	serviceNo : $("input[name=serviceNo]").val(),
+	   		        	category : $("input[name=category]").val(),
+	   		        	serviceTitle : "[요청]"+$("input[name=serviceTitle]").val(),
+	   		        	serviceContent : $("textarea[name=serviceContent]").val(),
+	   		        	writer : $("input[name=writer]").val(),
+	   		        	},
+	   		        success: function(response) {
+	   		        	console.log("등록 성공");
+   						location.href = "myRequest.me";
+	   		        },
+	   		        error: function(response) {
+	   		        	console.log("등록 실패");
+	   		        }
+	   		    });
+			}
 		}
     	
     </script>

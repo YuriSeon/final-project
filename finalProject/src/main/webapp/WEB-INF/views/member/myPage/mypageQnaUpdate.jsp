@@ -246,61 +246,82 @@
 				values.push(value);
 			});
 	      	
-	      	
-	      	$.ajax({
-   		        url: "myQnaUpdate.me",
-   		        type: "POST",
-   		        data: {
-   		        	serviceNo : $("input[name=serviceNo]").val(),
-   		        	category : $("input[name=category]").val(),
-   		        	serviceTitle : $("input[name=serviceTitle]").val(),
-   		        	serviceContent : $("textarea[name=serviceContent]").val(),
-   		        	writer : $("input[name=writer]").val(),
-   		        	fileNames : values
-   		        	},
-   		        success: function(response) {
-   		        	if (response == 1) {
-						result1 = 1;
-					}
-   		        	console.log("등록 성공");
-   		        	if (fileArr != null && fileArr.length > 0) {
-   		   		    	for (var i = 0; i < fileArr.length; i++) {
-   			   		      	formData.append("file", fileArr[i]);
-	   		   		    	console.log(formData);
-   		   		    	}
-   		   		    	formData.append("serviceNo", $("input[name=serviceNo]").val());
-   		   		    	$.ajax({
-   			   		        url: "myQnaFileUpdate.me",
-   			   		        type: "POST",
-   			   		        enctype: 'multipart/form-data',
-   			   		        data: formData,
-   			   		        processData: false,
-   			   		        contentType: false,
-   			   		        success: function(response) {
-   			   		        	if (response == 1) {
-   									result1 = 1;
-   								}
-   			   		        	console.log("파일 등록 성공");
-   			   		        },
-   			   		        error: function(response) {
-   			   		        	if (response == 0) {
-   									result1 = 0;
-   								}
-   			   		        	console.log("파일 등록 실패");
-   			   		        }
-   			   		    });
-   		   		 	}
-   		        	if (result1*result2 == 1) {
-   						location.href = "myQna.me";
-   					}
-   		        },
-   		        error: function(response) {
-   		        	if (response == 0) {
-						result1 = 0;
-					}
-   		        	console.log("등록 실패");
-   		        }
-   		    });
+	      	//파일 있을때
+	      	if (values.length>0) {
+	      		$.ajax({
+	   		        url: "myQnaUpdate.me",
+	   		        type: "POST",
+	   		        data: {
+	   		        	serviceNo : $("input[name=serviceNo]").val(),
+	   		        	category : $("input[name=category]").val(),
+	   		        	serviceTitle : $("input[name=serviceTitle]").val(),
+	   		        	serviceContent : $("textarea[name=serviceContent]").val(),
+	   		        	writer : $("input[name=writer]").val(),
+	   		        	fileNames : values
+	   		        },
+	   		        success: function(response) {
+	   		        	if (response == 1) {
+							result1 = 1;
+						}
+	   		        	console.log("등록 성공");
+	   		        	if (fileArr != null && fileArr.length > 0) {
+	   		   		    	for (var i = 0; i < fileArr.length; i++) {
+	   			   		      	formData.append("file", fileArr[i]);
+		   		   		    	console.log(formData);
+	   		   		    	}
+	   		   		    	formData.append("serviceNo", $("input[name=serviceNo]").val());
+	   		   		    	$.ajax({
+	   			   		        url: "myQnaFileUpdate.me",
+	   			   		        type: "POST",
+	   			   		        enctype: 'multipart/form-data',
+	   			   		        data: formData,
+	   			   		        processData: false,
+	   			   		        contentType: false,
+	   			   		        success: function(response) {
+	   			   		        	if (response == 1) {
+	   									result1 = 1;
+	   								}
+	   			   		        	console.log("파일 등록 성공");
+	   			   		        },
+	   			   		        error: function(response) {
+	   			   		        	if (response == 0) {
+	   									result1 = 0;
+	   								}
+	   			   		        	console.log("파일 등록 실패");
+	   			   		        }
+	   			   		    });
+	   		   		 	}
+	   		        	if (result1*result2 == 1) {
+	   						location.href = "myQna.me";
+	   					}
+	   		        },
+	   		        error: function(response) {
+	   		        	if (response == 0) {
+							result1 = 0;
+						}
+	   		        	console.log("등록 실패");
+	   		        }
+	   		    });
+	      	//파일 없을때
+			}else{
+		      	$.ajax({
+	   		        url: "myQnaUpdateNf.me",
+	   		        type: "POST",
+	   		        data: {
+	   		        	serviceNo : $("input[name=serviceNo]").val(),
+	   		        	category : $("input[name=category]").val(),
+	   		        	serviceTitle : $("input[name=serviceTitle]").val(),
+	   		        	serviceContent : $("textarea[name=serviceContent]").val(),
+	   		        	writer : $("input[name=writer]").val(),
+	   		        },
+	   		        success: function(response) {
+						location.href = "myQna.me";
+	   		        },
+	   		        error: function(response) {
+	   		        	console.log("등록 실패");
+	   		        }
+	   		    });
+			}
 		}
     	
     </script>

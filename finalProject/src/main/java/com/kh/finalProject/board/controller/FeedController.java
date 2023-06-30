@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -354,10 +355,5 @@ public class FeedController {
 
 			return "board/feed";
 		}
-		
-		
-		
-		
-		
 	
 }

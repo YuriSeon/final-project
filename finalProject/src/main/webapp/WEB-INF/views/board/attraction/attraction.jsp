@@ -150,7 +150,7 @@
 		});
 	</script>
 	<!-- 먼저 상세페이지로 이동하기위해 만들어놓은 태그 나중에 지우기 -->
-	<a href="detail.attr">상세페이지로이동태그</a>
+	<a href="detail.attr?boardNo=11">상세페이지로이동태그</a>
 	<a href="insert.attr">insert page</a>
     <div class="attr">
 		<div id="mainPhoto"></div>

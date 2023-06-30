@@ -16,7 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <title>마이페이지 Q&amp;A</title>
+    <title>마이페이지 정보 수정/신규 요청</title>
     <style type="text/css">
    	.snb_mypage ul li.on a {
 		background: url(resources/images/ico_mypagemenu.png) 0 0 no-repeat;
@@ -143,18 +143,18 @@
 	                    </c:choose>
 	                    <c:choose>
 	                    	<c:when test="${rq == 0 }">
-	                    		<li><a href="myRequest.me">관광정보 수정 / 신규 요청</a></li>
+	                    		<li class="on"><a href="myRequest.me">관광정보 수정 / 신규 요청</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<li><a href="myRequest.me">관광정보 수정 / 신규 요청(${rq})</a></li>
+	                    		<li class="on"><a href="myRequest.me">관광정보 수정 / 신규 요청(${rq})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <c:choose>
 	                    	<c:when test="${q == 0 }">
-	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A</a></li>
+	                    		<li><a href="myQna.me" id="qna">Q&amp;A</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A(${q})</a></li>
+	                    		<li><a href="myQna.me" id="qna">Q&amp;A(${q})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 	                    <li id="stampEnabled"><a href="myFoot.me" id="stamp">발도장</a></li>

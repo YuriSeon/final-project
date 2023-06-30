@@ -211,7 +211,7 @@
         $(function () {
     		$(".list_board1>.bdr_nor>.area_txt>strong>a").click(function () {
     			var sno = $(this).parents("li").find(".serviceNo").val();
-    			location.href = 'goQnaDetail.me?serviceNo='+sno;
+    			location.href = 'goRequestDetail.me?serviceNo='+sno;
     		});
     	});
     	
@@ -219,7 +219,7 @@
         $(function () {
     		$(".list_board1>li>.qna_subMenu>ul>.btn_mod").click(function () {
     			var sno = $(this).parents("li").find(".serviceNo").val();
-    			location.href = 'goServiceUpdate.me?serviceNo='+sno;
+    			location.href = 'goRequestUpdate.me?serviceNo='+sno;
     		});
     	});
     	

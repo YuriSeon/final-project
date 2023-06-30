@@ -431,6 +431,57 @@ public class MemberController {
 		return mv;
 	}
 	
+	//마이페이지 수정요청 상세 페이지 이동
+	@RequestMapping("goRequestDetail.me")
+	public ModelAndView goMyRequestDetail(int serviceNo
+										 ,ModelAndView mv
+										 ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Notice n = memberService.selectQna(serviceNo);
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.addObject("a",a);
+		mv.addObject("n",n).setViewName("member/myPage/mypageRequestDetail");
+		
+		return mv;
+	}
+	
+	//마이페이지 Q&A 수정 이동
+	@RequestMapping("goRequestUpdate.me")
+	public ModelAndView goRequestUpdate(@RequestParam(value="serviceNo") int serviceNo
+																	    ,ModelAndView mv
+																	    ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Notice n  = memberService.selectQna(serviceNo);
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.addObject("n", n);
+		mv.addObject("a", a).setViewName("member/myPage/mypageRequestUpdate");
+		return mv;
+	}
+	
 	//마이페이지 Q&A 이동
 	@RequestMapping("myQna.me")
 	public ModelAndView goMyQna(@RequestParam(value="currentPage", defaultValue="1") int currentPage
@@ -609,6 +660,40 @@ public class MemberController {
 		
 	}
 	
+	//마이페이지 Q&A 파일없는 수정
+	@ResponseBody
+	@RequestMapping("myQnaUpdateNf.me")
+	public String myQnaUpdateNf(@RequestParam("serviceNo") int serviceNo
+							   ,@RequestParam("category") int category
+							   ,@RequestParam("serviceTitle") String serviceTitle
+							   ,@RequestParam("serviceContent") String serviceContent
+							   ,@RequestParam("writer") String writer
+							   ,Model model
+							   ,HttpSession session) {
+		
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		if (a!=null) {
+			int result = memberService.deleteFile(serviceNo);
+			if (result>0) {
+				for (Attachment del : a) {
+					new File(session.getServletContext().getRealPath(del.getFilePath()+del.getChangeName())).delete();
+				}
+			}
+		}
+		
+		Notice n = Notice.builder().serviceNo(serviceNo).category(category).serviceTitle(serviceTitle).serviceContent(serviceContent).writer(writer).build();
+		int result = memberService.myQnaUpdate(n);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","질문 수정 완료");
+			return (result>0)?"1":"0";
+		}else {
+			model.addAttribute("errorMsg","질문 수정 실패");
+			return "common/errorPage";
+		}
+		
+	}
+	
 	//마이페이지 Q&A 질문 파일 수정
 	@ResponseBody
 	@PostMapping("myQnaFileUpdate.me")
@@ -668,8 +753,8 @@ public class MemberController {
 		
 		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
 		Notice n = memberService.selectQna(serviceNo);
-		
-		int writingCount = memberService.myWritingCount(nick);
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+ 		int writingCount = memberService.myWritingCount(nick);
 		int replyCount = memberService.myReplyCount(nick);
 		int choiceCount = memberService.myChoiceCount(nick);
 		int requestCount = memberService.myRequestCount(nick);
@@ -680,7 +765,7 @@ public class MemberController {
 		mv.addObject("c",choiceCount);
 		mv.addObject("rq",requestCount);
 		mv.addObject("q",qnaCount);
-		
+		mv.addObject("a",a);
 		mv.addObject("n",n).setViewName("member/myPage/mypageQnaDetail");
 		
 		return mv;
@@ -937,43 +1022,36 @@ public class MemberController {
 			
 			//카카오 인증 회원가입
 			if(m.getCertification()==1) {
-				System.out.println("카카오로 들어옴");
-				String kakaoSe = session.getId();
-				System.out.println(kakaoSe);
-//				session.removeAttribute("kakaoSe");
-				//모든 세션 값 삭제
-				session.invalidate();
-				//카카오 계정 로그아웃 도시켜주기
-//				String url = "https://kauth.kakao.com/oauth/logout";
-//				url += "?client_id="+appKey;
-//				url += "&logout_redirect_uri=http://localhost:8888/finalProject/";
+//				카카오 로그아웃 (카카오 관련 api만 로그아웃되므로 계정 로그아웃으로 진행)
+//				String url = "https://kapi.kakao.com/v1/user/logout";
+				
+//				URL requestUrl = new URL(url);
+//				HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
+//				urlCon.setRequestMethod("POST");
+//				urlCon.setRequestProperty("Authorization", "Bearer "+access_token);
+//		
+//				BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
 //				
-//				mv.setViewName("redirect:"+url);
-					
-//				카카오 로그아웃
-				String url = "https://kapi.kakao.com/v1/user/logout";
+//				String text = "";
+//				String line;
+//				
+//				while((line=br.readLine())!=null) {
+//					text += line;
+//				}
+//				
+//				//System.out.println(text);
+//				
+//				mv.setViewName("redirect:/");
+
+				//카카오 계정 로그아웃
+				String url = "https://kauth.kakao.com/oauth/logout";
+				url += "?client_id="+appKey;
+				url += "&logout_redirect_uri=http://localhost:8888/finalProject/";
 				
-				URL requestUrl = new URL(url);
-				HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
-				urlCon.setRequestMethod("POST");
-				urlCon.setRequestProperty("Authorization", "Bearer "+access_token);
-		
-				BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
-				
-				String text = "";
-				String line;
-				
-				while((line=br.readLine())!=null) {
-					text += line;
-				}
-				
-				//System.out.println(text);
-				
-				mv.setViewName("redirect:/");
+				mv.setViewName("redirect:"+url);
 			}
 			//네이버 인증 후 회원가입 시
 			if(m.getCertification()==2) {
-				System.out.println("네이버로 들어옴");
 				
 				String clientId = "xezYicDH1SzVKNokPSX2";
 				String ClientSecret = "h48MxFzhpW";
@@ -1020,20 +1098,8 @@ public class MemberController {
 	//카카오 인증 조회 (1.인가 코드 받기 2.인가코드로 토큰 받기 3.토큰으로 정보 조회)
 	//회원가입 폼
 	@RequestMapping("enrollForm.me")
-	public String joinMember(Member m, String birthDay, @RequestParam(value="certification",defaultValue="0") String certification, ModelAndView mv, String code,String error, HttpServletRequest request, HttpSession session) throws IOException, ParseException{
+	public ModelAndView joinMember(Member m, String birthDay, @RequestParam(value="certification",defaultValue="0") String certification, ModelAndView mv, String code,String error, HttpServletRequest request, HttpSession session) throws IOException, ParseException{
 		
-		//카카오톡
-		//로그인 인증 동의시 토큰 받기 요청위한 인가 코드(동의하고 계속하기 선택, 로그인 진행시)
-		//System.out.println(code);
-		//인증 실패시 반환되는 에러코드(로그인 취소)
-		//System.out.println(error);
-		
-		//카카오 인증 취소시
-		if(error != null) {
-			if(error.equals("access_denied")) {
-				session.setAttribute("alertMsg", "인증을 취소하였습니다.");
-			}
-		}
 		//인증1번으로 넘어오면 카카오로 토큰 받아오기
 		if(certification.equals("1")) {
 			//url작성
@@ -1147,7 +1213,7 @@ public class MemberController {
 			kakaoInfo.put("access_token",access_token);
 			kakaoInfo.put("certification",certification);
 			
-			session.setAttribute("kakaoInfo",kakaoInfo);
+			mv.addObject("kakaoInfo",kakaoInfo);
 		}
 		
 		//인증2번으로 넘어올시 네이버 토큰 발급 후 정보 조회
@@ -1238,17 +1304,17 @@ public class MemberController {
 			naverInfo.put("access_token",access_token);
 			naverInfo.put("certification",certification);
 			
-			session.setAttribute("naverInfo",naverInfo);
+			mv.addObject("naverInfo",naverInfo);
 		}
 		
-		return "member/memberEnrollForm";
+		mv.setViewName("member/memberEnrollForm");
+		
+		return mv;
 	}
 	
-	//이메일 인증번호 쏴주기
-	@ResponseBody
-	@RequestMapping("emailCk.fe")
-	public int emailCk(@RequestParam("email")String userMail) {
-		System.out.println("인증메일 보내는중...");
+	//이메일 인증번호 보내는 메소드
+	public int emailSend(String userMail) {
+		
 		String host = "smtp.naver.com";
 		String user = "cjj3845@naver.com";
 		String password = "1s2s3s4s";
@@ -1265,7 +1331,7 @@ public class MemberController {
 				return new PasswordAuthentication(user, password);
 			}
 		});
-			
+		
 		try {
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(user));
@@ -1281,6 +1347,15 @@ public class MemberController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return ranNum;
+	}
+	
+	//이메일 인증번호 쏴주기
+	@ResponseBody
+	@RequestMapping("emailCk.fe")
+	public int emailCk(@RequestParam("email")String userMail) {
+		System.out.println("인증메일 보내는중...");
+		int ranNum = emailSend(userMail);
 		return ranNum;
 	}
 	
@@ -1333,6 +1408,50 @@ public class MemberController {
 		int count = memberService.nickCheck(checkNick);
 		
 		return (count>0)?"NNNNN":"NNNNY";
+	}
+	
+	//아이디 찾기 폼으로 돌려주기
+	@RequestMapping("searchIdForm.me")
+	public String searchId() {
+		return "member/searchId";
+	}
+	
+	//아이디 찾기 진행시 인증번호 발송
+	@ResponseBody
+	@RequestMapping("searchId.me")
+	public int SearchId(@RequestParam("emailNm")String emailNm, @RequestParam("email")String email) {
+		System.out.println("인증메일 보내는 중...");
+		
+		HashMap<String, String> info = new HashMap();
+			info.put("emailNm", emailNm);
+			info.put("email", email);
+		
+		int count = memberService.searchId(info);
+		int ranNum = 0;
+		
+		if(count>0) {
+			ranNum = emailSend(email);
+		}
+		return ranNum;
+	}
+	//아이디 찾기 진행시 아이디 가져오기
+	@ResponseBody
+	@RequestMapping("searchIdList.me")
+	public Member searchIdList(@RequestParam("emailNm")String emailNm, @RequestParam("email")String email) {
+		
+		HashMap<String, String> info = new HashMap();
+			info.put("emailNm", emailNm);
+			info.put("email", email);
+		
+		Member memId = memberService.searchIdMem(info);
+		
+		return memId;
+	}
+	
+	//비밀번호 폼으로
+	@RequestMapping("searchPwd.me")
+	public String searchPwd(){
+		return "member/searchPwd";
 	}
 	
 	//로그아웃
