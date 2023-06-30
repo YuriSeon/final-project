@@ -28,30 +28,27 @@
 	            </div>
 	            </div>
 	            <div class="container right">
-	                <div class="content">
-	                    <p>여행 스타일(중복가능)</p>
-	                    <div id="sort">
-	                        <input type="checkbox" name="concept" value="액티비티" id="액티비티"><label for="액티비티">액티비티</label>
-	                        <input type="checkbox" name="concept" value="힐링" id="힐링"><label for="힐링">힐링</label>
-	                        <input type="checkbox" name="concept" value="인생샷" id="인생샷"><label for="인생샷">인생샷</label><br>
-	                        <input type="checkbox" name="concept" value="바다" id="바다"><label for="바다">바다</label>
-	                        <input type="checkbox" name="concept" value="산" id="산"><label for="산">산</label>
-	                        <input type="checkbox" name="concept" value="반려동물" id="반려동물"><label for="반려동물">반려동물</label><br>
-	                        <input type="checkbox" name="concept" value="역사" id="역사"><label for="역사">역사</label>
-	                        <input type="checkbox" name="concept" value="체험" id="체험"><label for="체험">체험</label>
-	                        <input type="checkbox" name="concept" value="음식" id="음식"><label for="음식">음식</label>
-	                        <input type="checkbox" name="concept" value="쇼핑" id="쇼핑"><label for="쇼핑">쇼핑</label>
-	                    </div>
-	                </div>
+	            	<div class="content">
+		                <p>어떤 일정인가요?</p>
+		                <textarea name="boardContent" placeholder="일정에 대해 설명해주세요"></textarea>
+		            </div>
 	            </div>
 	            <div class="container left">
-	            <div class="content">
-	                <p>동행을 구하시겠습니까?</p>
-	                <input type="radio" name="together" id="together-yes"><label for="together-yes">예</label> &nbsp;
-	                <input type="radio" name="together" id="together-no" value="0" checked><label for="together-no">아니오</label> <br>
-	                
-
-	            </div>
+	           		<div class="content">
+	                    <p>여행 스타일(중복가능)</p>
+	                    <div id="sort">
+	                        <input type="checkbox" name="style" value="액티비티" id="액티비티"><label for="액티비티">액티비티</label>
+	                        <input type="checkbox" name="style" value="힐링" id="힐링"><label for="힐링">힐링</label>
+	                        <input type="checkbox" name="style" value="인생샷" id="인생샷"><label for="인생샷">인생샷</label><br>
+	                        <input type="checkbox" name="style" value="바다" id="바다"><label for="바다">바다</label>
+	                        <input type="checkbox" name="style" value="산" id="산"><label for="산">산</label>
+	                        <input type="checkbox" name="style" value="반려동물" id="반려동물"><label for="반려동물">반려동물</label><br>
+	                        <input type="checkbox" name="style" value="역사" id="역사"><label for="역사">역사</label>
+	                        <input type="checkbox" name="style" value="체험" id="체험"><label for="체험">체험</label>
+	                        <input type="checkbox" name="style" value="음식" id="음식"><label for="음식">음식</label>
+	                        <input type="checkbox" name="style" value="쇼핑" id="쇼핑"><label for="쇼핑">쇼핑</label>
+	                    </div>
+	                </div>
 	            </div>
 	            <div class="container right">
 	                <div class="content">
@@ -236,7 +233,7 @@
 	    	// 반복문으로 일차별 정보 담기
 	    	for(var i=0; i<day.length; i++){
 			    var path = makeTag("input", {"type":"hidden", "name":"path"});
-	    		// pathVO(infoName, daily, pathNo, infoAddress, pay)
+	    		// pathVO(infoName, daily, pathNo, infoAddress, pay) 순서로 담음
 	    		
 		    	path.prop("value",($($(day[i]).children()).eq(1).text()
 			    					+","+$(day[i]).attr("name")
@@ -248,7 +245,16 @@
 		    	$("#insertForm").append(path);
 		    	path = "";
 	    	}
-// 	    	$("#insertForm").submit();
+
+			// 컨셉 구분자로 구분해서 넣기위한 작업해서 넘기기
+			var concepts = "";
+			$("input[name=style]:checked").each(function(){
+				concepts += $(this).val()+'/';
+			});
+			// 맨 뒤 구분자 하나 제거 후 input value에 담아서 폼태그에 넣기
+			var concept = makeTag("input",{"type":"hidden","name":"concept","value":concepts.slice(0,-1)}); 
+			$("#insertForm").append(concept);
+	    	$("#insertForm").submit(); // 제출
 	    }	
 	    
 	   

@@ -61,6 +61,98 @@ public class AttractionController {
 		}
 		return changeName;
 	}
+
+	// 이미지 다운 및 경로 설정 메소드(URL)
+	public static ArrayList<Attachment> imgTool(HttpSession session, ArrayList<String> imageURL){
+		String savePath = session.getServletContext().getRealPath("/resources/infoImg/"); //프로젝트 내 파일 다운받을 경로 설정
+		// 전역변수 선언
+		String originName = "";
+		String changeName = "";
+		InputStream inputStream = null;
+		ByteArrayOutputStream outputStream = null;
+		FileOutputStream fileOutputStream = null;
+		ArrayList<Attachment> atArr = new ArrayList<>();
+		
+		for(int i=0; i<imageURL.size(); i++) {
+			Attachment at = new Attachment();
+			String[] strArr = imageURL.get(i).split("/"); // 기존이름과 확장자명 추출위해 배열 변수처리
+			originName = strArr[strArr.length-1]; // 마지막 인덱스가 파일명
+			changeName = getChangeName(originName); // 랜덤 파일이름 부여 
+			
+			try {
+				URL url = new URL(imageURL.get(i));
+				URLConnection conn = url.openConnection();
+				inputStream = conn.getInputStream();
+
+				// 이미지 파일을 바이트 배열로 읽어오기
+				outputStream = new ByteArrayOutputStream();
+				byte[] buffer = new byte[4096];
+				int bytesRead;
+				while ((bytesRead = inputStream.read(buffer)) != -1) {
+				    outputStream.write(buffer, 0, bytesRead);
+				}
+				byte[] imageBytes = outputStream.toByteArray();
+
+				// 디렉토리 생성
+				File directory = new File(savePath);
+				if (!directory.exists()) {
+				    directory.mkdirs();
+				}
+
+				// 이미지 파일로 저장하기
+				fileOutputStream = new FileOutputStream(new File(savePath, changeName));// 파일 저장 경로 설정
+				fileOutputStream.write(imageBytes);
+				
+				// 이미지 저장되면 이름, 경로 저장
+				at.setOriginName(originName);
+				at.setChangeName(changeName);
+				at.setFilePath("resources/infoImg/"+changeName);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					outputStream.close();
+					inputStream.close();
+					fileOutputStream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			atArr.add(at);
+		}
+		
+		return atArr;
+	}
+	
+	// 파일로 이미지 업로드한 경우
+	public static ArrayList<Attachment> imgTool(ArrayList<MultipartFile> upfile, HttpSession session ){
+		String savePath = session.getServletContext().getRealPath("/resources/infoImg/"); //프로젝트 내 파일 다운받을 경로 설정
+		// 전역변수 선언
+		String originName = "";
+		String changeName = "";
+		ArrayList<Attachment> atArr = new ArrayList<>();
+		
+		// 직접 올린 파일이라면
+		for(int i=0; i<upfile.size(); i++) {
+			Attachment at = new Attachment();
+			originName = upfile.get(i).getOriginalFilename(); // 기존 이름 추출
+			if(!originName.equals("")) {  // 파일이 비어있지 않으면
+				changeName = getChangeName(originName); // 랜덤 파일이름 부여
+				// 경로와 수정파일명을 합쳐 파일 업로드
+				try {
+					upfile.get(i).transferTo(new File(savePath+changeName)); // 파일 업로드 구문
+					at.setOriginName(originName);
+					at.setChangeName(changeName);
+					at.setFilePath("resources/infoImg/"+changeName);
+				} catch (IllegalStateException | IOException e) {
+					e.printStackTrace();
+				}
+			}
+			atArr.add(at);
+		}
+		return atArr;
+	}
 	
 	@ResponseBody
 	@GetMapping(value="searchKeyword1", produces = "application/json; charset=UTF-8")
@@ -121,7 +213,6 @@ public class AttractionController {
 	}
 	
 	// 게시물 등록전 정보조회해오는 메소드 
-	@ResponseBody
 	@PostMapping(value="searchInfo.attr", produces ="json/application; charset=UTF-8")
 	public String searchInfo(Info in) {
 		Info info = new Selenium().infoDataGet(in);
@@ -132,95 +223,22 @@ public class AttractionController {
 	@PostMapping("insert.attr")
 	public ModelAndView insertAttr(HttpSession session, ModelAndView mv, Info info, int mainImg, ArrayList<MultipartFile> upfile, 
 									@RequestParam("imageURL") ArrayList<String> imageURL) {
-		String savePath = session.getServletContext().getRealPath("/resources/infoImg/");
-		String originName = "";
-		String changeName = "";
-		InputStream inputStream = null;
-		ByteArrayOutputStream outputStream = null;
-		FileOutputStream fileOutputStream = null;
+		// 이미지처리하는 메소드 실행
 		ArrayList<Attachment> atArr = new ArrayList<>();
-		
-		if(!imageURL.isEmpty()) { // 웹에서 다운받아야한다면
-			for(int i=0; i<imageURL.size(); i++) {
-				Attachment at = new Attachment();
-				String[] strArr = imageURL.get(i).split("/"); // 기존이름과 확장자명 추출위해 배열 변수처리
-				originName = strArr[strArr.length-1]; // 마지막 인덱스가 파일명
-				changeName = getChangeName(originName);
-				
-				try {
-					URL url = new URL(imageURL.get(i));
-					URLConnection conn = url.openConnection();
-					inputStream = conn.getInputStream();
-
-					// 이미지 파일을 바이트 배열로 읽어오기
-					outputStream = new ByteArrayOutputStream();
-					byte[] buffer = new byte[4096];
-					int bytesRead;
-					while ((bytesRead = inputStream.read(buffer)) != -1) {
-					    outputStream.write(buffer, 0, bytesRead);
-					}
-
-					byte[] imageBytes = outputStream.toByteArray();
-					
-					// 디렉토리 생성
-					File directory = new File(savePath);
-					if (!directory.exists()) {
-					    directory.mkdirs();
-					}
-
-					// 이미지 파일로 저장하기
-					fileOutputStream = new FileOutputStream(new File(savePath, changeName));// 파일 저장 경로 설정
-					fileOutputStream.write(imageBytes);
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					try {
-						outputStream.close();
-						inputStream.close();
-						fileOutputStream.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				if(i==(mainImg-1)) {
-					at.setFileLevel(1);
-				} else {
-					at.setFileLevel(2);
-				}
-				at.setOriginName(originName);
-				at.setChangeName(changeName);
-				at.setFilePath("resources/images/infoImg/"+changeName);
-				atArr.add(at);
-			}
-		} else { // 직접 올린 파일이라면
-			for(int i=0; i<upfile.size(); i++) {
-				Attachment at = new Attachment();
-				originName = upfile.get(i).getOriginalFilename();
-				if(!originName.equals("")) { 
-					changeName = getChangeName(originName);
-					// 경로와 수정파일명을 합쳐 파일 업로드
-					try {
-						upfile.get(i).transferTo(new File(savePath+changeName)); //파일 업로드 구문
-					} catch (IllegalStateException | IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				if(i==(mainImg-1)) {
-					at.setFileLevel(1);
-				} else {
-					at.setFileLevel(2);
-				}
-				at.setOriginName(originName);
-				at.setChangeName(changeName);
-				at.setFilePath("resources/images/infoImg/"+changeName);
-				atArr.add(at);
+		if(!imageURL.isEmpty()) {
+			atArr = imgTool(session, imageURL);
+		} else {
+			atArr = imgTool(upfile, session);
+		}
+		for(int i=0; i<atArr.size(); i++) { // 대표이미지 설정
+			if(i==(mainImg-1)) {
+				atArr.get(i).setFileLevel(1);
+			} else {
+				atArr.get(i).setFileLevel(2);
 			}
 		}
 		int result = atService.insertAttr(info, atArr);
-		if(result==(atArr.size()+1)) { // 파일개수 + 데이터삽입수의 합
+		if(result!=0) { // 0이 아니면 한번도 실패 안한거라서 성공
 			session.setAttribute("alertMsg", "게시물등록 성공");
 			mv.setViewName("redirect:attraction.bo");
 		} else {
@@ -235,9 +253,45 @@ public class AttractionController {
 		return "board/attraction/attrModifyRequest";
 	}
 	
+	// 댓글 등록
 	@ResponseBody
-	@PostMapping(value="insertReply.attr", produces ="application/json; charset=UTF-8")
+	@RequestMapping(value="insertReply.attr", produces ="application/json; charset=UTF-8")
 	public int insertReply(Rereply r){
 		return atService.insertReply(r);
 	}
+	
+	// 댓글 조회
+	@ResponseBody
+	@RequestMapping(value="selectReplyList.attr", produces ="application/json; charset=UTF-8")
+	public String selectReplyList(int boardNo) {
+		HashMap<String, Object> rList = atService.selectReplyList(boardNo);
+		return new Gson().toJson(rList);
+	}
+	
+	// 좋아요, 찜, 신고여부 조회
+	@ResponseBody
+	@RequestMapping(value="iconCheck.attr", produces ="application/json; charset=UTF-8")
+	public String iconCheck(@RequestParam("btnType") String btnType, 
+							@RequestParam("boardNo") int boardNo, 
+							@RequestParam("writer") String writer) {
+		int result = atService.iconCheck(btnType, boardNo, writer);
+		return new Gson().toJson(result);
+	}
+	
+	// 좋아요, 찜 아이콘 변경
+	@ResponseBody
+	@RequestMapping(value="iconChange.attr", produces ="application/json; charset=UTF-8")
+	public String iconChange(@RequestParam("btnType") String btnType, @RequestParam("tableName")String tableName,
+							 @RequestParam("no") int no, @RequestParam("writer") String writer) {
+		int count = 0;
+		int result = atService.iconCheck(btnType, no, writer);
+		if(result>0) { // 이미 눌렀던 사람 (취소하기)
+			count = atService.iconBefore(btnType, tableName, no, writer);
+		} else { // 새로 등록할 사람
+			count = atService.iconAfter(btnType, tableName, no, writer);
+		}
+		return new Gson().toJson(count);
+	}
+	
+	// 
 }
