@@ -372,7 +372,7 @@
                         <div class="modal_btns">
                             <button type="button" class="btn btn-success">채팅하기</button>
                             <button type="button" class="btn btn-info">쓴글보기</button>
-                            <button type="button" class="btn btn-danger">신고하기</button>
+                            <button type="button" class="btn btn-danger" >신고하기</button>
                         </div>
                         <br>
                     </div>

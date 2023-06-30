@@ -17,5 +17,5 @@ private String replyWriter;//	REPLY_WRITER
 private int refQno;//	REF_QNO
 private int replyNo;//	REPLY_NO
 private String status;//	STATUS
-
+private String profileImg; // 프로필이미지 경로+바뀐이름
 }

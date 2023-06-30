@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class choice {
 	
 	private int boardNo;	//	BOARD_NO	NUMBER
-	private int userNo;	//	USER_NO	NUMBER
+	private String writer;	//	USER_NO	NUMBER
 
 }

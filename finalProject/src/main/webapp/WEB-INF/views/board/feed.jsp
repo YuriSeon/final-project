@@ -247,6 +247,14 @@
 }
  .massge{cursor: pointer;}
  #reply-area{display: none;}
+ #nicknameHover{cursor: pointer;}
+ #pagingArea{
+		/* border: 1px solid; */
+		position: relative;
+		margin-left: 900px; 
+		margin-top: 100px;
+	}
+
 </style>
 
   <head>
@@ -306,21 +314,21 @@
                                                             <ul>
                                                                 <li><a href="feed.bo" class="circle">#전체</a></li>
                                                                 <li><a href="city.bo?city=11" class="circle">#서울</a></li>
-                                                                <li><a href="city.bo?city=23" class="circle">#인천</a></li>
-                                                                <li><a href="city.bo?city=21" class="circle">#부산</a></li>
-                                                                <li><a href="city.bo?city=22" class="circle">#대구</a></li>
-                                                                <li><a href="city.bo?city=24" class="circle">#광주</a></li>
-                                                                <li><a href="city.bo?city=25" class="circle">#대전</a></li>
-                                                                <li><a href="city.bo?city=26" class="circle">#울산</a></li>                                                                
-                                                                <li><a href="city.bo?city=31" class="circle">#경기</a></li>
-                                                                <li><a href="city.bo?city=32" class="circle">#강원</a></li>
-                                                                <li><a href="city.bo?city=33" class="circle">#충북</a></li>
-                                                                <li><a href="city.bo?city=34" class="circle">#충남</a></li>
-                                                                <li><a href="city.bo?city=37" class="circle">#경북</a></li>
-                                                                <li><a href="city.bo?city=38" class="circle">#경남</a></li>
-                                                                <li><a href="city.bo?city=35" class="circle">#전북</a></li>
-                                                                <li><a href="city.bo?city=36" class="circle">#전남</a></li>
-                                                                <li><a href="city.bo?city=39" class="circle">#제주</a></li>                                                           
+                                                                <li><a href="city.bo?city=28" class="circle">#인천</a></li>
+                                                                <li><a href="city.bo?city=26" class="circle">#부산</a></li>
+                                                                <li><a href="city.bo?city=27" class="circle">#대구</a></li>
+                                                                <li><a href="city.bo?city=29" class="circle">#광주</a></li>
+                                                                <li><a href="city.bo?city=30" class="circle">#대전</a></li>
+                                                                <li><a href="city.bo?city=31" class="circle">#울산</a></li>                                                                
+                                                                <li><a href="city.bo?city=41" class="circle">#경기</a></li>
+                                                                <li><a href="city.bo?city=42" class="circle">#강원</a></li>
+                                                                <li><a href="city.bo?city=43" class="circle">#충북</a></li>
+                                                                <li><a href="city.bo?city=44" class="circle">#충남</a></li>
+                                                                <li><a href="city.bo?city=47" class="circle">#경북</a></li>
+                                                                <li><a href="city.bo?city=48" class="circle">#경남</a></li>
+                                                                <li><a href="city.bo?city=45" class="circle">#전북</a></li>
+                                                                <li><a href="city.bo?city=46" class="circle">#전남</a></li>
+                                                                <li><a href="city.bo?city=50" class="circle">#제주</a></li>                                                           
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -360,10 +368,15 @@
 							                        						<c:when test="${loginUser.nickname eq f.boardWriter }">
 																				<ul id="sild">
 																					<li><button class="custom-button" id="updateBoard" onclick="updateBoard(this);">수정</button></li>
-																					<li><button class="custom-button" id="de" onclick="deletef(this);">삭제</button></li>
-																				
+																					<li><button class="custom-button" id="de" onclick="deletef(this);">삭제</button></li>													
 																				</ul>
 																			</c:when>
+																			<c:otherwise>
+																				<ul id="sild">
+																					<li><button class="custom-button" id="updateBoard" onclick="updateBoard(this);">프로필</button></li>
+																					<li><button class="custom-button" id="" onclick="deletef(this);">신고</button></li>	
+																				</ul>
+																			</c:otherwise>
 																			</c:choose>
 																		</li>												
 																	</ul>
@@ -408,10 +421,14 @@
 									                            <h5>${f.boardContent }</h5>
 									                            
 									                            <br>
-									                            <ul>					                                
-									                                <li>${f.createDate }</li>
-									                            </ul>
-									                           
+									                            <ul id="address">
+									                            	<li style="float: left;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+																		  <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+																		</svg>
+																	</li>
+									                            	<li>${f.info.getInfoAddress() }</li> 
+									                            </ul>									                            
+										                        <p>${f.createDate }</p>
 									                        </div>
 									                        <hr>
 									                        <div id="reply-area">
@@ -445,33 +462,66 @@
                 </div>
             </div>
         </div>
+        <c:choose>
+        	<c:when test="${not empty city }">
+        		<div id="pagingArea" align="center">
+	                <ul class="pagination">
+	                	<c:choose>
+	                		<c:when test="${pi.currentPage eq 1}">
+	                   			 <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+	                		</c:when>
+	                		<c:otherwise>
+	                			 <li class="page-item"><a class="page-link" href="city.bo?currentPage=${pi.currentPage - 1 }&city=${city}">Previous</a></li>
+	                		</c:otherwise>
+	                	</c:choose>
+	                	
+	                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
+		                    <li class="page-item"><a class="page-link" href="city.bo?currentPage=${p}&city=${city}">${p}</a></li>
+	                    </c:forEach>
+	                    
+	                    <c:choose>
+	                    	<c:when test="${pi.currentPage eq pi.maxPage}">
+			                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+	                    	</c:when>
+	                    	<c:otherwise>
+	                    		<li class="page-item"><a class="page-link" href="city.bo?currentPage=${pi.currentPage + 1}&city=${city}">Next</a></li>
+	                    	</c:otherwise>
+	                    </c:choose>
+	                </ul>
+               </div> 
         
-        <div id="pagingArea" align="center">
-                <ul class="pagination">
-                	<c:choose>
-                		<c:when test="${pi.currentPage eq 1}">
-                   			 <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                		</c:when>
-                		<c:otherwise>
-                			 <li class="page-item"><a class="page-link" href="feed.bo?currentPage=${pi.currentPage - 1 }">Previous</a></li>
-                		</c:otherwise>
-                	</c:choose>
-                	
-                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
-	                    <li class="page-item"><a class="page-link" href="feed.bo?currentPage=${p}">${p}</a></li>
-                    </c:forEach>
-                    
-                    <c:choose>
-                    	<c:when test="${pi.currentPage eq pi.maxPage}">
-		                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
-                    	</c:when>
-                    	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="feed.bo?currentPage=${pi.currentPage + 1}">Next</a></li>
-                    	</c:otherwise>
-                    </c:choose>
-                </ul>
-            </div> 
+        	</c:when>
+        	
+        	<c:otherwise>
+        	
+		        <div id="pagingArea" align="center">
+		                <ul class="pagination">
+		                	<c:choose>
+		                		<c:when test="${pi.currentPage eq 1}">
+		                   			 <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+		                		</c:when>
+		                		<c:otherwise>
+		                			 <li class="page-item"><a class="page-link" href="feed.bo?currentPage=${pi.currentPage - 1 }">Previous</a></li>
+		                		</c:otherwise>
+		                	</c:choose>
+		                	
+		                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
+			                    <li class="page-item"><a class="page-link" href="feed.bo?currentPage=${p}">${p}</a></li>
+		                    </c:forEach>
+		                    
+		                    <c:choose>
+		                    	<c:when test="${pi.currentPage eq pi.maxPage}">
+				                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+		                    	</c:when>
+		                    	<c:otherwise>
+		                    		<li class="page-item"><a class="page-link" href="feed.bo?currentPage=${pi.currentPage + 1}">Next</a></li>
+		                    	</c:otherwise>
+		                    </c:choose>
+		                </ul>
+		            </div> 
         
+        	</c:otherwise>
+        </c:choose>
     </div>
     
 
@@ -710,11 +760,9 @@ var loginUser =  "${loginUser}";
 					 
 				 }
 			 } 
-			 
-		//댓글삽입
-			
-				var replyBox = $(this).find("#replyBox");//댓글 넣을 div
-										
+
+			 //댓글삽입			
+			 var replyBox = $(this).find("#replyBox");//댓글 넣을 div
 				 $.ajax({
 					 url:"selectReplyList.fo",
 					 data:{refQno:boardNo},
@@ -727,8 +775,13 @@ var loginUser =  "${loginUser}";
 								/*   console.log(list[i].replyWriter); */
 
 								 str +="<div id='reply-text'>"
-								 	 +"<img src='resources/images/profile/빈프로필.jpg' alt='' style='width:20px; height:20px; border-radius:50%; margin-left:5px;margin-bottom: 4px;' id='profile'>"
-			             			 +"<b style='margin-bottom: 3px;'>"+list[i].replyWriter+"</b>"
+								if(!list[i].profileImg){		    			 
+						    		str+="<img src='resources/images/profile/빈프로필.jpg' style='width:20px; height:20px; border-radius:50%; margin-left:5px;margin-bottom: 4px;'>"
+						    	}else{
+						    		str+="<img src='"+list[i].profileImg+"' alt='프로필사진' style='width:20px; height:20px; border-radius:50%; margin-left:5px;margin-bottom: 4px;'>"		    			 
+						    	}
+								 	 
+			             		 str+="<b style='margin-bottom: 3px;'>"+list[i].replyWriter+"</b>"
 			             			 +"<button style='border: solid white; float: right;background-color: white;' id='report' onclick='report(\"" + list[i].replyWriter + "\",\"" + list[i].replyNo + "\")'>"
 			             			 +"<img alt='' src='resources/images/980829.png' style='width:15px; height:15px; float: right;'>"
 			             			 +"</button>"
@@ -754,6 +807,9 @@ var loginUser =  "${loginUser}";
 					 }
 				 });
 				
+		
+				
+										
 				
 				
 
@@ -778,7 +834,7 @@ var loginUser =  "${loginUser}";
 				success:function(result){
 					if(result =="success"){					
 						 /* selectReplyList();  */
-						$(this).prev().val("");
+						$(this).prev("#reply").val("");
 						location.reload();
 					}
 				},
@@ -789,7 +845,6 @@ var loginUser =  "${loginUser}";
 			  
 		 }else{
 			 alert("로그인시 이용가능합니다.");
-			 location.reload();
 		 }
 		 
 		 
@@ -947,9 +1002,13 @@ var loginUser =  "${loginUser}";
 				
 				for(i in list){
 					  rstr +="<div style='margin-top:10px;' id='rere-text'>"
-						 +"<i class='bi bi-arrow-return-right' style='float: left;margin-left: 10px;'></i>"				
-	            		 +"<img src='resources/images/profile/빈프로필.jpg' alt='' style='width:17px; height:17px; border-radius:50%; margin-left:5px;margin-bottom: 4px;'>"
-	        		     +"<b style='margin-bottom: 3px;font-size: 6px;'>"+list[i].replyWriter+"</b>"
+						 +"<i class='bi bi-arrow-return-right' style='float: left;margin-left: 10px;'></i>"		
+					if(!list[i].profileImg){		    			 
+			    		rstr+="<img src='resources/images/profile/빈프로필.jpg' style='width:17px; height:17px; border-radius:50%; margin-left:5px;margin-bottom: 4px;'>"
+			    	}else{
+			    		rstr+="<img src='"+list[i].profileImg+"' alt='프로필사진' style='width:17px; height:17px; border-radius:50%; margin-left:5px;margin-bottom: 4px;'>"		    			 
+			    	}          		
+						rstr+="<b style='margin-bottom: 3px;font-size: 6px;'>"+list[i].replyWriter+"</b>"
 	        		     +"<button style='border: solid white; float: right;background-color: white;' id='rere-report' onclick='rereport(\"" + list[i].replyWriter + "\",\"" + list[i].refRno + "\")'>"
 	            		 +"<img alt='' src='resources/images/980829.png' style='width:13px; height:13px; float: right;'>"
 	        		     +"</button>"
@@ -1058,13 +1117,24 @@ var loginUser =  "${loginUser}";
  }
 	
 	//city호버스타일 그대로하기
-	 var circles = document.getElementsByClassName("circle");
+	 $(function(){
+		 var circles = document.getElementsByClassName("circle");
+		  var activeLink = document.querySelector(".circle.active");
 
-	 for (var i = 0; i < circles.length; i++) {
-	   circles[i].addEventListener("click", function() {
-	     this.classList.toggle("active");
-	   });
-	 }
+		  if (activeLink) {
+		    activeLink.classList.add("active");
+		  }
+
+		  for (var i = 0; i < circles.length; i++) {
+		    circles[i].addEventListener("click", function() {
+		      var currentActiveLink = document.querySelector(".circle.active");
+		      if (currentActiveLink) {
+		        currentActiveLink.classList.remove("active");
+		      }
+		      this.classList.add("active");
+		    });
+		  }
+	 })
 	 
 	 //최신순
 	 function newerList(){
