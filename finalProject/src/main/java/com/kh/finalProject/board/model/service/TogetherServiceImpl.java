@@ -11,6 +11,7 @@ import com.kh.finalProject.board.model.dao.TogetherDao;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Plan;
+import com.kh.finalProject.board.model.vo.TogetherApplyVO;
 import com.kh.finalProject.board.model.vo.TogetherVO;
 import com.kh.finalProject.common.model.vo.PageInfo;
 
@@ -43,9 +44,25 @@ public class TogetherServiceImpl  implements TogetherService{
 	}
 	
 	@Override
-	public ArrayList<TogetherVO> optionSearch(TogetherVO t) {
-		return togetherDao.optionSearch(sqlSession,t);
+	public int selectOptionListCount(TogetherVO t) {
+		return togetherDao.selectOptionListCount(sqlSession,t);
 	}	
+	
+	@Override
+	public ArrayList<TogetherVO> optionSearch(TogetherVO t, PageInfo pi) {
+		return togetherDao.optionSearch(sqlSession,t,pi);
+	}
+
+	@Override
+	public int togetherApply(TogetherApplyVO ta) {
+		return togetherDao.togetherApply(sqlSession, ta);
+	}
+
+	@Override
+	public TogetherVO togetherDetail(int boardNo) {
+		return togetherDao.togetherDetail(sqlSession,boardNo);
+	}
+
 
 	
 }
