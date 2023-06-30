@@ -5,10 +5,10 @@
 /* ------------------------------------------------------------ */
 /* detail view */
 /* ------------------------------------------------------------ */
-
 .attracDetail, .attrInsert {
 	width: 75%;
 	margin: auto;
+	min-height: 450px;
 }
 
 .attracDetail * {
@@ -166,6 +166,12 @@
 .attracDetail .inr {
 	width: 93%;
 	text-align: left;
+}
+
+.attracDetail #infoDetail * {
+	text-align: left;
+	padding: 10px 30px;
+	font-size: 15px;
 }
 
 .attracDetail #btn_more {
@@ -378,7 +384,6 @@
 /* ------------------------------------------------------------ */
 /* enroll page */
 /* ------------------------------------------------------------ */
-
 .attrInsert * {
 	box-sizing: border-box;
 }
@@ -410,8 +415,9 @@
 	font-size: 13px;
 	font-weight: 500;
 	width: 100%;
-	text-align : left;
+	text-align: left;
 }
+
 .attrInsert mark {
 	background-color: #ffced7ad;
 }
@@ -469,14 +475,14 @@
 	border: 2px solid darkgray;
 }
 
-.attrInsert table input{
+.attrInsert table input {
 	width: 100%;
 	height: 100%;
 	border: none;
 }
+
 .attrInsert table textarea {
-	width : 100%
-	height: 97%;
+	width: 100% height: 97%;
 	border: none;
 	resize: none;
 }
@@ -485,6 +491,11 @@
 	height: 300px;
 	position: relative;
 }
+
+.attrInsert table #img-area * {
+	border: none;
+}
+
 .attrInsert #wrapSlide {
 	width: 100%;
 	height: 100%;
@@ -498,14 +509,10 @@
 .attrInsert #slideArea {
 	width: 60%;
 	height: 100%;
+	text-align: center;
 }
-/* 
-.attrInsert #slideImage{
-	width: 100%;
-	height: 100%;
-} */
 
-.attrInsert #slideImage{
+.attrInsert #slideImage {
 	width: auto;
 	max-height: 405px;
 	height: 100%;
@@ -525,22 +532,25 @@
 	opacity: 0.3;
 	width: 60%;
 	height: auto;
-	margin-top: 65%;
+	margin-top: 50%;
 	opacity: calc(0.1);
 	cursor: pointer;
+	margin-left: 25%;
 }
 
 .attrInsert #dotArea {
 	position: relative;
-	margin-top: 5px;
+	margin-top: 1px;
 	height: 5%;
+	text-align: center;
 }
 
 .attrInsert #dotArea * {
 	margin-right: 10px;
 }
+
 .attrInsert table #boardContent2 {
-	height : 200px;
+	height: 200px;
 }
 
 .attrInsert .btn-area {
@@ -572,7 +582,6 @@
 /* ------------------------------------------------------------ */
 /* update page */
 /* ------------------------------------------------------------ */
-
 .attrUpdate {
 	width: 75%;
 	margin: auto;
@@ -692,6 +701,7 @@
 .modifyRequest {
 	width: 75%;
 	margin: auto;
+	min-height: 450px;
 }
 
 .modifyRequest * {
@@ -830,7 +840,7 @@
 	font-size: 19px;
 	font-weight: 550;
 	padding-left: 15px;
-	text-align:center;
+	text-align: center;
 }
 
 .modifyRequest .modify .name {

@@ -337,7 +337,7 @@
 	              </div>
 	            </div>
 	            <div id="cookie-ck">
-	              <input type="checkbox" id="saveId" name="saveId">
+	              <input type="checkbox" id="saveId" name="saveId" value="off">
 	              <label for="saveId">아이디 저장</label>
 	            </div>
 	            <div id="login-fales">
@@ -351,9 +351,9 @@
 	          
 	          <!-- Modal footer -->
 	          <div class="modal-footer">
-	            <a href="">아이디 찾기</a> |
-	            <a href="">비밀번호 찾기</a> |
-	            <a href="">회원가입</a>
+	            <a href="searchIdForm.me">아이디 찾기</a> |
+	            <a href="searchPwd.me">비밀번호 찾기</a> |
+	            <a href="enrollListForm.me">회원가입</a>
 	          </div>
 	  
 	        </div>
@@ -384,11 +384,18 @@
   		});
   		
   		//로그인 회원인지 조희
+  		
   		function loginGo(){
+  			
+  			if($("#saveId").prop("checked")){
+  				$("#saveId").val("on");
+  			}
+  			
   			$.ajax({
   				url : "login.me",
   				data : {userId : $("#userId").val(),
-  						userPwd : $("#userPwd").val()},
+  						userPwd : $("#userPwd").val(),
+  						saveId : $("#saveId").val()},
   				success : function(result){
   					if(result == "NNNNN"){//로그인 유저 없을시
   						console.log("dd");
@@ -400,6 +407,7 @@
   			});
   			return false;
   		}
+  		
   	</script>
   	
   	<div class="modal" id="profile" role="dialog">
