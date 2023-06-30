@@ -48,10 +48,21 @@ public class MemberServiceImpl implements MemberService{
 	public int searchId(HashMap<String, String> info) {
 		return memberDao.searchId(sqlSession, info);
 	}
-	//아이디 찾기 진행시 아이디 리스트
+	//아이디 찾기 진행시 아이디
 	@Override
 	public Member searchIdMem(HashMap<String, String> info) {
 		return memberDao.searchIdMem(sqlSession, info);
+	}
+	
+	//비밀번호 찾기 조회(인증번호 발송)
+	@Override
+	public int searchPwd(HashMap<String, String> info) {
+		return memberDao.searchPwd(sqlSession, info);
+	}
+	//비밀번호 재설정
+	@Override
+	public int pwdRe(HashMap<String, String> info) {
+		return memberDao.pwdRe(sqlSession, info);
 	}
 
 	@Override

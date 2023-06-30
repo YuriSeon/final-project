@@ -31,6 +31,15 @@ public class MemberDao {
 	public Member searchIdMem(SqlSessionTemplate sqlSession, HashMap<String, String> info) {
 		return sqlSession.selectOne("memberMapper.searchIdMem", info);
 	}
+	
+	//비밀번호 찾기 조회 (인증번호 발송)
+	public int searchPwd(SqlSessionTemplate sqlSession, HashMap<String, String> info) {
+		return sqlSession.selectOne("memberMapper.searchPwd", info);
+	}
+	//비밀번호 재설정
+	public int pwdRe(SqlSessionTemplate sqlSession, HashMap<String, String> info) {
+		return sqlSession.update("memberMapper.pwdRe", info);
+	}
 
 	//아이디 중복 확인
 	public int idCheck(SqlSessionTemplate sqlSession, String checkId) {

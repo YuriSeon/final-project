@@ -1013,7 +1013,7 @@ public class MemberController {
 		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
 		//System.out.println(encPwd);
 		m.setUserPwd(encPwd);
-		System.out.println(certification);
+
 		//연령대 계산
 		//입력한 나이
 		int birYear = Integer.parseInt(birthDay.substring(0, 4));
@@ -1450,11 +1450,10 @@ public class MemberController {
 	public String searchId() {
 		return "member/searchId";
 	}
-	
 	//아이디 찾기 진행시 인증번호 발송
 	@ResponseBody
 	@RequestMapping("searchId.me")
-	public int SearchId(@RequestParam("emailNm")String emailNm, @RequestParam("email")String email) {
+	public int searchId(@RequestParam("emailNm")String emailNm, @RequestParam("email")String email) {
 		System.out.println("인증메일 보내는 중...");
 		
 		HashMap<String, String> info = new HashMap();
@@ -1484,9 +1483,48 @@ public class MemberController {
 	}
 	
 	//비밀번호 폼으로
-	@RequestMapping("searchPwd.me")
+	@RequestMapping("searchPwdForm.me")
 	public String searchPwd(){
 		return "member/searchPwd";
+	}
+	//비밀번호 찾기 진행시 인증번호 발송
+	@ResponseBody
+	@RequestMapping("searchPwd.me")
+	public int searchPwd(@RequestParam("pwdId")String pwdId, @RequestParam("emailNm")String emailNm, @RequestParam("email")String email) {
+		System.out.println("인증메일 보내는 중...");
+		
+		HashMap<String, String> info = new HashMap();
+			info.put("emailNm", emailNm);
+			info.put("email", email);
+			info.put("pwdId", pwdId);
+		
+		int count = memberService.searchPwd(info);
+		int ranNum = 0;
+
+		if(count>0) {
+			ranNum = emailSend(email);
+		}
+		return ranNum;
+	}
+	//비밀번호 재설정
+	@ResponseBody
+	@RequestMapping("pwdRe.me")
+	public int searchPwdMem(@RequestParam("memPwd")String memPwd, @RequestParam("pwdId")String pwdId,
+								@RequestParam("emailNm")String emailNm, @RequestParam("email")String email,
+								ModelAndView mv) {
+		
+		//비밀번호 암호화
+		String encPwd = bcryptPasswordEncoder.encode(memPwd);
+		
+		HashMap<String, String> info = new HashMap();
+			info.put("userPwd", encPwd);
+			info.put("userId", pwdId);
+			info.put("userName", emailNm);
+			info.put("email", email);
+		
+		int count = memberService.pwdRe(info);
+		
+		return count;
 	}
 	
 	//로그아웃
