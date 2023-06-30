@@ -4,22 +4,34 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="feedMapper">
   	
+  	<!-- 보드등록 -->
   	<insert id="insertBoard">
   	INSERT INTO BOARD(BOARD_NO
   						,ZONE_NO
+  						,INFO_NO
 						,BOARD_WRITER
 						,CATEGORY
 						,BOARD_CONTENT)
 					VALUES(SEQ_BNO.NEXTVAL,
 							#{zoneNo},
+							SEQ_INO.NEXTVAL,
 							#{boardWriter},
 							4,
 							#{boardContent})
   	</insert>
+  	
+  	<!-- 파일등록-->
   	<insert id="insertAttachment">
   	INSERT INTO ATTACHMENT(FILE_NO,BOARD_NO,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,FILE_LEVEL)
   	VALUES(SEQ_FNO.NEXTVAL,SEQ_BNO.CURRVAL,#{originName},#{changeName},#{filePath},2)  	
   	</insert>
+  	
+  	<!-- 정보등록 -->
+  	<insert id="insertInfo">
+  		INSERT INTO INFO(INFO_NO,BOARD_NO,ZONE_NO,INFO_ADDRESS,INFO_TYPE)
+  		VALUES(SEQ_INO.CURRVAL,SEQ_BNO.CURRVAL,#{zoneNo},#{infoAddress},1)
+  	</insert>
+  	
   	<select id="selectListCount" resultType="_int">
   		SELECT COUNT(*)
   		FROM BOARD
@@ -27,8 +39,9 @@
   		AND CATEGORY = 4
   	</select>
   	<select id="selectBoardList" resultMap="feedResultSet">
-  		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",GOOD
+  		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",GOOD,INFO_ADDRESS
 		FROM BOARD 
+        JOIN INFO USING (BOARD_NO)
 		WHERE STATUS = 'Y'
         AND CATEGORY = 4
 		ORDER BY CREATE_DATE DESC
@@ -41,7 +54,13 @@
   		<result column="CREATE_DATE" property="createDate"/>
   		<result column="GOOD" property="good"/>
   		<result column="ZONE_NO" property="zoneNo"/>
+  		
+  		<collection property="info" resultMap="infoResultSet"></collection>
   	</resultMap>
+  	
+  	<resultMap type="info" id="infoResultSet">
+		<result property="infoAddress" column="INFO_ADDRESS"/>		
+	</resultMap>
   	
   	<select id="selectAttachmentList" resultMap="attaResultSet">
   		SELECT BOARD_NO,FILE_PATH
@@ -85,6 +104,12 @@
   	<delete id="deleteRereply">
   		DELETE FROM REREPLY
   		WHERE REF_QNO = #{boardNo}
+  	</delete>
+  	
+  	<!-- info테이블 삭제 -->
+  	<delete id="deleteInfo">
+  		DELETE FROM INFO
+  		WHERE BOARD_NO = #{boardNo}
   	</delete>
   	<!-- good테이블 count세기 -->
   	<select id="ckHeart" resultType="_int">
@@ -153,10 +178,12 @@
   	
   	<!-- 댓글삽입 -->
   	<select id="selectReplyList" resultMap="ReplyResultMap">
-  		SELECT REPLY_NO,CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",REPLY_WRITER,REF_QNO
-  		FROM REPLY
+  		SELECT REPLY_NO,CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",REPLY_WRITER,REF_QNO,(FILE_PATH || CHANGE_NAME) PROFILEIMG
+  		FROM REPLY R
+  		LEFT JOIN ATTACHMENT A ON(REPLY_WRITER = WRITER)
   		WHERE REF_QNO = #{refQno}
-  		AND STATUS = 'Y'
+  		AND R.STATUS = 'Y'
+  		ORDER BY CREATE_DATE 
   	</select>
   	
   	<resultMap type="reply" id="ReplyResultMap">
@@ -167,6 +194,7 @@
   		<result column="REF_QNO" property="refQno"/>
   		<result column="REF_RNO" property="refRno"/>
   		<result column="STATUS" property="status"/>
+  		<result column="PROFILEIMG" property="profileImg"/>
   	</resultMap>
   	
   	<!-- 댓글삭제 -->
@@ -204,16 +232,19 @@
   	
   	<!-- 대댓글삽입 -->
   	<select id="selectRereply" resultMap="rereplyresultMap">
-  		SELECT REF_RNO,CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",REPLY_WRITER
-  		FROM REREPLY
+  		SELECT REF_RNO,CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",REPLY_WRITER,(FILE_PATH || CHANGE_NAME) PROFILEIMG
+  		FROM REREPLY R
+  		LEFT JOIN ATTACHMENT A ON(REPLY_WRITER = WRITER)
   		WHERE REPLY_NO = #{replyNo}
-  		AND STATUS = 'Y'
+  		AND R.STATUS = 'Y'
+  		ORDER BY CREATE_DATE
   	</select>
   	<resultMap type="rereply" id="rereplyresultMap">
   		<result column="REF_RNO" property="refRno"/>
   		<result column="CONTENT" property="content"/>
   		<result column="CREATE_DATE" property="createDate"/>
   		<result column="REPLY_WRITER" property="replyWriter"/>
+  		<result column="PROFILEIMG" property="profileImg"/>
   	</resultMap>
   	
   	<!-- 대댓글 삭제 -->
@@ -251,8 +282,10 @@
   	
   	<!-- 게시물수정폼board -->
   	<select id="selectBoard" resultMap="feedResultSet">
-  		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",ZONE_NO
-		FROM BOARD 
+  		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE"
+  		    ,B.ZONE_NO,INFO_ADDRESS
+		FROM BOARD B
+		JOIN INFO USING (BOARD_NO)
 		WHERE STATUS = 'Y'
         AND CATEGORY = 4
         AND BOARD_NO = #{boardNo}
@@ -282,10 +315,20 @@
   	VALUES(SEQ_FNO.NEXTVAL,#{boardNo},#{originName},#{changeName},#{filePath},2)  	
   	</insert>
   	
+  	<!-- 게시물 수정 info -->
+  	<update id="updateInfo">
+  		UPDATE INFO
+  		SET ZONE_NO = #{zoneNo}
+  		   ,INFO_ADDRESS = #{infoAddress}
+  		WHERE BOARD_NO = #{boardNo}
+  		AND INFO_TYPE = 1
+  	</update>
+  	
   	<!-- 인기순 -->
   	<select id="rankingBoardList" resultMap="feedResultSet">
-  		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",GOOD
+  		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",GOOD,INFO_ADDRESS
 		FROM BOARD 
+        JOIN INFO USING (BOARD_NO)
 		WHERE STATUS = 'Y'
         AND CATEGORY = 4
 		ORDER BY GOOD DESC
@@ -293,14 +336,40 @@
   	
   	<!-- 도시선택 -->
   	<select id="selectCityList" resultMap="feedResultSet">
-  		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",GOOD
-		FROM BOARD 
+  		SELECT B.BOARD_NO,B.BOARD_WRITER,B.BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE"
+        ,B.GOOD,I.INFO_ADDRESS
+		FROM BOARD B
+		JOIN INFO I ON (B.BOARD_NO = I.BOARD_NO)
 		WHERE STATUS = 'Y'
         AND CATEGORY = 4
         <if test="city!=null">
-        AND ZONE_NO = #{city}
-        
+         AND B.ZONE_NO LIKE  CONCAT(#{city}, '%')      
         </if>
 		ORDER BY CREATE_DATE DESC
   	</select>
+  	
+  	<!-- 도시선택 갯수 -->
+  	<select id="selectCityCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM BOARD
+  		WHERE STATUS = 'Y'
+  		AND CATEGORY = 4
+  		AND ZONE_NO LIKE  CONCAT(#{city}, '%')
+  	</select>
+  	
+  	<!-- 게시물신고 멤버업데이트 -->
+  	 <update id="updateMember">
+  		UPDATE MEMBER
+  		SET REPORT = REPORT+1
+  		WHERE NICKNAME = #{nickname}
+  		AND STATUS = 'Y'
+  	</update>
+  	
+  	<!-- 게시물신고 신고insert -->
+  	<insert id="insertReportBoard"> 		
+  		INSERT INTO REPORT(BOARD_NO,WRITER,REPORT_REASON)
+    	VALUES(#{boardNo},#{writer},#{reportReason})
+  	</insert> 
+  	
+  	
   </mapper>

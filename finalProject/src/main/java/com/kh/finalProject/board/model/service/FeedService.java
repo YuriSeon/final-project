@@ -6,6 +6,7 @@ import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Good;
+import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.common.model.vo.PageInfo;
@@ -14,7 +15,7 @@ import com.kh.finalProject.member.model.vo.Member;
 public interface FeedService {
 
 	//피드인서트문
-	int insertFeed(Board b, ArrayList<Attachment> list);
+	int insertFeed(Board b, ArrayList<Attachment> list, Info in);
 
 	//리스트카운트
 	int selectListCount();
@@ -83,7 +84,7 @@ public interface FeedService {
 	ArrayList<Attachment> selectAttachment(int boardNo);
 
 	//게시물 수정
-	int updateFeed(Board b, ArrayList<Attachment> list);
+	int updateFeed(Board b, ArrayList<Attachment> list, Info in);
 
 	//게시물수정시 기존에 있던 사진지우기
 	int deleteAttachment(int boardNo);
@@ -93,6 +94,14 @@ public interface FeedService {
 
 	//도시선택
 	ArrayList<Board> selectCityList(PageInfo pi, int city);
+
+	//도시선택갯수
+	int selectListCount(int city);
+
+	//게시물 신고
+	int reportBoard(Report re, String nickname);
+
+	
 
 	
 	

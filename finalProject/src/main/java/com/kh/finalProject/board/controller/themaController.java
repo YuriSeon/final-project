@@ -14,14 +14,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.service.ThemaService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.board.model.vo.Theme;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
 
@@ -41,7 +46,7 @@ public class themaController {
 		
 		int listCount = themaService.selectListCount();
 		int pageLimit = 5;
-		int boardLimit = 10;
+		int boardLimit = 5;
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		
@@ -59,6 +64,7 @@ public class themaController {
 		model.addAttribute("list", list);
 		model.addAttribute("pi", pi);
 		model.addAttribute("count", listCount);
+		model.addAttribute("sort", sort);
 		return "thema/themaList";
 	}
 	
@@ -137,6 +143,7 @@ public class themaController {
 	@RequestMapping("detailTheme.bo")
 	public ModelAndView detailTheme(int boardNo,ModelAndView mv) {
 		
+		
 		//조회수 올리기
 		int result = themaService.increaseCount(boardNo);
 		
@@ -145,14 +152,130 @@ public class themaController {
 			Board b = themaService.selectBoard(boardNo);
 			//상세페이지 at
 			ArrayList<Attachment> at = themaService.selectAttachment(boardNo);
-			
+			//찜하기			
+			ArrayList<choice> clist = themaService.selectChoice(boardNo);
+			//신고리스트
+			ArrayList<Report> rlist = themaService.selectReportList(); 
+			//댓글 갯수
+			int reply =themaService.selectReplyCount(boardNo);
+						
 			mv.addObject("b", b);
 			mv.addObject("at", at);
+			mv.addObject("clist", new Gson().toJson(clist));
+			mv.addObject("rlist", new Gson().toJson(rlist));
+			mv.addObject("reply", reply);
 			mv.setViewName("thema/themeDetailView");
 		}else {
-			mv.addObject("errorMsg", "테마 게시글 등록에 실패하였습니다.").setViewName("common/errorPage");
+			mv.addObject("errorMsg", "테마 게시글 조회에 실패하였습니다.").setViewName("common/errorPage");
 		}
 		return mv;
 	}
+	
+	//댓글입력
+	@ResponseBody
+	@RequestMapping("insertReply.mo")
+	public String insertReply(Reply r) {
+		
+		int result = themaService.insertReply(r);
+		return (result>0)?"success":"fali";
+	}
+	
+	//댓글불러오기
+	@ResponseBody
+	@RequestMapping(value="selectReply.mo", produces = "application/json; charset=UTF-8")
+	public String selectReply(int boardNo) {
+		ArrayList<Reply> list = themaService.selectReply(boardNo);
+		
+		return new Gson().toJson(list);
+	}
+	
+	//댓글삭제
+	@ResponseBody
+	@RequestMapping("deleteReply.mo")
+	public String deleteReply(int replyNo) {
+		
+		int result = themaService.deleteReply(replyNo);
+		return (result>0)?"success":"fali";
+	}
+	
+	//댓글수정
+	@ResponseBody
+	@RequestMapping("updateReply.mo")
+	public String updateReply(Reply r) {
+		int result = themaService.updateReply(r);
+		return (result>0)?"success":"fali";
+	}
+	
+	//댓글신고
+	@ResponseBody
+	@RequestMapping("report.mo")
+	public String reportReply(Report re,String nickname) {
+		int result = themaService.reportReply(re,nickname);
+		return (result>0)?"success":"fali";
+	}
+	
+	//찜하기
+	@ResponseBody
+	@RequestMapping(value = "choice.mo", produces = "application/json; charset=UTF-8")
+	public String insertChoice(choice c) {
+		//찜하기테이블 확인
+		int result = themaService.ckChoice(c);
+		
+		if(result>0) {
+			//테이블에 있으면 없애기
+			result = themaService.deleteChoice(c)-1;
+		}else {
+			//테이블이 없으면 넣기
+			result = themaService.insertChoice(c);
+		}
+		return new Gson().toJson(result);
+	}
+	
+	//검색
+	@RequestMapping("search.mo")
+	public String searchList(@RequestParam(value="currentPage", defaultValue="1") int currentPage
+							,@RequestParam(value="sort",defaultValue = "1") int sort
+							,Model model,HttpServletRequest request
+							,@RequestParam(value="zone")String zone
+							,@RequestParam(value="country")String country) {
+		
+		String zoneName = zone+" "+ country;
 
+		int listCount = themaService.selectSearchListCount(zoneName); 
+		int pageLimit = 5;
+		int boardLimit = 5;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		
+		ArrayList<Board> list = new ArrayList<>();
+		
+		
+		if(sort ==1) {
+			//검색 최신순 테마
+			list = themaService.selectThemaList(pi,zoneName);
+		}else if(sort ==2) {
+			//검색 인기순 테마
+			list = themaService.selectRankingThemaList(pi,zoneName);
+		}
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("count", listCount);
+		model.addAttribute("zone", zone);
+		model.addAttribute("country", country);
+		model.addAttribute("sort", sort);
+		return "thema/themaList";
+	}
+	
+	//사용자 요청페이지 이동
+	@RequestMapping("askUpdate.mo")
+	public ModelAndView askUpdate(int boardNo,ModelAndView mv) {
+		Board b = themaService.selectBoard(boardNo);
+		
+		mv.addObject("b", b);		
+		mv.setViewName("thema/modifyRequest");
+	
+	return mv;
+	}
+	
 }

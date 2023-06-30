@@ -26,6 +26,7 @@ import com.kh.finalProject.board.model.service.FeedService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Good;
+import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.common.model.vo.PageInfo;
@@ -45,7 +46,7 @@ public class FeedController {
 	}
 	
 	@RequestMapping("insert.fo")
-	public ModelAndView insertFeed(Board b,ModelAndView mv,HttpSession session,ArrayList<MultipartFile> upfile) {
+	public ModelAndView insertFeed(Board b,ModelAndView mv,HttpSession session,ArrayList<MultipartFile> upfile,Info in) {
 
 		ArrayList<Attachment> list = new ArrayList<>();
 		
@@ -98,7 +99,7 @@ public class FeedController {
 		}
 		}
 
-		int result = feedService.insertFeed(b,list);
+		int result = feedService.insertFeed(b,list,in);
 		if(result>0) {
 			mv.addObject("alertMsg","피드게시물 작성완료").setViewName("redirect:feed.bo");
 		}else {
@@ -135,7 +136,8 @@ public class FeedController {
         
 		}
 		
-		@RequestMapping(value="heart.bo", method = RequestMethod.POST)
+		//좋아요등록
+		@RequestMapping(value="heart.bo", method = RequestMethod.POST,produces = "application/json; charset=UTF-8")
 		@ResponseBody
 		public void insertHeart(@RequestParam("boardNo") int boardNo,@RequestParam("writer") String writer,ModelAndView mv,HttpServletRequest request,HttpServletResponse response ) throws IOException {
 			
@@ -149,10 +151,10 @@ public class FeedController {
 				result = feedService.insertHeart(boardNo,writer);
 				
 			}
-			response.setContentType("application/json; charset=UTF-8");
 		    response.getWriter().print(result);
 		}
 		
+		//댓글등록
 		@ResponseBody
 		@RequestMapping(value="reply.fo")
 		public String insertReply(Reply r){
@@ -164,6 +166,7 @@ public class FeedController {
 			return (result>0)?"success":"fail";
 		}
 		
+		//댓글삽입
 		@ResponseBody
 		@RequestMapping(value="selectReplyList.fo",produces = "application/json; charset=UTF-8")
 		public String selectReplyList(int refQno) {
@@ -172,6 +175,7 @@ public class FeedController {
 			return new Gson().toJson(list);
 		}
 		
+		//댓글삭제
 		@ResponseBody
 		@RequestMapping("deleteReply.fo")
 		public String deleteReply(int replyNo) {
@@ -180,6 +184,7 @@ public class FeedController {
 			return (result>0)?"success":"fail";
 		}
 		
+		//댓글수정
 		@ResponseBody
 		@RequestMapping("updateReply.fo")
 		public String updateReply(Reply r) {
@@ -265,9 +270,9 @@ public class FeedController {
 		
 		//게시물 수정
 		@RequestMapping(value="updatefeed.fo",method=RequestMethod.POST)
-		public ModelAndView updatefeed(Board b,ArrayList<MultipartFile> upfile,String[] filePath,ModelAndView mv,HttpSession session) {
+		public ModelAndView updatefeed(Board b,ArrayList<MultipartFile> upfile,String[] filePath,ModelAndView mv,HttpSession session,Info in) {
 			ArrayList<Attachment> list = new ArrayList<>();
-			
+			System.out.println(in);
 			for(MultipartFile file : upfile) {
 				if(!file.getOriginalFilename().equals("")) {
 					
@@ -314,7 +319,7 @@ public class FeedController {
 				}
 			}
 			int result = feedService.deleteAttachment(b.getBoardNo());
-			int result2 = feedService.updateFeed(b,list);
+			int result2 = feedService.updateFeed(b,list,in);
 			
 			if(result *result2>0) {
 				mv.addObject("alertMsg","피드게시물 수정완료").setViewName("redirect:feed.bo");
@@ -334,7 +339,7 @@ public class FeedController {
 			ArrayList<Member> mlist = feedService.selectMember();
 			ArrayList<Good> glist = feedService.selectGood();
 			ArrayList<Attachment> alist = feedService.selectAttachmentList();
-			int listCount = feedService.selectListCount();
+			int listCount = feedService.selectListCount(city);
 			int pageLimit = 5;
 			int boardLimit = 5;
 			
@@ -351,11 +356,18 @@ public class FeedController {
 			model.addAttribute("size", alist.size());
 			model.addAttribute("glist",new Gson().toJson(glist));
 			model.addAttribute("mlist",new Gson().toJson(mlist));
+			model.addAttribute("city", city);
 
 			return "board/feed";
 		}
 		
-		
+		//게시물 신고
+		@ResponseBody
+		@RequestMapping("report")
+		public String report(Report re,String nickname) {
+			int result = feedService.reportBoard(re,nickname);
+			return (result>0)?"success":"fali";
+		}
 		
 		
 		

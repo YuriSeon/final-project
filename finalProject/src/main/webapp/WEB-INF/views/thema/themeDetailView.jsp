@@ -64,15 +64,47 @@
 		float: left;
 		margin: 5px;		 
 	}
-	.bi li{
-		float: left;		
+	.bii li{
+		float: left;	
+		margin: auto;
+		margin-right: 40px;
 	}
+	.bii{
+		border-top: 1px solid;
+		margin-left: 250px;
+		margin-right: 250px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 10px;
+		border-bottom: 1px solid;
+	}
+	.reply-area{
+		margin-left: 400px;
+		margin-right: 400px;
+		padding: 70px;
+	}
+	.reply-area button{transform: translateY(-45%);}
+	#replyBox{
+		margin-left: 50px;
+		margin-right: 100px;
+	}
+	#content {
+      	margin-left: 20px;
+      	width: 400px;
+      	height: 50px;
+     }
+     .cont2{
+     	margin-left: 250px;
+		margin-right: 250px;
+		float: right;
+		margin-top: 10px;
+     }
 </style>
 </head>
 <body>
 	<%@include file="../common/menubar.jsp" %>
-	<div class="images">
-		
+	<div class="images">		
 		<img alt="" src="${at[0].filePath}" style="margin-left: 150px;">
 		<img alt="" src="${at[1].filePath}" style="margin-top: 200px;">
 		<img alt="" src="${at[2].filePath}">
@@ -88,6 +120,11 @@
 	${b.boardContent }
 	</p>
 	<div id="map"></div>
+	<div class="cont2">
+         <c:if test="${loginUser.status ne 'A' }">
+            <button class="btn_modify" onclick="pageLoad();" style="background-color: white;">관광정보 수정요청</button>
+         </c:if>
+    </div>
 	<div class="info">
 		<ul>
 			<li>
@@ -114,50 +151,75 @@
 	
 	</div>
 	
-	<div class="bi">
+	<div class="bii">
 		<ul>
 			<li>
-				<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
-				  <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
-				</svg>
+				<button type="button" style="border: solid white; background-color: white;" onclick="goChoice();">																		
+					<img alt="" src="resources/images/star-before.png" style="width: 50px;height: 50px;" id="star">							
+				</button>
+				<b>찜하기</b>
 			</li>
 			<li>
 				<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
 				  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
 				  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
 				</svg>
+				<b>${b.count }</b>
 			</li>
 		</ul>
 	</div>
+	
+	<div class="reply-area">
+		<b style="font-size: 20px;">댓글(${reply })</b>
+		<div style="margin: 10px;">
+			<textarea rows="3" cols="100" id="replyContent" placeholder="로그인 후 이용가능합니다."></textarea>
+			<button id="btn" class="btn btn-warning" style="height: 80px;">댓글</button>
+		</div>
+						                        	
+		<div id="replyBox">
+			
+			
+		</div>
+									                        	
+	</div>	
+	
+		<!-- The Modal -->
+		
+			<div class="modal" id="myModal">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			
+			      <!-- Modal Header -->
+			      <div class="modal-header">
+			        <h5 class="modal-title"></h5>
+			        <input type="hidden" id="replyWriter">
+			        <input type="hidden" id="replyNo">
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			      </div>
+			
+			      <!-- Modal body -->
+			      <div id="modal-body">
+			      	<div>
+			         	<input type="text" name="content" id="content" placeholder="신고사유">
+			      	</div>
+			      </div>
+			
+			      <!-- Modal footer -->
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-info" onclick="return goReport()">등록</button>
+			        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			      </div>
+			
+			    </div>
+			  </div>
+			</div>						                        	
+		
 	
 	
 	
 	
 	<jsp:include page="../common/footer.jsp"/>
 <script >
-	/* var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-	mapOption = { 
-	    center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-	    level: 3 // 지도의 확대 레벨
-	};
-	
-	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-	
-	var marker = new kakao.maps.Marker();
-	
-	//타일 로드가 완료되면 지도 중심에 마커를 표시합니다
-	kakao.maps.event.addListener(map, 'tilesloaded', displayMarker);
-	
-	function displayMarker() {
-	
-	// 마커의 위치를 지도중심으로 설정합니다 
-	marker.setPosition(map.getCenter()); 
-	marker.setMap(map); 
-	
-	// 아래 코드는 최초 한번만 타일로드 이벤트가 발생했을 때 어떤 처리를 하고 
-	// 지도에 등록된 타일로드 이벤트를 제거하는 코드입니다 
-	// kakao.maps.event.removeListener(map, 'tilesloaded', displayMarker);
-	} */
 	
 	 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
      mapOption = {
@@ -177,32 +239,263 @@
 	    
 	    //우편api를 활용
 	    $(function(){
-	    	new daum.Postcode({
-        	    oncomplete: function(data) {        	    	     
-                     // 주소로 상세 정보를 검색
-                     geocoder.addressSearch("${b.info.getInfoAddress()}", function(results, status) {
-                         // 정상적으로 검색이 완료됐으면
-                         if (status === daum.maps.services.Status.OK) {
+	    	geocoder.addressSearch("${b.info.getInfoAddress()}", function(results, status) {
+                // 정상적으로 검색이 완료됐으면
+                if (status === daum.maps.services.Status.OK) {
 
-                             var result = results[0]; //첫번째 결과의 값을 활용
+                    var result = results[0]; //첫번째 결과의 값을 활용
 
-                             // 해당 주소에 대한 좌표를 받아서
-                             var coords = new daum.maps.LatLng(result.y, result.x);
-                             // 지도를 보여준다.
-                             mapContainer.style.display = "block";
-                             map.relayout();
-                             // 지도 중심을 변경한다.
-                             map.setCenter(coords);
-                             // 마커를 결과값으로 받은 위치로 옮긴다.
-                             marker.setPosition(coords)
+                    // 해당 주소에 대한 좌표를 받아서
+                    var coords = new daum.maps.LatLng(result.y, result.x);
+                    // 지도를 보여준다.
+                    mapContainer.style.display = "block";
+                    map.relayout();
+                    // 지도 중심을 변경한다.
+                    map.setCenter(coords);
+                    // 마커를 결과값으로 받은 위치로 옮긴다.
+                    marker.setPosition(coords)
 
-                         }
-                     });
-        	    	
-        	    }
-        	}).open();
+                }
+            });
+	    });
+	    
+	    //로그인닉네임변수처리
+	    var nickname = "${loginUser.nickname}";
+	    /*  console.log(nickname);  */
+	    
+	    //로그인안하고 댓글쓰려고 할때
+	    $(".reply-area").on("click","#replyContent",function(){
+	    	if(nickname === ""){
+	    		alert("로그인 후 가능합니다.");
+	    	}
+	    });
+	    //댓글 입력
+	    $(".reply-area").on("click","#btn",function(){
+	    		
+		    	$.ajax({
+		    		url:"insertReply.mo",
+		    		data:{replyWriter:nickname,
+		    			  content:$("#replyContent").val(),	
+		    			  refQno:"${b.boardNo}"
+		    		},
+		    		success:function(result){
+		    			if(result == "success"){
+		    				selectReply();
+		    				$("#replyContent").val("");
+		    			}
+		    		},
+		    		error:function(){
+		    			console.log("error");
+		    		}
+		    	})	    	
 	    })
+	    
+	    //댓글 불러오기
+	    function selectReply(){	
+	    	console.log("test");
+		    $.ajax({
+		    	url:"selectReply.mo",
+		    	data:{boardNo:"${b.boardNo}"},
+		    	success:function(list){
+		    		var str = "";
+		    		
+		    		for(i in list){		    			
+		    		 str +="<div id='reply-text'>"
+		    		 if(!list[i].profileImg){		    			 
+		    			 str+="<img src='resources/images/profile/빈프로필.jpg' style='width:30px; height:30px; border-radius:50%; margin-left:5px;margin-bottom: 4px;'>"
+		    		 }else{
+		    			 str+="<img src='"+list[i].profileImg+"' alt='프로필사진' style='width:30px; height:30px; border-radius:50%; margin-left:5px;margin-bottom: 4px;'>"		    			 
+		    		 }
+               		     str+="<b style='margin-bottom: 3px;'>"+list[i].replyWriter+"</b>"
+             			 +"<button style='border: solid white; float: right;background-color: white;' onclick='report(\"" + list[i].replyWriter + "\",\"" + list[i].replyNo + "\")'>"
+             			 +"<img alt='' src='resources/images/980829.png' style='width:17px; height:17px; float: right;'>"
+             			 +"</button>"
+             			 +"<p style='font-size: 20px;'>"+list[i].content+"</p>"   
+             		if (nickname === list[i].replyWriter) {	 
+             		 str +="<button  onclick='deleteReply(\"" + list[i].replyNo + "\")' style='color: black;font-size: 11px;padding: 3px;float: right;border: solid white;'>삭제</button>"
+						 +"<button onclick='updateReplyForm(\"" + list[i].replyNo + "\",\"" + list[i].content + "\",\"" + list[i].replyWriter + "\",this)' style='color: black;font-size: 11px;padding: 3px;float: right;border-right: 1px solid;border: solid white;'>수정</button>"
+             		   }
+					 str +="<p style='font-size: 15px; margin-top: 5px;'>"+list[i].createDate+"</p>"
+					 	 +"<button onclick='rere(\"" + list[i].replyNo + "\",\"" + list[i].refQno + "\",this);' style='color: black;font-size: 11px;padding: 3px;border: solid white;margin-top: 8px;'>답글</button>"	
+						 +"<div id='rreply-box'>"								 	
+					 	 +"</div>"		
+					 	 +"</div>"	
+		    		}
+		    		
+					$("#replyBox").html(str);
+		    	},
+		    	error:function(){
+		    		console.log("error");
+		    	}
+		    })
+	    }
+	    $(function(){
+	    	selectReply();
+	    })
+	    
+	    function deleteReply(replyNo){
+	    	var chk = confirm("정말 댓글 삭제 하실건가요?");
+	    	if(chk === true){
+	    		
+		    	$.ajax({
+		    		url:"deleteReply.mo",
+		    		data:{replyNo:replyNo},
+		    		success:function(result){
+		    			if(result == "success"){
+		    				alert("댓글을 삭제하였습니다.");
+		    			}
+		    		},
+		    		error:function(){
+		    			console.log("error");
+		    		}
+		    	})
+	    	}
+	    }
+	    
+	    //댓글수정폼
+	     function updateReplyForm(replyNo,content,replyWriter,tg){
+	    	 var form ="";
+			 form +="<b style='display: block; margin-bottom: 1px; margin-left:7px;'>"+replyWriter+"</b>"
+				  +"<textarea rows='3' cols='90'  id='upcontent'>"+content+"</textarea>"
+   		          +"<button class='btn btn-warning' style='height: 80px;' onclick='updateReply("+replyNo+")'>수정</button>"
+				  		    
+   		       $(tg).parents("#reply-text").html(form);
+	     }
+	     
+	    //댓글수정업데이트
+	    function updateReply(replyNo){
+	    	$.ajax({
+	    		url:"updateReply.mo",
+	    		data:{replyNo:replyNo,
+	    			 content:$("#upcontent").val()
+	    			},
+	    		success:function(result){
+	    			if(result =="success"){
+	    				selectReply();
+	    			}
+	    		},
+	    		error:function(){
+	    			console.log("error");
+	    		}
+	    	});
+	    }
+	    
+	   
+	    
+	    //신고모달
+	function report(replyWriter, replyNo) {
+		//신고리스트
+	    var rlist = ${rlist};
+			
+		var alreadyReported = false;
+	    
+	    for (var i = 0; i < rlist.length; i++) {
+	        if (nickname !== "" && rlist[i].replyNo == replyNo && rlist[i].writer == nickname) {
+	            alreadyReported = true;
+	            break;
+	        }
+	    }
+	    
+	    if (alreadyReported) {
+	        alert("이미 신고한 댓글입니다.");
+	    } else if (nickname === "") {
+	        alert("로그인 후 신고 가능합니다.");
+	    } else {
+	        $(".modal-title").text("정말 " + replyWriter + " 님을 신고하시겠습니까?");
+	        $("#replyWriter").val(replyWriter);
+	        $("#replyNo").val(replyNo);
+	        $("#myModal").modal('show'); //모달열기
+	    }
+	    }
+	    //신고모달-2
+		function goReport() {
 
+			var content = $("#content").val();
+			console.log(content);
+			if (content !== "") {
+
+				$.ajax({
+					url : "report.mo",
+					data : {
+						replyNo : $("#replyNo").val(),
+						nickname : $("#replyWriter").val(),
+						reportReason : content,
+						writer:nickname
+					},
+					success : function(result) {
+						if (result == "success") {
+							alert("신고되었습니다.");
+							$("#myModal").modal('hide');	//모달닫기	
+							
+						}
+					},
+					error : function() {
+						console.log("error");
+					}
+				})
+			}else{
+				alert("신고내용을 입력해 주세요");
+			}
+		}
+	    
+	    //찜하기
+	    function goChoice(){
+	    	
+	    	if(nickname !== ""){
+	    		
+	    		$.ajax({
+	    			url:"choice.mo",
+	    			data:{
+	    				boardNo:"${b.boardNo}",
+	    				writer: nickname
+	    			},
+	    			success:function(result){
+	    				if(result>0){
+	    					$("#star").attr("src", "resources/images/star-after.png");
+	    				}else{
+	    					$("#star").attr("src", "resources/images/star-before.png");
+	    				}
+	    			},
+	    			error:function(){
+	    				console.log("error");
+	    			}
+	    		});
+	    	}else{
+	    		alert("로그인 후 이용 가능합니다.");
+	    	}
+	    }
+	    
+	    //찜하기 보여주기
+	    $(function(){
+	    	var boardNo = "${b.boardNo}";
+	    		boardNo = parseInt(boardNo);
+	    	var img = $("#star");
+	    	var writer = "${loginUser.nickname}";
+	    	var like = false;
+	    	var clist = ${clist};
+	    	
+	    	for(var i=0; i<clist.length; i++){
+	    		var c=clist[i];
+	    		
+	    		if(c.boardNo === boardNo && c.writer === writer){
+	    			like = true;
+	    		}
+	    	}
+	    	
+	    	if(like){
+	    		img.attr("src","resources/images/star-after.png");
+	    	}else{
+	    		img.attr("src","resources/images/star-before.png");
+	    	}
+	    });
+	    	    	    
+	   
+	    //사용자 정보수정 요청
+	    function pageLoad(){
+	    	boardNo = "${b.boardNo}";
+	    	location.href = "askUpdate.mo?boardNo="+boardNo;
+	    }
+	
 </script>
 </body>
 </html>

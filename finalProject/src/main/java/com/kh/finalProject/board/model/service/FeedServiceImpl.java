@@ -12,6 +12,7 @@ import com.kh.finalProject.board.model.dao.FeedDao;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Good;
+import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.common.model.vo.PageInfo;
@@ -27,15 +28,17 @@ public class FeedServiceImpl implements FeedService{
 	private FeedDao feedDao;
 
 	@Override
-	public int insertFeed(Board b, ArrayList<Attachment> list) {
+	@Transactional
+	public int insertFeed(Board b, ArrayList<Attachment> list,Info in) {
 		int result = feedDao.insertBoard(sqlSession,b);
-		int result2 = 1;
+		int result2 =feedDao.insertInfo(sqlSession,in);
+		int result3 = 1;
 		for(Attachment at : list) {
 			
-			result2 *= feedDao.insertAttachment(sqlSession,at);
+			result3 *= feedDao.insertAttachment(sqlSession,at);
 		}
 		
-		return result * result2;
+		return result * result2 *result3;
 	}
 
 	@Override
@@ -184,15 +187,17 @@ public class FeedServiceImpl implements FeedService{
 	}
 
 	@Override
-	public int updateFeed(Board b, ArrayList<Attachment> list) {
+	public int updateFeed(Board b, ArrayList<Attachment> list, Info in) {
 		int result = feedDao.updateBoard(sqlSession,b);
 		int result2 = 1;
 		for(Attachment at : list) {
 			
 			result2 *= feedDao.updateAttachment(sqlSession,at);
 		}
+		int result3 = feedDao.updateInfo(sqlSession,in);
+		System.out.println(result3);
 		
-		return result * result2;
+		return result * result2 * result3;
 	}
 
 	//게시물수정시 기존에 있던 사진지우기
@@ -216,6 +221,22 @@ public class FeedServiceImpl implements FeedService{
 		ArrayList<Board> list = feedDao.selectCityList(sqlSession,pi,city);
 		return list;
 	}
+
+	//도시선택 갯수
+	@Override
+	public int selectListCount(int city) {
+		int result = feedDao.selectListCount(sqlSession,city);
+		return result;
+	}
+
+	//게시물 신고
+	@Override
+	public int reportBoard(Report re, String nickname) {
+		int result = feedDao.reportBoard(sqlSession,nickname);
+		int result2 = feedDao.insertReport(sqlSession,re);
+		return result * result2;
+	}
+
 
 	
 

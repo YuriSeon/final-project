@@ -12,6 +12,7 @@ import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Good;
+import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.common.model.vo.PageInfo;
@@ -31,6 +32,12 @@ public class FeedDao {
 	public int insertAttachment(SqlSessionTemplate sqlSession, Attachment at) {
 		// TODO Auto-generated method stub
 		return sqlSession.insert("feedMapper.insertAttachment", at);
+	}
+	
+	//장소등록
+	public int insertInfo(SqlSessionTemplate sqlSession, Info in) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("feedMapper.insertInfo", in);
 	}
 
 	//리스트카운트
@@ -70,7 +77,9 @@ public class FeedDao {
         int result4 = sqlSession.delete("feedMapper.replyDelete", boardNo);
         //rereply테이블 삭제
         int result5 = sqlSession.delete("feedMapper.deleteRereply",boardNo);
-		return result1 + result2 + result3+result4+result5;
+        //info테이블 삭제
+        int result6 = sqlSession.delete("feedMapper.deleteInfo", boardNo);
+		return result1 + result2 + result3+result4+result5+result6;
 	}
 
 	//good테이블 count세기
@@ -219,6 +228,12 @@ public class FeedDao {
 		// TODO Auto-generated method stub
 		return sqlSession.insert("feedMapper.updateAttachment", at);
 	}
+	
+	//게시물 수정 info
+	public int updateInfo(SqlSessionTemplate sqlSession, Info in) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("feedMapper.updateInfo",in);
+	}
 
 	//게시물수정시 기존에 있던 사진지우기
 	public int deleteAttachment(SqlSessionTemplate sqlSession, int boardNo) {
@@ -245,5 +260,29 @@ public class FeedDao {
 		
 		return (ArrayList)sqlSession.selectList("feedMapper.selectCityList",city, rowBounds);
 	}
+
+	//도시선택 갯수
+	public int selectListCount(SqlSessionTemplate sqlSession, int city) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("feedMapper.selectCityCount", city);
+	}
+
+	//게시물 신고업데이트
+	public int reportBoard(SqlSessionTemplate sqlSession, String nickname) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("feedMapper.updateMember", nickname);
+	}
+
+	//게시물 신고
+	public int insertReport(SqlSessionTemplate sqlSession, Report re) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("feedMapper.insertReportBoard", re);
+	}
+
+	
+
+	
+
+	
 
 }
