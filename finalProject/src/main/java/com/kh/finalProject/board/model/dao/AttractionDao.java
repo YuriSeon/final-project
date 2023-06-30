@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.board.model.vo.Zone;
 
 @Repository
 @SuppressWarnings({"unchecked", "rawtypes"})

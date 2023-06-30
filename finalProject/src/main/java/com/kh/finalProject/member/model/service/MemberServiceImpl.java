@@ -229,5 +229,30 @@ public class MemberServiceImpl implements MemberService{
 	public int myQnaUpdate(Notice n) {
 		return memberDao.myQnaUpdate(sqlSession,n);
 	}
+
+	//마이페이지 Q&A 파일 삭제
+	@Override
+	public int deleteFile(Attachment del) {
+		return memberDao.deleteFile(sqlSession,del);
+	}
+
+	//마이페이지 Q&A 삭제파일 changName가져오기
+	@Override
+	public Attachment selectDelFile(Attachment del) {
+		return memberDao.selectDelFile(sqlSession,del);
+	}
+
+	//마이페이지 Q&A 파일 수정
+	@Override
+	public int myQnaFileUpdate(Attachment a) {
+		return memberDao.myQnaFileUpdate(sqlSession,a);
+	}
+
+	//마이페이지 Q&A 삭제
+	@Override
+	public int qnaDelete(int serviceNo) {
+		memberDao.deleteFile(sqlSession, serviceNo);
+		return memberDao.qnaDelete(sqlSession,serviceNo);
+	}
 	
 }

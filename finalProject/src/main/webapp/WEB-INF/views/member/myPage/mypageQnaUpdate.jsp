@@ -75,11 +75,21 @@
 <!-- 								<input type="hidden" value="bcf3955b-b26d-4a4a-b4c2-1a5da3ff2cf2" name="fileid" id="fileid"> -->
 <!-- 								<input type="hidden" value="/bc/b2/4a/b4/1a/bcf3955b-b26d-4a4a-b4c2-1a5da3ff2cf2.png" name="fileidfull" id="fileidfull"> -->
 <!-- 							</div> -->
+							<c:if test="${a != null}">
+								<c:forEach var="a" items="${a}">
+									<div class="uploadfile">
+										<input type="text" name="filename0" id="filename0" value="${a.originName}" title="첨부된 파일" disabled="disabled">
+										<button type="button" class="btn_file_del">
+											<span>첨부 파일 삭제</span>
+										</button>
+									</div>
+								</c:forEach>
+							</c:if>
 						</div>
 					</div>
 	            </div>
 	            <div class="btn_center">
-	                <a href="javascript:qnaSubmit();" class="btn_greyL">등록</a>
+	                <a href="javascript:qnaSubmit();" class="btn_greyL">수정</a>
 	            </div>
 	        </div>
 	        <!-- //질문등록 -->    
@@ -141,7 +151,12 @@
     <script>
     	
 		const dataTransfer = new DataTransfer();
-		var count = 0;
+		
+		// div 요소 선택
+		var divElement = document.getElementById('addfile');
+
+		// 자식 개수 세기
+		var count = divElement.childElementCount;
 		
 		//파일 3개 추가시 버튼 막기
 		$(".btn_filesearch").click(function() {
@@ -153,7 +168,6 @@
 		
 		//파일 배열에 추가
 		$("#files").change(function(){
-			
 			if (count<3) {
 				let fileArr = document.getElementById("files").files;
 				if(fileArr != null && fileArr.length>0){
@@ -165,7 +179,8 @@
 					
 					// ==========================================
 				}
-				count+=1;
+// 				count+=1;
+				count = divElement.childElementCount;
 			}
 		});
     
@@ -196,8 +211,8 @@
     	$(function() {
 			$(document).on('click', '#addfile>.uploadfile>button', function() {
 				
-				const $divs = $('.uploadfile'); // 같은 클래스를 가진 div 요소들을 선택합니다.
-				const index = $divs.index($(this).parent()); // targetDiv가 몇 번째 요소인지 알아냅니다.
+				const $divs = $('.uploadfile'); 
+				const index = $divs.index($(this).parent()); 
 				
 				var fileId = $(this).siblings().eq(0).prop("id");
 				var fileName = $(this).prev().val();
@@ -206,14 +221,15 @@
 				
 				const files = Array.from(dataTransfer.files);
 				var fileArr = document.getElementById("files").files;
+				
 				dataTransfer.items.remove(index);
 				fileArr = dataTransfer.files;
-				count--; 
-				
+// 				count--; 
+				count = divElement.childElementCount;
 			});
 		});
     	
-    	//질문 등록
+    	//질문 수정
     	function qnaSubmit() {
 
     		var fileArr = document.getElementById("files").files;
@@ -221,30 +237,42 @@
 	      	var result1 = 0;
 	      	var result2 = 1;
 	      	
+	      	var parentDiv = $("#addfile");
+	      	var fileInput = parentDiv.find("input");
+	      	var values = []; 
+	      	
+	      	fileInput.each(function() {
+				var value = $(this).val();
+				values.push(value);
+			});
+	      	
+	      	
 	      	$.ajax({
-   		        url: "myQnaInsert.me",
+   		        url: "myQnaUpdate.me",
    		        type: "POST",
    		        data: {
+   		        	serviceNo : $("input[name=serviceNo]").val(),
    		        	category : $("input[name=category]").val(),
    		        	serviceTitle : $("input[name=serviceTitle]").val(),
    		        	serviceContent : $("textarea[name=serviceContent]").val(),
-   		        	writer : $("input[name=writer]").val()
+   		        	writer : $("input[name=writer]").val(),
+   		        	fileNames : values
    		        	},
    		        success: function(response) {
    		        	if (response == 1) {
 						result1 = 1;
 					}
    		        	console.log("등록 성공");
-   		        	console.log(response);
    		        	if (fileArr != null && fileArr.length > 0) {
    		   		    	for (var i = 0; i < fileArr.length; i++) {
    			   		      	formData.append("file", fileArr[i]);
-   			   		     	console.log(formData);
+	   		   		    	console.log(formData);
    		   		    	}
-   		   		    	
+   		   		    	formData.append("serviceNo", $("input[name=serviceNo]").val());
    		   		    	$.ajax({
-   			   		        url: "myQnaFileInsert.me",
+   			   		        url: "myQnaFileUpdate.me",
    			   		        type: "POST",
+   			   		        enctype: 'multipart/form-data',
    			   		        data: formData,
    			   		        processData: false,
    			   		        contentType: false,
@@ -253,14 +281,12 @@
    									result1 = 1;
    								}
    			   		        	console.log("파일 등록 성공");
-   			   		        	console.log(response);
    			   		        },
    			   		        error: function(response) {
    			   		        	if (response == 0) {
    									result1 = 0;
    								}
    			   		        	console.log("파일 등록 실패");
-   			   		        	console.log(response);
    			   		        }
    			   		    });
    		   		 	}
@@ -273,10 +299,8 @@
 						result1 = 0;
 					}
    		        	console.log("등록 실패");
-   		        	console.log(response);
    		        }
    		    });
-	    	
 		}
     	
     </script>

@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +57,8 @@ import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
 import com.kh.finalProject.member.model.service.MemberService;
 import com.kh.finalProject.member.model.vo.Member;
+
+import oracle.net.aso.m;
 
 @Controller
 public class MemberController {
@@ -553,23 +556,165 @@ public class MemberController {
 	//마이페이지 Q&A 수정
 	@ResponseBody
 	@RequestMapping("myQnaUpdate.me")
-	public ModelAndView myQnaUpdate(Notice n
-								   ,ModelAndView mv
+	public String myQnaUpdate(@RequestParam("serviceNo") int serviceNo
+								   ,@RequestParam("category") int category
+								   ,@RequestParam("serviceTitle") String serviceTitle
+								   ,@RequestParam("serviceContent") String serviceContent
+								   ,@RequestParam("writer") String writer
+								   ,@RequestParam("fileNames[]") String[] names
+								   ,Model model
 								   ,HttpSession session) {
 		
+		ArrayList<Attachment> oldList = memberService.fileSelect(serviceNo);
+		ArrayList<String> different = new ArrayList<>();
+		ArrayList<Attachment> delName = new ArrayList<Attachment>();
+		
+		//원래 있던 파일과 새로 들어온 파일 비교 같지 않은 이름 추출
+		for (Attachment a : oldList) {
+            boolean found = false;
+            for (String name : names) {
+                if (a.getOriginName().equals(name)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                different.add(a.getOriginName());
+            }
+        }
+		//같지 않은 이름 새로운 arraylist에 담기
+		for (String diff : different) {
+			Attachment a = Attachment.builder().boardNo(serviceNo).originName(diff).build();
+			delName.add(a);
+		}
+		//없어진 파일 삭제
+		for (Attachment del : delName) {
+			Attachment a = memberService.selectDelFile(del);
+			int result = memberService.deleteFile(del);
+			if (result>0) {
+				new File(session.getServletContext().getRealPath(a.getFilePath()+a.getChangeName())).delete();
+			}
+		}
+		
+		Notice n = Notice.builder().serviceNo(serviceNo).category(category).serviceTitle(serviceTitle).serviceContent(serviceContent).writer(writer).build();
 		int result = memberService.myQnaUpdate(n);
 		
 		if(result>0) {
 			session.setAttribute("alertMsg","질문 수정 완료");
-			mv.setViewName("member/myPage/mypageQna");
+			return (result>0)?"1":"0";
 		}else {
-			mv.addObject("errorMsg","질문 수정 실패").setViewName("common/errorPage");
+			model.addAttribute("errorMsg","질문 수정 실패");
+			return "common/errorPage";
 		}
+		
+	}
+	
+	//마이페이지 Q&A 질문 파일 수정
+	@ResponseBody
+	@PostMapping("myQnaFileUpdate.me")
+	public String myQnaFileUpdate(@RequestParam("file") MultipartFile[] files
+								 ,Notice n
+								 ,HttpSession session) {
+		
+		int result = 0;
+		for (MultipartFile file : files) {
+			if (file != null) {
+				Attachment a = new Attachment();
+				
+				if(!file.getOriginalFilename().equals("")) {
+					String changeName = saveFile(file, session);
+					
+					a.setOriginName(file.getOriginalFilename());
+					a.setChangeName(changeName);
+					a.setFilePath("resources/images/qna/");
+					a.setBoardNo(n.getServiceNo());
+				}
+				result = memberService.myQnaFileUpdate(a);
+			}
+		}
+		return (result>0)?"1":"0";
+	}
+	
+	//마이페이지 Q&A 삭제
+	@ResponseBody
+	@RequestMapping(value = "qnaDelete.me", method = RequestMethod.POST)
+	public String qnaDelete(@RequestParam("serviceNo") int serviceNo
+												       ,HttpSession session) {
+
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		if (a!=null) {
+			for (Attachment del : a) {
+				new File(session.getServletContext().getRealPath(del.getFilePath()+del.getChangeName())).delete();
+			}
+		}
+		int result = memberService.qnaDelete(serviceNo);
+		
+		String resultString = "";
+		if (result>0) {
+			session.setAttribute("alertMsg", "질문 삭제 완료");
+			resultString = "success";
+		}else {
+			resultString = "fail";
+		}
+
+		return resultString;
+	}
+	
+	//마이페이지 Q&A 상세 페이지 이동
+	@RequestMapping("goQnaDetail.me")
+	public ModelAndView goMyQnaDetail(int serviceNo
+									 ,ModelAndView mv
+									 ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Notice n = memberService.selectQna(serviceNo);
+		
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		
+		mv.addObject("n",n).setViewName("member/myPage/mypageQnaDetail");
 		
 		return mv;
 	}
 	
-
+	//마이페이지 Q&A 답변 조회
+	@ResponseBody
+	@RequestMapping(value = "qnaReplyList.me",produces = "application/json; charset=UTF-8")
+	public String qnaReplyList(int serviceNo) {
+		
+		ArrayList<Reply> list = adminService.qnaReplyList(serviceNo);
+		return new Gson().toJson(list);
+	}
+	
+	//마이페이지 Q&A 답변 등록
+	@ResponseBody
+	@RequestMapping("qnaReplyInsert.me")
+	public String qnaReplyInsert(Reply r
+							 	,HttpSession session) {
+		
+		int result = adminService.qnaReplyInsert(r);
+		return (result>0)?"success":"fail";
+	}
+	
+	//마이페이지 Q&A 답변 삭제
+	@ResponseBody
+	@RequestMapping("qnaReplyDelete.me")
+	public String qnaReplyDelete(Reply r
+							 	,HttpSession session) {
+		
+		int result = adminService.qnaReplyDelete(r);
+		return (result>0)?"success":"fail";
+	}
+	
 	//프로필 사진 업데이트
 	@PostMapping("/updateImg.me")
 	public ModelAndView updateImg(Attachment a

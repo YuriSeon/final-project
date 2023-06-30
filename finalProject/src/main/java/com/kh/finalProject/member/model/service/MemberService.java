@@ -104,4 +104,16 @@ public interface MemberService {
 
 	//마이페이지 Q&A 수정
 	int myQnaUpdate(Notice n);
+
+	//마이페이지 Q&A 파일 삭제
+	int deleteFile(Attachment del);
+
+	//마이페이지 Q&A 삭제파일 changName가져오기
+	Attachment selectDelFile(Attachment del);
+
+	//마이페이지 Q&A 파일 수정
+	int myQnaFileUpdate(Attachment a);
+
+	//마이페이지 Q&A 삭제
+	int qnaDelete(int serviceNo);
 }

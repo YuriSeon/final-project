@@ -206,4 +206,29 @@ public class MemberDao {
 		return sqlSession.update("memberMapper.myQnaUpdate",n);
 	}
 
+	//마이페이지 Q&A 파일 삭제
+	public int deleteFile(SqlSessionTemplate sqlSession, Attachment del) {
+		return sqlSession.delete("memberMapper.deleteFile",del);
+	}
+
+	//마이페이지 Q&A 삭제파일 changName가져오기
+	public Attachment selectDelFile(SqlSessionTemplate sqlSession, Attachment del) {
+		return sqlSession.selectOne("memberMapper.selectDelFile",del);
+	}
+
+	//마이페이지 Q&A 파일 수정
+	public int myQnaFileUpdate(SqlSessionTemplate sqlSession, Attachment a) {
+		return sqlSession.insert("memberMapper.myQnaFileUpdate",a);
+	}
+
+	//마이페이지 Q&A 파일 삭제(boardNo)
+	public void deleteFile(SqlSessionTemplate sqlSession, int serviceNo) {
+		sqlSession.delete("memberMapper.deleteFileNo",serviceNo);
+	}
+
+	//마이페이지 Q&A 삭제
+	public int qnaDelete(SqlSessionTemplate sqlSession, int serviceNo) {
+		return sqlSession.update("memberMapper.qnaDelete",serviceNo);
+	}
+
 }

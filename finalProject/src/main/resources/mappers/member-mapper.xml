@@ -293,4 +293,38 @@
 	  	WHERE SERVICE_NO = #{serviceNo}
   	</update>
   	
+  	<!-- 마이페이지 Q&A 파일 삭제 -->
+  	<delete id="deleteFile">
+  		DELETE FROM ATTACHMENT
+  		WHERE BOARD_NO = #{boardNo}
+  		AND ORIGIN_NAME = #{originName}
+  	</delete>
+  	
+  	<!-- 마이페이지 Q&A 삭제할 파일 changeName 조회 -->
+  	<select id="selectDelFile" resultMap="attachmentResultSet">
+		SELECT FILE_NO,BOARD_NO,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,UPLOAD_DATE,FILE_LEVEL,STATUS,WRITER
+		FROM ATTACHMENT
+		WHERE BOARD_NO = #{boardNo}
+		AND ORIGIN_NAME = #{originName}
+  	</select>
+  	
+  	<!-- 마이페이지 Q&A 질문 파일 수정 -->
+	<insert id="myQnaFileUpdate">
+	  	INSERT INTO ATTACHMENT(FILE_NO,BOARD_NO,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,FILE_LEVEL)
+	  	VALUES(SEQ_FNO.NEXTVAL,#{boardNo},#{originName},#{changeName},#{filePath},2)
+  	</insert>
+  	
+  	<!-- 마이페이지 Q&A 삭제 -->
+	<update id="qnaDelete">
+	  	UPDATE SERVICE
+	  	SET STATUS = 'N'
+	  	WHERE SERVICE_NO = #{serviceNo}
+	  	AND STATUS = 'Y'
+  	</update>
+  	
+  	<!-- 마이페이지 Q&A 파일 삭제(번호) -->
+  	<delete id="deleteFileNo">
+  		DELETE FROM ATTACHMENT
+  		WHERE BOARD_NO = #{serviceNo}
+  	</delete>
 </mapper>
