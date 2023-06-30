@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -15,14 +13,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -33,29 +38,31 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.kh.finalProject.admin.model.vo.Notice;
+import com.kh.finalProject.board.model.service.FeedService;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
 import com.kh.finalProject.member.model.service.MemberService;
 import com.kh.finalProject.member.model.vo.Member;
-
-import lombok.val;
-
-import com.kh.finalProject.admin.model.vo.Notice;
 
 @Controller
 public class MemberController {
 	
 	@Autowired
 	public MemberService memberService;
+	
+	@Autowired
+	public FeedService feedService;
 	
 	@Autowired
 	private ServletContext ServletContext;
@@ -96,6 +103,284 @@ public class MemberController {
 		return "member/myPage/mypage";
 	}
 	
+	//마이페이지 개인정보 수정 이동
+	@RequestMapping("goInfoUpdate.me")
+	public String goMyInfoUpdate() {
+		return "member/myPage/myInfoUpdate";
+	}
+	
+	//마이페이지 개인정보 수정
+	@RequestMapping("myInfoUpdate.me")
+	public ModelAndView myInfoUpdate(Member m
+									,ModelAndView mv
+									,HttpSession session) throws IOException, ParseException {
+		
+		if (!m.getUserPwd().equals("")) {
+			//비밀번호 암호화
+			String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
+			m.setUserPwd(encPwd);
+		}
+		
+		int result = memberService.updateMember(m);
+
+		Member loginUser = memberService.loginMember(m);
+		
+		if(result>0) {
+			session.setAttribute("loginUser", loginUser);
+			session.setAttribute("alertMsg", "개인정보 수정 완료");
+			mv.setViewName("redirect:mypage.me");
+		}else {
+			mv.addObject("errorMsg", "개인정보 수정에 실패하였습니다.").setViewName("common/errorPage");
+		}
+		return mv;
+	}
+	
+	//마이페이지 회원 탈퇴 이동
+	@RequestMapping("goInfoDelete.me")
+	public String goMyInfoDelete() {
+		return "member/myPage/myInfoDelete";
+	}
+	
+	//마이페이지 회원 탈퇴
+	@ResponseBody
+	@RequestMapping(value="myInfoDelete.me",produces = "application/json; charset=utf-8")
+	public String myInfoDelete(Member m
+							  ,ModelAndView mv
+							  ,HttpSession session) throws IOException, ParseException {
+		Member loginUser = memberService.loginMember(m);
+		memberService.deleteMember(m);
+		
+		if (loginUser!=null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {
+			session.setAttribute("alertMsg2", "회원탈퇴가 완료되었습니다.<br>이용해주시고 사랑해주셔서 감사합니다.<br>더욱더 노력하고 발전하겠습니다.");
+			session.removeAttribute("loginUser");
+			return new Gson().toJson("success");
+		}else {
+			return new Gson().toJson("fail");
+		}
+	}
+	
+	//마이페이지 작성글 보기 이동
+	@RequestMapping("myWriting.me")
+	public ModelAndView goMyWriting(@RequestParam(value="currentPage", defaultValue="1") int currentPage
+																				  		,ModelAndView mv
+																				  		,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		
+		int listCount = memberService.myWritingCount(nick);
+		int pageLimit = 5;
+		int boardLimit = 5;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Board> list = memberService.myWritingList(pi,nick);
+		
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageWriting");
+		
+		return mv;
+	}
+	
+	//마이페이지 작성글 게시판 종류 선택
+	@RequestMapping("selectBoard.me")
+	public ModelAndView selectBoard(@RequestParam(value="currentPage", defaultValue="1") int currentPage
+																						,int category
+																						,ModelAndView mv
+																						,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Board b = Board.builder()
+				.category(category)
+				.boardWriter(nick).build();
+		int listCount = memberService.selectBoardCount(b);
+		int pageLimit = 5;
+		int boardLimit = 5;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Board> list = memberService.selectBoardList(b,pi);
+		
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.addObject("category", category).setViewName("member/myPage/mypageWriting");
+		return mv;
+	}
+	
+	//마이페이지 게시글 피드 삭제
+	@ResponseBody
+	@RequestMapping(value = "deleteFeed.me", method = RequestMethod.POST)
+	public String deleteFeed(@RequestParam("boardNo") int boardNo
+												     ,HttpSession session) {
+		
+		ArrayList<Attachment> a = memberService.fileSelect(boardNo);
+		int result = feedService.deleteFeed(boardNo);
+		String resultString = "";
+		if (result > 0) {
+            if (!a.isEmpty()) {
+                for (Attachment path : a) {
+                    new File(session.getServletContext().getRealPath("/"+path.getFilePath())).delete();
+                }
+                session.setAttribute("alertMsg", "게시글 삭제 성공");
+                resultString = "success";
+            }else {
+            	resultString = "fail";
+			}
+        }else {
+        	resultString = "fail";
+		}
+		return resultString;
+    
+	}
+	
+	//마이페이지 댓글 보기 이동
+	@RequestMapping("myReply.me")
+	public ModelAndView goMyReply(@RequestParam(value="currentPage", defaultValue="1") int currentPage
+																				  	  ,ModelAndView mv
+																				  	  ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		
+		int listCount = memberService.myReplyCount(nick);
+		int pageLimit = 5;
+		int boardLimit = 5;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Reply> list = memberService.myReplyList(pi,nick);
+		
+		int writingCount = memberService.myWritingCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.addObject("w",writingCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageReply");
+		
+		return mv;
+	}
+	
+	//마이페이지 댓글 수정
+	@RequestMapping("myReplyUpdate.me")
+	public ModelAndView myReplyUpdate(Reply r
+									 ,ModelAndView mv
+									 ,HttpSession session){
+		
+		int result = memberService.replyUpdate(r);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg", "댓글 수정 완료");
+			mv.setViewName("redirect:myReply.me");
+		}else {
+			mv.addObject("errorMsg", "댓글 수정에 실패하였습니다.").setViewName("common/errorPage");
+		}
+		return mv;
+	}
+	
+	//마이페이지 댓글 삭제
+	@ResponseBody
+	@RequestMapping(value = "replyDelete.me", method = RequestMethod.POST)
+	public String replyDelete(@RequestParam("replyNo") int replyNo
+												     ,HttpSession session) {
+		
+		int result = memberService.replyDelete(replyNo);
+		String resultString = "";
+		if (result>0) {
+			session.setAttribute("alertMsg", "댓글 삭제 성공");
+			resultString = "success";
+			
+		}else {
+			resultString = "fail";
+		}
+
+		return resultString;
+	}
+	
+	//마이페이지 찜 목록 이동
+	@RequestMapping("myChoice.me")
+	public ModelAndView goMyChoice(@RequestParam(value="currentPage", defaultValue="1") int currentPage
+																		  	     ,ModelAndView mv
+																		  	     ,HttpSession session) {
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		
+		int listCount = memberService.myChoiceCount(nick);
+		int pageLimit = 5;
+		int boardLimit = 5;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Board> list = memberService.myChoiceList(pi,nick);
+		
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageChoice");
+		
+		return mv;
+	}
+	
+	//마이페이지 수정요청 이동
+	@RequestMapping("myRequest.me")
+	public ModelAndView goMyRequest(@RequestParam(value="currentPage", defaultValue="1") int currentPage
+																				  		,ModelAndView mv
+																				  		,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		
+		int listCount = memberService.myRequestCount(nick);
+		int pageLimit = 5;
+		int boardLimit = 5;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		ArrayList<Notice> list = memberService.myRequestList(pi,nick);
+		
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("list",list);
+		mv.addObject("pi",pi);
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageRequest");
+		
+		return mv;
+	}
+	
 	//마이페이지 Q&A 이동
 	@RequestMapping("myQna.me")
 	public ModelAndView goMyQna(@RequestParam(value="currentPage", defaultValue="1") int currentPage
@@ -105,19 +390,23 @@ public class MemberController {
 		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
 		
 		int listCount = memberService.myQnaCount(nick);
-		
 		int pageLimit = 5;
-		
 		int boardLimit = 5;
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-		
 		ArrayList<Notice> list = memberService.myQnaList(pi,nick);
 		
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		
 		mv.addObject("list",list);
-		
 		mv.addObject("pi",pi);
-		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
 		mv.setViewName("member/myPage/mypageQna");
 		
 		return mv;
@@ -250,8 +539,6 @@ public class MemberController {
 	@ResponseBody
 	public String surveyResult(String result, String userId) {
 		
-		System.out.println(userId);
-		
 		int countEI = 0;
 		int countSN = 0;
 		int countTF = 0;
@@ -351,12 +638,12 @@ public class MemberController {
 		
 	//회원가입 메소드
 	@RequestMapping("insert.me")
-	public ModelAndView insertMember(Member m,String birthDay, String kakaoId, String access_token, ModelAndView mv, HttpSession session) throws IOException, ParseException {
+	public ModelAndView insertMember(Member m,String birthDay, @RequestParam(value = "certification", defaultValue = "0")int certification, String kakaoId, String access_token, ModelAndView mv, HttpSession session) throws IOException, ParseException {
 		//비밀번호 암호화
 		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
 		//System.out.println(encPwd);
 		m.setUserPwd(encPwd);
-		
+		System.out.println(certification);
 		//연령대 계산
 		//입력한 나이
 		int birYear = Integer.parseInt(birthDay.substring(0, 4));
@@ -393,18 +680,16 @@ public class MemberController {
 			
 			session.setAttribute("alertMsg", "회원가입을 성공하였습니다.");
 			
+			//일반 회원가입시
+			if(certification==0) {
+				mv.setViewName("redirect:/");
+			}
+			
 			//카카오 인증 회원가입
 			if(m.getCertification()==1) {
-				//카카오 로그아웃 도시켜주기
-					String url = "https://kauth.kakao.com/oauth/logout";
-					url += "?client_id="+appKey;
-					url += "&logout_redirect_uri=http://localhost:8888/finalProject/";
-					
-					mv.setViewName("redirect:"+url);
-					
-//				카카오 로그아웃
+//				카카오 로그아웃 (카카오 관련 api만 로그아웃되므로 계정 로그아웃으로 진행)
 //				String url = "https://kapi.kakao.com/v1/user/logout";
-//				
+				
 //				URL requestUrl = new URL(url);
 //				HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
 //				urlCon.setRequestMethod("POST");
@@ -419,12 +704,20 @@ public class MemberController {
 //					text += line;
 //				}
 //				
-//				System.out.println(text);
+//				//System.out.println(text);
 //				
 //				mv.setViewName("redirect:/");
+
+				//카카오 계정 로그아웃
+				String url = "https://kauth.kakao.com/oauth/logout";
+				url += "?client_id="+appKey;
+				url += "&logout_redirect_uri=http://localhost:8888/finalProject/";
+				
+				mv.setViewName("redirect:"+url);
 			}
 			//네이버 인증 후 회원가입 시
 			if(m.getCertification()==2) {
+				
 				String clientId = "xezYicDH1SzVKNokPSX2";
 				String ClientSecret = "h48MxFzhpW";
 				//네이버 탈퇴 요청
@@ -459,7 +752,7 @@ public class MemberController {
 				
 				String resultNaver = (String) jsonObj.get("result");
 				
-				mv.setViewName("redirect:/index");
+				mv.setViewName("redirect:/");
 			}
 		}else {
 			mv.addObject("errorMsg", "회원가입 실패").setViewName("common/errorPage");
@@ -470,20 +763,8 @@ public class MemberController {
 	//카카오 인증 조회 (1.인가 코드 받기 2.인가코드로 토큰 받기 3.토큰으로 정보 조회)
 	//회원가입 폼
 	@RequestMapping("enrollForm.me")
-	public String joinMember(Member m, String birthDay, @RequestParam(value="certification",defaultValue="0") String certification, ModelAndView mv, String code,String error, HttpServletRequest request, HttpSession session) throws IOException, ParseException{
+	public ModelAndView joinMember(Member m, String birthDay, @RequestParam(value="certification",defaultValue="0") String certification, ModelAndView mv, String code,String error, HttpServletRequest request, HttpSession session) throws IOException, ParseException{
 		
-		//카카오톡
-		//로그인 인증 동의시 토큰 받기 요청위한 인가 코드(동의하고 계속하기 선택, 로그인 진행시)
-		//System.out.println(code);
-		//인증 실패시 반환되는 에러코드(로그인 취소)
-		//System.out.println(error);
-		
-		//카카오 인증 취소시
-		if(error != null) {
-			if(error.equals("access_denied")) {
-				session.setAttribute("alertMsg", "인증을 취소하였습니다.");
-			}
-		}
 		//인증1번으로 넘어오면 카카오로 토큰 받아오기
 		if(certification.equals("1")) {
 			//url작성
@@ -595,8 +876,9 @@ public class MemberController {
 			kakaoInfo.put("gender", gender);
 			kakaoInfo.put("id",idd);
 			kakaoInfo.put("access_token",access_token);
+			kakaoInfo.put("certification",certification);
 			
-			session.setAttribute("kakaoInfo",kakaoInfo);
+			mv.addObject("kakaoInfo",kakaoInfo);
 		}
 		
 		//인증2번으로 넘어올시 네이버 토큰 발급 후 정보 조회
@@ -687,10 +969,59 @@ public class MemberController {
 			naverInfo.put("access_token",access_token);
 			naverInfo.put("certification",certification);
 			
-			session.setAttribute("naverInfo",naverInfo);
+			mv.addObject("naverInfo",naverInfo);
 		}
 		
-		return "member/memberEnrollForm";
+		mv.setViewName("member/memberEnrollForm");
+		
+		return mv;
+	}
+	
+	//이메일 인증번호 보내는 메소드
+	public int emailSend(String userMail) {
+		
+		String host = "smtp.naver.com";
+		String user = "cjj3845@naver.com";
+		String password = "1s2s3s4s";
+		
+		int ranNum = (int)(Math.random()*9000+1000);
+		
+		Properties props = new Properties();
+			props.put("mail.smtp.host", host);
+			props.put("mail.smtp.port", 587);
+			props.put("mail.smtp.auth", "true");
+		
+		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(user, password);
+			}
+		});
+		
+		try {
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(user));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(userMail));
+			
+			message.setSubject("여행가보자고의 인증 메일이 도착하였습니다.");
+			message.setText("인증번호 : "+ranNum);
+			
+			Transport.send(message);
+			System.out.println(userMail+"로 인증메일 발송 완료, 인증번호 : "+ranNum);
+			
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ranNum;
+	}
+	
+	//이메일 인증번호 쏴주기
+	@ResponseBody
+	@RequestMapping("emailCk.fe")
+	public int emailCk(@RequestParam("email")String userMail) {
+		System.out.println("인증메일 보내는중...");
+		int ranNum = emailSend(userMail);
+		return ranNum;
 	}
 	
 	//로그인 메소드
@@ -744,6 +1075,50 @@ public class MemberController {
 		return (count>0)?"NNNNN":"NNNNY";
 	}
 	
+	//아이디 찾기 폼으로 돌려주기
+	@RequestMapping("searchIdForm.me")
+	public String searchId() {
+		return "member/searchId";
+	}
+	
+	//아이디 찾기 진행시 인증번호 발송
+	@ResponseBody
+	@RequestMapping("searchId.me")
+	public int SearchId(@RequestParam("emailNm")String emailNm, @RequestParam("email")String email) {
+		System.out.println("인증메일 보내는 중...");
+		
+		HashMap<String, String> info = new HashMap();
+			info.put("emailNm", emailNm);
+			info.put("email", email);
+		
+		int count = memberService.searchId(info);
+		int ranNum = 0;
+		
+		if(count>0) {
+			ranNum = emailSend(email);
+		}
+		return ranNum;
+	}
+	//아이디 찾기 진행시 아이디 가져오기
+	@ResponseBody
+	@RequestMapping("searchIdList.me")
+	public Member searchIdList(@RequestParam("emailNm")String emailNm, @RequestParam("email")String email) {
+		
+		HashMap<String, String> info = new HashMap();
+			info.put("emailNm", emailNm);
+			info.put("email", email);
+		
+		Member memId = memberService.searchIdMem(info);
+		
+		return memId;
+	}
+	
+	//비밀번호 폼으로
+	@RequestMapping("searchPwd.me")
+	public String searchPwd(){
+		return "member/searchPwd";
+	}
+	
 	//로그아웃
 	@RequestMapping("logout.me")
 	public String logoutMember(HttpSession session) {
@@ -764,4 +1139,6 @@ public class MemberController {
 		}
 		return new Gson().toJson(m);
 	}
+	
+	    
 }

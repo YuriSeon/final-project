@@ -76,7 +76,7 @@
         		<div class="terms-body">
           			<div id="terms-body_1">KH정보교육원의 이용약관은 다음과 같습니다.</div>
 			        <div id="terms-body_2">
-			            <textarea name="" id="" cols="30" rows="10"></textarea>
+			            <textarea name="" cols="30" rows="10"></textarea>
 			        </div>
         		</div>
   
@@ -100,14 +100,14 @@
           <div class="modal-body">
             <div id="id-pwd">
               <div id="id-input">
-                <input type="text" id="userId" name="userId" placeholder="아이디" style="color: black;">
+                <input type="text" name="" placeholder="아이디" style="color: black;">
               </div>
               <div id="pwd-input">
-                <input type="password" id="userPwd" name="userPwd" placeholder="비밀번호" style="color: black;">
+                <input type="password" name="" placeholder="비밀번호" style="color: black;">
               </div>
             </div>
             <div id="cookie-ck">
-              <input type="checkbox" id="saveId" name="saveId">
+              <input type="checkbox" id="saveId" name="savaId">
               <label for="saveId">아이디 저장</label>
             </div>
             <div id="login-fales">
@@ -115,7 +115,7 @@
               		&nbsp;&nbsp;입력하신 내용을 다시 확인해주세요. -->
             </div>
             <div>
-              <button type="button" id="login-button" onclick="return loginGo();">로그인</button>
+              <button type="button" onclick="">로그인</button>
             </div>
           </div>
           
@@ -147,22 +147,22 @@
 	          <div class="modal-body">
 	            <div id="id-pwd">
 	              <div id="id-input">
-	                <input type="text" id="userId" name="userId" placeholder="아이디" style="color: black;">
+	                <input type="text" name="" placeholder="아이디" style="color: black;">
 	              </div>
 	              <div id="pwd-input">
-	                <input type="password" id="userPwd" name="userPwd" placeholder="비밀번호" style="color: black;">
+	                <input type="password" name="" placeholder="비밀번호" style="color: black;">
 	              </div>
 	            </div>
 	            <div id="cookie-ck">
-	              <input type="checkbox" id="saveId" name="saveId">
-	              <label for="saveId">아이디 저장</label>
+	              <input type="checkbox" name="save">
+	              <label for="save">아이디 저장</label>
 	            </div>
 	            <div id="login-fales">
 	              		<!-- *아이디 또는 비밀번호를 잘못 입력했습니다.<br>
 	              		&nbsp;&nbsp;입력하신 내용을 다시 확인해주세요. -->
 	            </div>
 	            <div>
-	              <button type="button" id="login-button" onclick="return loginGo();">로그인</button>
+	              <button type="button" onclick="">로그인</button>
 	            </div>
 	          </div>
 	          
@@ -195,22 +195,22 @@
 	          <div class="modal-body">
 	            <div id="id-pwd">
 	              <div id="id-input">
-	                <input type="text" id="userId" name="userId" placeholder="아이디" style="color: black;">
+	                <input type="text" name="" placeholder="아이디" style="color: black;">
 	              </div>
 	              <div id="pwd-input">
-	                <input type="password" id="userPwd" name="userPwd" placeholder="비밀번호" style="color: black;">
+	                <input type="password" name="" placeholder="비밀번호" style="color: black;">
 	              </div>
 	            </div>
 	            <div id="cookie-ck">
-	              <input type="checkbox" id="saveId" name="saveId">
-	              <label for="saveId">아이디 저장</label>
+	              <input type="checkbox" name="sav">
+	              <label for="sav">아이디 저장</label>
 	            </div>
 	            <div id="login-fales">
 	              		<!-- *아이디 또는 비밀번호를 잘못 입력했습니다.<br>
 	              		&nbsp;&nbsp;입력하신 내용을 다시 확인해주세요. -->
 	            </div>
 	            <div>
-	              <button type="button" id="login-button" onclick="return loginGo();">로그인</button>
+	              <button type="button" onclick="">로그인</button>
 	            </div>
 	          </div>
 	          

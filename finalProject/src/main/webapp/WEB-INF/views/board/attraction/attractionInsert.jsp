@@ -19,14 +19,14 @@
                 <img src="resources/images/attr2.png">
                 <img src="resources/images/attr1.png">
             </div>
-            <pre> 아래에 검색하여 정보를 먼저 가져온 뒤 비어있는 입력사항을 채워넣어주세요 </pre>
+            <pre> 아래에 검색하여 정보를 먼저 가져온 뒤 비어있는 입력사항을 채워넣어주세요 <br><mark>!! 정보를 검색해오는데 시간이 걸리니까 지도 클릭 후 조금만 기다려주세요 !!</mark></pre>
         </div>
         <div class="serach-area">
             <input type="search" name="title" id="search-input" placeholder="등록을 원하는 관광지를 입력해주세요">
             <button onclick="mapSearch();">검색</button>
         </div>
         <hr>
-        <form action="insert.attr" method="post" id="insert-form">
+        <form action="insert.attr" method="post" id="insert-form" enctype="multipart/form-data" onsubmit="submitForm();">
             <table>
                 <thead>
                     <tr>
@@ -40,7 +40,11 @@
                     </tr>
                     <tr>
                         <th>핵심 소개 문구</th>
-                        <td colspan="3"><input type="text" name="infoName" id="introduce" placeholder="30자까지만 작성해주세요"></td>
+                        <td colspan="3"><input type="text" id="boardContent1" placeholder="30자까지만 작성해주세요"></td>
+                    </tr>
+                    <tr>
+                        <th>상세 설명 문구</th>
+                        <td colspan="3" id="boardContent2"><textarea name="boardContent" id="boardContent" placeholder="게시글에 넣을 세부 내용을 작성해주세요 "></textarea></td>
                     </tr>
                     <tr>
                         <th>주소 (도로명 주소)</th>
@@ -69,8 +73,25 @@
                     <tr>
                         <th>이미지</th>
                         <td id="img-area" colspan="3">
-                            <input type="file" name="upfile">
+	                        <div id="wrapSlide">
+		                        <div id="float">
+		                            <div class="float-img">
+		                                <img src="resources/images/left.png" id="prev" >
+		                            </div>
+		                            <div id="slideArea">
+		                                <img id="slideImage" name="upfile"/>
+		                            </div>
+		                            <div class="float-img">
+		                                <img src="resources/images/right.png" id="next" >
+		                            </div>
+		                        </div>
+		                        <div id="dotArea"></div>
+		                    </div>
                         </td>
+                    </tr>
+                    <tr>
+                        <th>대표이미지 번호</th>
+                        <td colspan="3"><input type="number" name="mainImg" placeholder="대표이미지로 설정할 이미지의 번호를 써주세요"></td>
                     </tr>
                 </tbody>
             </table>
@@ -113,10 +134,11 @@
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3f6edea42e65caf1e4e0b7f49028f282&libraries=services"></script>
     <script type="text/javascript" src="resources/js/listmap.js"></script>  
         <script>
-            $(function(){
-                // $("#insert-form").css("display", "none");
-            });
-
+	    	// 사진 슬라이더 사용 위해서 먼저 변수 지정
+	       	var slideIndex = [];
+	    	$("hr").css("display", "none");
+            $("#insert-form").css("display", "none");
+        
             /* 지도로 검색어 넘기는 이벤트 */
             function mapSearch(){
                 $("#keyword").prop("value", $('#search-input').val());
@@ -140,30 +162,102 @@
                         infoName : infoName,
                         infoAddress : infoAddress
                     },
+                   	method: "POST",
                     success : function(result){
-                        console.log("성공");
                         if(result!=null){
+                        	var boardContent = result.boardContent.split("||"); // img src와 boardContent분리
+                        	var img = boardContent[0].split("|"); // img src배열
                             $("#infoName").prop("value",result.infoName);
-                            $("#introduce").prop("value",result); // 여기 가져오는 키값 작성하기
+                            $("#boardContent").prop("value",boardContent[1]);
                             $("#infoAddress").prop("value", result.infoAddress);
                             $("#infoHomepage").prop("value", result.infoHomepage);
                             $("#infoTime").prop("value", result.infoTime);
                             $("#dayOff").prop("value", result.dayOff);
-                            $("infoCall").prop("value",result.infoCall);
+                            $("#infoCall").prop("value",result.infoCall);
                             $("#parking").prop("value",result.parking);
-                            $("#infoType").prop("value", result.infoType);
-                            $("#img-area").append(makeTag("img", {"src":""})); // 이미지 가져오는거 마저작성하기
+                            for(var i in img){
+                            	slideIndex.push(img[i]);
+                            	console.log(img[i]);
+                            }
+                            /* 사진 슬라이더로 보여주기 */
+                            let currentIndex = slideIndex[0];
+            	    	    const dotPath = 'resources/images/dot.png';
+            		    	$("#slideImage").prop("src", slideIndex[0]);
+            		        slideIndex.forEach(function(item, index, array){
+            		            let img = document.createElement("img");
+            		            img.setAttribute("src", dotPath);
+            		            img.setAttribute("width", "15px");
+            		            img.setAttribute("height", "15px");
+            		            img.setAttribute("id", "dotImage" + index);
+            		            img.setAttribute("class", "dotImage");
+            		            img.setAttribute("onclick", "dotClickEvent(" + index + ")");
+            		            document.querySelector("#dotArea").appendChild(img);
+            		        });
                         } else {
-                            alert("맞는 정보가 없어서 가져오지 못했습니다 직접 작성해서 정보를 제공해주세요");
+                            alert("오류로 정보를 가져오지 못했습니다 직접 작성해서 게시물을 작성해주세요");
+                            
                         }
-
-                        $("#insert-form").css("display", "none");
-                    },
-                    complete : function(){
-                        console.log("일단 되긴 함");
+                        $("hr").css("display", "block");
+                        $("#insert-form").css("display", "block");
                     }
                 });
             });
+		        
+	        	/* 사진 슬라이더 */
+		        function dotClickEvent(index){
+			        $("#slideImage").prop("src", slideIndex[index]);
+			        currentIndex = slideIndex[index];
+			    }
+		    
+			    $("#prev").on("click", function(){
+			        slideIndex.some(function(item, index, array){
+			            if(index != 0){
+			                if(item == currentIndex){
+			                    $("#slideImage").prop("src", slideIndex[index - 1]);
+			                    currentIndex = slideIndex[index - 1];
+			                    return true;
+			                }
+			            }else{
+			                if(item == currentIndex){
+			                    $("#slideImage").prop("src", slideIndex[slideIndex.length - 1]);
+			                    currentIndex = slideIndex[slideIndex.length - 1];
+			                    return true;
+			                }
+			            }
+			        });
+			    });
+			    $("#next").on("click", function(){
+			        slideIndex.some(function(item, index, array){
+			            if(index != slideIndex.length - 1){
+			                if(item == currentIndex){
+			                    $("#slideImage").prop("src", slideIndex[index + 1]);
+			                    currentIndex = slideIndex[index + 1];
+			                    return true;
+			                }
+			            }else{
+			                if(item == currentIndex){
+			                    $("#slideImage").prop("src", slideIndex[0]);
+			                    currentIndex = slideIndex[0];
+			                    return true;
+			                }
+			            }
+			        });
+			    });
+    	    
+    	 	/* 게시물 등록전 할 작업 */ 
+            function submitForm(){ 
+	            // 사진 경로가 웹주소라면 이미지 url 컨트롤러로 넘겨주기
+            	var imageURL = slideIndex;
+				for(var i in imageURL){
+	            	if(imageURL[i].includes("https:")){ 
+	            		var hidden = makeTag("input",{"type":"hidden","name":"imageURL","value":imageURL[i]});
+		            	$("#insert-form").append(hidden);
+	            	}
+				}
+				// boardConten에 소개문구 더해넣어주기(상세설명||소개문구)
+				var boardContent = $("#boardContent2").text()+'||'+$("boardContent1").val();
+				$("#boardContent2").attr("value", boardContent);
+            }
         </script>
     </body>
 </html>

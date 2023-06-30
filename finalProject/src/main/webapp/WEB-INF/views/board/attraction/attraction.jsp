@@ -148,18 +148,9 @@
 				}
 			});
 		});
-		
-		/* 클릭시 상세페이지 이동 */
-		$(function(){
-			$(".list-area").on("click", function(){
-				/* boardNo 꺼내는거 마저 작성하기 */
-				var bno = $(this).
-				location.href='detail.attr?bno='+bno;
-			});
-		});
 	</script>
 	<!-- 먼저 상세페이지로 이동하기위해 만들어놓은 태그 나중에 지우기 -->
-	<a href="detail.attr">상세페이지로이동태그</a>
+	<a href="detail.attr?boardNo=11">상세페이지로이동태그</a>
 	<a href="insert.attr">insert page</a>
     <div class="attr">
 		<div id="mainPhoto"></div>
@@ -168,26 +159,25 @@
 				<!-- main화면의 큰 지도 들어갈 위치 -->
 			</div>
 			<div id="zone-area">
-				<div id="first"><span class="seoul">서울</span></div>
-				<div><span class="busan">부산</span></div>
-				<div><span class="">대구</span></div>
-				<div><span class="">인천</span></div>
-				<div><span class="">광주</span></div>
-				<div><span class="">대전</span></div>
-				<div><span class="">울산</span></div>
-				<div><span class="">세종</span></div>
-				<div><span class="">경기</span></div>
-				<div><span class="">충북</span></div>
-				<div><span class="">충남</span></div>
-				<div><span class="">전북</span></div>
-				<div><span class="">전남</span></div>
-				<div><span class="">경북</span></div>
-				<div><span class="">경남</span></div>
-				<div><span class="kangwoun">강원</span></div>
-				<div><span class="jeju">제주</span></div>
+				<div class="zone" id="first"><span class="서울">서울</span></div>
+				<div class="zone"><span class="부산">부산</span></div>
+				<div class="zone"><span class="대구">대구</span></div>
+				<div class="zone"><span class="인천">인천</span></div>
+				<div class="zone"><span class="광주">광주</span></div>
+				<div class="zone"><span class="대전">대전</span></div>
+				<div class="zone"><span class="울산">울산</span></div>
+				<div class="zone"><span class="세종">세종</span></div>
+				<div class="zone"><span class="경기">경기</span></div>
+				<div class="zone"><span class="충북">충북</span></div>
+				<div class="zone"><span class="충남">충남</span></div>
+				<div class="zone"><span class="전북">전북</span></div>
+				<div class="zone"><span class="전남">전남</span></div>
+				<div class="zone"><span class="경북">경북</span></div>
+				<div class="zone"><span class="경남">경남</span></div>
+				<div class="zone"><span class="강원">강원</span></div>
+				<div class="zone"><span class="제주">제주</span></div>
 			</div>
 		</div>
-		<!-- react라서 수업 진도 나가고 나서 해보기 d3 cdn은 미리 넣어둠! -->
 		<div id="content">
 			<div class="float">
 				<!-- 작아진 지도 들어갈 위치 -->
@@ -282,5 +272,10 @@
 		</div>
 	</div>
 	<%@include file="../../common/footer.jsp" %>
+	<script>
+		$(".zone").on("click", function(){
+			var zoneName = $(this).attr("class")
+		});
+	</script>
   </body>
 </html>

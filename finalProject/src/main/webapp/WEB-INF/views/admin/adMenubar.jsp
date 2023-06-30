@@ -20,7 +20,7 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="resources/css/dashboard_admin.css?v=1">
+    <link rel="stylesheet" type="text/css" href="resources/css/dashboard_admin.css?v=2">
     <!-- Alertify JavaScript -->
 	<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 	<!-- Alertify CSS -->
@@ -81,22 +81,22 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="attraction.ad">
                             <span class='glyphicon glyphicon-list-alt'></span> 명소
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="feed.ad">
                             <span class='glyphicon glyphicon-list-alt'></span> 피드
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="schedule.ad">
                             <span class='glyphicon glyphicon-list-alt'></span> 일정자랑
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="together.ad">
                             <span class='glyphicon glyphicon-list-alt'></span> 함께가치
                         </a>
                     </li>
@@ -109,11 +109,11 @@
                     <span class='glyphicon glyphicon-user'></span> 회원관리
                 </a>
             </li>
-            <li>
-                <a href="#">
-                    <span class='glyphicon glyphicon-comment'></span> 쪽지관리
-                </a>
-            </li>
+<!--             <li> -->
+<!--                 <a href="#"> -->
+<!--                     <span class='glyphicon glyphicon-comment'></span> 쪽지관리 -->
+<!--                 </a> -->
+<!--             </li> -->
             <li id="notice-manage">
                 <a style="color: white;">
                     <span class='glyphicon glyphicon-question-sign'></span> 문의관리
@@ -214,13 +214,13 @@
 			}else if (key === 51) {
     			location.href="festival.ad";
 			}else if (key === 52) {
-    			location.href="theme.ad";
+    			location.href="attraction.ad";
 			}else if (key === 53) {
-    			location.href="theme.ad";
+    			location.href="feed.ad";
 			}else if (key === 54) {
-    			location.href="theme.ad";
+    			location.href="schedule.ad";
 			}else if (key === 81) {
-    			location.href="theme.ad";
+    			location.href="together.ad";
 			}else if (key === 87) {
     			location.href="member.ad";
 			}else if (key === 69) {

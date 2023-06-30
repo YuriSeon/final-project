@@ -1,7 +1,5 @@
 package com.kh.finalProject.board.model.vo;
 
-import java.sql.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,4 +26,6 @@ public class Reply {
 	private int refRno;
 	private String status;
 	private String profileImg; // 프로필이미지 경로+바뀐이름
+	private String boardTitle;
+
 }

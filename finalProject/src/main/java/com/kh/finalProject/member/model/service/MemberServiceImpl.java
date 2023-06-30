@@ -2,6 +2,7 @@ package com.kh.finalProject.member.model.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.dao.MemberDao;
 import com.kh.finalProject.member.model.vo.Member;
@@ -37,6 +40,17 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public Member loginMember(Member m) {
 		return memberDao.loginMember(sqlSession, m);
+	}
+	
+	//아이디 찾기 조회(인증번호 발송)
+	@Override
+	public int searchId(HashMap<String, String> info) {
+		return memberDao.searchId(sqlSession, info);
+	}
+	//아이디 찾기 진행시 아이디 리스트
+	@Override
+	public Member searchIdMem(HashMap<String, String> info) {
+		return memberDao.searchIdMem(sqlSession, info);
 	}
 
 	@Override
@@ -117,5 +131,95 @@ public class MemberServiceImpl implements MemberService{
 	public ArrayList<Notice> myQnaList(PageInfo pi,String nick) {
 		return memberDao.myQnaList(sqlSession,pi,nick);
 	}
+
+	//마이페이지 작성글 개수
+	@Override
+	public int myWritingCount(String nick) {
+		return memberDao.myWritingCount(sqlSession,nick);
+	}
+
+	//마이페이지 작성글 리스트 조회
+	@Override
+	public ArrayList<Board> myWritingList(PageInfo pi, String nick) {
+		return memberDao.myWritingList(sqlSession,nick,pi);
+	}
+
+	//마이페이지 작성글 게시판 종류 선택 개수
+	@Override
+	public int selectBoardCount(Board b) {
+		return memberDao.selectBoardCount(sqlSession,b);
+	}
+
+	//마이페이지 작성글 게시판 종류 선택 리스트
+	@Override
+	public ArrayList<Board> selectBoardList(Board b, PageInfo pi) {
+		return memberDao.selectBoardList(sqlSession,b,pi);
+	}
+
 	
+	//마이페이지 댓글 개수
+	@Override
+	public int myReplyCount(String nick) {
+		return memberDao.myReplyCount(sqlSession,nick);
+	}
+
+	//마이페이지 댓글 리스트
+	@Override
+	public ArrayList<Reply> myReplyList(PageInfo pi, String nick) {
+		return memberDao.myReplyList(sqlSession,nick,pi);
+	}
+
+	//마이페이지 찜 목록 개수
+	@Override
+	public int myChoiceCount(String nick) {
+		return memberDao.myChoiceCount(sqlSession,nick);
+	}
+
+	//마이페이지 찜 목록 리스트
+	@Override
+	public ArrayList<Board> myChoiceList(PageInfo pi, String nick) {
+		return memberDao.myChoiceList(sqlSession,nick,pi);
+	}
+
+	//마이페이지 수정요청 개수
+	@Override
+	public int myRequestCount(String nick) {
+		return memberDao.myRequestCount(sqlSession,nick);
+	}
+
+	//마이페이지 수정요청 리스트
+	@Override
+	public ArrayList<Notice> myRequestList(PageInfo pi, String nick) {
+		return memberDao.mymyRequestList(sqlSession,nick,pi);
+	}
+
+	//마이페이지 개인정보 수정
+	@Override
+	public int updateMember(Member m) {
+		return memberDao.updateMember(sqlSession,m);
+	}
+
+	//마이페이지 회원 탈퇴
+	@Override
+	public void deleteMember(Member m) {
+		memberDao.deleteMember(sqlSession,m);
+	}
+
+	//마이페이지 게시글 파일 조회
+	@Override
+	public ArrayList<Attachment> fileSelect(int boardNo) {
+		return memberDao.fileSelect(sqlSession,boardNo);
+	}
+
+	//마이페이지 댓글 수정
+	@Override
+	public int replyUpdate(Reply r) {
+		return memberDao.replyUpdate(sqlSession,r);
+	}
+
+	//마이페이지 댓글 삭제
+	@Override
+	public int replyDelete(int replyNo) {
+		return memberDao.replyDelete(sqlSession,replyNo);
+	}
 }

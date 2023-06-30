@@ -22,5 +22,7 @@ public class Info {
 	private String infoName; //INFO_NAME	VARCHAR2(50 BYTE)
 	private int infoType; //INFO_TYPE	NUMBER
 	private String dayOff; // DAY_OFF VARCHAR2(50 BYTE)
+	
+	private String boardContent; // 필요해서 이거 하나만 필드부에 추가할게요
 
 }

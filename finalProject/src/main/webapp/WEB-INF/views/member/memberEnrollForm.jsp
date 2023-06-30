@@ -7,18 +7,18 @@
 <title>Insert title here</title>
 
 	<style>
-		@import url("https://fonts.googleapis.com/css?family=Lato:300,400,700");
+		/* @import url("https://fonts.googleapis.com/css?family=Lato:300,400,700");
  		.container_1 *{
 			box-sizing: border-box;
 			display : inline-block;
 			height:auto;
-		}
+		} */
 
-		.container_1 *, .container_1 *::after, .container_1 *::before,
+		/* .container_1 *, .container_1 *::after, .container_1 *::before,
 		.container_2 *, .container_2 *::after, .container_2 *::before,
 		.container_3 *, .container_3 *::after, .container_3 *::before{
   			box-sizing: inherit;
-		}
+		} */
 
 		div.fancy-select ul.options li, div.fancy-select ul.options.overflowing.open, div.fancy-select ul.options.overflowing, div.fancy-select ul.options.open, div.fancy-select ul.options, div.fancy-select div.trigger, [type=checkbox]:not(:checked) + label:before,
 		[type=checkbox]:checked + label:before, .container_1 button, .container_2 button, .container_3 button, .auto-textarea, .field-bar, .float-label, input[type=text],
@@ -28,11 +28,11 @@
   			-moz-transition: all 0.25s ease-out;
   			transition: all 0.25s ease-out;
 		}
-		body {
+		/* body {
   			background: #efefef;
   			box-sizing: border-box;
   			font-family: "Lato";
-		}
+		} */
 		
 		.container_1, .container_2, .container_3 {
   			max-width: 600px;
@@ -43,11 +43,11 @@
  			padding: 3rem 2rem;
   			border-radius: 1rem;
 			}
-		.::after {
+		/* .::after {
   			clear: both;
   			content: "";
   			display: block;
-		}
+		} */
 
 		.field-wrapper {
   			float: left;
@@ -58,9 +58,9 @@
   			margin-bottom: 2.5rem;
   			height: 35px;
 		}
-		.field-wrapper:last-child {
+		/* .field-wrapper:last-child {
   			margin-right: 0;
-		}
+		} */
 
 		.field-wrapper-half {
   			float: left;
@@ -68,22 +68,22 @@
   			margin-right: 2.3576520234%;
 			width: 48.8211739883%;
 		}
-		.field-wrapper-half:last-child {
+		/* .field-wrapper-half:last-child {
   			margin-right: 0;
-		}
-		.field-wrapper-half:nth-child(2n+1) {
+		} */
+		/* .field-wrapper-half:nth-child(2n+1) {
   			margin-right: 0;
-		}
+		} */
 
-		.button-wrapper {
+		/* .button-wrapper {
   			float: left;
   			display: block;
   			margin-right: 2.3576520234%;
   			width: 100%;
-		}
-		.button-wrapper:last-child {
+		} */
+		/* .button-wrapper:last-child {
   			margin-right: 0;
-		}
+		} */
 
 		input[type=text],
 		input[type=email],
@@ -101,13 +101,13 @@
   			vertical-align: middle;
   			width: 100%;
 		}
-		input[type=text]::placeholder,
+		/* input[type=text]::placeholder,
 		input[type=email]::placeholder,
 		input[type=password]::placeholder,
 		input[type=number]::placeholder,
 		textarea::placeholder {
   			opacity: 0;
-		}
+		} */
 		input[type=text]::-webkit-input-placeholder,
 		input[type=email]::-webkit-input-placeholder,
 		input[type=password]::-webkit-input-placeholder,
@@ -128,6 +128,7 @@
 		textarea:valid {
 		  	outline: 0;
 		}
+		/* ======================================================================================여기까지 확인========== */
 		input[type=text]:focus::placeholder, input[type=text]:valid::placeholder,
 		input[type=email]:focus::placeholder,
 		input[type=password]:focus::placeholder,
@@ -563,8 +564,9 @@
 		    	<input type="email" id="email" name="email" maxlength="30" placeholder="email@email.com (이메일 인증 api가져올거라 조건 안걸려있음)" class="float-field" required style="width: 400px;"/>
 		    	<label for="email" class="float-label">이메일</label>
 		    	<div class="field-bar"></div>
-		  		<button type="" style="position:relative; top: -35px; left:400px; font-size: 9px;">이메일 인증</button>
-		    	<div id="email_check" style="position:relative; left: -140px"></div>
+		  		<button type="button" onclick="emailCk()" style="position:relative; top: -35px; left:400px; font-size: 9px;">이메일 인증</button>
+		  		<input type="text" id="emailNumCk" name="emailNumCk" maxlength="4" placeholder="인증번호 4자리를 입력해주세요." class="float-field" required style="width: 400px; margin-top: -20px;"/>
+		    	<div id="email_check" style="position:relative; font-size: 12px;"></div>
 		  	</div>
 		  	<button type="submit" id="insertGo" style="position:relative; top:390px; left:125px;" onclick="return joinChk();">회원가입</button>
 		  	<button type="button" id="form_open" style="position:relative; top:390px; left:130px;">정보 추가 입력</button>
@@ -799,8 +801,8 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 			</div>
 		  	<!-- 여행 MBTI -->
 		  	<div class="field-wrapper">
-		    	<input type="text" name="email"  placeholder="MBTI 테스트를 진행해주세요!" class="float-field" style="position:relative; left:170px; top:8px; width: 365px;" readonly/>
-		    	<label for="email" class="float-label" style="position:relative; top:-48px;">여행 MBTI<img src="resources/images/question.png" alt="" style="height:11px; width:11px; position:relative; left:2px; top:-1px; background-color:rgb(239, 239, 239);"></label>
+		    	<input type="text" name="survey"  placeholder="MBTI 테스트를 진행해주세요!" class="float-field" style="position:relative; left:170px; top:8px; width: 365px;" readonly/>
+		    	<label for="survey" class="float-label" style="position:relative; top:-48px;">여행 MBTI<img src="resources/images/question.png" alt="" style="height:11px; width:11px; position:relative; left:2px; top:-1px; background-color:rgb(239, 239, 239);"></label>
 		    	<!-- <div class="field-bar"></div> -->
 		  		<button type="" style="position:relative; left:-75px; top:-20px; font-size: 9px;">여행 MBTI</button>
 		  	</div>
@@ -948,13 +950,26 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 				$("#phone_check").show();
 			}
 		});
+		
+		//이메일 인증 칸 숨겨놓기
+		$("#emailNumCk").hide();
+		//이메일 경고 텍스트 숨기기
+		$("#email").keyup(function(){
+			$("#email_check").hide();
+		});
+		$("#emailNumCk").keyup(function(){
+			$("#email_check").hide();
+		});
+		
 		console.log('${naverInfo.certification}');
 		console.log('${kakaoInfo.certification}');
 		console.log($("#certification").val());
+		
 		//카카오 회원번호 넘어오면 정보 담아주기
-		if('${kakaoInfo.name}'!=""){
+		if('${kakaoInfo.certification}'!=""){
 			$("#kakaoId").val('${kakaoInfo.id}');
-			$("#access_token").val('${kakaoInfo.access_token}');			
+			$("#access_token").val('${kakaoInfo.access_token}');
+			$("#certification").val('${kakaoInfo.certification}');
 		}
 		
 		//네이버 정보 뿌려주기
@@ -980,6 +995,26 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 			$("#pwdCk_check").show();
 			$("#pwdCk_check").css({"color":"red","font-size":"12px"}).text("비밀번호가 일치하지 않습니다.");
 		}
+	}
+	
+	var ckNum = "";
+	var ckEmail = "";
+	//이메일 인증 클릭시
+	function emailCk(){
+		var email = $("#email").val();
+		$.ajax({
+			url : "emailCk.fe",
+			data : {email : email},
+			success : function(result){
+				ckNum = result;
+				ckEmail = email;
+				alert("인증번호가 전송되었습니다.")
+				$("#emailNumCk").show();
+				$("#emailNumCk").focus();
+			},error : function(){
+				console.log("이메일 인증 보내기 에이젝스 에러");
+			}
+		});
 	}
 	
 	/* 추가입력사항 슬라이드 */
@@ -1031,7 +1066,7 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 	}
 	
 	//버튼 클릭시 회원가입 진행
-	function joinChk(){	
+	function joinChk(){
 		
 		//아이디
 		var $userId = $("#insertForm input[name=userId]");
@@ -1116,6 +1151,26 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		//자릿수 초과시
 		if($("#phone").val().trim().length>=12){
 			$("#phone").focus();
+			return false;
+		}
+		
+		//이메일 인증 안했을시
+		if($("#emailNumCk").val().length<4){
+			alert("이메일 인증을 진행해주세요.");
+			return false;
+		}
+		//이메일 인증번호 다를시
+		if($("#emailNumCk").val()!=ckNum){
+			$("#email_check").css({"color":"red","font-size":"12px"}).text("인증번호가 일치하지 않습니다.");
+			$("#email_check").show();
+			$("#emailNumCk").focus();
+			return false;
+		}
+		//이메일 주소 바꿀시
+		if($("#email").val()!=ckEmail){
+			$("#email_check").css({"color":"red","font-size":"12px"}).text("인증번호 발송한 메일주소와 입력하신 주소가 일치하지 않습니다.");
+			$("#email_check").show();
+			$("#email_check").focus();
 			return false;
 		}
 		
