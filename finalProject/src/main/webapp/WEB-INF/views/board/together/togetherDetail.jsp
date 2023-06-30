@@ -47,7 +47,6 @@
 			margin:auto;
 			width:1110px;
 			height: 500px;
-/* 			border: 1px solid black; */
 		}
 		#replyEnrollArea{
 			height: 100px;
