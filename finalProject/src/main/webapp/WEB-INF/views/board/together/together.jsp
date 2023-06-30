@@ -115,6 +115,24 @@
 		#applyBtnArea>button{
 			margin:0px 10px;
 		}
+		#contentOuter .col-lg-4:hover{
+			cursor : pointer;
+			background-color:lightgray; 
+			border-radius : 15px;
+		}
+		.col-lg-4>.ticket-item{
+			margin-top:10px;
+		}
+		#mbtiRecommend{
+			 width:100px; 
+			 height:60px; 
+			 text-align : center;
+			 z-index:10; 
+			 position:absolute; 
+			 margin:10px 0px 0px 10px;
+			 border-radius : 5px;
+			 padding-top : 3px;
+		}
 	</style>
     <title>함께 가치</title>
 
@@ -152,9 +170,10 @@
       </div>
     </div>
     <!-- ***** Preloader End ***** -->
-	<%@include file="../common/menubar.jsp" %>
+	<%@include file="../../common/menubar.jsp" %>
     <!-- ***** Header Area End ***** -->
 	<script>
+
 		$(function(){
 			$(".nav>li>a").each(function(){
 				if($(this).text() == $("title").eq(0).text()){
@@ -227,7 +246,85 @@
 								<button type="button" id="search-Btn" onclick="goOptionSearch();">검색 </button>
 							</div>
 							
+							<c:if test="${not empty loginUser and cookie.mbtiCheck != null }">
+								<script>
+								
+								$(function(){
+										var mbtiCheck = decodeURI("${cookie.mbtiCheck.value}");
+										var nickname = mbtiCheck.split("+")[0];
+										var plusMbti = mbtiCheck.split("+")[2];
+										var minusMbti = mbtiCheck.split("+")[3];
+										
+							
+										$("input[name=survey]").each(function(){
+										
+												var boardMbti = $(this).val().split(" ")[0];
+												
+												if(boardMbti == plusMbti){
+													$(this).siblings().eq(1).children().children().eq(0).css("background-color","lightgreen").html("회원님과 잘 맞을 것 같아요!").css("color","white").css("display","block");
+												}
+												
+												if(boardMbti == minusMbti){
+													$(this).siblings().eq(1).children().children().eq(0).css("background-color","yellow").html("잘 안맞을 수도 있어요..").css("color","gray").css("display","block");	
+												}
+										});
+										$("#mbtiCheckBox").attr("checked",true);
+										$("#mbtiCheckBox").css("display","inline-block");
+										$("#mbtiCheckBoxLabel").css("display","inline-block");
+										
+										$("#mbtiCheckBox").on("change",function(){
+											if($(this).prop("checked")){
+												$("#mbtiRecommend").css("display","block");
+											}else{
+												$("#mbtiRecommend").css("display","none");
+											}
+										});
+								});
+								
+// 								$(function(){
+// 									$("#mbtiCheckBox").attr("checked",true);
+// 									$("#mbtiCheckBox").css("display","inline-block");
+// 									$("#mbtiCheckBoxLabel").css("display","inline-block");
+									
+// 									$("#mbtiCheckBox").on("change",function(){
+// 										if($(this).prop("checked")){
+// 											$("#mbtiRecommend").css("display","block");
+// 										}else{
+// 											$("#mbtiRecommend").css("display","none");
+// 										}
+// 									});
+									
+// 								});
+									
+								</script>
+							</c:if>
+							
+							<c:if test="${not empty loginUser and not empty cookie.applyCheck }">
+									<script>
+											$(function(){
+												var applyCheck = "${cookie.applyCheck.value}";
+												var applyBoardNo = applyCheck.split("/")[0];
+												var applyWriter = applyCheck.split("/")[1];
+												var loginUser = "${loginUser.nickname}";
+													$(".togetherBoardNo").each(function(){
+														if(loginUser == applyWriter){
+																if($(this).val() == applyBoardNo){
+																	var $applyBtn = $(this).siblings().eq(0).children().eq(1).children("div").children("button");
+																	$applyBtn.text("작성자 승인 대기중").attr("disabled",true).css("color","white").css("background-color","lightgreen");																
+																}else{
+																	var $elseBtns = $(this).siblings().eq(0).children().eq(1).children("div").children("button");
+																		if($elseBtns.text() != "마감되었습니다."){
+																			$elseBtns.text("중복 참여 불가").attr("disabled",true).css("color","black").css("background-color","lightgray");
+																		}
+																}														
+														}
+													});
+											});
+									</script>
+							</c:if>							
+							
 							<script>
+							
 								function goOptionSearch(){
 									var startDate = $("#startDate").val();
 									var endDate = $("#endDate").val();
@@ -244,48 +341,69 @@
 										},
 										success : function(result){
 											
-												$("#contentOuter").children().remove();
-												var str = "";
-												var today = new Date().getTime();
-												for(var i in result){
-													str += "<div class='col-lg-4'>"
-										                +"<input type='hidden' name='boardNo'  class='togetherBoardNo' value="+result[i].boardNo+">"
-										                    +"<div class='ticket-item'>"
-										                        +"<div class='thumb'>"
-										                            +"<img src=/finalProject"+result[i].filePath+" alt=></div>"
-										                        +"<div class='down-content'>"
-										                        	+"<h5>["+result[i].totalDate+"박 "+ (result[i].totalDate +1)+"일]</h3>"
-										                            +"<h4>&lt;"+result[i].zoneName+" "+result[i].concept+" 여행&gt; <br> "+result[i].boardTitle+"</h4>"
-										                            +"<ul id='optionIcons'>"
-										                                +"<li><i class='fa fa-clock-o'></i>"+result[i].startDate+" ~ "+result[i].endDate+"</li>"
-										                                +"<li><i class='fa fa-map-marker'></i>"+result[i].zoneName+"</li>"
-										                                +"<li><img src='/finalProject/resources/images/together_won.png'>"+result[i].totalPay+"원 이하</li>";
-										                                if(result[i].profilePath){
-										                                	console.log("profle")
-									                               		    str += "<li><img src='/finalProject/"+result[i].profilePath+"' style='border-radius:50%;''> <a id='nicknameHover' onclick='whoareyou();''>"+result[i].boardWriter+"</a></li>";
-										                                }else{
-										                                	console.log("profle no")
-										                                	str += "<li><img src='/finalProject/resources/images/기본프로필.png' style='border-radius:50%;''> <a id='nicknameHover' onclick='whoareyou();''>"+result[i].boardWriter+"</a></li>";
-										                                }
-										                                str += "<li>작성일 : "+result[i].createDate+"</li></ul>"
-										                            +"<div class='main-dark-button' id='applyBtn'>";
-																	var d = new Date("20"+result[i].endDate).getTime();
-																	if(d - today >0 && result[i].together - result[i].togetherCount != 0){
-										                            			<%if(request.getSession().getAttribute("loginUser") != null){%>
-// 													                            	  str += "<a href='#'>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</a>";
-													                            	  str += "<button type='button' class='togetherBtn' data-toggle="modal" data-target="#applyModal">참여하기 "+result[i].togetherCount+"/"+result[i].together+"</button>";
-													                           <%}else{%>
-// 															                          str += "<a style='background-color:lightgray;''>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</a>"
-																					  str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[i].togetherCount+"/"+result[i].together+"</button>";
-															                           		+"<p>참여하려면 로그인을 해주세요.</p>";
-													                           <%}%>
+											$("#contentOuter").children().remove();
+											var str = "";
+											var today = new Date().getTime();
+											for(var i in result[0]){
+												str += "<div class='col-lg-4' onclick='goTogetherDetail("+result[0][i].boardNo+");'>"
+									                +"<input type='hidden' name='boardNo'  class='togetherBoardNo' value="+result[0][i].boardNo+">"
+									                +"<input type='hidden' name='survey'  class='survey' value="+result[0][i].survey+">"
+									                    +"<div class='ticket-item'>"
+									                        +"<div class='thumb'>"
+									                            +" <div id='mbtiRecommend' style='display:none;'></div>"
+									                            +"<img src=/finalProject"+result[0][i].filePath+" style='position:relative;'></div>"
+									                        +"<div class='down-content'>"
+									                        	+"<h5>["+result[0][i].totalDate+"박 "+ (result[0][i].totalDate +1)+"일]</h3>"
+									                            +"<h4>&lt;"+result[0][i].zoneName+" "+result[0][i].concept+" 여행&gt; <br> "+result[0][i].boardTitle+"</h4>"
+									                            +"<ul id='optionIcons'>"
+									                                +"<li><i class='fa fa-clock-o'></i>"+result[0][i].startDate+" ~ "+result[0][i].endDate+"</li>"
+									                                +"<li><i class='fa fa-map-marker'></i>"+result[0][i].zoneName+"</li>"
+									                                +"<li><img src='/finalProject/resources/images/together_won.png'>"+result[0][i].totalPay+"원 이하</li>";
+									                                if(result[0][i].profilePath){
+								                               		    str += "<li><img src='/finalProject/"+result[0][i].profilePath+"' style='border-radius:50%;''> <a id='nicknameHover' onclick='whoareyou();''>"+result[0][i].boardWriter+"</a></li>";
+									                                }else{
+									                                	str += "<li><img src='/finalProject/resources/images/기본프로필.png' style='border-radius:50%;''> <a id='nicknameHover' onclick='whoareyou();''>"+result[0][i].boardWriter+"</a></li>";
+									                                }
+									                                str += "<li>작성일 : "+result[0][i].createDate+"</li></ul>"
+									                            +"<div class='main-dark-button' id='applyBtn'>";
+																var d = new Date("20"+result[0][i].endDate).getTime();
+																if(d - today >0 && result[0][i].together - result[0][i].togetherCount != 0){
+									                            			<%if(request.getSession().getAttribute("loginUser") != null){%>
+									                            				if("${loginUser.nickname}" == result[0][i].boardWriter){
+																						str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>내가 작성한 글입니다.</button>";								                            					
+									                            				}else if("${loginUser.certification}" != 0){
+												                            		    str += "<button type='button' class='togetherBtn' data-toggle='modal' data-target='#applyModal'>참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>";
+									                            				}else{
+									                            					str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>";
+													                           		+"<p>참여하려면 본인 인증을 해주세요.</p>";
+									                            				}
+												                           <%}else{%>
+																				  str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>";
+														                           		+"<p>참여하려면 로그인을 해주세요.</p>";
+												                           <%}%>
+																}else{
+									                            		str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>마감되었습니다.</button>";
+																}
+																str += "</div></div></div></div></div>";
+											}
+											$('#contentOuter').append(str);
+											
+											var paging = "<div class='col-lg-12'><div class='pagination' align='center'><ul>";
+																if(result[1].currentPage != 1){
+																	paging += "<li class='page-item'><a class='page-link' href='together.bo?currentPage="+result[1].currentPage -1+"'>Previous</a></li>";
+																}
+																for(var i = result[1].startPage; i<=result[1].endPage; i++){
+																	if(i != result[1].currentPage){
+																		paging += "<li class='page-item'><a class='page-link' href='together.bo?currentPage="+i+"'>"+i+"</a></li>";
 																	}else{
-// 										                            		str += "<a  style='background-color:lightgray;' disabled>마감되었습니다.</a>";
-										                            		str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>마감되었습니다.</button>";
+																		paging += "<li class='page-item disabled'><a class='page-link' href='together.bo?currentPage="+i+"'>"+i+"</a></li>";
 																	}
-																	str += "</div></div></div></div></div>";
-												}
-												$("#contentOuter").append(str);
+																}
+																if(result[1].currentPage != result[1].endPage){
+																	paging += "<li class='page-item'><a class='page-link' href='together.bo?currentPage="+result[1].currentPage +1 +"'>Next</a></li></ul></div>";
+																}
+											
+											$("#contentOuter").append(paging);
 										},
 										error : function(){
 											console.log("옵션 검색 실패");
@@ -308,13 +426,15 @@
                 <c:choose>
                 	<c:when test="${not empty list }">
 			                <c:forEach var="i" items="${list }">
-			                	<fmt:parseDate value="${i.endDate }" pattern="yy/MM/dd" var="end" scope="request"/>
-			                	<fmt:parseNumber value="${end.time / (1000*60*60*24)}" integerOnly="true" var="endDate" scope="request"/>
-					                <div class="col-lg-4">
+			                	<fmt:parseDate value="${i.startDate }" pattern="yy/MM/dd" var="start" scope="request"/>
+			                	<fmt:parseNumber value="${start.time / (1000*60*60*24)}" integerOnly="true" var="startDate" scope="request"/>
+					                <div class="col-lg-4" onclick="goTogetherDetail(${i.boardNo});">
 					                <input type="hidden" name="boardNo"  class="togetherBoardNo" value="${i.boardNo }">
+					                <input type="hidden" name="survey"  class="survey" value="${i.survey }">
 					                    <div class="ticket-item">
 					                        <div class="thumb">
-					                            <img src="/finalProject${i.filePath}" alt="">
+					                            <div id="mbtiRecommend"></div>
+					                            <img src="/finalProject${i.filePath}" style="position:relative;" alt="">
 					                        </div>
 					                        <div class="down-content">
 					                        	<h5>[${i.totalDate}박 ${ i.totalDate +1}일]</h3>
@@ -325,24 +445,33 @@
 					                                <li><img src="/finalProject/resources/images/together_won.png">${i.totalPay }원 이하</li>
 					                                <c:choose>
 					                                <c:when test="${not empty i.profilePath }">
-				                               		    <li><img src="/finalProject/${i.profilePath }" style="border-radius:50%;"> <a id="nicknameHover" onclick="whoareyou();">${i.boardWriter }</a></li>
+				                               		    <li><img src="/finalProject/${i.profilePath }" class='profileLink' style="border-radius:50%;"> <a id="nicknameHover" class='profileLink' onclick="whoareyou();">${i.boardWriter }</a></li>
 					                                </c:when>
 					                                <c:otherwise>
-					                                	<li><img src="/finalProject/resources/images/기본프로필.png" style="border-radius:50%;"> <a id="nicknameHover" onclick="whoareyou();">${i.boardWriter }</a></li>
+					                                	<li><img src="/finalProject/resources/images/기본프로필.png" class='profileLink' style="border-radius:50%;"> <a id="nicknameHover" class='profileLink' onclick="whoareyou();">${i.boardWriter }</a></li>
 					                                </c:otherwise>
 					                                </c:choose>
 					                                <li>작성일 : ${i.createDate }</li>
 					                            </ul>
 					                            <div class="main-dark-button" id="applyBtn">
-					                            <c:choose>
-					                            <c:when test="${endDate-today >0 and i.together - i.togetherCount != 0}">
+					                            <c:choose> 
+					                            <c:when test="${startDate-today >0 and i.together - i.togetherCount != 0}">
 					                            		<c:choose>
 					                            			<c:when test="${not empty loginUser }">
-<%-- 								                            	    <a href="#">참여하기 ${i.togetherCount}/${i.together }</a> --%>
-								                            	    <button type="button" class="togetherBtn">참여하기 ${i.togetherCount}/${i.together }</button>
+					                            				<c:choose>
+					                            						<c:when test="${i.boardWriter == loginUser.nickname }">
+					                            								<button type="button" class="togetherBtn" style="background-color:lightgray;">내가 작성한 글입니다.</button>
+					                            						</c:when>
+					                            						<c:when test="${loginUser.certification eq 0 }">
+					                            								<button type="button" class="togetherBtn" style="background-color:lightgray;">참여하기 ${i.togetherCount}/${i.together }</button>
+					                            				    			<p>참여하려면 본인 인증을 해주세요.</p>
+					                            						</c:when>
+					                            						<c:otherwise>
+											                            	    <button type="button" class="togetherBtn">참여하기 ${i.togetherCount}/${i.together }</button>
+					                            						</c:otherwise>
+					                            				</c:choose>
 					                            			</c:when>
 					                            			<c:otherwise>
-<%-- 					                            				    <a style="background-color:lightgray;">참여하기 ${i.togetherCount}/${i.together }</a> --%>
  																	<button type="button" class="togetherBtn" style="background-color:lightgray;">참여하기 ${i.togetherCount}/${i.together }</button>
 					                            				    <p>참여하려면 로그인을 해주세요.</p>
 					                            			</c:otherwise>
@@ -350,7 +479,6 @@
 					                            </c:when>
 					                            <c:otherwise>
 					                            		<button type="button" class="togetherBtn" style="background-color:lightgray;"disabled>마감되었습니다.</button>
-<!-- 					                            		<a  style="background-color:lightgray;" disabled>마감되었습니다.</a> -->
 					                            </c:otherwise>
 					                            </c:choose>
 					                            </div>
@@ -365,11 +493,12 @@
                 </c:choose>
                 
                 <script>
-                	$("#contentOuter").on("click","button",function(){
+                	$("#contentOuter").on("click","button",function(e){
+                		
                 		var boardNo = $(this).parent().parent().parent().parent().children("input").val();
                 		var title = $(this).parent().siblings("h4").text().split('>');
                 		if(confirm("이 여행의 세부 일정을 확인하시겠습니까 ?")){
-                			location.href="";
+                			location.href="togetherDetail.bo?boardNo="+boardNo;
                 		}else{
                 			if(confirm("세부 일정을 확인하지 않고 이 여행에 참여하시겠습니까 ?")){
 	                			if(confirm("참여하기 버튼은 하루에 한개만 누르실 수 있습니다. \n진행하시겠습니까 ?")){
@@ -380,7 +509,6 @@
 	                				$("#applyBoardNo").val(boardNo);
 	                				
 	                				$("#applyModal").modal('show');
-	                				
 	                			}else{
 	                				alert("참여하기를 취소합니다.")
 	                			}
@@ -388,8 +516,14 @@
                 				alert("참여하기를 취소합니다.");
                 			}
                 		}
+                		e.stopImmediatePropagation();
                 	});
                 	
+                	function goTogetherDetail(boardNo){
+                			if(event.target.className != 'togetherBtn' || event.target.className != 'profileLink'){
+ 								location.href="togetherDetail.bo?boardNo="+boardNo;                		
+                			}
+                	};
                 </script>
                 
                 <div class="col-lg-12">

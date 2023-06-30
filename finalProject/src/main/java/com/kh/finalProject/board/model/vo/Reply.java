@@ -25,6 +25,7 @@ public class Reply {
 	private int refQno;
 	private int refRno;
 	private String status;
-	
+	private String profileImg; // 프로필이미지 경로+바뀐이름
 	private String boardTitle;
+
 }

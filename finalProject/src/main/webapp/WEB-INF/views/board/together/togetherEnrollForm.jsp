@@ -66,7 +66,7 @@
 </style>
 </head>
 <body>
-	<%@include file="../common/menubar.jsp" %>
+	<%@include file="../../common/menubar.jsp" %>
 		<div id="writeTitle">
 				함께 가치 글쓰기
 		</div>

@@ -38,7 +38,9 @@
 		margin-left: 850px; 
 		margin-top: 100px;
 	}
-	
+	.selected-link {
+        font-weight: bold;
+    }
 </style>
 <head>
 <meta charset="UTF-8">
@@ -58,24 +60,24 @@
     <!-- 지역찾기 -->
     <div class="zone" align="center">
     	<form action="search.mo" method="get">
-    		<select name='zoneNo' onchange="change(this.selectedIndex);"  class=input id="zone" style="width: 200px;height: 50px;margin-right: 50px;">
-    			<option value='00'>전체</option>
-		        <option value='11'>서울특별시</option>
-		        <option value='21'>부산광역시</option>
-		        <option value='22'>대구광역시</option>
-		        <option value='23'>인천광역시</option>
-		        <option value='24'>광주광역시</option>
-		        <option value='25'>대전광역시</option>
-		        <option value='26'>울산광역시</option>
-		        <option value='31'>경기도</option>
-		        <option value='32'>강원도</option>
-		        <option value='33'>충청북도</option>
-		        <option value='34'>충청남도</option>
-		        <option value='35'>전라북도</option>
-		        <option value='36'>전라남도</option>
-		        <option value='37'>경상북도</option>
-		        <option value='38'>경상남도</option>
-		        <option value='39'>제주도</option>		                       
+    		<select name='zone' onchange="change(this.selectedIndex);"  class=input id="zone" style="width: 200px;height: 50px;margin-right: 50px;" >
+    			<option>전체</option>
+		        <option value='서울'>서울특별시</option>
+		        <option value='부산'>부산광역시</option>
+		        <option value='대구'>대구광역시</option>
+		        <option value='인천'>인천광역시</option>
+		        <option value='광주'>광주광역시</option>
+		        <option value='대전'>대전광역시</option>
+		        <option value='울산'>울산광역시</option>
+		        <option value='경기'>경기도</option>
+		        <option value='강원'>강원도</option>
+		        <option value='충북'>충청북도</option>
+		        <option value='충남'>충청남도</option>
+		        <option value='전북'>전라북도</option>
+		        <option value='전남'>전라남도</option>
+		        <option value='경북'>경상북도</option>
+		        <option value='경남'>경상남도</option>
+		        <option value='제주'>제주도</option>		                       
 		     </select>  
 		         
 		     <select name='country'  class=select id="country" style="width: 200px;height: 50px;margin-right: 50px;">
@@ -91,13 +93,33 @@
     </div>
     <br><br><br><br><br><br>
     	<!-- 리스트뷰 -->
+    <!-- 카테고리 그대로 -->
+    <c:if test="${not empty zone and not empty country }">
+			<script>
+				$(function(){
+					$("#zone").val('${zone}').attr("selected",true);
+					$("#country").children().eq(0).html('${country}').attr("selected",true);
+				})
+			</script>    
+    </c:if>	
+    	
     <table align="center">
     	<thead>
     		<tr style="border-bottom: 2px solid gray; padding-bottom: 30px;">
     			<th style="padding-left: 20px;">총${count }건</th>
     			<td style="float: right;padding-right: 30px;">
-    				<a href="" style="font-weight: bold;color: black;font-size: 20px;">최신순 </a>|
-    				<a href="" style="font-weight: bold;color: black;font-size: 20px;">인기순 </a>
+    				<a href="themaList.bo" style="color: black;font-size: 20px;">전체 </a>|
+    				<c:choose>
+    					<c:when test="${not empty zone and not empty country}">   						
+    						<a href="search.mo?zone=${zone}&country=${country}&sort=1" style="color: black;font-size: 20px;">최신순 </a>|
+    						<a href="search.mo?zone=${zone}&country=${country}&sort=2" style="color: black;font-size: 20px;">인기순 </a>
+    					</c:when>
+    					<c:otherwise>
+    						<a href="themaList.bo" style="color: black;font-size: 20px;" class="link">최신순 </a>|
+    						<a href="themaList.bo?currentPage=1&sort=2" style="color: black;font-size: 20px;" class="link">인기순 </a>
+    					</c:otherwise>
+    				</c:choose>
+    				
     			</td>
     		</tr>    		
     	</thead>
@@ -127,19 +149,21 @@
     	</tbody>
     </table>
    
-    <div id="pagingArea" align="center">
+   <c:choose>
+   		<c:when test="${not empty zone and not empty country}">
+   			<div id="pagingArea" align="center">
                 <ul class="pagination">
                 	<c:choose>
                 		<c:when test="${pi.currentPage eq 1}">
                    			 <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
                 		</c:when>
                 		<c:otherwise>
-                			 <li class="page-item"><a class="page-link" href="themaList.bo?currentPage=${pi.currentPage - 1 }">Previous</a></li>
+                			 <li class="page-item"><a class="page-link" href="search.mo?currentPage=${pi.currentPage - 1 }&zone=${zone}&country=${country}&sort=${sort}">Previous</a></li>
                 		</c:otherwise>
                 	</c:choose>
                 	
                     <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
-	                    <li class="page-item"><a class="page-link" href="themaList.bo?currentPage=${p}">${p}</a></li>
+	                    <li class="page-item"><a class="page-link" href="search.mo?currentPage=${p}&zone=${zone}&country=${country}&sort=${sort}">${p}</a></li>
                     </c:forEach>
                     
                     <c:choose>
@@ -147,11 +171,42 @@
 		                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
                     	</c:when>
                     	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="themaList.bo?currentPage=${pi.currentPage + 1}">Next</a></li>
+                    		<li class="page-item"><a class="page-link" href="search.mo?currentPage=${pi.currentPage + 1}&zone=${zone}&country=${country}&sort=${sort}">Next</a></li>
                     	</c:otherwise>
                     </c:choose>
                 </ul>
             </div> 
+   		</c:when>
+   		
+   		<c:otherwise>
+   			<div id="pagingArea" align="center">
+                <ul class="pagination">
+                	<c:choose>
+                		<c:when test="${pi.currentPage eq 1}">
+                   			 <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                		</c:when>
+                		<c:otherwise>
+                			 <li class="page-item"><a class="page-link" href="themaList.bo?currentPage=${pi.currentPage - 1 }&sort=${sort}">Previous</a></li>
+                		</c:otherwise>
+                	</c:choose>
+                	
+                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
+	                    <li class="page-item"><a class="page-link" href="themaList.bo?currentPage=${p}&sort=${sort}">${p}</a></li>
+                    </c:forEach>
+                    
+                    <c:choose>
+                    	<c:when test="${pi.currentPage eq pi.maxPage}">
+		                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+                    	</c:when>
+                    	<c:otherwise>
+                    		<li class="page-item"><a class="page-link" href="themaList.bo?currentPage=${pi.currentPage + 1}&sort=${sort}">Next</a></li>
+                    	</c:otherwise>
+                    </c:choose>
+                </ul>
+            </div> 
+   		</c:otherwise>
+   </c:choose>
+    
    
 	
 	
@@ -183,7 +238,7 @@
 	  $("#country").children().remove();
 	  /* 옵션박스추가 */
 	  for (i=0; i < cnt[add].length;i++){                     
-	       $("#country").append("<option>"+cnt[add][i]+"</option>");
+	       $("#country").append("<option value='"+cnt[add][i]+"'>"+cnt[add][i]+"</option>");
 	    }         
 	}
 	
@@ -195,5 +250,15 @@
 			 location.href="detailTheme.bo?boardNo="+bno; 
 		});
 	});
+
+	 $(function() {
+	        $('.link').on('click', function() {
+	        	 if (!$(this).hasClass('selected-link')) {
+	                 $('.link').removeClass('selected-link');
+	                 $(this).addClass('selected-link');
+	             }
+	        });
+	    });
+	
 </script>
 </html>
