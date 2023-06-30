@@ -266,4 +266,11 @@ public class themaController {
 		model.addAttribute("sort", sort);
 		return "thema/themaList";
 	}
+	
+	//사용자 요청페이지 이동
+	@RequestMapping("askUpdate.mo")
+	public String askUpdate(int boardNo) {
+		return "";
+	}
+	
 }

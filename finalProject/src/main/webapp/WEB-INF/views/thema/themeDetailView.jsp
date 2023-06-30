@@ -94,6 +94,12 @@
       	width: 400px;
       	height: 50px;
      }
+     .cont2{
+     	margin-left: 250px;
+		margin-right: 250px;
+		float: right;
+		margin-top: 10px;
+     }
 </style>
 </head>
 <body>
@@ -114,6 +120,11 @@
 	${b.boardContent }
 	</p>
 	<div id="map"></div>
+	<div class="cont2">
+         <c:if test="${loginUser.status ne 'A' }">
+            <button class="btn_modify" onclick="pageLoad();" style="background-color: white;">관광정보 수정요청</button>
+         </c:if>
+    </div>
 	<div class="info">
 		<ul>
 			<li>
@@ -458,17 +469,13 @@
 	    		alert("로그인 후 이용 가능합니다.");
 	    	}
 	    }
-	    
-	    //댓글 프로필사진
-	   /*  $(".reply-area>#replyBox").each(function(){
-	    	console.log($(this).children("#reply-text"));
-	    }) */
-	    
-	    $(function(){
-	    	var $reply = $("#replyBox");
-	        console.log($reply.children());
-	    })
-	    
+	    	    	    
+	   
+	    //사용자 정보수정 요청
+	    function pageLoad(){
+	    	boardNo = "${b.boardNo}";
+	    	location.href = "askUpdate.mo?boardNo="+boardNo;
+	    }
 	
 </script>
 </body>
