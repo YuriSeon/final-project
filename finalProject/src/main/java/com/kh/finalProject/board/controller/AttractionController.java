@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,7 @@ import com.google.gson.Gson;
 import com.kh.finalProject.board.model.service.AttractionService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.board.model.vo.Selenium;
 
 @Controller
@@ -55,7 +57,7 @@ public class AttractionController {
 			// 4. 추출한 문자열들 다 합쳐서 changeName 만들기
 			changeName = currentTime+ranNum+ext;
 		} else {// 확장자명이 없다면
-			changeName = currentTime+ranNum;
+			changeName = currentTime+ranNum+".jpg";
 		}
 		return changeName;
 	}
@@ -130,7 +132,7 @@ public class AttractionController {
 	@PostMapping("insert.attr")
 	public ModelAndView insertAttr(HttpSession session, ModelAndView mv, Info info, int mainImg, ArrayList<MultipartFile> upfile, 
 									@RequestParam("imageURL") ArrayList<String> imageURL) {
-		String savePath = session.getServletContext().getRealPath("/resources/infoImg");
+		String savePath = session.getServletContext().getRealPath("/resources/infoImg/");
 		String originName = "";
 		String changeName = "";
 		InputStream inputStream = null;
@@ -159,9 +161,15 @@ public class AttractionController {
 					}
 
 					byte[] imageBytes = outputStream.toByteArray();
+					
+					// 디렉토리 생성
+					File directory = new File(savePath);
+					if (!directory.exists()) {
+					    directory.mkdirs();
+					}
 
 					// 이미지 파일로 저장하기
-					fileOutputStream = new FileOutputStream(savePath);// 파일 저장 경로 설정
+					fileOutputStream = new FileOutputStream(new File(savePath, changeName));// 파일 저장 경로 설정
 					fileOutputStream.write(imageBytes);
 					
 				} catch (IOException e) {
@@ -170,6 +178,7 @@ public class AttractionController {
 					try {
 						outputStream.close();
 						inputStream.close();
+						fileOutputStream.close();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -182,7 +191,7 @@ public class AttractionController {
 				}
 				at.setOriginName(originName);
 				at.setChangeName(changeName);
-				at.setFilePath(savePath);
+				at.setFilePath("resources/images/infoImg/"+changeName);
 				atArr.add(at);
 			}
 		} else { // 직접 올린 파일이라면
@@ -206,7 +215,7 @@ public class AttractionController {
 				}
 				at.setOriginName(originName);
 				at.setChangeName(changeName);
-				at.setFilePath(savePath);
+				at.setFilePath("resources/images/infoImg/"+changeName);
 				atArr.add(at);
 			}
 		}
@@ -224,5 +233,11 @@ public class AttractionController {
 	@GetMapping("modify.attr")
 	public String modifyRequestAttr(int boardNo) {
 		return "board/attraction/attrModifyRequest";
+	}
+	
+	@ResponseBody
+	@PostMapping(value="insertReply.attr", produces ="application/json; charset=UTF-8")
+	public int insertReply(Rereply r){
+		return atService.insertReply(r);
 	}
 }

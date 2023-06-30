@@ -1,3 +1,5 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="com.kh.finalProject.board.model.vo.Info"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -14,27 +16,27 @@
         <div id="contents">
             <!-- 상단 -->
             <div class="titleType">
-                <h2 id="topTitle">장소이름</h2>
+                <h2 id="topTitle">${dataMap.board.boardTitle}</h2>
                 <div class="area_address" id="topAddr">
-                    <span>지역정보</span>
+                    <span>${fn:split(dataMap.info.infoAddress, ' ')[0]} ${fn:split(dataMap.info.infoAddress, ' ')[1]}</span>
                 </div>
                 <div class="titTypeWrap">
                     <span>
-                        한줄설명내용 영역
+                    	${fn:split(dataMap.board.boardContent, '||')[1] }
                     </span>
                 </div>
                 <div class="board-area">
                     <span class="ico"><img src="resources/images/view.png"></span>
-                    <span class="num" id="conRead">조회수</span>
+                    <span class="num" id="conRead">${dataMap.board.count }</span>
                     <span class="ico">
                         <img class="good" src="resources/images/Like-before.png">
                     </span>
-                    <span class="num" id="conLike">좋아요 수</span>
+                    <span class="num" id="conLike">${dataMap.board.good }</span>
                     <span class="ico">
                         <img class="choice" src="resources/images/star-before.png">
                     </span>
                     <!-- 스크립트 부분에서 사용하기위해서 숨겨둠 -->
-                    <input type="hidden" name="boardNo" value="${board.boardNo}"> 
+                    <input type="hidden" id="boardNo" name="boardNo" value="${dataMap.board.boardNo}"> 
                 </div>
             </div>
             <hr>
@@ -47,7 +49,7 @@
                             <div class="float-img">
                                 <img src="resources/images/left.png" id="prev" onclick="prev()">
                             </div>
-                            <div id="slideArea" onmouseover="opacityIn(this)" onmouseout="opacityOut(this)">
+                            <div id="slideArea">
                                 <img id="slideImage"/>
                             </div>
                             <div class="float-img">
@@ -72,11 +74,7 @@
                         <hr>
                         <div class="inr_wrap">
                             <div class="inr text">
-                                강원도 평창 고랭지 청정지역에서 유기농 허브와 유기농 블루베리를 재배하고 있는 대한민국 스타팜 농장입니다. 2009년 8월에 국립농산물품질관리원에서 농장 전체를
-                                유기농인증을 받은 농장이다. 평창라벤다팜은 삼면이 산으로 둘러싸여 있어 더욱 청정지역을 유지할 수 있는 환경이며, 고랭지 해발 700m에 위치하여 큰 일교차, 비옥한
-                                토양, 일조량 등의 환경에서 자란 유기농허브와 유기농블루베리는 맛이 뛰어나다.2015년부터는 체험장을 오픈하여 더 많은 소비자들과 소통을
-                                하기위해 노력하고 있으며,십 수 년간 허브를 연구해 오신 대표님과 원장님이 각 허브와 블루베리에 맞는 천연비료를 직접 조제하셔서 적절한 시기에 주기 때문에 맛과 향이
-                                오래간다. 다양한 허브와 블루베리를 이용한 체험프로그램을 진행하고 있고 중.고등학교 진로체험을 위한 프로그램도 진행하고 있다.<br>
+                                ${fn:split(dataMap.board.boardContent, '||')[0] }
                             </div>
                             <div class="cont_more">
                                 <button type="button" id="btn_more" title="내용더보기">+ 더보기</button>
@@ -91,7 +89,8 @@
                 <div class="wrap_contView" id="detailinfoview">
                     <!-- 세부 정보 -->
                     <div class="inr">
-                        장소 세부 정보 들어가는 영역
+                    	<table id="infoDetail">
+                    	</table>
                     </div>
                 </div>
             </div>
@@ -128,7 +127,7 @@
             <div>
                 <div id="reply-back">
                     <input type="text" id="reply-content" placeholder="지금 보고계신 명소에 대해 댓글을 작성해주세요!">
-                    <button onclick="insertReply();">작성</button>
+                    <button class="insertReply">작성</button>
                 </div>
             </div>
             <div id="content-pack"></div>
@@ -200,7 +199,7 @@
             /* 페이지로드되면 바로 실행해야 할 부분 */ 
             // 1. 숨길영역 숨기기
             $("#myModal").modal('hide'); 
-            $(".text").hide(); 
+//             $(".text").hide(); 
             // 2. 댓글 조회
             selectReplyList(); 
             // 3. 좋아요 신고 아이콘 변경
@@ -208,9 +207,30 @@
                 iconChange(this);
             });
             // 4. 로그인 확인 후 댓글 비활성화
-            if("${empty loginUser}"){
-                $("#reply-back").children().siblings().attr("disabled", "true"); // 비활성화 시키기
-            	$("#reply-back input").attr("placeholder", "로그인하셔야 댓글작성이 가능합니다.");
+//             if("${empty loginUser}"){
+//                 $("#reply-back").children().siblings().attr("disabled", "true"); // 비활성화 시키기
+//             	$("#reply-back input").attr("placeholder", "로그인하셔야 댓글작성이 가능합니다.");
+//             }
+            // 5. 장소 상세정보 출력
+            var list = ['infoAddress','infoTime','infoHomepage','infoCall','parking','infoType','dayOff']; // 출력할 내용 배열에 담기
+            	//key로 꺼내 사용할 수 있도록 객체형식으로 변경
+            	// 처음과 마지막 ()만 변경되도록/ =은 :로 변경/ :의 앞 뒤 ""로 감싸주는데 http:는 추가로 감싸지 않도록 설정
+           	var info =("${dataMap.info}").replace(/Info/g, '').replace(/^./, '{').replace(/.$/, '}').replace(/=/g, ':')
+										.replace(/(\w+):/g, '"$1":').replace(/:([^,{}\[\]]+)/g, ':"$1"').replace('"http"', 'http');
+            var infoObj = JSON.parse(info);
+            for(var i in list){
+            	switch(list[i]){
+	            	case 'infoAddress' : label = '주소 (도로명 주소)'; break;
+	            	case 'infoTime' : label = '이용시간'; break;
+	            	case 'infoHomepage' : label = '홈페이지주소'; break;
+	            	case 'infoCall' : label = '대표 번호 (고객문의용)'; break;
+	            	case 'infoType' : label = '장소 종류'; break;
+	            	case 'parking' : label = '주차장'; break;
+	            	case 'dayOff' : label = '휴무일';
+            	}
+            	if(infoObj[list[i]]!="null"){ // 정규표현식으로 ""전부 감싸줬기에 이렇게 비교
+            		$("#infoDetail").append($("<tr>").append($("<th>").append(label),$("<td>").append(infoObj[list[i]])));
+            	}
             }
             
             /* 상세정보 더보기 버튼 슬라이드 이벤트 */
@@ -292,7 +312,7 @@
             var replyDiv = $("#content-pack"); // 댓글 넣을 영역
             $.ajax({
                 url : "replyList.attr",
-                data : { boardNo : "${board.boardNo}" },
+                data : { boardNo : "${dataMap.board.boardNo}" },
                 success : function(result){
                  /*     <div class="reply">
                             <div class="pro">프로필</div>
@@ -306,7 +326,7 @@
                                     <img class="choice" src="resources/images/bell-before.png">
                                 </span>
                                 <input type="text" id="reReply-content" placeholder="댓글을 작성해주세요!">
-                                <button onclick="reReplyinsert();"></button>
+                                <button onclick="replyinsert();"></button>
                                 <input type="hidden" id="replyNo" value="">
                             </div>
                             대댓글 영역 조건문 걸기 있을때만 생성
@@ -333,8 +353,8 @@
                             good : makeTag("span",{"class":"ico"}).append(makeTag("img",{"class":"good","src":"resources/images/Like-before.png"})),
                             choice : makeTag("span",{"class":"ico"}).append(makeTag("img",{"class":"choice","src":"resources/images/star-before.png"})),
                             reReplyinput : makeTag("intup",{"type":"text","id":"reReply-content","placeholder":"댓글을 작성해주세요!"}),
-                            reReplyBtn : makeTag("button", {"onclick":"reReplyinsert();"}),
-                            replyNo : makeTag("input",{"type":"hidden","class":"replyNo","value":"/*댓글번호넣어주기*/"}),
+                            reReplyBtn : makeTag("button", {"class":"replyinsert"}),
+                            replyNo : makeTag("input",{"type":"hidden", "id":"replyNo","class":"replyNo","value":"/*댓글번호넣어주기*/"}),
                             reReplyNo : makeTag("input",{"type":"hidden","class":"reReplyNo","value":"/*댓글번호넣어주기*/"})
                         }
                         var replyBtn = makeTag("div",{"class":"reply-btn"}).append(r.good, r.choice, r.reReplyinput, r.reReplyBtn, r.replyNo);
@@ -364,19 +384,20 @@
         }
 
         /* 댓글 등록 */
-        function insertReply(){
+        $(".insertReply").on("click",function(){
             $.ajax({
                 url : "insertReply.attr",
                 data : {
-                    content : $("#reply-content"),
-                    replyWriter : "${loginUser.nickName}",
-                    refQno : $("#boardNo")
+                    content : $(this).prev().val(),
+                    replyWriter : "abc"/* "${loginUser.nickName}" */,
+                    refQno : "${dataMap.board.boardNo}",
+	                replyNo : $(this).next().val()
                 },
                 success : function(result){
                     if(result>0){
                         alert("댓글 등록 성공");
-                        selectReplyList(); // 리스트 추가됐으니 다시 조회
-                        $("#reply-content").val() = ""; // 댓글 등록됐으니 비워주기 
+//                         selectReplyList(); // 리스트 추가됐으니 다시 조회
+                        $(this).prev().val() = ""; // 댓글 등록됐으니 비워주기 
                     } else {
                         alert("댓글 등록 실패")
                     }
@@ -385,7 +406,7 @@
                     console.log("등록 실패");
                 }
             });
-        }
+        });
 
          /* 좋아요 찜 버튼 클릭 이벤트 */
          $(".ico").click(function(){
@@ -452,13 +473,21 @@
         }
         
 	    /* 사진 슬라이더 */
-		const slideIndex = ['ticket.png', '하트.png', 'star.png'];
+		const slideIndex = [];
+	    // 텍스트 형식으로 넘어오니 객체로 바꿔주기위한 작업
+	   	const atTextArr = ("${dataMap.at}").replace(/Attachment/g, '').replace(/\(/g, '{').replace(/\)/g, '}').replace(/=/g, ':')
+	   										.replace(/(\w+):/g, '"$1":').replace(/:([^,{}\[\]]+)/g, ':"$1"');
+	    // 객체로 바꿔준것을 json화
+	   	const at = JSON.parse(atTextArr); 
+	    // 슬라이드에 사용할 배열에 파일경로 추출해서 넣어주기
+	   	for(var i in at){
+	   		slideIndex.push(at[i].filePath);
+	   	}
 	    let currentIndex = slideIndex[0];
-	    const imagePath = 'resources/images/';
 	    const dotPath = 'resources/images/dot.png';
 	    
 	    $(function(){
-	        $("#slideImage").prop("src", imagePath + slideIndex[0]);
+	        $("#slideImage").prop("src", slideIndex[0]);
 	        slideIndex.forEach(function(item, index, array){
 	            let img = document.createElement("img");
 	            img.setAttribute("src", dotPath);
@@ -470,45 +499,45 @@
 	            document.querySelector("#dotArea").appendChild(img);
 	        });
 	    });
-	    function prev(){
+	    function dotClickEvent(index){
+	        $("#slideImage").prop("src", slideIndex[index]);
+	        currentIndex = slideIndex[index];
+	    }
+    
+	    $("#prev").on("click", function(){
 	        slideIndex.some(function(item, index, array){
 	            if(index != 0){
 	                if(item == currentIndex){
-	                    $("#slideImage").prop("src", imagePath + slideIndex[index - 1]);
+	                    $("#slideImage").prop("src", slideIndex[index - 1]);
 	                    currentIndex = slideIndex[index - 1];
 	                    return true;
 	                }
 	            }else{
 	                if(item == currentIndex){
-	                    $("#slideImage").prop("src", imagePath + slideIndex[slideIndex.length - 1]);
+	                    $("#slideImage").prop("src", slideIndex[slideIndex.length - 1]);
 	                    currentIndex = slideIndex[slideIndex.length - 1];
 	                    return true;
 	                }
 	            }
 	        });
-	    }
-	    function next(){
+	    });
+	    $("#next").on("click", function(){
 	        slideIndex.some(function(item, index, array){
 	            if(index != slideIndex.length - 1){
 	                if(item == currentIndex){
-	                    $("#slideImage").prop("src", imagePath + slideIndex[index + 1]);
+	                    $("#slideImage").prop("src", slideIndex[index + 1]);
 	                    currentIndex = slideIndex[index + 1];
 	                    return true;
 	                }
 	            }else{
 	                if(item == currentIndex){
-	                    $("#slideImage").prop("src", imagePath + slideIndex[0]);
+	                    $("#slideImage").prop("src", slideIndex[0]);
 	                    currentIndex = slideIndex[0];
 	                    return true;
 	                }
 	            }
 	        });
-	    }
-	    function dotClickEvent(index){
-	        $("#slideImage").prop("src", imagePath + slideIndex[index]);
-	        currentIndex = slideIndex[index];
-	    }
-
+	    });
         /* 지도 영역 */
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
         mapOption = {
@@ -518,7 +547,7 @@
         var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
         var geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성
         // 주소로 좌표를 검색합니다
-        geocoder.addressSearch('제주특별자치도 제주시 첨단로 242'/* 여기에 검색할 주소 넣기 */, function(result, status) {
+        geocoder.addressSearch('${dataMap.info.infoAddress}', function(result, status) {
             if (status === kakao.maps.services.Status.OK) { // 정상적으로 검색 완료
 
                 var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
@@ -527,7 +556,7 @@
                     position: coords
                 });
                 var infowindow = new kakao.maps.InfoWindow({ // 인포윈도우로 장소 설명 표시
-                    content: '<div style="width:150px;text-align:center;padding:6px 0;">+장소이름넣기+</div>'
+                    content: '<div style="width:150px;text-align:center;padding:6px 0;">${dataMap.info.infoName}</div>'
                 });
                 infowindow.open(map, marker);
                 map.setCenter(coords);// 지도의 중심 결과값으로 받은 위치로 이동
