@@ -215,7 +215,18 @@ public class AttractionController {
 	// 게시물 등록전 정보조회해오는 메소드 
 	@PostMapping(value="searchInfo.attr", produces ="json/application; charset=UTF-8")
 	public String searchInfo(Info in) {
-		Info info = new Selenium().infoDataGet(in);
+		Info info = null; // 선언
+		String infoName = in.getInfoName();
+		String infoAddress = in.getInfoAddress();
+		String zone = infoAddress.split(" ")[0]; // 주소에서 지역명 추출
+		// 첫번째 공백 뒤로 잘라서 주소 검색
+		// 서울이나 서울특별시 이렇게 다르게 찾아질 수 있으니 처음 단위 제거
+		String address = infoAddress.substring(infoAddress.indexOf(" ")+1); 
+		int result = atService.checkInfo(address);
+		if(result==0) { //이미 등록된게 없다면 검색진행
+			info = new Selenium().searchData(infoName, zone);
+		}
+		System.out.println("여기에 오니?");
 		return new Gson().toJson(info);
 	}
 	
@@ -292,6 +303,5 @@ public class AttractionController {
 		}
 		return new Gson().toJson(count);
 	}
-	
-	// 
+
 }

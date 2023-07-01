@@ -26,6 +26,31 @@
   		<result column="COMPLETE" property="complete"/>
   	</resultMap>
   	
-  	
+  	<insert id="insertSchedule">
+  		INSERT ALL
+  			INTO BOARD (BOARD_NO, ZONE_NO, BOARD_WRITER, CATEGORY, BOARD_TITLE, BOARD_CONTENT)
+  				 VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, #{boardWriter}, 6, #{boardTitle}, #{boardContent})
+  			INTO PLAN (BOARD_NO, WRITER, TOGETHER, TOGETHER_COUNT, CONCEPT, START_DATE, END_DATE, TRANSPORT ,TOTAL_DATE, TOTAL_PAY, COMPLETE)
+  				VALUES(SEQ_BNO.CURRVAL, #{boardWriter}, #{together}, #{togetherCount}, #{concept}, #{startDate}, #{endDate}, #{transport}, #{totalDate}, #{totalPay}, #{complete})
+  		SELECT * FROM DUAL
+  	</insert>
+  	<insert id="insertPath">
+  		INSERT INTO PATH VALUES((SELECT BOARD_NO FROM BOARD WHERE BOARD_TITLE=#{boardTitle}),
+  								(SELECT INFO_NO FROM INFO WHERE INFO_NAME = #{infoName}),
+  								#{daily}, #{pathNo}, #{pay})
+  	</insert>
+  	<select id="searchInfoNo" resultType="_int">
+  		SELECT INFO_NO
+  		FROM PATH
+  		WHERE BOARD_NO = (SELECT BOARD_NO FROM BOARD WHERE BOARD_TITLE=#{boardTitle})
+  		AND DAILY = #{daily}
+  		AND PATH_NO = #{pathNo}
+  		AND PAY = #{pay}
+  	</select>
+  	<update id="updatePlanInfoNo">
+  		UPDATE PLAN
+  		SET INFO_NO = INFO_NO||'/'||#{infoNo}
+  		WHERE BOARD_NO = SEQ_BNO.CURRVAL
+  	</update>
   </mapper>
   

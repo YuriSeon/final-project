@@ -20,7 +20,7 @@ import com.kh.finalProject.board.model.vo.choice;
 public class AttractionDao {
 	
 	// 지역번호 조회
-	public int selectZoneNo(SqlSession sqlSession, String address) {
+	public static int selectZoneNo(SqlSession sqlSession, String address) {
 		// 매개변수로 전달받은 주소로 시군구영역 뒤부터 찾아서 조회
 		String zoneName = "";
 		String[] strArr = address.split(" ");
@@ -32,14 +32,18 @@ public class AttractionDao {
 		}
 		return sqlSession.selectOne("attractionMapper.selectZoneNo", zoneName);
 	}
+	// 이미 등록된 장소인지 체크
+	public static int checkInfo(SqlSession sqlSession, String infoAddress) {
+		return sqlSession.selectOne("attractionMapper.checkInfo", infoAddress);
+	}
 	
 	// board, info 등록
-	public int insertInfo(SqlSession sqlSession, Info info) {
+	public static int insertInfo(SqlSession sqlSession, Info info) {
 		return sqlSession.insert("attractionMapper.insertInfo", info);
 	}
 	
 	// 첨부파일 등록
-	public int insertAttachment(SqlSession sqlSession, Attachment at) {
+	public static int insertAttachment(SqlSession sqlSession, Attachment at) {
 		return sqlSession.insert("attractionMapper.insertAttachment", at); 
 	}
 	
@@ -122,6 +126,7 @@ public class AttractionDao {
 	public int insertReport(SqlSession sqlSession, Report report) {
 		return sqlSession.insert("attractionMapper.insertreport", report);
 	}
+
 	
 	
 

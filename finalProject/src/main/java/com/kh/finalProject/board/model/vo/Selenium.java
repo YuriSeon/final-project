@@ -10,18 +10,16 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import com.kh.finalProject.board.controller.AttractionController;
+import com.kh.finalProject.board.model.service.AttractionService;
+
+
 
 public class Selenium {
 	
 	private WebDriver wd;
 	private static String WEB_DRIVER_ID = "webdriver.chrome.driver"; // Properties 설정(정해져있는 키값)
 	private static String WEB_DRIVER_PATH = (Selenium.class.getResource("/").getPath()).replace("target/classes/", "src/main/webapp/WEB-INF/lib/chromedriver");
-	
-	
-	// 기본생성자
-	public Selenium() {
-		chrome(); // 현재 class내에 있는 method연결해서 객체생성될 때 실행되도록 설정 
-	}
 	
 	// chrome driver연결
 	private void chrome() {
@@ -39,38 +37,19 @@ public class Selenium {
 		
 		//wd = new ChromeDriver(options); // 설정한 option으로  webDriver생성
 		wd = new ChromeDriver();
-		wd.manage().timeouts().implicitlyWait(Duration.ofMillis(500));//페이지로드가 완료 될 때까지 기다리는 시간 설정
-	}
-	
-	// schedule insert시 사용
-	public Info infoDataGet(String[] pathArr) {
-		// 매개변수로 전달받은 배열에서 사용할 값 추출
-		String infoName = pathArr[0];
-		String infoAddress = pathArr[3];
-		String zone = infoAddress.split(" ")[0]; // 주소에서 지역명 추출
-		
-		return searchData(infoName, zone);
-		
-	}
-	
-	// attraction insert시 사용
-	public Info infoDataGet(Info in) {
-		// 매개변수로 전달받은 장소 이름, 주소, 지역명
-		String infoName = in.getInfoName();
-		String infoAddress = in.getInfoAddress();
-		String zone = infoAddress.split(" ")[0]; // 주소에서 지역명 추출
-		
-		return searchData(infoName, zone);
+		wd.manage().timeouts().implicitlyWait(Duration.ofMillis(5000));//페이지로드가 완료 될 때까지 기다리는 시간 설정
 	}
 	
 	// 정보 검색해오는 메소드
 	public Info searchData(String infoName, String zone) {
+		chrome(); // 실행
 		Info in = new Info(); // 조회한 정보 담을 객체
 		try {
+			
 			// webDriver와 검색할 url 연결(검색어 입력)
 			wd.get("https://conlab.visitkorea.or.kr/conlab/search-result?mainKeyword="+zone+ " " +infoName +"&mainSearchType=Formal&searchPage=1&searchLang=%ED%95%9C%EA%B5%AD%EC%96%B4");
 			// 검색결과창에서 첫번째 나오는 게시물 선택
-			WebElement searchResult = wd.findElement(By.className("card-style-wrap")); 
+			WebElement searchResult = wd.findElement(By.xpath("//*[@id=\"full-width-tabpanel-Formal\"]/div/div/div/div[2]/div/div[2]/div[1]")); 
 			searchResult.click();
 			// 게시물내의 info data key, value형태로 저장시키기
 			List<WebElement> culomnList = (wd.findElements(By.className("label"))); // info table에 저장할 컬럼명
@@ -106,6 +85,8 @@ public class Selenium {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("오류로 인해 크롤링실패");
+			in.setBoardContent("오류");
+			return in;
 			
 		} finally {
 			quitDriver();

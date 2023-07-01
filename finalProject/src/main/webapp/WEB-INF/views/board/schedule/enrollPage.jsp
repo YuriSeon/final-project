@@ -24,13 +24,13 @@
 	            <div class="container left">
 	            <div class="content">
 	            	<p>제목</p>
-	                <input type="text" name="boardTitle" class="write" style="width: 80%; height: 40px; font-size: 18px; font-weight: 400;" placeholder="일정 이름을 작성해주세요">
+	                <input type="text" name="boardTitle" class="write" style="width: 80%; height: 40px; font-size: 18px; font-weight: 400;" placeholder="일정 이름을 작성해주세요" required>
 	            </div>
 	            </div>
 	            <div class="container right">
 	            	<div class="content">
 		                <p>어떤 일정인가요?</p>
-		                <textarea name="boardContent" placeholder="일정에 대해 설명해주세요"></textarea>
+		                <textarea name="boardContent" placeholder="일정에 대해 설명해주세요" required></textarea>
 		            </div>
 	            </div>
 	            <div class="container left">
@@ -53,8 +53,8 @@
 	            <div class="container right">
 	                <div class="content">
 	                	<p>현재 일정의 예상 인원수?</p>
-						<select name="togetherCount">
-							<option value="1">1</option>
+						<select id="count">
+							<option value="1" selected>1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
 							<option value="4">4</option>
@@ -80,8 +80,8 @@
 	            <div class="container right">
 	                <div class="content">
 	                	<p>여행 기간</p>
-	                    <label for="start-date" class="date">시작일 </label> <input type="date" name="startDate" id="start-date" onchange="total();"><br>
-	                    <label for="end-date" class="date">마지막일</label> <input type="date" name="endDate" id="end-date" onchange="total();">
+	                    <label for="start-date" class="date">시작일 </label> <input type="date" name="startDate" id="start-date" onchange="total();" required><br>
+	                    <label for="end-date" class="date">마지막일</label> <input type="date" name="endDate" id="end-date" onchange="total();" required>
 	                </div>
 	            </div>
 	        </div>
@@ -90,6 +90,7 @@
 	        <div class="enroll" id="plan-area"></div>
 	        <input type="hidden" name="totalDate">
 			<input type="hidden" name="totalPay">
+			<input type="hidden" name="boardWriter" value="${loginUser.nickname }">
 	        <div class="btn-area">
 	            <button type="button" onclick="history.back();">돌아가기</button>
 	            <button type="button" onclick="insertForm();">작성완료</button>
@@ -224,6 +225,7 @@
 	   	function insertForm(){
 	    	var totalPay = Number(0); // 계산한 값 담을 변수 및 number type으로 초기화
 	    	var pay = $("input[name=pay]");
+	    	var formTag = $("#insertForm");
 	    	for(var i = 0; i < pay.length; i++) { 
 	    		totalPay += Number($(pay[i]).val());
 	    	}
@@ -242,10 +244,9 @@
 			    					+","+$($(day[i]).children()).eq(3).val()));
 	    		console.log(path);
 		    	// 담은 정보 폼태그에 넣어주기
-		    	$("#insertForm").append(path);
+		    	formTag.append(path);
 		    	path = "";
 	    	}
-
 			// 컨셉 구분자로 구분해서 넣기위한 작업해서 넘기기
 			var concepts = "";
 			$("input[name=style]:checked").each(function(){
@@ -253,8 +254,18 @@
 			});
 			// 맨 뒤 구분자 하나 제거 후 input value에 담아서 폼태그에 넣기
 			var concept = makeTag("input",{"type":"hidden","name":"concept","value":concepts.slice(0,-1)}); 
-			$("#insertForm").append(concept);
-	    	$("#insertForm").submit(); // 제출
+			formTag.append(concept);
+			// 동행 구하는지 confirm 받아서 컬럼명에 맞게 태그 생성
+			var withConfirm= confirm('동행을 구하시겠습니까? 확인을 누르시면 작성 후 함께가치 작성 페이지로 넘어갑니다');
+			var count = $("#count option:selected").val();
+			var together = makeTag("input", {"name":"together"});
+			var togetherCount = makeTag("input", {"name":"togetherCount"});
+			if(confirm){
+				formTag.append(together.attr("value", count), togetherCount.attr("value",0));
+			} else {
+				formTag.append(together.attr("value", 0), togetherCount.attr("value",count));
+			}
+	    	formTag.submit(); // 제출
 	    }	
 	    
 	   
