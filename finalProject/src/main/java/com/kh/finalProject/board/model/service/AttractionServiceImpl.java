@@ -8,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.dao.AttractionDao;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Good;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Rereply;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Service
@@ -45,7 +48,7 @@ public class AttractionServiceImpl implements AttractionService {
 		int result = atDao.insertInfo(sqlSession, info); 
 		// 첨부파일 개수만큼 반복해서 등록
 		for(Attachment at : atArr) { 
-			result += atDao.insertAttachment(sqlSession, at);
+			result *= atDao.insertAttachment(sqlSession, at);
 		}
 		return result;
 	}
@@ -75,13 +78,61 @@ public class AttractionServiceImpl implements AttractionService {
 	public int insertReply(Rereply r) {
 		int result = 0;
 		if(r.getReplyNo()==0) { // 참조게시글 번호가 없다면 댓글
-			// reply 조회
+			// reply 등록
 			result = atDao.insertReplyList(sqlSession, r);
 		} else {
-			// reReply 조회
+			// reReply 등록
 			result = atDao.insertRereplyList(sqlSession, r);
 		}
 		return result;
 	}
 
+	// 댓글 조회 // 댓글들 필드에 filepath추가해도 되는지 물어보기 그러면 프로필 따로조회 안해도 됨
+	@Override
+	public HashMap<String, Object> selectReplyList(int boardNo) {
+		HashMap<String, Object> rList = new HashMap<>();
+		// reply 조회
+		rList.put("reply", atDao.selectReplyList(sqlSession, boardNo));
+		// reReply 조회
+		rList.put("reReply", atDao.selectRereplyList(sqlSession, boardNo));
+		return rList;
+	}
+
+	// 좋아요, 찜, 신고 조회
+	@Override
+	public int iconCheck(String btnType, int boardno, String writer) {
+		int result = 100; // 조회 오류 확인용 초기화
+		System.out.println(btnType);
+		switch(btnType) {
+			case "good" : result = atDao.goodSearch(sqlSession,new Good(boardno, writer)); break;
+			case "choice" : result = atDao.choiceSearch(sqlSession,new choice(boardno, writer)); break;
+			case "report" : result = atDao.reportSearch(sqlSession, Report.builder().boardNo(boardno).writer(writer).build()); //댓글이랑 보드 구분해서 작성해야함
+		}
+		return result;
+	}
+
+	// 좋아요 찜 취소
+	@Override
+	public int iconBefore(String btnType, String tableName, int no, String writer) {
+		int result = 0;
+		if(btnType.equals("good")) {
+			result = atDao.deleteGood(sqlSession,new Good(no, writer));
+		} else {
+			result = atDao.deletechoice(sqlSession,new choice(no, writer));
+		}
+		return result;
+	}
+
+	// 좋아요, 찜 등록
+	@Override
+	public int iconAfter(String btnType, String tableName, int no, String writer) {
+		int result = 0;
+		if(btnType.equals("good")) {
+			result = atDao.insertGood(sqlSession,new Good(no, writer));
+		} else {
+			result = atDao.insertchoice(sqlSession,new choice(no, writer));
+		}
+		return result;
+	}
+	
 }
