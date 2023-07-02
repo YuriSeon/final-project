@@ -459,6 +459,7 @@
             var noParents = $(obj).parent().siblings();
             var no = noParents.eq(noParents.length-1).val();
             var imgsrc = ($(obj).children().attr("src"));
+            
             $.ajax({
                 url : "iconChange.attr",
                 data : {
@@ -477,12 +478,12 @@
                 	changeSrc(btnType, result);
                 }
             });
+            
         }
         
         // 아이콘 src 변경 함수
         function changeSrc(obj, result){
         	var imgsrc = $(obj).attr("src");
-        	console.log(imgsrc);
         	var changeSrc = ""; 
             if(result==0){ // 좋아요 찜 신고 안누름
             	console.log("be");

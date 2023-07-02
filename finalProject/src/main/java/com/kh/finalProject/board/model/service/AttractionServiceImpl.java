@@ -42,13 +42,13 @@ public class AttractionServiceImpl implements AttractionService {
 	@Transactional
 	public int insertAttr(Info info, ArrayList<Attachment> atArr) {
 		// 주소로 지역번호 조회해와서 넣어주기
-		int zoneNo = atDao.selectZoneNo(sqlSession, info.getInfoAddress());
+		int zoneNo = AttractionDao.selectZoneNo(sqlSession, info.getInfoAddress());
 		info.setZoneNo(zoneNo); 
 		// board, info 데이터 등록
-		int result = atDao.insertInfo(sqlSession, info); 
+		int result = AttractionDao.insertInfo(sqlSession, info); 
 		// 첨부파일 개수만큼 반복해서 등록
 		for(Attachment at : atArr) { 
-			result *= atDao.insertAttachment(sqlSession, at);
+			result *= AttractionDao.insertAttachment(sqlSession, at);
 		}
 		return result;
 	}
@@ -134,5 +134,10 @@ public class AttractionServiceImpl implements AttractionService {
 		}
 		return result;
 	}
-	
+
+	@Override
+	public int checkInfo(String address) {
+		return AttractionDao.checkInfo(sqlSession, address);
+	}
+
 }

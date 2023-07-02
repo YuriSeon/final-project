@@ -154,7 +154,7 @@
                 var infoName = infoFind(this, "div", 0); 
                 var infoAddress = infoFind(this, "div", 1);
                 $(".close").click();
-
+				alert("fdsafd");
                 // 가져온 값으로 셀레니움으로 조회 후 값 넣어주기 
                 $.ajax({
                     url : "searchInfo.attr",
@@ -164,7 +164,9 @@
                     },
                    	method: "POST",
                     success : function(result){
-                        if(result!=null){
+                        if(result.boardContent=='오류'){ // 셀레니움 정보 조회 오류시 ck 위해 값 넣어둠
+                        	alert("오류로 정보를 가져오지 못했습니다 직접 작성해서 게시물을 작성해주세요");
+                        } else if(result != null) {
                         	var boardContent = result.boardContent.split("||"); // img src와 boardContent분리
                         	var img = boardContent[0].split("|"); // img src배열
                             $("#infoName").prop("value",result.infoName);
@@ -194,8 +196,8 @@
             		            document.querySelector("#dotArea").appendChild(img);
             		        });
                         } else {
-                            alert("오류로 정보를 가져오지 못했습니다 직접 작성해서 게시물을 작성해주세요");
-                            
+                        	alert("이미 등록된 정보가 있습니다.");
+                        	return; // 아래 표를 보여줄필요가 없기에 리턴
                         }
                         $("hr").css("display", "block");
                         $("#insert-form").css("display", "block");

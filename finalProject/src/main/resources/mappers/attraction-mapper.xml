@@ -117,4 +117,9 @@
   	<insert id="insertreport">
   		INSERT INTO REPORT VALUES(#{boardNo}, #{writer})
   	</insert>
+  	<select id="checkInfo" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM INFO
+  		WHERE INFO_ADDRESS LIKE '%'||#{address}||'%'
+  	</select>
   </mapper>
