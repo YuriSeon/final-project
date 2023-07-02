@@ -420,13 +420,14 @@
         function pageLoad(num){
             var obj = $(".attracDetail"); 
             var form = makeTag("form", {"method":"get"});
-            var boardNo = makeTag("input", {"type":"hidden", "name":"boardNo", "value":"${dataMap.board.boardNo}"}); // 게시물번호 변수처리
+            var boardNo = makeTag("input", {"type":"hidden", "name":"boardNo", "value":"${dataMap.board.boardNo}"}); // 게시물 번호
+            var at = makeTag("input", {"type":"hidden", "name":"boardNo", "value":"${dataMap.at})"}); // 파일경로
             switch(num){
                 case 1 : form.attr("action", "modify.attr"); break; // 관리자에게 정보수정요청
                 case 2 : form.attr("action", "update.attr"); break; // 게시물 수정
                 case 3 : form.attr("action", "delete.attr"); break; // 게시물 삭제
             }
-            obj.append(form.append(boardNo));
+            obj.append(form.append(boardNo, at));
             form.submit();
         }
         

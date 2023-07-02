@@ -32,6 +32,13 @@ public interface AttractionService {
 	int iconAfter(String btnType, String tableName, int no, String writer);
 
 	int checkInfo(String address);
+
+	Info modifyRequestAttr(int boardNo);
+
+	int modifyinfo(Board b);
+
+	int deleteAttr(int boardNo);
+
 	
 
 }

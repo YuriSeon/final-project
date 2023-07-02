@@ -36,35 +36,35 @@
                 <tbody>
                     <tr>
                         <th>관광지명</th>
-                        <td colspan="3"><input type="text" name="infoName" id="infoName" placeholder="장소 이름을 작성해주세요" value="${info.infoName}"></td>
+                        <td colspan="3"><input type="text" name="infoName" id="infoName" placeholder="장소 이름을 작성해주세요" value="${dataMap.info.infoName}"></td>
                     </tr>
                     <tr>
                         <th>핵심 소개 문구</th>
-                        <td colspan="3"><input type="text" name="introduce" id="introduce" placeholder="30자까지만 작성해주세요" value="${introduce}"></td>
+                        <td colspan="3"><input type="text" name="introduce" id="introduce" placeholder="30자까지만 작성해주세요" value="${fn:split(dataMap.board.boardContent, '||')[1] }"></td>
                     </tr>
                     <tr>
                         <th>주소 (도로명 주소)</th>
-                        <td colspan="3"><input type="text" name="infoAddress" id="infoAddress" placeholder="도로명 주소로 작성해주세요" value="${info.infoAddress}"></td>
+                        <td colspan="3"><input type="text" name="infoAddress" id="infoAddress" placeholder="도로명 주소로 작성해주세요" value="${dataMap.info.infoAddress}"></td>
                     </tr>
                     <tr>
                         <th>홈페이지 주소</th>
-                        <td colspan="3"><input type="text" name="infoHomepage" id="infoHomepage" placeholder="홈페이지 주소 또는 SNS 주소를 작성해주세요" value="${info.infoHomepage}"></td>
+                        <td colspan="3"><input type="text" name="infoHomepage" id="infoHomepage" placeholder="홈페이지 주소 또는 SNS 주소를 작성해주세요" value="${dataMap.info.infoHomepage}"></td>
                     </tr>
                     <tr>
                         <th>이용시간</th>
-                        <td colspan="3"><input type="text" name="infoTime" id="infoTime" placeholder="이용가능한 시간을 확인해서 작성해주세요" value="${info.infoTime}"></td>
+                        <td colspan="3"><input type="text" name="infoTime" id="infoTime" placeholder="이용가능한 시간을 확인해서 작성해주세요" value="${dataMap.info.infoTime}"></td>
                     </tr>
                     <tr>
                         <th>휴무일</th>
-                        <td><input type="text" name="dayOff" id="dayOff" placeholder="휴무일을 작성해주세요" value="${info.dayOff}"></td>
+                        <td><input type="text" name="dayOff" id="dayOff" placeholder="휴무일을 작성해주세요" value="${dataMap.info.dayOff}"></td>
                         <th>대표 번호 (고객문의용)</th>
-                        <td><input type="text" name="infoCall" id="infoCall" placeholder="'-'포함해서 작성해주세요" value="${info.infoCall}"></td>
+                        <td><input type="text" name="infoCall" id="infoCall" placeholder="'-'포함해서 작성해주세요" value="${dataMap.info.infoCall}"></td>
                     </tr>
                     <tr>
                         <th>주차장 여부</th>
-                        <td><input type="text" name="parking" id="parking" placeholder="주차장 여부(Y/N)를 작성해주세요" value="${info.parking}"></td>
+                        <td><input type="text" name="parking" id="parking" placeholder="주차장 여부(Y/N)를 작성해주세요" value="${dataMap.info.parking}"></td>
                         <th>장소의 분류</th>
-                        <td><input type="number" name="infoType" id="infoType" placeholder="장소종류(1.여행, 2.맛집, 3.기타) - 숫자로 작성해주세요" value="${info.infoType}"></td>
+                        <td><input type="number" name="infoType" id="infoType" placeholder="장소종류(1.여행, 2.맛집, 3.기타) - 숫자로 작성해주세요" value="${dataMap.info.infoType}"></td>
                     </tr>
                     <tr>
                         <th>이미지</th>
@@ -111,7 +111,7 @@
             </div>
         </div>
     <%@include file="../../common/footer.jsp" %>
-        <script type="text/javascript" src="resources/js/function.js"></script>
+        <!-- <script type="text/javascript" src="resources/js/function.js"></script>
         <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3f6edea42e65caf1e4e0b7f49028f282&libraries=services"></script>
         <script type="text/javascript" src="resources/js/listmap.js"></script>  
         <script>
@@ -160,6 +160,6 @@
                     }
                 });
             });
-        </script>
+        </script> -->
 </body>
 </html>

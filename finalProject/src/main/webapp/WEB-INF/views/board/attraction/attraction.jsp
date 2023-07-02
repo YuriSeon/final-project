@@ -150,8 +150,9 @@
 		});
 	</script>
 	<!-- 먼저 상세페이지로 이동하기위해 만들어놓은 태그 나중에 지우기 -->
-	<a href="detail.attr?boardNo=11">상세페이지로이동태그</a>
+	<a href="detail.attr?boardNo=62">상세페이지로이동태그</a>
 	<a href="insert.attr">insert page</a>
+	<a href="update.attr?boardNo=62">수정페이지로이동태그</a>
     <div class="attr">
 		<div id="mainPhoto"></div>
 		<div class="float">
@@ -275,6 +276,19 @@
 	<script>
 		$(".zone").on("click", function(){
 			var zoneName = $(this).attr("class")
+			$.ajax({
+				url : "zonesearch.attr",
+				data : {
+					zoneName : zoneName
+					// 일단 서울, 부산 이런식으로 했는데 지역코드 변경하면 그거에 맞춰서 넣기
+				},
+				success : function(result){
+					console.log(result);
+				},
+				complete : function(){
+					console.log("일단됨");
+				}
+			});
 		});
 	</script>
   </body>

@@ -43,12 +43,13 @@ public class ScheduleDao {
 
 	// path에 해당하는 infoNo 조회
 	public int searchInfoNo(SqlSession sqlSession, Path path) {
+		System.out.println("dao    "+path);
 		return sqlSession.selectOne("scheduleMapper.searchInfoNo", path);
 	}
 	
 	// plan에 infoNo 추가해주기
-	public int updatePlanInfoNo(SqlSession sqlSession, int infoNo) {
-		return sqlSession.update("scheduleMapper.updatePlanInfoNo", infoNo);
+	public int updatePlanInfoNo(SqlSession sqlSession, Path path) {
+		return sqlSession.update("scheduleMapper.updatePlanInfoNo", path);
 	}
 
 

@@ -1,6 +1,5 @@
 package com.kh.finalProject.board.model.dao;
 
-
 import java.util.ArrayList;
 
 import org.apache.ibatis.session.SqlSession;
@@ -16,37 +15,38 @@ import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.board.model.vo.choice;
 
 @Repository
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class AttractionDao {
-	
+
 	// 지역번호 조회
 	public static int selectZoneNo(SqlSession sqlSession, String address) {
 		// 매개변수로 전달받은 주소로 시군구영역 뒤부터 찾아서 조회
 		String zoneName = "";
 		String[] strArr = address.split(" ");
-		for(int i=strArr.length-1; i>=0; i--) {
-			if(("시군구").contains(strArr[i].split("")[strArr[i].length()-1])) {
+		for (int i = strArr.length - 1; i >= 0; i--) {
+			if (("시군구").contains(strArr[i].split("")[strArr[i].length() - 1])) {
 				zoneName = strArr[i]; // 일치하는 영역 담기
 				break;
 			}
 		}
 		return sqlSession.selectOne("attractionMapper.selectZoneNo", zoneName);
 	}
+
 	// 이미 등록된 장소인지 체크
 	public static int checkInfo(SqlSession sqlSession, String infoAddress) {
 		return sqlSession.selectOne("attractionMapper.checkInfo", infoAddress);
 	}
-	
+
 	// board, info 등록
 	public static int insertInfo(SqlSession sqlSession, Info info) {
 		return sqlSession.insert("attractionMapper.insertInfo", info);
 	}
-	
+
 	// 첨부파일 등록
 	public static int insertAttachment(SqlSession sqlSession, Attachment at) {
-		return sqlSession.insert("attractionMapper.insertAttachment", at); 
+		return sqlSession.insert("attractionMapper.insertAttachment", at);
 	}
-	
+
 	// 조회수 증가
 	public int increaseCount(SqlSession sqlSession, int boardNo) {
 		return sqlSession.update("attractionMapper.increaseCount", boardNo);
@@ -56,7 +56,7 @@ public class AttractionDao {
 	public Board selectBoard(SqlSession sqlSession, int boardNo) {
 		return sqlSession.selectOne("attractionMapper.selectBoard", boardNo);
 	}
-	
+
 	// info 조회
 	public Info selectInfo(SqlSession sqlSession, int boardNo) {
 		return sqlSession.selectOne("attractionMapper.selectInfo", boardNo);
@@ -66,7 +66,7 @@ public class AttractionDao {
 	public ArrayList<Attachment> selectAttachment(SqlSession sqlSession, int boardNo) {
 		return (ArrayList)sqlSession.selectList("attractionMapper.selectAttachment", boardNo);
 	}
-	
+
 	// 댓글 등록
 	public int insertReplyList(SqlSession sqlSession, Rereply r) {
 		return sqlSession.insert("attractionMapper.insertReplyList", r);
@@ -79,12 +79,12 @@ public class AttractionDao {
 
 	// 댓글 조회
 	public ArrayList<Reply> selectReplyList(SqlSession sqlSession, int boardNo) {
-		return (ArrayList)sqlSession.selectList("attractionMapper.selectReplyList", boardNo);
+		return (ArrayList) sqlSession.selectList("attractionMapper.selectReplyList", boardNo);
 	}
 
 	// 대댓글 조회
 	public ArrayList<Rereply> selectRereplyList(SqlSession sqlSession, int boardNo) {
-		return (ArrayList)sqlSession.selectList("attractionMapper.selectRereplyList", boardNo);
+		return (ArrayList) sqlSession.selectList("attractionMapper.selectRereplyList", boardNo);
 	}
 
 	// 좋아요 조회
@@ -102,7 +102,7 @@ public class AttractionDao {
 		return sqlSession.selectOne("attractionMapper.reportSearch", report);
 	}
 
-	// 좋아요 취소 
+	// 좋아요 취소
 	public int deleteGood(SqlSession sqlSession, Good good) {
 		return sqlSession.delete("attractionMapper.deleteGood", good);
 	}
@@ -127,8 +127,29 @@ public class AttractionDao {
 		return sqlSession.insert("attractionMapper.insertreport", report);
 	}
 
-	
-	
+	// 관리자에게 내용 수정 요정 페이지 로드 전 조회
+	public Info modifyRequestAttr(SqlSession sqlSession, int boardNo) {
+		return sqlSession.selectOne("attractionMapper.modifyRequestAttr", boardNo);
+	}
 
+	// 관리자에게 게시물 내용 수정 요청
+	public int modifyinfo(SqlSession sqlSession, Board b) {
+		return sqlSession.insert("attractionMapper.modifyinfo", b);
+	}
+
+	// board삭제
+	public int deleteBoard(SqlSession sqlSession, int boardNo) {
+		return sqlSession.update("attractionMapper.deleteBoard", boardNo);
+	}
+
+	// info삭제
+	public int deleteInfo(SqlSession sqlSession, int boardNo) {
+		return sqlSession.update("attractionMapper.deleteInfo", boardNo);
+	}
+
+	// 첨부파일 삭제
+	public int deleteAttachment(SqlSession sqlSession, int boardNo) {
+		return sqlSession.delete("attractionMapper.deleteAttachment", boardNo);
+	}
 
 }

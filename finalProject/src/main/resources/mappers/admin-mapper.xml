@@ -75,6 +75,7 @@
   		<result column="INFO_NAME" property="infoName"/>
   		<result column="INFO_TYPE" property="infoType"/>
   		<result column="DAY_OFF" property="dayOff"/>
+  		<result column="BOARD_CONTENT" property="boardContent"/>
   	</resultMap>
   	
 	<!-- SERVICE RESULT MAP -->

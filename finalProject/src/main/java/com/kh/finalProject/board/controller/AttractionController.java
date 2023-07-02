@@ -31,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.kh.finalProject.board.model.service.AttractionService;
 import com.kh.finalProject.board.model.vo.Attachment;
+import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.board.model.vo.Selenium;
@@ -115,7 +116,6 @@ public class AttractionController {
 					inputStream.close();
 					fileOutputStream.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -169,7 +169,7 @@ public class AttractionController {
 		String etc = "&MobileOS=ETC&MobileApp=AppTest&_type=json&listYN=Y";
 		
 		// 검색해서 보여줄 url 완성
-		String url = BASEURL + SERVICEKEY + rowBounds + page  + sort + keyword + type + etc;
+		String url = BASEURL + SERVICEKEY + rowBounds + page  + arr + keyword + type + etc;
 		
 		// url 연결 후 값 읽어오기
 		URL requestUrl = new URL(url);
@@ -195,15 +195,14 @@ public class AttractionController {
 		// 게시물 클릭시 조회수 증가
 		int count = atService.increaseCount(boardNo);
 		// 게시물 데이터 조회
-		HashMap<String, Object> dataMap = atService.attrDetail(boardNo);
-		model.addAttribute("dataMap", dataMap);
-		return "board/attraction/attractionDetail";
-	}
-	
-	// 게시물 수정페이지 이동
-	@GetMapping("update.attr")
-	public String updateAttr(int boardNo) {
-		return "board/attraction/attractionUpdate";
+		if(count>0) {
+			HashMap<String, Object> dataMap = atService.attrDetail(boardNo);
+			model.addAttribute("dataMap", dataMap);
+			return "board/attraction/attractionDetail";
+		} else {
+			model.addAttribute("errorMsg", "조회 오류");
+			return "common/errorPage";
+		}
 	}
 	
 	// 게시물 등록페이지 이동
@@ -213,6 +212,7 @@ public class AttractionController {
 	}
 	
 	// 게시물 등록전 정보조회해오는 메소드 
+	@ResponseBody
 	@PostMapping(value="searchInfo.attr", produces ="json/application; charset=UTF-8")
 	public String searchInfo(Info in) {
 		Info info = null; // 선언
@@ -226,7 +226,6 @@ public class AttractionController {
 		if(result==0) { //이미 등록된게 없다면 검색진행
 			info = new Selenium().searchData(infoName, zone);
 		}
-		System.out.println("여기에 오니?");
 		return new Gson().toJson(info);
 	}
 	
@@ -258,10 +257,25 @@ public class AttractionController {
 		return mv;
 	}
 	
-	// 게시물 내용 수정 요청 페이지로 이동
+	// 관리자에게 게시물 내용 수정 요청 페이지 이동
 	@GetMapping("modify.attr")
-	public String modifyRequestAttr(int boardNo) {
+	public String modifyRequestAttr(int boardNo, Model model) {
+		Info info = atService.modifyRequestAttr(boardNo);
+		model.addAttribute("info", info);
 		return "board/attraction/attrModifyRequest";
+	}
+	// 관리자에게 게시물 내용 수정 요청
+	@PostMapping("modifyRequest.attr")
+	public String modifyinfo(HttpSession session, Board b,
+							@RequestParam("answer") ArrayList<String> answer) {
+		String boardContent = "";
+		for(String str : answer) { // 수정원하는 정보 
+			boardContent += str+" ";
+		}
+		b.setBoardContent(boardContent);
+		atService.modifyinfo(b);
+		session.setAttribute("alertMsg", "정보수정 요청을 전송하였습니다");
+		return "redirect:attraction.bo";
 	}
 	
 	// 댓글 등록
@@ -302,6 +316,37 @@ public class AttractionController {
 			count = atService.iconAfter(btnType, tableName, no, writer);
 		}
 		return new Gson().toJson(count);
+	}
+	
+	// 게시물 수정페이지 이동
+	@GetMapping("update.attr")
+	public String updateAttr(Model model, int boardNo) {
+		HashMap<String, Object> dataMap = atService.attrDetail(boardNo);
+		model.addAttribute("dataMap", dataMap);
+		return "board/attraction/attractionUpdate";
+	}
+	
+//	// 게시물 수정 
+//	@PostMapping("update.attr")
+//	public ModelAndView updateAttr(ModelAndView mv, Info info, )
+		
+	// 게시물 삭제 
+	@RequestMapping("delete.attr")
+	public ModelAndView deleteAttr(int boardNo, ModelAndView mv, HttpSession session,
+							@RequestParam("at") ArrayList<String> at) {
+		int result = atService.deleteAttr(boardNo);
+		if(result>0) {
+			if(!at.isEmpty()) { // 넘어온 파일정보가 있을때 
+				for(String path : at) {
+					new File(session.getServletContext().getRealPath(path)).delete();
+				}
+			}
+			session.setAttribute("alertMsg", "게시물 삭제 성공");
+			mv.setViewName("redirect:list.bo");
+		} else {
+			mv.addObject("errorMsg", "게시물 삭제 실패").setViewName("common/errorPage");
+		}
+		return mv;
 	}
 
 }
