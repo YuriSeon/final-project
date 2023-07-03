@@ -307,9 +307,9 @@
 										<option value="충남">충청남도</option>
 										<option value="전북">전라북도</option>
 										<option value="전남">전라남도</option>
-										<option value="경북" id="Asia">경상북도</option>
-										<option value="경남" id="Asia">경상남도</option>
-										<option value="제주" id="Asia">제주도</option>
+										<option value="경북">경상북도</option>
+										<option value="경남">경상남도</option>
+										<option value="제주">제주도</option>
                                 </select>
                             </div>
                             <div class="select_box select_cate" id="cate">
