@@ -374,7 +374,7 @@
 									                            				}else if("${loginUser.certification}" != 0){
 												                            		    str += "<button type='button' class='togetherBtn' data-toggle='modal' data-target='#applyModal'>참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>";
 									                            				}else{
-									                            					str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>";
+									                            					str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>"
 													                           		+"<p>참여하려면 본인 인증을 해주세요.</p>";
 									                            				}
 												                           <%}else{%>
@@ -382,7 +382,8 @@
 														                           		+"<p>참여하려면 로그인을 해주세요.</p>";
 												                           <%}%>
 																}else{
-									                            		str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>마감되었습니다.</button>";
+									                            		str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>마감되었습니다.</button>"
+									                            			+"<p>다음 여행 때 함께해요~!</p>";
 																}
 																str += "</div></div></div></div></div>";
 											}
@@ -479,6 +480,7 @@
 					                            </c:when>
 					                            <c:otherwise>
 					                            		<button type="button" class="togetherBtn" style="background-color:lightgray;"disabled>마감되었습니다.</button>
+					                            		<p>다음 여행 때 함께해요~!</p>
 					                            </c:otherwise>
 					                            </c:choose>
 					                            </div>

@@ -131,7 +131,7 @@ public class BoardController {
 		
 		String loginMbti = null;
 		
-		if(request.getSession().getAttribute("loginUser") != null) {
+		if(request.getSession().getAttribute("loginUser") != null && ((Member)(request.getSession().getAttribute("loginUser"))).getSurvey() != null) {
 			loginMbti = ((Member)(request.getSession().getAttribute("loginUser"))).getSurvey().split(" ")[0];
 		}
 		
