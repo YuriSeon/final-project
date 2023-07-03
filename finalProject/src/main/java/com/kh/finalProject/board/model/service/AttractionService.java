@@ -23,4 +23,15 @@ public interface AttractionService {
 
 	int insertReply(Rereply r);
 
+	HashMap<String, Object> selectReplyList(int boardNo);
+
+	int iconCheck(String btnType, int boardno, String writer);
+
+	int iconBefore(String btnType, String tableName, int no, String writer);
+
+	int iconAfter(String btnType, String tableName, int no, String writer);
+
+	int checkInfo(String address);
+	
+
 }
