@@ -154,8 +154,8 @@ public class ThemaServiceImpl implements ThemaService{
 
 	//찜하기이미지바꾸기
 	@Override
-	public choice selectChoice(int boardNo) {
-		choice c = themaDao.selectChoice(sqlSession,boardNo);
+	public ArrayList<choice> selectChoice(int boardNo) {
+		ArrayList<choice> c = themaDao.selectChoice(sqlSession,boardNo);
 		return c;
 	}
 

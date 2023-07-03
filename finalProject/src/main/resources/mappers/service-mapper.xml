@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="serviceMapper">
+
+	<resultMap type="service" id="serviceResultSet">
+		<result property="serviceNo" column="SERVICE_NO"/>
+		<result property="serviceTitle" column="SERVICE_TITLE"/>
+		<result property="serviceContent" column="SERVICE_CONTENT"/>
+		<result property="count" column="COUNT"/>
+		<result property="createDate" column="CREATE_DATE"/>
+		<result property="writer" column="WRITER"/>
+	</resultMap>
+	
+	<resultMap type="attachment" id="attResultSet">
+		<result property="filePath" column="FILE_PATH"/>
+	</resultMap>
+	
+	<!-- 공지사항 총 리스트 수 -->
+	<select id="serCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 1
+	</select>
+	
+	<!-- 페이징처리한 공지사항 리스트 -->
+	<select id="serList" resultMap="serviceResultSet" resultType="service">
+		SELECT SERVICE_NO, SERVICE_TITLE, WRITER, TO_CHAR(CREATE_DATE, 'YYYY.MM.DD')CREATE_DATE, COUNT
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+		AND CATEGORY = 1
+		ORDER BY SERVICE_NO DESC
+	</select>
+	
+	<!-- 공지사항 디테일 -->
+	<select id="detailSer" parameterType="_int" resultMap="serviceResultSet" resultType="service">
+		SELECT SERVICE_TITLE, TO_CHAR(CREATE_DATE,'YYYY.MM.DD')CREATE_DATE, COUNT, SERVICE_CONTENT
+		FROM SERVICE
+		WHERE SERVICE_NO = #{boardNo}
+	</select>
+	
+	<!-- 조회수 올려주기 -->
+	<update id="countUp" parameterType="_int">
+		UPDATE SERVICE
+		SET COUNT = COUNT+1
+		WHERE SERVICE_NO=#{boardNo}
+	</update>
+	
+	<!-- 이전글 가져오기 -->
+	<select id="preSer" parameterType="_int" resultMap="serviceResultSet" resultType="service">
+		SELECT SERVICE_NO, SERVICE_TITLE
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+		AND SERVICE_NO = (SELECT MAX(SERVICE_NO)SERVICE_NO
+		                    FROM SERVICE
+		                    <![CDATA[WHERE SERVICE_NO < #{boardNo})]]>
+	</select>
+	<!-- 다음글 가져오기 -->
+	<select id="nextSer" parameterType="_int" resultMap="serviceResultSet" resultType="service">
+		SELECT SERVICE_NO, SERVICE_TITLE
+		FROM SERVICE
+		WHERE STATUS = 'Y'
+		AND SERVICE_NO = (SELECT MIN(SERVICE_NO)SERVICE_NO
+		                    FROM SERVICE
+		                    <![CDATA[WHERE SERVICE_NO > #{boardNo})]]>
+	</select>
+
+</mapper>

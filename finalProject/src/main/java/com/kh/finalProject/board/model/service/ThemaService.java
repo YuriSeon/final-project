@@ -61,7 +61,7 @@ public interface ThemaService {
 	int insertChoice(choice c);
 
 	//찜하기이미지바꾸기
-	choice selectChoice(int boardNo);
+	ArrayList<choice> selectChoice(int boardNo);
 
 	//신고리스트
 	ArrayList<Report> selectReportList();

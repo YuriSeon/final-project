@@ -20,6 +20,7 @@
  			});
  		});
 	</script>
+    <a href="detail.sc">상세페이지로</a>
    <div class="main-schedule"></div>
    <div class="schedule">
         <div class="title-area">

@@ -76,6 +76,7 @@
   		<result column="INFO_NAME" property="infoName"/>
   		<result column="INFO_TYPE" property="infoType"/>
   		<result column="DAY_OFF" property="dayOff"/>
+  		<result column="BOARD_CONTENT" property="boardContent"/>
   	</resultMap>
   	
 	<!-- SERVICE RESULT MAP -->
@@ -379,8 +380,7 @@
   	<select id="festivalSearchCount" resultType="_int">
 		SELECT COUNT(*)
 		FROM BOARD
-		WHERE STATUS = 'Y'
-		AND CATEGORY = 2
+		WHERE CATEGORY = 2
 		<if test="status == 'title'">
 		AND BOARD_TITLE
 		</if>
@@ -397,8 +397,7 @@
 			  ,TO_CHAR(MODIFY_DATE, 'YYYY-MM-DD') MODIFY_DATE
   			  ,GOOD,REPORT,COUNT,STATUS,BOARD_WRITER 
 		FROM BOARD
-		WHERE STATUS = 'Y'
-		AND CATEGORY = 2
+		WHERE CATEGORY = 2
 		<choose>
 			<when test="status=='title'">
 				AND BOARD_TITLE
@@ -419,7 +418,6 @@
   			  ,GOOD,REPORT,COUNT,STATUS,BOARD_WRITER
 		FROM BOARD 
 		WHERE BOARD_NO = #{boardNo}
-		AND STATUS = 'Y' 
 	</select>
 
 	<!-- 게시글 축제 수정 파일 조회 -->
@@ -427,7 +425,6 @@
 		SELECT FILE_NO, BOARD_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, UPLOAD_DATE, FILE_LEVEL, STATUS, WRITER
 		FROM ATTACHMENT 
 		WHERE BOARD_NO = #{boardNo}
-		AND STATUS = 'Y' 
 	</select>
 	
 	<!-- 게시글 축제 수정 축제 조회 -->

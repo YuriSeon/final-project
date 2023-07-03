@@ -22,4 +22,23 @@
   		<result property="zoneNo" column="ZONE_NO"/>
 		<result property="zoneName" column="ZONE_NAME"/>
 	</resultMap>
+	<resultMap type="reply" id="replyResultSet">
+  		<result column="REPLY_NO" property="replyNo"/>
+  		<result column="CONTENT" property="content"/>
+  		<result column="CREATE_DATE" property="createDate"/>
+  		<result column="REPLY_WRITER" property="replyWriter"/>
+  		<result column="REF_QNO" property="refQno"/>
+  		<result column="STATUS" property="status"/>
+  		<result column="FILE_PATH" property="profileImg"/>
+  	</resultMap>
+  	<resultMap type="rereply" id="rereplyResultSet">
+  		<result column="REF_RNO" property="refRno"/>
+  		<result column="CONTENT" property="content"/>
+  		<result column="CREATE_DATE" property="createDate"/>
+  		<result column="REPLY_WRITER" property="replyWriter"/>
+  		<result column="REF_QNO" property="refQno"/>
+  		<result column="REPLY_NO" property="replyNo"/>
+  		<result column="STATUS" property="status"/>
+  		<result column="FILE_PATH" property="profileImg"/>
+  	</resultMap>
   </mapper>

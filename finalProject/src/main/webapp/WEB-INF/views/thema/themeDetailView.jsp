@@ -94,6 +94,12 @@
       	width: 400px;
       	height: 50px;
      }
+     .cont2{
+     	margin-left: 250px;
+		margin-right: 250px;
+		float: right;
+		margin-top: 10px;
+     }
 </style>
 </head>
 <body>
@@ -114,6 +120,11 @@
 	${b.boardContent }
 	</p>
 	<div id="map"></div>
+	<div class="cont2">
+         <c:if test="${loginUser.status ne 'A' }">
+            <button class="btn_modify" onclick="pageLoad();" style="background-color: white;">관광정보 수정요청</button>
+         </c:if>
+    </div>
 	<div class="info">
 		<ul>
 			<li>
@@ -143,15 +154,8 @@
 	<div class="bii">
 		<ul>
 			<li>
-				<button type="button" style="border: solid white; background-color: white;" onclick="goChoice();">
-					<c:choose>
-						<c:when test="${not empty loginUser and loginUser.nickname eq c.writer }">
-							<img alt="" src="resources/images/star-after.png" style="width: 50px;height: 50px;" id="star">
-						</c:when>
-						<c:otherwise>
-							<img alt="" src="resources/images/star-before.png" style="width: 50px;height: 50px;" id="star">
-						</c:otherwise>
-					</c:choose>
+				<button type="button" style="border: solid white; background-color: white;" onclick="goChoice();">																		
+					<img alt="" src="resources/images/star-before.png" style="width: 50px;height: 50px;" id="star">							
 				</button>
 				<b>찜하기</b>
 			</li>
@@ -429,6 +433,8 @@
 						console.log("error");
 					}
 				})
+			}else{
+				alert("신고내용을 입력해 주세요");
 			}
 		}
 	    
@@ -459,16 +465,36 @@
 	    	}
 	    }
 	    
-	    //댓글 프로필사진
-	   /*  $(".reply-area>#replyBox").each(function(){
-	    	console.log($(this).children("#reply-text"));
-	    }) */
-	    
+	    //찜하기 보여주기
 	    $(function(){
-	    	var $reply = $("#replyBox");
-	        console.log($reply.children());
-	    })
-	    
+	    	var boardNo = "${b.boardNo}";
+	    		boardNo = parseInt(boardNo);
+	    	var img = $("#star");
+	    	var writer = "${loginUser.nickname}";
+	    	var like = false;
+	    	var clist = ${clist};
+	    	
+	    	for(var i=0; i<clist.length; i++){
+	    		var c=clist[i];
+	    		
+	    		if(c.boardNo === boardNo && c.writer === writer){
+	    			like = true;
+	    		}
+	    	}
+	    	
+	    	if(like){
+	    		img.attr("src","resources/images/star-after.png");
+	    	}else{
+	    		img.attr("src","resources/images/star-before.png");
+	    	}
+	    });
+	    	    	    
+	   
+	    //사용자 정보수정 요청
+	    function pageLoad(){
+	    	boardNo = "${b.boardNo}";
+	    	location.href = "askUpdate.mo?boardNo="+boardNo;
+	    }
 	
 </script>
 </body>

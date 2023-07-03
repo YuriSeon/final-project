@@ -361,5 +361,13 @@ public class FeedController {
 
 			return "board/feed";
 		}
-	
+
+		//게시물 신고
+		@ResponseBody
+		@RequestMapping("report")
+		public String report(Report re,String nickname) {
+			int result = feedService.reportBoard(re,nickname);
+			return (result>0)?"success":"fali";
+		}
+		
 }
