@@ -281,8 +281,7 @@
   	<select id="festivalListCount" resultType="_int">
   		SELECT COUNT(*)
   		FROM BOARD
-  		WHERE STATUS = 'Y'
-  		AND CATEGORY = 2
+  		WHERE CATEGORY = 2
   	</select>
   	
 	<!-- 게시글 축제 리스트 조회 -->
@@ -292,8 +291,7 @@
 			  ,TO_CHAR(MODIFY_DATE, 'YYYY-MM-DD') MODIFY_DATE
   			  ,GOOD,REPORT,COUNT,STATUS,BOARD_WRITER 
   		FROM BOARD
-		WHERE STATUS = 'Y'
-		AND CATEGORY = 2
+		WHERE CATEGORY = 2
 		ORDER BY BOARD_NO
   	</select>
 	
@@ -301,8 +299,7 @@
   	<select id="festivalSearchCount" resultType="_int">
 		SELECT COUNT(*)
 		FROM BOARD
-		WHERE STATUS = 'Y'
-		AND CATEGORY = 2
+		WHERE CATEGORY = 2
 		<if test="status == 'title'">
 		AND BOARD_TITLE
 		</if>
@@ -319,8 +316,7 @@
 			  ,TO_CHAR(MODIFY_DATE, 'YYYY-MM-DD') MODIFY_DATE
   			  ,GOOD,REPORT,COUNT,STATUS,BOARD_WRITER 
 		FROM BOARD
-		WHERE STATUS = 'Y'
-		AND CATEGORY = 2
+		WHERE CATEGORY = 2
 		<choose>
 			<when test="status=='title'">
 				AND BOARD_TITLE
@@ -341,7 +337,6 @@
   			  ,GOOD,REPORT,COUNT,STATUS,BOARD_WRITER
 		FROM BOARD 
 		WHERE BOARD_NO = #{boardNo}
-		AND STATUS = 'Y' 
 	</select>
 
 	<!-- 게시글 축제 수정 파일 조회 -->
@@ -349,7 +344,6 @@
 		SELECT FILE_NO, BOARD_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, UPLOAD_DATE, FILE_LEVEL, STATUS, WRITER
 		FROM ATTACHMENT 
 		WHERE BOARD_NO = #{boardNo}
-		AND STATUS = 'Y' 
 	</select>
 	
 	<!-- 게시글 축제 수정 축제 조회 -->
