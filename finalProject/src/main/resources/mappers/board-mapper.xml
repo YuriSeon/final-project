@@ -29,6 +29,7 @@
   		<result column="REPLY_WRITER" property="replyWriter"/>
   		<result column="REF_QNO" property="refQno"/>
   		<result column="STATUS" property="status"/>
+  		<result column="FILE_PATH" property="profileImg"/>
   	</resultMap>
   	<resultMap type="rereply" id="rereplyResultSet">
   		<result column="REF_RNO" property="refRno"/>
@@ -38,5 +39,6 @@
   		<result column="REF_QNO" property="refQno"/>
   		<result column="REPLY_NO" property="replyNo"/>
   		<result column="STATUS" property="status"/>
+  		<result column="FILE_PATH" property="profileImg"/>
   	</resultMap>
   </mapper>

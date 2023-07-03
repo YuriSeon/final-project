@@ -236,7 +236,6 @@
 	    	for(var i=0; i<day.length; i++){
 			    var path = makeTag("input", {"type":"hidden", "name":"path"});
 	    		// pathVO(infoName, daily, pathNo, infoAddress, pay) 순서로 담음
-	    		
 		    	path.prop("value",($($(day[i]).children()).eq(1).text()
 			    					+","+$(day[i]).attr("name")
 			    					+","+i

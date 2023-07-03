@@ -35,22 +35,23 @@
   		SELECT * FROM DUAL
   	</insert>
   	<insert id="insertPath">
-  		INSERT INTO PATH VALUES((SELECT BOARD_NO FROM BOARD WHERE BOARD_TITLE=#{boardTitle}),
+  		INSERT INTO PATH VALUES((SEQ_BNO.CURRVAL-#{boardNo}),
   								(SELECT INFO_NO FROM INFO WHERE INFO_NAME = #{infoName}),
   								#{daily}, #{pathNo}, #{pay})
   	</insert>
   	<select id="searchInfoNo" resultType="_int">
   		SELECT INFO_NO
   		FROM PATH
-  		WHERE BOARD_NO = (SELECT BOARD_NO FROM BOARD WHERE BOARD_TITLE=#{boardTitle})
+  		WHERE BOARD_NO = SEQ_BNO.CURRVAL - #{boardNo}
   		AND DAILY = #{daily}
   		AND PATH_NO = #{pathNo}
   		AND PAY = #{pay}
   	</select>
+  	<!-- 기본으로 처음에 /가 들어있으니 제거하고 구분자로 구분해야 인덱스 맞음 잊지말기-->
   	<update id="updatePlanInfoNo">
   		UPDATE PLAN
   		SET INFO_NO = INFO_NO||'/'||#{infoNo}
-  		WHERE BOARD_NO = SEQ_BNO.CURRVAL
+  		WHERE BOARD_NO = SEQ_BNO.CURRVAL - #{boardNo}
   	</update>
   </mapper>
   

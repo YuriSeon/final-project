@@ -42,7 +42,7 @@
   	</select>
   	<!-- 게시물 첨부파일 조회 -->
   	<select id="selectAttachment" resultMap="adminMapper.attachmentResultSet">
-  		SELECT FILE_NO, FILE_PATH, FILE_LEVEL
+  		SELECT FILE_NO, FILE_PATH, FILE_LEVEL, CHANGE_NAME
   		FROM ATTACHMENT
   		WHERE BOARD_NO = #{boardNo}
   	</select>
@@ -58,16 +58,18 @@
   	</insert>
   	<!-- 댓글 조회 -->
   	<select id="selectReplyList" resultMap="boardMapper.replyResultSet">
-  		SELECT REPLY_NO, CONTENT, CREATE_DATE, REPLY_WRITER
-  		FROM REPLY
+  		SELECT REPLY_NO, CONTENT, R.CREATE_DATE, REPLY_WRITER, FILE_PATH
+  		FROM REPLY R
+  		JOIN ATTACHMENT ON(WRITER=REPLY_WRITER)
   		WHERE REF_QNO = #{refQno}
   		AND STATUS = 'Y'
   		ORDER BY CREATE_DATE DESC
   	</select>
   	<!-- 대댓글 조회 -->
   	<select id="selectRereplyList" resultMap="boardMapper.rereplyResultSet">
-  		SELECT REF_RNO, CONTENT, CREATE_DATE, REPLY_WRITER, REPLY_NO
-  		FROM REREPLY
+  		SELECT REF_RNO, CONTENT, R.CREATE_DATE, REPLY_WRITER, REPLY_NO, FILE_PATH
+  		FROM REREPLY R
+  		JOIN ATTACHMENT ON(WRITER=REPLY_WRITER)
   		WHERE REF_QNO = #{refQno}
   		AND STATUS = 'Y'
   		ORDER BY CREATE_DATE DESC
@@ -117,9 +119,37 @@
   	<insert id="insertreport">
   		INSERT INTO REPORT VALUES(#{boardNo}, #{writer})
   	</insert>
+  	<!-- 기존 등록 내역 조회 -->
   	<select id="checkInfo" resultType="_int">
   		SELECT COUNT(*)
   		FROM INFO
   		WHERE INFO_ADDRESS LIKE '%'||#{address}||'%'
   	</select>
+  	<select id="modifyRequestAttr"  resultMap="adminMapper.infoResultSet" resultType="info">
+  		SELECT I.INFO_NO , I.BOARD_NO ,I.ZONE_NO ,INFO_ADDRESS ,INFO_TIME ,INFO_HOMEPAGE ,INFO_CALL ,PARKING ,INFO_NAME ,INFO_TYPE ,DAY_OFF, B.BOARD_CONTENT
+  		FROM INFO I
+  		JOIN BOARD B ON(B.BOARD_NO=I.BOARD_NO)
+  		WHERE I.BOARD_NO = #{boardNo}
+  	</select>
+  	<insert id="modifyinfo">
+  		INSERT INTO SERVICE(SERVICE_NO, WRITER ,CATEGORY ,SERVICE_TITLE ,SERVICE_CONTENT ,ANSWER_STATUS)
+  					VALUES(SEQ_BNO.NEXTVAL, #{boardWriter}, 3, '정보수정요청', #{boardContent}, 'N')
+  	</insert>
+  	<update id="deleteBoard">
+  		UPDATE BOARD
+  		SET STATUS = 'N'
+  		WHERE BOARD_NO = #{boardNo}
+  		AND STATUS = 'Y'
+  	</update>
+  	<update id="deleteInfo">
+  		UPDATE INFO
+  		SET STATUS = 'N'
+  		WHERE BOARD_NO = #{boardNo}
+  		AND STATUS = 'Y'
+  	</update>
+  	<delete id="deleteAttachment">
+  		DELETE ATTACHMENT
+  		WHERE BOARD_NO = #{boardNo}
+  		AND STATUS ='Y'
+  	</delete>
   </mapper>
