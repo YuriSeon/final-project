@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.kh.finalProject.admin.model.vo.Notice;
+import com.kh.finalProject.admin.model.vo.Visit;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
@@ -133,4 +134,7 @@ public interface MemberService {
 
 	//마이페이지 피드 보기
 	Board selectFeed(int boardNo);
+
+	//접속자 ip,접속시간 기록
+	int connectData(Visit v);
 }

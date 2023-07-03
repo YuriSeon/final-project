@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.finalProject.admin.model.vo.Notice;
+import com.kh.finalProject.admin.model.vo.Visit;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
@@ -253,6 +254,11 @@ public class MemberDao {
 	//마이페이지 피드 보기
 	public Board selectFeed(SqlSessionTemplate sqlSession, int boardNo) {
 		return sqlSession.selectOne("memberMapper.selectFeed",boardNo);
+	}
+
+	//접속자 ip,접속시간 기록
+	public int connectData(SqlSessionTemplate sqlSession, Visit v) {
+		return sqlSession.insert("adminMapper.connectData",v);
 	}
 
 }

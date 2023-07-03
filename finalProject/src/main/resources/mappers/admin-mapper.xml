@@ -42,6 +42,7 @@
   		<result column="COUNT" property="count"/>
   		<result column="STATUS" property="status"/>
   		<result column="BOARD_WRITER" property="boardWriter"/>
+  		<result column="TOTAL_VIEW_COUNT" property="totalViewCount"/>
   	</resultMap>
   	
   	<!-- THEME RESULT MAP -->
@@ -127,9 +128,63 @@
   		<result column="REPORT1" property="boardReport"/>
   		<result column="REPORT2" property="replyReport"/>
   	</resultMap>
-
+  	
+	<!-- VISIT RESULT MAP -->
+  	<resultMap type="visit" id="visitResultSet">
+  		<result column="VISIT_NO" property="visitNo"/>
+  		<result column="VISIT_IP" property="visitIp"/>
+  		<result column="VISIT_TIME" property="visitTime"/>
+  		<result column="VISITOR" property="visitor"/>
+  	</resultMap>
+  	
 <!-- ===========================================대시보드============================================= -->
   	
+  	<!-- 대시보드 방문자 통계 일일 -->
+	<select id="dayCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM VISIT
+		WHERE TO_CHAR(VISIT_TIME, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+	</select>
+	
+	<!-- 대시보드 방문자 통계 주간 -->
+	<select id="weekCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM VISIT
+		<![CDATA[
+		WHERE VISIT_TIME >= TRUNC(SYSDATE, 'IW') AND VISIT_TIME < TRUNC(SYSDATE, 'IW') + 7
+		]]>
+	</select>
+	
+	<!-- 대시보드 방문자 통계 월간 -->
+	<select id="monthCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM VISIT
+		WHERE EXTRACT(YEAR FROM VISIT_TIME) = EXTRACT(YEAR FROM SYSDATE)
+		AND EXTRACT(MONTH FROM VISIT_TIME) = EXTRACT(MONTH FROM SYSDATE)
+	</select>
+	
+	<!-- 대시보드 방문자 통계 전체 -->
+	<select id="totalCount" resultType="_int">
+		SELECT COUNT(*) AS DAILY_VISITOR_COUNT
+		FROM VISIT
+	</select>
+  	
+  	<!-- 대시보드 방문자 입력 -->
+  	<insert id="connectData">
+  		INSERT INTO VISIT(VISIT_NO,VISIT_IP,VISIT_TIME,VISITOR)
+  		VALUES(SEQ_VNO.NEXTVAL,#{visitIp},TO_DATE(#{visitTime},'yyyy/mm/dd hh24:mi:ss'),#{visitor})
+	</insert>
+  	
+  	<!-- 대시보드 게시판 별 조회수 -->
+	<select id="countList" resultMap="boardResultSet">
+		SELECT CATEGORY, SUM(count) AS TOTAL_VIEW_COUNT
+		FROM BOARD
+		WHERE STATUS = 'Y'
+		GROUP BY CATEGORY
+		ORDER BY CATEGORY
+	</select>
+  	
+  	<!-- 대시보드 최근 신고 5개 -->
 	<select id="currentReportList" resultMap="reportResultSet">
 		SELECT R.*
 		FROM(SELECT REPORT_NO,BOARD_NO,REPLY_NO,WRITER,REPORT_REASON,P.CREATE_DATE,B.BOARD_WRITER,M1.REPORT REPORT1,R.REPLY_WRITER,M2.REPORT REPORT2
@@ -139,9 +194,34 @@
 			 LEFT JOIN MEMBER M1 ON(B.BOARD_WRITER=M1.NICKNAME)
 			 LEFT JOIN MEMBER M2 ON(R.REPLY_WRITER=M2.NICKNAME)
 			 ORDER BY CREATE_DATE DESC, REPORT_NO ASC) R
-	 		 <![CDATA[
-			 WHERE ROWNUM <= 5
-			 ]]>
+	 	<![CDATA[
+		WHERE ROWNUM <= 5
+		]]>
+	</select>
+	
+	<!-- 대시보드 최근 작성글 5개 -->
+	<select id="currentBoardList" resultMap="boardResultSet">
+		SELECT B.*
+		FROM(SELECT BOARD_NO,ZONE_NO,INFO_NO,CATEGORY,BOARD_TITLE,BOARD_CONTENT,CREATE_DATE,MODIFY_DATE,GOOD,REPORT,COUNT,STATUS,BOARD_WRITER,CHOICE
+			 FROM BOARD B
+			 WHERE STATUS = 'Y'
+			 ORDER BY CREATE_DATE DESC, BOARD_NO ASC) B
+		<![CDATA[
+		WHERE ROWNUM <= 5
+		]]>
+	</select>
+	
+	<!-- 대시보드 최근 문의 5개 -->
+	<select id="currentQnaList" resultMap="serviceResultSet">
+		SELECT S.*
+		FROM(SELECT SERVICE_NO,CATEGORY,SERVICE_TITLE,SERVICE_CONTENT,ANSWER_STATUS,COUNT,CREATE_DATE,STATUS,WRITER
+			 FROM SERVICE S
+             WHERE CATEGORY = 3
+             AND STATUS = 'Y'
+			 ORDER BY CREATE_DATE DESC, SERVICE_NO ASC) S
+		<![CDATA[
+		WHERE ROWNUM <= 5
+		]]>			 
 	</select>
 
 <!-- ===========================================게시글관리============================================= -->
@@ -676,6 +756,13 @@
 		WHERE USER_NO = #{userNo}	
 	</update>
 	
+	<!-- 비밀번호 초기화 -->
+	<update id="pwdUpdate">
+		UPDATE MEMBER
+		SET USER_PWD = #{userPwd}
+		WHERE NICKNAME = #{nickname}	
+	</update>
+	
 	<!-- 프로필 사진 업데이트 -->
 	<update id="memberUpdateImg">
 		UPDATE ATTACHMENT
@@ -707,6 +794,21 @@
 		GROUP BY CATEGORY
 		ORDER BY CATEGORY
 	</select>
+	
+	<!-- 회원 편집 접속기록 조회 -->
+  	<select id="visitSelect" resultMap="visitResultSet">
+		SELECT VISIT_NO,VISIT_IP,VISIT_TIME
+		FROM VISIT
+		WHERE VISITOR = #{nickname}
+		ORDER BY VISIT_TIME
+	</select>
+	
+	<!-- 회원 계정 복구 -->
+	<update id="memberRestore">
+		UPDATE MEMBER
+		SET STATUS = 'Y'
+		WHERE USER_NO = #{userNo}
+	</update>
 	
 <!-- ===========================================공지사항============================================= -->
 

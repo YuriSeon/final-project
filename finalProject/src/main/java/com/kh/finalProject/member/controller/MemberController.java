@@ -48,6 +48,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.kh.finalProject.admin.model.service.AdminService;
 import com.kh.finalProject.admin.model.vo.Notice;
+import com.kh.finalProject.admin.model.vo.Visit;
 import com.kh.finalProject.board.model.service.FeedService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
@@ -1414,10 +1415,22 @@ public class MemberController {
 		}
 		
 		Member loginUser = memberService.loginMember(m);
+		
+		String ipAddress = request.getRemoteAddr(); // 사용자의 IP 주소 추출
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd kk:mm:ss");
+		Date currentTime = new Date();
+		String strdate = dateFormat.format(currentTime);
+		
 
 		if(loginUser!=null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {//로그인 유저 있으면 -> 유저 정보 담기
 			session.setAttribute("loginUser", loginUser);
 			session.setAttribute("alertMsg", "로그인이 완료되었습니다.");
+			if (loginUser != null) {
+				Visit v = Visit.builder().visitIp(ipAddress).visitTime(strdate).visitor(loginUser.getNickname()).build();
+				if (!loginUser.getNickname().equals("관리자")) {
+					memberService.connectData(v);
+				}
+			}
 			//로그인 성공시 전 페이지로 돌려주기
 			return request.getHeader("referer");
 		}else {//로그인 실패시

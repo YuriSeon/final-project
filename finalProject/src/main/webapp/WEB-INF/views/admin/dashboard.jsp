@@ -39,10 +39,10 @@
                     <th style="border-top-right-radius: 20px;">총 방문자</th>
                 </tr>
                 <tr>
-                    <td>100명</td>
-                    <td>200명</td>
-                    <td>300명</td>
-                    <td>400명</td>
+                    <td>${vcList.get("day")}명</td>
+                    <td>${vcList.get("week")}명</td>
+                    <td>${vcList.get("month")}명</td>
+                    <td>${vcList.get("total")}명</td>
                 </tr>
             </table>
         </div>
@@ -72,11 +72,11 @@
                     </tbody>
                 </table>
                 <span>최근 작성 글</span>
-                <table style="margin-bottom: 20px;">
+                <table id="boardTable" style="margin-bottom: 20px;">
                     <thead>
                         <tr>
                             <th>번호</th>
-                            <th>제목</th>
+                            <th width="34%;">제목</th>
                             <th>작성자</th>
                             <th>위치</th>
                             <th>작성시각</th>
@@ -85,106 +85,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>제목입니다.</td>
-                            <td>작성자</td>
-                            <td>피드</td>
-                            <td>2023.06.01</td>
-                            <td>1</td>
-                            <td>2</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>제목입니다.</td>
-                            <td>작성자</td>
-                            <td>피드</td>
-                            <td>2023.06.01</td>
-                            <td>1</td>
-                            <td>2</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>제목입니다.</td>
-                            <td>작성자</td>
-                            <td>피드</td>
-                            <td>2023.06.01</td>
-                            <td>1</td>
-                            <td>2</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>제목입니다.</td>
-                            <td>작성자</td>
-                            <td>피드</td>
-                            <td>2023.06.01</td>
-                            <td>1</td>
-                            <td>2</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>제목입니다.</td>
-                            <td>작성자</td>
-                            <td>피드</td>
-                            <td>2023.06.01</td>
-                            <td>1</td>
-                            <td>2</td>
-                        </tr>
                     </tbody>
                 </table>
                 <span>최근 작성 문의</span>
-                <table>
+                <table id="qnaTable">
                     <thead>
                         <tr>
                             <th>번호</th>
                             <th>제목</th>
                             <th>작성자</th>
-                            <th>위치</th>
                             <th>작성시각</th>
-                            <th>조회수</th>
+                            <th>답변여부</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>제목입니다.</td>
-                            <td>작성자</td>
-                            <td>Q&A</td>
-                            <td>2023.06.01</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>제목입니다.</td>
-                            <td>작성자</td>
-                            <td>Q&A</td>
-                            <td>2023.06.01</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>제목입니다.</td>
-                            <td>작성자</td>
-                            <td>Q&A</td>
-                            <td>2023.06.01</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>제목입니다.</td>
-                            <td>작성자</td>
-                            <td>Q&A</td>
-                            <td>2023.06.01</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>제목입니다.</td>
-                            <td>작성자</td>
-                            <td>Q&A</td>
-                            <td>2023.06.01</td>
-                            <td>1</td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -215,13 +129,19 @@
     
     //조회수 그래프
     var ctx = $('#myChart');
+    var countList = [];
+    <c:forEach items="${bcList}" var="count">
+    	if ('${count.category}'!=4) {
+	        countList.push('${count.totalViewCount}');
+		}
+    </c:forEach>
     var myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['테마', '축제', '명소', '피드', '일정자랑', '함께가치'],
+        labels: ['테마', '축제', '명소', '일정자랑', '함께가치'],
         datasets: [{
           label: '게시판 별 조회수',
-          data: [50,55, 43, 20, 52, 30],
+          data: countList,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
@@ -291,6 +211,8 @@
     
     $(function() {
 		currentReportList();
+		currentBoardList();
+		currentQnaList();
 	});
     
     //최근 신고 5개
@@ -323,6 +245,110 @@
 // 					var bno = $(this).children().eq(0).text();
 // 					location.href = 'detail.bo?boardNo='+bno;
 // 				});
+				
+			},
+			error: function() {
+				console.log("통신실패");
+			}
+		});
+	}
+    
+  	//최근 작성글 5개
+    function currentBoardList() {
+		$.ajax({
+			url:"currentBoardList.ad",
+			success: function(list) {
+				var str = "";
+				for(var i in list){
+					str +="<tr>"
+	                    +"<td>"+list[i].boardNo+"</td>";
+
+                    if (list[i].boardTitle == null) {
+                    	str += "<td>"+list[i].boardContent+"</td>";
+					}else {
+						str += "<td>"+list[i].boardTitle+"</td>";
+					}
+	                    
+                    str += "<td>"+list[i].boardWriter+"</td>";
+	                    
+                    if (list[i].category == 1) {
+                    	str +="<td>테마</td>";
+					}else if (list[i].category == 2) {
+						str +="<td>축제</td>";
+					}else if (list[i].category == 3) {
+						str +="<td>명소</td>";
+					}
+					else if (list[i].category == 4) {
+						str +="<td>피드</td>";
+					}
+					else if (list[i].category == 5) {
+						str +="<td>함께가치</td>";
+					}else{
+						str +="<td>일정자랑</td>";
+					}
+                    
+                    str +="<td>"+list[i].createDate+"</td>"
+	                    +"<td>"+list[i].good+"</td>"
+	                    +"<td>"+list[i].count+"</td>"
+	                	+"</tr>";
+				}
+				
+				$("#boardTable>tbody").html(str);
+				
+				$("#boardTable>tbody>tr").click(function () {
+// 					var bno = $(this).children().eq(0).text();
+					var cate = $(this).children().eq(3).text();
+					if (cate == '테마') {
+	 					location.href = 'theme.ad';						
+					}else if (cate == '축제') {
+						location.href = 'festival.ad';
+					}else if (cate == '명소') {
+						location.href = 'attraction.ad';
+					}
+					else if (cate == '피드') {
+						location.href = 'feed.ad';
+					}
+					else if (cate == '함께가치') {
+						location.href = 'together.ad';
+					}else{
+						location.href = 'schedule.ad';
+					}
+				});
+				
+			},
+			error: function() {
+				console.log("통신실패");
+			}
+		});
+	}
+  	
+  	//최근 문의글 5개
+    function currentQnaList() {
+		$.ajax({
+			url:"currentQnaList.ad",
+			success: function(list) {
+				var str = "";
+				for(var i in list){
+					str +="<tr>"
+	                    +"<td>"+list[i].serviceNo+"</td>"
+	                    +"<td>"+list[i].serviceTitle+"</td>"
+	                    +"<td>"+list[i].writer+"</td>"
+	                    +"<td>"+list[i].createDate+"</td>";
+	                    
+                    if (list[i].answerStatus == 'N') {
+                    	str +="<td style='color: red;'>답변대기</td>";
+					}else{
+						str +="<td style='color: green;'>답변완료</td>";
+					}
+                    str +="</tr>";
+				}
+				
+				$("#qnaTable>tbody").html(str);
+				
+				$("#qnaTable>tbody>tr").click(function () {
+					var bno = $(this).children().eq(0).text();
+					location.href = 'qnaSelect.ad?serviceNo='+bno;
+				});
 				
 			},
 			error: function() {

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.finalProject.admin.model.vo.Notice;
+import com.kh.finalProject.admin.model.vo.Visit;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
@@ -288,6 +289,12 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public Board selectFeed(int boardNo) {
 		return memberDao.selectFeed(sqlSession,boardNo);
+	}
+
+	//접속자 ip,접속시간 기록
+	@Override
+	public int connectData(Visit v) {
+		return memberDao.connectData(sqlSession,v);
 	}
 	
 }

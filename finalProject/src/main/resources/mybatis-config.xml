@@ -24,5 +24,6 @@
   		<typeAlias type="com.kh.finalProject.board.model.vo.Theme" alias="theme"/>
   		<typeAlias type="com.kh.finalProject.board.model.vo.TogetherApplyVO" alias="ta"/>
   		<typeAlias type="com.kh.finalProject.board.model.vo.choice" alias="choice"/>
+  		<typeAlias type="com.kh.finalProject.admin.model.vo.Visit" alias="visit"/>
   	</typeAliases>
   </configuration>

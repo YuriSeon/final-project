@@ -50,7 +50,6 @@
                     <button class="btn btn-danger" onclick="chkDelete();">탈퇴 처리</button>
                     <button class="btn btn-info" onclick="location.href='memberExcel.ad';">정보 받기</button>
 <!--                     <button class="btn btn-info">쪽지 발송</button> -->
-                    <button class="btn btn-info">메일 발송</button>
                 </div>
                 <!-- 버튼 끝 -->
             </div>
@@ -66,7 +65,7 @@
                             <th style="width: 10%;">상태</th>
                             <th style="width: 20%;">가입일</th>
                             <th style="width: 5%;">인증상태</th>
-                            <th style="width: ;">관리</th>
+                            <th style="width: 12%;">관리</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -100,7 +99,7 @@
 	                            		</c:otherwise>
 	                            	</c:choose>
 	       	                    </td>
-	                            <td><button class="btn btn-default">관리</button></td>
+	                            <td><button class="btn btn-default manage" style="width: 150px;">관리</button><button class="btn btn-default admin" style="width: 150px;">관리자임명</button></td>
                         	</tr>
                     	</c:forEach>
 <!--                         <tr> -->
@@ -208,9 +207,44 @@
     
     //관리페이지 이동
     $(function () {
-		$(".member-table>tbody>tr>td>button").click(function () {
+		$(".member-table>tbody>tr>td>.manage").click(function () {
 			var bno = $(this).closest("tr").children().eq(1).text();
-			location.href = 'goMemberUpdate.ad?userNo='+bno;
+// 			location.href = 'goMemberUpdate.ad?userNo='+bno;
+		});
+	});
+    
+  	//관리자 임명 복구
+    $(function () {
+		$(".member-table>tbody>tr>td>.admin").click(function () {
+			var bno = $(this).closest("tr").children().eq(1).text();
+			console.log("bno");
+		});
+	});
+    
+    //탈퇴 복구
+    $(function () {
+		$(".member-table>tbody>tr>td").click(function () {
+			var bno = $(this).closest("tr").children().eq(1).text();
+			if ($(this).text().trim() == "탈퇴") {
+				if (confirm("복구하시겠습니까?")) {
+					
+					$.ajax({
+			    		type: "post",
+			    		url: "memberRestore.ad",
+			    		data: {	userNo : bno },
+						success: function(result) {
+							if(result=="success"){
+								location.href="member.ad";
+							}else{
+								alertify.message("회원 복구 실패");
+							}
+						},
+						error: function(request,status,error) {
+							console.log("통신오류");
+						}
+			    	});
+				}
+			}
 		});
 	});
     
