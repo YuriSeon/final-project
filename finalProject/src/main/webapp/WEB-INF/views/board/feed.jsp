@@ -65,6 +65,9 @@
  .bi-justify+ul:hover{
      display: block;         
 }
+.bi-list:hover+ul{display: block;}
+.bi-list+ul:hover{display: block;}
+
  .city{
  	border-bottom: 2px dotted #d7dadc;
  	border-top: 2px dotted #d7dadc;
@@ -254,6 +257,7 @@
 		margin-left: 900px; 
 		margin-top: 100px;
 	}
+#sild2{display: none;}
 
 </style>
 
@@ -363,20 +367,16 @@
 																	<ul>
 																		<li>
 										                        			<input type="hidden" value="${f.boardNo }" class="boardNo" name="boardNo">
-										                        			<i class="bi bi-justify"></i>
 																			<c:choose>
 							                        						<c:when test="${loginUser.nickname eq f.boardWriter }">
+																				 <i class="bi bi-justify"></i>
+										                        			
 																				<ul id="sild">
 																					<li><button class="custom-button" id="updateBoard" onclick="updateBoard(this);">수정</button></li>
 																					<li><button class="custom-button" id="de" onclick="deletef(this);">삭제</button></li>													
 																				</ul>
 																			</c:when>
-																			<c:otherwise>
-																				<ul id="sild">
-																					<li><button class="custom-button" id="updateBoard" onclick="updateBoard(this);">프로필</button></li>
-																					<li><button class="custom-button" id="" onclick="deletef(this);">신고</button></li>	
-																				</ul>
-																			</c:otherwise>
+																			
 																			</c:choose>
 																		</li>												
 																	</ul>
@@ -429,6 +429,9 @@
 									                            	<li>${f.info.getInfoAddress() }</li> 
 									                            </ul>									                            
 										                        <p>${f.createDate }</p>
+										                        <button style='border: solid white; float: right;background-color: white;' onclick="report('${f.boardNo}', '${f.boardWriter}');">
+																	<img alt='' src='resources/images/980829.png' style='width:15px; height:15px; float: right;'>
+																</button>
 									                        </div>
 									                        <hr>
 									                        <div id="reply-area">
@@ -449,19 +452,44 @@
 							                    	<br><br><br><br><br>
 							                      </c:forEach> 
 							                </div>
-
-
                                             </div>
                                         </div>
-                                    </div>
-                                                 
-                                
+                                    </div>                                                                               
                             </section>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
+        <!-- The Modal -->
+		<div class="modal" id="myModal">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		
+		      <!-- Modal Header -->
+		      <div class="modal-header">
+		        <h4 class="modal-title"></h4>
+		        <input type="hidden" id="boardWriter">
+		        <input type="hidden" id="boardNo">
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      </div>
+		
+		      <!-- Modal body -->
+		      <div class="modal-body">
+		        <input type="text" name="content" id="content" placeholder="신고사유">
+		      </div>
+		
+		      <!-- Modal footer -->
+		      <div class="modal-footer">
+		      	<button type="button" class="btn btn-info" onclick="return goReport()">등록</button>
+		        <button type="button" class="btn btn-danger" data-dismiss="modal">취소</button>
+		      </div>
+		
+		    </div>
+		  </div>
+		</div>
+        
         <c:choose>
         	<c:when test="${not empty city }">
         		<div id="pagingArea" align="center">
@@ -685,10 +713,8 @@ var loginUser =  "${loginUser}";
 	 var heartImage = $(this).closest(".ticket-item").find("#heart");	 
 	  var boardNo = $(this).closest(".ticket-item").find("#up").find(".boardNo").val(); 
 	  /* console.log(boardNo);  */
-	 var writer =  "${loginUser.nickname}";
-		 
-	      if (writer !== ""){ 
-		 
+	 var writer =  "${loginUser.nickname}";		 
+	      if (writer !== ""){ 		 
 	 	$.ajax({
 	 		url: "heart.bo",
 	 		type: "POST",
@@ -1157,7 +1183,49 @@ var loginUser =  "${loginUser}";
 			 $mass.slideUp(0);
 		 }
 	 });
+	 
+	 //게시글 신고 모달1
+	 function report(boardNo,boardWriter){
+		 var loginUser = "${loginUser.nickname}";
+		 
+		 if(loginUser !== ""){
+			 $(".modal-title").text("정말 " + boardWriter + " 님을 신고하시겠습니까?");
+		        $("#boardWriter").val(boardWriter);
+		        $("#boardNo").val(boardNo); 
+		        $("#myModal").modal('show');
+		 }else{
+			 alert("로그인 후 신고 가능합니다.");
+		 }
+	 }
 
+	 //게시글 신고 모달2
+	 function goReport(){
+		 var content = $("#content").val();
+		 console.log(content);
+		 if(content !==""){
+			 $.ajax({
+				 url:"report",
+				 data:{
+					 boardNo: $("#boardNo").val(),
+					 nickname: $("#boardWriter").val(),
+					 reportReason: content,
+					 writer:"${loginUser.nickname}"
+				 },
+				 success : function(result){
+					 if(result == "success"){
+						 alert("신고되었습니다.");
+						 $("#myModal").modal('hide');
+					 }
+				 },
+				 error : function(){
+					 console.log("error");
+				 }
+			 });
+		 }else{
+			 alert("신고내용을 입력해 주세요");
+		 }
+		 
+	 }
  </script>
 
 </html>

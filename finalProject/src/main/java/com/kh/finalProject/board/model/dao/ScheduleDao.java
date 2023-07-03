@@ -7,6 +7,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Path;
+import com.kh.finalProject.board.model.vo.Plan;
 import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Repository
@@ -28,5 +30,29 @@ public class ScheduleDao {
 
 		return (ArrayList)sqlSession.selectList("scheduleMapper.selectBoardList", sort, rowBounds);
 	}
+
+	// board + plan 등록
+	public int insertSchedule(SqlSession sqlSession, Plan plan) {
+		return sqlSession.insert("scheduleMapper.insertSchedule", plan);
+	}
+
+	// path 등록
+	public int insertPath(SqlSession sqlSession, Path path) {
+		return sqlSession.insert("scheduleMapper.insertPath", path);
+	}
+
+	// path에 해당하는 infoNo 조회
+	public int searchInfoNo(SqlSession sqlSession, Path path) {
+		System.out.println("dao    "+path);
+		return sqlSession.selectOne("scheduleMapper.searchInfoNo", path);
+	}
+	
+	// plan에 infoNo 추가해주기
+	public int updatePlanInfoNo(SqlSession sqlSession, Path path) {
+		return sqlSession.update("scheduleMapper.updatePlanInfoNo", path);
+	}
+
+
+	
 
 }

@@ -61,7 +61,7 @@
 	margin-right: 5%;
 }
 
-.attracDetail .board-area .ico img, #myModal .ico img {
+.attracDetail .board-area .ico img, #myModal .ico img, .attracDetail .board-area .icon img {
 	width: 30px;
 	margin-left: 13px;
 }

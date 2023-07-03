@@ -1,20 +1,18 @@
 package com.kh.finalProject.board.model.vo;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
+
+import com.kh.finalProject.board.controller.AttractionController;
+import com.kh.finalProject.board.model.service.AttractionService;
+
 
 
 public class Selenium {
@@ -22,12 +20,6 @@ public class Selenium {
 	private WebDriver wd;
 	private static String WEB_DRIVER_ID = "webdriver.chrome.driver"; // Properties 설정(정해져있는 키값)
 	private static String WEB_DRIVER_PATH = (Selenium.class.getResource("/").getPath()).replace("target/classes/", "src/main/webapp/WEB-INF/lib/chromedriver");
-	
-	
-	// 기본생성자
-	public Selenium() {
-		chrome(); // 현재 class내에 있는 method연결해서 객체생성될 때 실행되도록 설정 
-	}
 	
 	// chrome driver연결
 	private void chrome() {
@@ -45,94 +37,18 @@ public class Selenium {
 		
 		//wd = new ChromeDriver(options); // 설정한 option으로  webDriver생성
 		wd = new ChromeDriver();
-		wd.manage().timeouts().implicitlyWait(Duration.ofMillis(500));//페이지로드가 완료 될 때까지 기다리는 시간 설정
+		wd.manage().timeouts().implicitlyWait(Duration.ofMillis(5000));//페이지로드가 완료 될 때까지 기다리는 시간 설정
 	}
 	
-	// info data 등록
-	public void infoDataGet(String[] pathArr) {
-		// 매개변수로 전달받은 배열에서 사용할 값 추출
-		String infoName = pathArr[0];
-		String infoAddress = pathArr[3];
-		// webDriver와 검색할 url 연결
-		wd.get("https://conlab.visitkorea.or.kr/conlab/search-result?mainKeyword=&mainSearchType=All");
-		
-		// 요소 추출
-		WebElement input = wd.findElement(By.xpath("//*[@id=\\\"mui-10523\\\"]")); // search input tag 들어있는 클래스명 추출
-		WebElement button = wd.findElement(By.className(".MuiButtonBase-root MuiButton-root MuiButton-text btn-init fill icon search")); // 검색어 입력 후 전송할 버튼
-		
-		// 검색어 입력 후 상세페이지로 이동
-		input.sendKeys(infoName); // 매개변수로 전달받은 검색어 input창에 입력
-		StringSelection data = new StringSelection("검색할값넣기");
-		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		clipboard.setContents(data, data);
-		Actions act = new Actions(wd);
-		Action paste = act.keyDown(input, Keys.COMMAND).sendKeys(input, "v").keyUp(input, Keys.COMMAND).build();
-		paste.perform();
-		button.click(); 
-		WebElement searchResult = wd.findElement(By.className("card-style-wrap")); // 검색결과창에서 첫번째 나오는 게시물 선택
-		searchResult.click();
-		// 새창전환
-	//	ArrayList<String> tabs = new ArrayList<String>(wd.getWindowHandles());
-	//	wd.switchTo().window(tabs.get(1));
-		// 게시물내의 info data key, value형태로 저장시키기
-		List<WebElement> infoDiv = wd.findElements(By.className("label-has-wrap")); // info div요소 배열로 선택
-		Info info = null; // 배열에서 꺼내온 값 담을 객체 
-		for(int i=0; i<infoDiv.size(); i++) {
-			String culomn = (infoDiv.get(i).findElement(By.className("label"))).getText(); // info table에 저장할 컬럼명
-			String value = (infoDiv.get(i).findElement(By.className("cont-text"))).getText(); // 컬럼명에 일치하는 value값
-			switch(culomn) { // culomn에 맞는 value값으로 set
-				case "주소" : 
-//					if(value==infoAddress) {
-						info.setInfoAddress(value); break;
-//					} else {
-						
-//					}
-				case "이용시간" : info.setInfoTime(value); break;
-				case "휴무일" : info.setDayOff(value); break;
-				case "홈페이지" : info.setInfoHomepage(value); break;
-				case "전화번호" : info.setInfoCall(value); break;
-				case "주차장" : info.setParking(value); break;
-			}
-		}
-		System.out.println(info);
-		
-		quitDriver();
-//		// 이미지 가져오기 
-//		WebElement imgEl = wd.findElement(By.xpath("//*[@id='full-width-tabpanel-Formal']/div/div/div/div[2]/div/div[2]/div[1]/div[1]//img[1]")); // 사진 전체 영역에서 첫번째 이미지요소 선택(xpath//img[1])
-//		String imgPath = imgEl.getAttribute("src"); // 이미지 경로 변수에 담음
-//		String[] strArr = imgPath.split("/"); // 경로 '/' 구분자로 배열에 넣음
-//		String originName = strArr[strArr.length]; // 파일이름 추출
-//		// 파일명 랜덤으로 바꿔주기위한 작업
-//		String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()); 
-//		int ranNum = (int)(Math.random()*90000+10000); // 5자리 랜덤값
-//		String ext = originName.substring(originName.lastIndexOf(".")); // 확장자명 추출
-//		String changeName = currentTime+ranNum+ext; 
-//		String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");
-		
-		
-	}
-	
-	// 종료
-	public void quitDriver() {
-		if(wd != null) {
-			wd.close();
-			wd.quit(); //close 하면 webDriver만 종료, quit으로 browser까지 종료
-		}
-	}
-
-	// attraction insert시 사용할 메소드
-	public Info infoDataGet(Info in) {
-		
-		// 매개변수로 전달받은 장소 이름, 주소, 지역명
-		String infoName = in.getInfoName();
-		String infoAddress = in.getInfoAddress();
-		String zone = infoAddress.split(" ")[0]; // 주소에서 지역명 추출
-		
+	// 정보 검색해오는 메소드
+	public Info searchData(String infoName, String zone) {
+		chrome(); // 실행
+		Info in = new Info(); // 조회한 정보 담을 객체
 		try {
 			// webDriver와 검색할 url 연결(검색어 입력)
 			wd.get("https://conlab.visitkorea.or.kr/conlab/search-result?mainKeyword="+zone+ " " +infoName +"&mainSearchType=Formal&searchPage=1&searchLang=%ED%95%9C%EA%B5%AD%EC%96%B4");
 			// 검색결과창에서 첫번째 나오는 게시물 선택
-			WebElement searchResult = wd.findElement(By.className("card-style-wrap")); 
+			WebElement searchResult = wd.findElement(By.xpath("//*[@id=\"full-width-tabpanel-Formal\"]/div/div/div/div[2]/div/div[2]/div[1]")); 
 			searchResult.click();
 			// 게시물내의 info data key, value형태로 저장시키기
 			List<WebElement> culomnList = (wd.findElements(By.className("label"))); // info table에 저장할 컬럼명
@@ -150,24 +66,55 @@ public class Selenium {
 				String culomn = culomnList.get(i).getText();
 				String value = valueList.get(i).getText();
 				switch (culomn) { // culomn에 맞는 value값으로 set
-					case "주소": in.setInfoAddress(value); break;
-					case "이용시간": in.setInfoTime(value); break;
-					case "휴무일": in.setDayOff(value); break;
-					case "홈페이지": in.setInfoHomepage(value); break;
-					case "전화번호": in.setInfoCall(value); break;
-					case "주차장": 
-						if(value.contains("가능")) {
-							in.setParking("Y"); break;
-						} else {
-							in.setParking("N"); break;
+				case "주소": in.setInfoAddress(value); break;
+				case "이용시간": 
+					if(value.contains(":")) {	
+						String str[] = value.split(":");
+						if(str[2].contains(" ,/")){
+							str[2]= str[2].split(" /,")[0];
+							in.setInfoTime(str[0]+":"+str[1]+":"+str[2]); break;
 						}
-					case "개요": in.setBoardContent(imgPath+"||"+value); break;
+					}else if(value.contains("/,")) { // 데이터 크기에 맞춰서 조정
+						in.setInfoTime(value.split("/,")[0]); break;
+					} else {
+						in.setInfoTime(value);break;
+					}
+				case "휴무일": in.setDayOff(value); break;
+				case "홈페이지": in.setInfoHomepage(value); break;
+				case "전화번호": 
+					if(value.contains("-")) {
+						String str[] = value.split("-");
+						in.setInfoCall(str[0]+str[1]+str[2]); break;
+					} else {
+						in.setInfoCall(value); break;
+					}
+				case "주차장": 
+					if(value.contains("가능")) {
+						in.setParking("Y"); break;
+					} else {
+						in.setParking("N"); break;
+					}
+				case "개요": 
+					if(imgPath!="") {
+						in.setBoardContent(imgPath+"||"+value); break;
+					} else {
+						in.setBoardContent(value); break;
+					}
+				case "카테고리" : 
+					if(value.contains("음식")) {
+						in.setInfoType(2);
+					} else if(value.contains("관광")||value.contains("숙박")) {
+						in.setInfoType(1);
+					} else {
+						in.setInfoType(3);
+					}
 				}
 			}
+			in.setInfoName(infoName);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("오류로 인해 크롤링실패");
-			
+			in.setBoardContent("오류"); // 오류 확인하기 위해 임의로 값 넣음
+			return in;
 		} finally {
 			quitDriver();
 		}
@@ -184,5 +131,13 @@ public class Selenium {
                 return;
             }
         }
-}
+	}
+	
+	// 종료
+	public void quitDriver() {
+		if(wd != null) {
+			wd.close();
+			wd.quit(); //close 하면 webDriver만 종료, quit으로 browser까지 종료
+		}
+	}
 }
