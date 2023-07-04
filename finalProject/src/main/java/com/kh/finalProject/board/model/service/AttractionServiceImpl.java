@@ -59,7 +59,7 @@ public class AttractionServiceImpl implements AttractionService {
 		return atDao.increaseCount(sqlSession, boardNo);
 	}
 
-	// 디테일뷰 페이지
+	//디테일뷰 페이지
 	@Override
 	public HashMap<String, Object> attrDetail(int boardNo) {
 		HashMap<String, Object> dataMap = new HashMap<>(); // 조회해온 값 담을 map
@@ -135,9 +135,32 @@ public class AttractionServiceImpl implements AttractionService {
 		return result;
 	}
 
+	// 기존 정보 있는지 체크
 	@Override
 	public int checkInfo(String address) {
 		return AttractionDao.checkInfo(sqlSession, address);
+	}
+
+	// 내용 수정 요청 페이지 이동 전 조회
+	@Override
+	public Info modifyRequestAttr(int boardNo) {
+		return atDao.modifyRequestAttr(sqlSession, boardNo);
+	}
+
+	// 관리자에게 게시물 수정 요청
+	@Override
+	public int modifyinfo(Board b) {
+		return atDao.modifyinfo(sqlSession, b);
+	}
+
+	// 게시물 삭제 및 첨부파일 삭제
+	@Override
+	@Transactional
+	public int deleteAttr(int boardNo) {
+		int result = atDao.deleteBoard(sqlSession, boardNo);
+		result *= atDao.deleteInfo(sqlSession, boardNo);
+		result *= atDao.deleteAttachment(sqlSession, boardNo);
+		return result;
 	}
 
 }

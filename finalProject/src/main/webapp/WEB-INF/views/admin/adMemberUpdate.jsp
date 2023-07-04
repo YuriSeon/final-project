@@ -80,7 +80,7 @@
 	                    </div>
 	                    <div class="info-input">
 	                        <label for="pwd">비밀번호</label>
-	                        <input type="button" class="btn btn-primary" id="pwd" value="비밀번호 초기화">
+	                        <input type="button" class="btn btn-primary" id="pwd" onclick="findPwd();" value="비밀번호 초기화">
 	                    </div>
 	                </div>
                 </form>
@@ -97,11 +97,17 @@
                     </div>
                     <div class="info-place">
                         <div class="info-title">로그인</div>
-                        <div>2023.06.03 (3회)</div>
+                        <c:choose>
+                        		<c:when test="${empty v}"><div>미접속</div></c:when>
+                        		<c:otherwise><div>${v.get(v.size()-1).visitTime} (${v.size()}회)</div></c:otherwise>
+                       	</c:choose>
                     </div>
                     <div class="info-place">
                         <div class="info-title">최종 로그인 IP</div>
-                        <div>192.169.11.11</div>
+                        <c:choose>
+                        		<c:when test="${empty v}"><div>미접속</div></c:when>
+                        		<c:otherwise><div>${v.get(v.size()-1).visitIp}</div></c:otherwise>
+                       	</c:choose>
                         <br>
                         <div class="info-title">성별</div>
                         <div>
@@ -248,6 +254,22 @@
 			}
 		});
 	});
+	
+	//비밀번호 초기화
+	function findPwd(){
+		$.ajax({
+			url : "findPwd.ad",
+			data : {
+				nickname : $("#nick").val(),
+				email : $("#email").val()
+			},
+			success : function(result){
+				alert("임시 비밀번호가 전송되었습니다.")
+			},error : function(){
+				console.log("통신오류");
+			}
+		});
+	}
 
 	//폼 서브밋
 	function enrollSubmit() {

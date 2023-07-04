@@ -7,7 +7,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
+import java.util.Random;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -19,6 +28,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,11 +43,13 @@ import com.kh.finalProject.admin.model.service.AdminService;
 import com.kh.finalProject.admin.model.vo.Criteria;
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.admin.model.vo.Report;
+import com.kh.finalProject.admin.model.vo.Visit;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Festival;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.board.model.vo.Theme;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
@@ -54,6 +66,9 @@ public class AdminController {
 	@Autowired
 	public AdminService adminService;
 	
+	//비밀번호 암호화
+	@Autowired
+	private BCryptPasswordEncoder bcryptPasswordEncoder;
 	
 	//파일 업로드 처리 메소드 (모듈)
 	public String saveFile(MultipartFile upfile,HttpSession session) {
@@ -80,8 +95,17 @@ public class AdminController {
 	
 	//관리자 페이지로 이동
 	@RequestMapping("admin.ad")
-	public String goAdmin() {
-		return "admin/dashboard";
+	public ModelAndView goAdmin(ModelAndView mv) {
+		
+		ArrayList<Board> list = adminService.countList();
+		HashMap<String, Integer> count = adminService.countVisit(); 
+		HashMap<String, Integer> map = adminService.countMap();
+		
+		
+		mv.addObject("vcList", count);
+		mv.addObject("bcList", list).setViewName("admin/dashboard");
+//		System.out.println(list);
+		return mv;
 	}
 	
 	//사용자 페이지로 이동
@@ -98,6 +122,24 @@ public class AdminController {
 	public String selectList() {
 		
 		ArrayList<Report> list = adminService.currentReportList();
+		return new Gson().toJson(list);
+	}
+	
+	//대시보드 최근 작성 5개
+	@ResponseBody
+	@RequestMapping(value = "currentBoardList.ad",produces = "application/json; charset=UTF-8")
+	public String selectBoardList() {
+		
+		ArrayList<Board> list = adminService.currentBoardList();
+		return new Gson().toJson(list);
+	}
+	
+	//대시보드 최근 문의 5개
+	@ResponseBody
+	@RequestMapping(value = "currentQnaList.ad",produces = "application/json; charset=UTF-8")
+	public String selectQnaList() {
+		
+		ArrayList<Notice> list = adminService.currentQnatList();
 		return new Gson().toJson(list);
 	}
 	
@@ -677,6 +719,7 @@ public class AdminController {
 		
 		Member m = adminService.memberSelect(userNo);
 		List<Integer> bcount = adminService.boardCount(m.getNickname());
+		ArrayList<Visit> v = adminService.visitSelect(m.getNickname());
 
 		if (bcount.size() < 3) {
 		    int remaining = 3 - bcount.size(); // 남은 개수 계산
@@ -686,6 +729,7 @@ public class AdminController {
 		    }
 		}
 
+		mv.addObject("v", v);
 		mv.addObject("bcount", bcount);
 		mv.addObject("m", m).setViewName("admin/adMemberUpdate");
 		return mv;
@@ -700,12 +744,46 @@ public class AdminController {
 		int result = adminService.memberUpdate(m);
 		
 		if(result>0) {
-			session.setAttribute("alertMsg","회원정보 수정 완료");
+			session.setAttribute("alertMsg","회원 복구 완료");
 			mv.setViewName("redirect:member.ad");
 		}else {
 			mv.addObject("errorMsg","회원정보 수정 실패").setViewName("common/errorPage");
 		}
 		return mv;
+	}
+	
+	//회원 계정 복구
+	@ResponseBody
+	@PostMapping("memberRestore.ad")
+	public String memberRestore(@RequestParam(value="userNo") int userNo
+							    ,ModelAndView mv
+				  		        ,HttpSession session) {
+
+		int result = adminService.memberRestore(userNo);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","회원 복구 완료");
+			return "success";
+		}else {
+			return "fail";
+		}
+	}
+	
+	//회원 관리자 전환
+	@ResponseBody
+	@PostMapping("changeAdmin.ad")
+	public String changeAdmin(@RequestParam(value="userNo") int userNo
+							    ,ModelAndView mv
+				  		        ,HttpSession session) {
+
+		int result = adminService.changeAdmin(userNo);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","관리자 전환 완료");
+			return "success";
+		}else {
+			return "fail";
+		}
 	}
 	
 	//프로필 사진 업데이트
@@ -771,7 +849,6 @@ public class AdminController {
 		
 		return "";
 	}
-	
 	
 	//회원 정보 엑셀로 받기
 	@GetMapping("memberExcel.ad")
@@ -884,6 +961,73 @@ public class AdminController {
         wb.write(response.getOutputStream());
         wb.close();
     }
+	
+	//이메일 임시 비밀번호 보내는 메소드
+	public String emailSend(String userMail) {
+		
+		String host = "smtp.naver.com";
+		String user = "cjj3845@naver.com";
+		String password = "1s2s3s4s";
+		
+		//임시 비밀번호 8자리 영어+숫자
+		String CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	    int LENGTH = 8;
+
+	    StringBuilder sb = new StringBuilder(LENGTH);
+	    Random random = new Random();
+
+	    for (int i = 0; i < LENGTH; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            char randomChar = CHARACTERS.charAt(index);
+            sb.append(randomChar);
+        }
+		
+	    String pwd = sb.toString();
+	    
+		Properties props = new Properties();
+			props.put("mail.smtp.host", host);
+			props.put("mail.smtp.port", 587);
+			props.put("mail.smtp.auth", "true");
+		
+		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(user, password);
+			}
+		});
+		
+		try {
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(user));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(userMail));
+			
+			message.setSubject("여행가보자고의 임시 비밀번호 메일이 도착하였습니다.");
+			message.setText("인증번호 : "+pwd+"\n로그인 후 비밀번호를 변경해주세요.");
+			
+			Transport.send(message);
+//			System.out.println(userMail+"로 인증메일 발송 완료, 인증번호 : "+pwd);
+			
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		return pwd;
+	}
+	
+	//이메일 임시 비밀번호 보내기
+	@ResponseBody
+	@RequestMapping("findPwd.ad")
+	public String findPwd(@RequestParam("email")String userMail
+						 ,@RequestParam("nickname")String nickname) {
+		
+		String pwd = emailSend(userMail);
+		
+		//비밀번호 암호화
+		String encPwd = bcryptPasswordEncoder.encode(pwd);
+		
+		Member m = Member.builder().nickname(nickname).userPwd(encPwd).build();
+		adminService.pwdUpdate(m);
+		
+		return pwd;
+	}
 	
 //==================================================공지사항===========================================================
 	
@@ -1431,5 +1575,39 @@ public class AdminController {
 		return (result>0)?new Gson().toJson("success"):new Gson().toJson("fail");
 	}
 	
+	//신고 게시물 이동
+	@ResponseBody
+	@RequestMapping(value = "boardChk.ad")
+	public String boardChk(@RequestParam("boardNo") int boardNo
+					   	   ,HttpSession session) {
+		
+		int result = adminService.boardChk(boardNo);
+		String cate= Integer.toString(result);
+		
+		System.out.println(cate);
+		return cate;
+	}
+
+	//신고 댓글 조회
+	@ResponseBody
+	@RequestMapping(value = "replyChk.ad", produces = "application/json; charset=UTF-8")
+	public String replyChk(@RequestParam("replyNo") int replyNo
+					   	   ,HttpSession session) {
+		
+		Reply r = adminService.replyChk(replyNo);
+		
+		return new Gson().toJson(r);
+	}
+	
+	//신고 대댓글 조회
+	@ResponseBody
+	@RequestMapping(value = "rereplyChk.ad", produces = "application/json; charset=UTF-8")
+	public String rereplyChk(@RequestParam("replyNo") int replyNo
+					   	   ,HttpSession session) {
+		
+		Rereply r = adminService.rereplyChk(replyNo);
+		
+		return new Gson().toJson(r);
+	}
 	
 }

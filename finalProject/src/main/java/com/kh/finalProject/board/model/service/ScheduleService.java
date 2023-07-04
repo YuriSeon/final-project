@@ -19,7 +19,7 @@ public interface ScheduleService {
 
 	int insertInfoAttach(Info info, ArrayList<Attachment> atList);
 
-	int insertPath(String[][] pathArr, String boardTitle);
+	int insertPath(String[][] pathArr, int num);
 
 	int checkInfo(String address);
 

@@ -19,7 +19,7 @@ public class Selenium {
 	
 	private WebDriver wd;
 	private static String WEB_DRIVER_ID = "webdriver.chrome.driver"; // Properties 설정(정해져있는 키값)
-	private static String WEB_DRIVER_PATH = (Selenium.class.getResource("/").getPath()).replace("target/classes/", "src/main/webapp/WEB-INF/lib/chromedriver");
+	private static String WEB_DRIVER_PATH = (Selenium.class.getResource("/").getPath()).replace("target/classes/", "src/main/webapp/WEB-INF/lib/chromedriver.exe");
 	
 	// chrome driver연결
 	private void chrome() {
@@ -45,7 +45,6 @@ public class Selenium {
 		chrome(); // 실행
 		Info in = new Info(); // 조회한 정보 담을 객체
 		try {
-			
 			// webDriver와 검색할 url 연결(검색어 입력)
 			wd.get("https://conlab.visitkorea.or.kr/conlab/search-result?mainKeyword="+zone+ " " +infoName +"&mainSearchType=Formal&searchPage=1&searchLang=%ED%95%9C%EA%B5%AD%EC%96%B4");
 			// 검색결과창에서 첫번째 나오는 게시물 선택
@@ -68,30 +67,57 @@ public class Selenium {
 				String value = valueList.get(i).getText();
 				switch (culomn) { // culomn에 맞는 value값으로 set
 				case "주소": in.setInfoAddress(value); break;
-				case "이용시간": in.setInfoTime(value); break;
+				case "이용시간": 
+					if(value.contains(":")) {	
+						String str[] = value.split(":");
+						if(str[2].contains(" ,/")){
+							str[2]= str[2].split(" /,")[0];
+							in.setInfoTime(str[0]+":"+str[1]+":"+str[2]); break;
+						}
+					}else if(value.contains("/,")) { // 데이터 크기에 맞춰서 조정
+						in.setInfoTime(value.split("/,")[0]); break;
+					} else {
+						in.setInfoTime(value);break;
+					}
 				case "휴무일": in.setDayOff(value); break;
 				case "홈페이지": in.setInfoHomepage(value); break;
-				case "전화번호": in.setInfoCall(value); break;
+				case "전화번호": 
+					if(value.contains("-")) {
+						String str[] = value.split("-");
+						in.setInfoCall(str[0]+str[1]+str[2]); break;
+					} else {
+						in.setInfoCall(value); break;
+					}
 				case "주차장": 
 					if(value.contains("가능")) {
 						in.setParking("Y"); break;
 					} else {
 						in.setParking("N"); break;
 					}
-				case "개요": in.setBoardContent(imgPath+"||"+value); break;
+				case "개요": 
+					if(imgPath!="") {
+						in.setBoardContent(imgPath+"||"+value); break;
+					} else {
+						in.setBoardContent(value); break;
+					}
+				case "카테고리" : 
+					if(value.contains("음식")) {
+						in.setInfoType(2);
+					} else if(value.contains("관광")||value.contains("숙박")) {
+						in.setInfoType(1);
+					} else {
+						in.setInfoType(3);
+					}
 				}
 			}
 			in.setInfoName(infoName);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("오류로 인해 크롤링실패");
-			in.setBoardContent("오류");
+			in.setBoardContent("오류"); // 오류 확인하기 위해 임의로 값 넣음
 			return in;
-			
 		} finally {
 			quitDriver();
 		}
-		
 		return in;
 	}
 	

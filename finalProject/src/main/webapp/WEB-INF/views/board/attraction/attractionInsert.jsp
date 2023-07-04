@@ -154,7 +154,6 @@
                 var infoName = infoFind(this, "div", 0); 
                 var infoAddress = infoFind(this, "div", 1);
                 $(".close").click();
-				alert("fdsafd");
                 // 가져온 값으로 셀레니움으로 조회 후 값 넣어주기 
                 $.ajax({
                     url : "searchInfo.attr",
