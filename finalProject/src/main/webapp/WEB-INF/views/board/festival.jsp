@@ -29,9 +29,9 @@
  	    font-size: 16px;
 	}
 	.special_box .list {
-	    background: #f6fff8;	/* 달력배경색깔 */
+	    background: #f6fff8;
 	    border-radius: 10px;
-	    margin: 40px 0 0;			/* 달력 위 여분 */
+	    margin: 40px 0 0;
 	}
 	.special_box {
 	    position: relative;
@@ -44,16 +44,16 @@
 
 	/* -----달력----- */
 	.list {
-		background: #f9fffa;								/* 달력 배경 색 */
-	  	height: 780px;											/* 달력 배경 색 높이 */		
+		background: #f9fffa;
+	  	height: 780px;
 	}	
 	#fes_con{
 	    margin: auto;
-	    margin-top: 1%												/* 달력 위 아래 위치 */   
+	    margin-top: 1%
 	}
 	#fes_con table {
 	    position: relative;
-	    left: -195px;										/* 달력 가운데로 */
+	    left: -195px;
 	    width: 800px;
 	}
 	.fes_container {
@@ -62,17 +62,17 @@
 	/* ---------- CALENDAR ---------- */
 	
 	.calendar {
-		text-align: center;									/* 6월 가운데로 */
+		text-align: center;
 	}
 	.calendar header {
-		position: relative;									/* 옆으로 누르는 버튼 */
+		position: relative;
 	}
 	.calendar thead {
 		font-weight: 600;
 	}
 	.calendar td {
 		border-radius: 50%;
-		height: 6em;								/* 일 수 높이 */
+		height: 6em;
 	}
 	.btn-prev,
 	.btn-next {
@@ -90,7 +90,7 @@
 	.btn-next:hover {
 		background: #cbd1d2;
 	}
-	.btn-prev {												/* 버튼 위지 */
+	.btn-prev {
 		left: 6em;
 	}
 	.btn-next {
@@ -111,26 +111,26 @@
 	}
 	
 	/* 카테고리 */
-	.cate_main .inner {									/* 옆으로 크키 */
+	.cate_main .inner {
 	    position: relative;
 	    max-width: 928px;
 	    margin: 0 auto;
 	}
-	.search_slide_wrap .search_box_wrap {				/* 옆 정렬 */
+	.search_slide_wrap .search_box_wrap {
 	    display: flex;
-	    margin-bottom: 50px;							/* 목록 간격 */
+	    margin-bottom: 50px;
 	}
-	.search_slide_wrap .search_box_wrap .select_box {				/* 전체 메뉴 */
+	.search_slide_wrap .search_box_wrap .select_box {
 	    flex: 1;
 	    margin-right: 12px;
 	}
 	.search_slide_wrap .search_box_wrap .select_box select {
 	    width: 100%;
 	    height: 48px;
-	    padding: 0 0 0 52px;										/* 메뉴바 왼쪽 이미지 공간 */
+	    padding: 0 0 0 52px;
 	    border-radius: 8px;
 	}
-	.search_slide_wrap .btn_search {					/* 검색 버튼 */
+	.search_slide_wrap .btn_search {
 	    padding: 9px 40px 9px 11px;
 	    border: 0;
 	    border-radius: 8px;
@@ -139,7 +139,7 @@
 	    font-size: 20px;
 	    color: #616362;
 	}
-	.cate_main fieldset {								/* 메뉴 크기들의 전체 영향?? */
+	.cate_main fieldset {
 	    display: block;
 	    margin-inline-start: 2px;
 	    margin-inline-end: 2px;
@@ -161,7 +161,7 @@
 	.cate_main button, .cate_main input[type=submit] {
 	    cursor: pointer;
 	}
-	.search_slide_wrap {									/* 검색 전체 위아래 조절? */
+	.search_slide_wrap {
 	    margin-top: -40px;
 	}
 	
@@ -172,7 +172,7 @@
 		height: 10px;
 		border-radius: 8px;
 		display: flex;
-  		align-items: center; 							/* 수직 가운데 정렬 */
+  		align-items: center;
   		top:10px;
   		left: 10px;
 	}
@@ -365,9 +365,6 @@
 		                    <div class="thumb">
 		                    	<input type="hidden" class="boardNo" name="boardNo" value="${b.boardNo }">
 		                        <img src="${b.attachment.filePath }" alt="" style="height: 300px;">
-		                        <!-- <div class="price" id="fes_go">
-		                            <span>개최중</span>
-		                        </div> -->
 		                    </div>
 		                    <div id="good_div"><img src="/finalProject/resources/images/Like-before.png" id="good_img" onclick="goodCk(event, '${b.boardNo}', this)"></div>
 		                    <div class="down-content">
@@ -429,7 +426,6 @@
 	        </div>
 	    </div>
 	</div>
-	<button type="button" onclick="location.href='fesEnrollForm.fe'">축제 등록</button>
 	
 	<!-- 로그인 정보 있을시 축제 찜 이미지 있으면 띄워주기 -->
 	<c:choose>
