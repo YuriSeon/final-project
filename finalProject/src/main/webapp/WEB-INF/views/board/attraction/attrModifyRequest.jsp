@@ -71,7 +71,7 @@
             </div>
             <div class="btn-area">
                 <button type="button" onclick="history.back();">뒤로가기</button>
-                <button type="button"onclick="submitBefore();">전송하기</button>
+                <button type="button" id="submit" onclick="submitBefore();">전송하기</button>
             </div>
         </form>
     </div>
@@ -140,10 +140,9 @@
                 }
             });
 
-            /* 제출버튼 인풋창 모두 작성됐을때만 나오도록 설정 마저하기 */
+            /* 제출버튼 인풋창 모두 작성됐을때만 나오도록 설정 */
             $(document).on("input", input, function(){
             	var allInputsFilled = true; // 모든 인풋창
-
                 // 비어있는지 확인
                 $(".modifyRequest input.after").each(function() {
                   if ($(this).val() === "") {
@@ -153,9 +152,9 @@
                 });
              	// 인풋창 비었는지 확인 후 제출버튼 숨김 or 보이기
                 if (allInputsFilled) {
-                  $("#submit").show();
+                    btn.show();
                 } else {
-                  $("#submit").hide();
+                    btn.hide();
                 }
             });
         });
@@ -174,12 +173,11 @@
                 parking : "${info.parking}",
                 infoType : "${info.infoType}"
             }
-            console.log(sort[id])
             var modifyArea = makeTag("div",{"class":"modify"})
                                     .append(makeTag("div",{"class":"name"}).text("기존정보")
                                             , makeTag("div",{"class":"input-area"}).append(makeTag("input",{"type":"text","class":"before","readonly":"true","value":sort[id]}))
                                             , makeTag("div",{"class":"name"}).text("수정사항")
-                                            , makeTag("div",{"class":"input-area"}).append(makeTag("input",{"type":"text","class":id+"after","name":"answer"})));
+                                            , makeTag("div",{"class":"input-area"}).append(makeTag("input",{"type":"text","class":"after","name":"answer"})));
             var column = makeTag("div",{"class":"column"}).text($("#"+id).siblings().text()); // checked label
             var conArea = makeTag("div",{"class":"con"}).append(column,modifyArea);
             var checkImgArea = makeTag("div", {"class":"checkImg"}).append(makeTag("img",{"src":"resources/images/check-red.png"}));
@@ -212,7 +210,7 @@
         function submitBefore(){
             $("input[name=answer]").each(function(){
                 $(this).val = $(this).attr("class")+$(this).val();
-                $("#form").submit();
+                form.submit();
             })
         }
     </script>
