@@ -407,12 +407,12 @@
 			                        <li><a href="#" style="background-color: white;" disabled><img src="/finalProject/resources/images/fes_left.png" style="width: 30px; height: 40px;"></a></li>	                    		
 	                    		</c:when>
 	                    		<c:otherwise>
-	                   				<li><a href="festival.fe?currentPage=${pi.currentPage-1 }" style="background-color: white;"><img src="/finalProject/resources/images/fes_left.png" style="width: 30px; height: 40px;"></a></li>
+	                   				<li><a href="festival.fe?currentPage=${pi.currentPage-1 }&searchDate=${date}&searchArea=${area}&searchCate=${cate}" style="background-color: white;"><img src="/finalProject/resources/images/fes_left.png" style="width: 30px; height: 40px;"></a></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
 
 		                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage }">
-		                    	<li><a class="page_list" href="festival.fe?currentPage=${p }">${p }</a></li>
+		                    	<li><a class="page_list" href="festival.fe?currentPage=${p }&searchDate=${date}&searchArea=${area}&searchCate=${cate}">${p }</a></li>
 		                    </c:forEach>
 		                        
 		                   	<c:choose>
@@ -420,7 +420,7 @@
 			                        <li><a href="#" style="background-color: white;" disabled><img src="/finalProject/resources/images/right01.png" style="width: 30px; height: 40px;"></a></li>
 		                   		</c:when>
 		                   		<c:otherwise>
-									<li><a href="festival.fe?currentPage=${pi.currentPage+1 }" style="background-color: white;"><img src="/finalProject/resources/images/right01.png" style="width: 30px; height: 40px;"></a></li>		                   		
+									<li><a href="festival.fe?currentPage=${pi.currentPage+1 }&searchDate=${date}&searchArea=${area}&searchCate=${cate}" style="background-color: white;"><img src="/finalProject/resources/images/right01.png" style="width: 30px; height: 40px;"></a></li>		                   		
 		                   		</c:otherwise>
 		                   	</c:choose>
 	                    </ul>
