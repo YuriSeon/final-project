@@ -203,6 +203,8 @@
 		font-size: 28px;
 		padding: 0px 0px 0px 400px;
 		width:1000px;
+		position: relative;
+		left: -140px;
 	}
 	#title_menu>a{
 		font-size: 18px;
@@ -284,6 +286,14 @@
 		height: 400px;
 		margin: auto;
 	}
+	
+	#fesReBtn{
+		position: relative;
+		left: 420px;
+		background-color: #f8f8f8;
+		border: 1px solid rgb(202, 202, 202);
+		border-radius: 3px;
+	}
 	</style>
 
   <head>
@@ -332,9 +342,18 @@
 		        	</button>
 		        <span class="num_view"><img src="resources/images/eye.png" alt="" style="height: 24px; width: 24px;">&nbsp;${b.count }</span>
 		        <span class="rline">
-		            <button type="button" class="btn_sharing" onclick="openShare();">
-		                	수정요청
-		            </button>
+		        	<c:choose>
+		        		<c:when test="${not empty loginUser }">
+				            <button type="button" id="fesReBtn" onclick="location.href='myRequest.me'">
+				                	수정요청
+				            </button>		        		
+		        		</c:when>
+		        		<c:otherwise>
+		        			<button type="button" id="fesReBtn" onclick="alert('로그인 후 요청이 가능합니다.')">
+				                	수정요청
+				            </button>	
+		        		</c:otherwise>
+		        	</c:choose>
 		        </span>
 			</div>
         </div>
@@ -546,6 +565,7 @@ ${b.boardContent }
 				$('#loginModal').show();
 			}
 		}
+		
    </script>
 
     <!-- jQuery -->

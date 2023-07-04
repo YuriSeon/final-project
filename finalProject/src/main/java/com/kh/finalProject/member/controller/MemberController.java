@@ -1009,7 +1009,9 @@ public class MemberController {
 		
 	//회원가입 메소드
 	@RequestMapping("insert.me")
-	public ModelAndView insertMember(Member m,String birthDay, @RequestParam(value = "certification", defaultValue = "0")int certification, String kakaoId, String access_token, ModelAndView mv, HttpSession session) throws IOException, ParseException {
+	public ModelAndView insertMember(@RequestParam("userId2")String userId, Member m,String birthDay, @RequestParam(value = "certification", defaultValue = "0")int certification, String kakaoId, String access_token, ModelAndView mv, HttpSession session) throws IOException, ParseException {
+		m.setUserId(userId);
+		
 		//비밀번호 암호화
 		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
 		//System.out.println(encPwd);
