@@ -23,7 +23,7 @@
 </head>
 <body>
 <%@include file="adMenubar.jsp" %>
-<!-- Content - Start  -->
+<!-- Content - Startt  -->
 <div id="content-wrapper" style="height: auto; background-color: #EEEEEE;">
     <div class="container-fluid">
         <div class="dash-title">
