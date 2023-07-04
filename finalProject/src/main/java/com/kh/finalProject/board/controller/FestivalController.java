@@ -147,8 +147,6 @@ public class FestivalController {
 		System.out.println(count);
 		System.out.println(nowDay);
 		
-		
-		
 		return 1;
 	}
 	
@@ -168,7 +166,7 @@ public class FestivalController {
 			keyword.put("area", area);
 			keyword.put("cate", cate);
 			keyword.put("day", nowDay);
-		
+			
 		int searchCount = festivalService.selectSearchCount(keyword);
 		int pageLimit = 10;
 		int boardLimit = 6;

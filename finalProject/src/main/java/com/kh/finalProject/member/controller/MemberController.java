@@ -1009,7 +1009,9 @@ public class MemberController {
 		
 	//회원가입 메소드
 	@RequestMapping("insert.me")
-	public ModelAndView insertMember(Member m,String birthDay, @RequestParam(value = "certification", defaultValue = "0")int certification, String kakaoId, String access_token, ModelAndView mv, HttpSession session) throws IOException, ParseException {
+	public ModelAndView insertMember(@RequestParam("userId2")String userId, Member m,String birthDay, @RequestParam(value = "certification", defaultValue = "0")int certification, String kakaoId, String access_token, ModelAndView mv, HttpSession session) throws IOException, ParseException {
+		m.setUserId(userId);
+		
 		//비밀번호 암호화
 		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
 		//System.out.println(encPwd);
@@ -1059,32 +1061,32 @@ public class MemberController {
 			//카카오 인증 회원가입
 			if(m.getCertification()==1) {
 //				카카오 로그아웃 (카카오 관련 api만 로그아웃되므로 계정 로그아웃으로 진행)
-//				String url = "https://kapi.kakao.com/v1/user/logout";
+				String url = "https://kapi.kakao.com/v1/user/logout";
 				
-//				URL requestUrl = new URL(url);
-//				HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
-//				urlCon.setRequestMethod("POST");
-//				urlCon.setRequestProperty("Authorization", "Bearer "+access_token);
-//		
-//				BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
-//				
-//				String text = "";
-//				String line;
-//				
-//				while((line=br.readLine())!=null) {
-//					text += line;
-//				}
-//				
-//				//System.out.println(text);
-//				
-//				mv.setViewName("redirect:/");
+				URL requestUrl = new URL(url);
+				HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
+				urlCon.setRequestMethod("POST");
+				urlCon.setRequestProperty("Authorization", "Bearer "+access_token);
+		
+				BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+				
+				String text = "";
+				String line;
+				
+				while((line=br.readLine())!=null) {
+					text += line;
+				}
+				
+				//System.out.println(text);
+				
+				mv.setViewName("redirect:/");
 
 				//카카오 계정 로그아웃
-				String url = "https://kauth.kakao.com/oauth/logout";
-				url += "?client_id="+appKey;
-				url += "&logout_redirect_uri=http://localhost:8888/finalProject/";
-				
-				mv.setViewName("redirect:"+url);
+//				String url = "https://kauth.kakao.com/oauth/logout";
+//				url += "?client_id="+appKey;
+//				url += "&logout_redirect_uri=http://localhost:8888/finalProject/";
+//				
+//				mv.setViewName("redirect:"+url);
 			}
 			//네이버 인증 후 회원가입 시
 			if(m.getCertification()==2) {
