@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,15 +46,21 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+import com.kh.finalProject.admin.model.service.AdminService;
 import com.kh.finalProject.admin.model.vo.Notice;
+import com.kh.finalProject.admin.model.vo.Visit;
 import com.kh.finalProject.board.model.service.FeedService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
 import com.kh.finalProject.member.model.service.MemberService;
 import com.kh.finalProject.member.model.vo.Member;
+
+import lombok.Data;
+import oracle.net.aso.m;
 
 @Controller
 public class MemberController {
@@ -63,6 +70,9 @@ public class MemberController {
 	
 	@Autowired
 	public FeedService feedService;
+	
+	@Autowired
+	public AdminService adminService;
 	
 	@Autowired
 	private ServletContext ServletContext;
@@ -227,6 +237,31 @@ public class MemberController {
 		return mv;
 	}
 	
+	//마이페이지 게시글 피드 보기
+	@ResponseBody
+	@RequestMapping(value = "selectFeed.me",produces = "application/json; charset=UTF-8")
+	public feedResponse selectFeed(@RequestParam("boardNo") int boardNo
+					        	  ,HttpSession session) {
+		
+		Board feed = memberService.selectFeed(boardNo);
+		ArrayList<Attachment> a = memberService.fileSelect(boardNo);
+		
+		feedResponse response = new feedResponse(feed, a);
+		return response;
+	}
+	
+	//마이페이지 피드 보기 객체 2개 보낼때 사용
+	@Data
+	private static class feedResponse {
+	    private Board b;
+	    private ArrayList<Attachment> a;
+	    
+	    public feedResponse(Board b, ArrayList<Attachment> a) {
+	      this.b = b;
+	      this.a = a;
+	    }
+	}
+	
 	//마이페이지 게시글 피드 삭제
 	@ResponseBody
 	@RequestMapping(value = "deleteFeed.me", method = RequestMethod.POST)
@@ -250,7 +285,6 @@ public class MemberController {
         	resultString = "fail";
 		}
 		return resultString;
-    
 	}
 	
 	//마이페이지 댓글 보기 이동
@@ -350,6 +384,27 @@ public class MemberController {
 		return mv;
 	}
 	
+	//마이페이지 찜 목록 삭제
+	@ResponseBody
+	@RequestMapping(value = "choiceDelete.me", method = RequestMethod.POST)
+	public String choiceDelete(@RequestParam("boardNo") int boardNo
+												       ,HttpSession session) {
+
+		String writer = ((Member)session.getAttribute("loginUser")).getNickname();
+		choice c = choice.builder().boardNo(boardNo).writer(writer).build();
+		
+		int result = memberService.choiceDelete(c);
+		String resultString = "";
+		if (result>0) {
+			session.setAttribute("alertMsg", "찜 목록 삭제 성공");
+			resultString = "success";
+		}else {
+			resultString = "fail";
+		}
+
+		return resultString;
+	}
+	
 	//마이페이지 수정요청 이동
 	@RequestMapping("myRequest.me")
 	public ModelAndView goMyRequest(@RequestParam(value="currentPage", defaultValue="1") int currentPage
@@ -378,6 +433,78 @@ public class MemberController {
 		mv.addObject("q",qnaCount);
 		mv.setViewName("member/myPage/mypageRequest");
 		
+		return mv;
+	}
+	
+	//마이페이지 수정요청 등록 이동
+	@RequestMapping("myRequestEnroll.me")
+	public ModelAndView goMyRequestEnroll(ModelAndView mv
+	  								 	 ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageRequestEnroll");
+		return mv;
+	}
+	
+	//마이페이지 수정요청 상세 페이지 이동
+	@RequestMapping("goRequestDetail.me")
+	public ModelAndView goMyRequestDetail(int serviceNo
+										 ,ModelAndView mv
+										 ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Notice n = memberService.selectQna(serviceNo);
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.addObject("a",a);
+		mv.addObject("n",n).setViewName("member/myPage/mypageRequestDetail");
+		
+		return mv;
+	}
+	
+	//마이페이지 Q&A 수정 이동
+	@RequestMapping("goRequestUpdate.me")
+	public ModelAndView goRequestUpdate(@RequestParam(value="serviceNo") int serviceNo
+																	    ,ModelAndView mv
+																	    ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Notice n  = memberService.selectQna(serviceNo);
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.addObject("n", n);
+		mv.addObject("a", a).setViewName("member/myPage/mypageRequestUpdate");
 		return mv;
 	}
 	
@@ -414,8 +541,23 @@ public class MemberController {
 	
 	//마이페이지 Q&A 질문등록 이동
 	@RequestMapping("myQnaEnroll.me")
-	public String goMyQnaEnroll() {
-		return "member/myPage/mypageQnaEnroll";
+	public ModelAndView goMyQnaEnroll(ModelAndView mv
+	  								 ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageQnaEnroll");
+		return mv;
 	}
 	
 	//마이페이지 Q&A 질문 등록
@@ -434,8 +576,6 @@ public class MemberController {
 			model.addAttribute("errorMsg","질문 등록 실패");
 			return "common/errorPage";
 		}
-		
-		
 	}
 	
 	//마이페이지 Q&A 질문 파일 등록
@@ -464,7 +604,228 @@ public class MemberController {
 		
 		return (result>0)?"1":"0";
 	}
+	
+	//마이페이지 Q&A 수정 이동
+	@RequestMapping("goServiceUpdate.me")
+	public ModelAndView goServiceUpdate(@RequestParam(value="serviceNo") int serviceNo
+																	    ,ModelAndView mv
+																	    ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Notice n  = memberService.selectQna(serviceNo);
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.addObject("n", n);
+		mv.addObject("a", a).setViewName("member/myPage/mypageQnaUpdate");
+		return mv;
+	}
+	
+	//마이페이지 Q&A 수정
+	@ResponseBody
+	@RequestMapping("myQnaUpdate.me")
+	public String myQnaUpdate(@RequestParam("serviceNo") int serviceNo
+								   ,@RequestParam("category") int category
+								   ,@RequestParam("serviceTitle") String serviceTitle
+								   ,@RequestParam("serviceContent") String serviceContent
+								   ,@RequestParam("writer") String writer
+								   ,@RequestParam("fileNames[]") String[] names
+								   ,Model model
+								   ,HttpSession session) {
+		
+		ArrayList<Attachment> oldList = memberService.fileSelect(serviceNo);
+		ArrayList<String> different = new ArrayList<>();
+		ArrayList<Attachment> delName = new ArrayList<Attachment>();
+		
+		//원래 있던 파일과 새로 들어온 파일 비교 같지 않은 이름 추출
+		for (Attachment a : oldList) {
+            boolean found = false;
+            for (String name : names) {
+                if (a.getOriginName().equals(name)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                different.add(a.getOriginName());
+            }
+        }
+		//같지 않은 이름 새로운 arraylist에 담기
+		for (String diff : different) {
+			Attachment a = Attachment.builder().boardNo(serviceNo).originName(diff).build();
+			delName.add(a);
+		}
+		//없어진 파일 삭제
+		for (Attachment del : delName) {
+			Attachment a = memberService.selectDelFile(del);
+			int result = memberService.deleteFile(del);
+			if (result>0) {
+				new File(session.getServletContext().getRealPath(a.getFilePath()+a.getChangeName())).delete();
+			}
+		}
+		
+		Notice n = Notice.builder().serviceNo(serviceNo).category(category).serviceTitle(serviceTitle).serviceContent(serviceContent).writer(writer).build();
+		int result = memberService.myQnaUpdate(n);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","질문 수정 완료");
+			return (result>0)?"1":"0";
+		}else {
+			model.addAttribute("errorMsg","질문 수정 실패");
+			return "common/errorPage";
+		}
+		
+	}
+	
+	//마이페이지 Q&A 파일없는 수정
+	@ResponseBody
+	@RequestMapping("myQnaUpdateNf.me")
+	public String myQnaUpdateNf(@RequestParam("serviceNo") int serviceNo
+							   ,@RequestParam("category") int category
+							   ,@RequestParam("serviceTitle") String serviceTitle
+							   ,@RequestParam("serviceContent") String serviceContent
+							   ,@RequestParam("writer") String writer
+							   ,Model model
+							   ,HttpSession session) {
+		
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		if (a!=null) {
+			int result = memberService.deleteFile(serviceNo);
+			if (result>0) {
+				for (Attachment del : a) {
+					new File(session.getServletContext().getRealPath(del.getFilePath()+del.getChangeName())).delete();
+				}
+			}
+		}
+		
+		Notice n = Notice.builder().serviceNo(serviceNo).category(category).serviceTitle(serviceTitle).serviceContent(serviceContent).writer(writer).build();
+		int result = memberService.myQnaUpdate(n);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","질문 수정 완료");
+			return (result>0)?"1":"0";
+		}else {
+			model.addAttribute("errorMsg","질문 수정 실패");
+			return "common/errorPage";
+		}
+		
+	}
+	
+	//마이페이지 Q&A 질문 파일 수정
+	@ResponseBody
+	@PostMapping("myQnaFileUpdate.me")
+	public String myQnaFileUpdate(@RequestParam("file") MultipartFile[] files
+								 ,Notice n
+								 ,HttpSession session) {
+		
+		int result = 0;
+		for (MultipartFile file : files) {
+			if (file != null) {
+				Attachment a = new Attachment();
+				
+				if(!file.getOriginalFilename().equals("")) {
+					String changeName = saveFile(file, session);
+					
+					a.setOriginName(file.getOriginalFilename());
+					a.setChangeName(changeName);
+					a.setFilePath("resources/images/qna/");
+					a.setBoardNo(n.getServiceNo());
+				}
+				result = memberService.myQnaFileUpdate(a);
+			}
+		}
+		return (result>0)?"1":"0";
+	}
+	
+	//마이페이지 Q&A 삭제
+	@ResponseBody
+	@RequestMapping(value = "qnaDelete.me", method = RequestMethod.POST)
+	public String qnaDelete(@RequestParam("serviceNo") int serviceNo
+												       ,HttpSession session) {
 
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		if (a!=null) {
+			for (Attachment del : a) {
+				new File(session.getServletContext().getRealPath(del.getFilePath()+del.getChangeName())).delete();
+			}
+		}
+		int result = memberService.qnaDelete(serviceNo);
+		
+		String resultString = "";
+		if (result>0) {
+			session.setAttribute("alertMsg", "질문 삭제 완료");
+			resultString = "success";
+		}else {
+			resultString = "fail";
+		}
+
+		return resultString;
+	}
+	
+	//마이페이지 Q&A 상세 페이지 이동
+	@RequestMapping("goQnaDetail.me")
+	public ModelAndView goMyQnaDetail(int serviceNo
+									 ,ModelAndView mv
+									 ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Notice n = memberService.selectQna(serviceNo);
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+ 		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.addObject("a",a);
+		mv.addObject("n",n).setViewName("member/myPage/mypageQnaDetail");
+		
+		return mv;
+	}
+	
+	//마이페이지 Q&A 답변 조회
+	@ResponseBody
+	@RequestMapping(value = "qnaReplyList.me",produces = "application/json; charset=UTF-8")
+	public String qnaReplyList(int serviceNo) {
+		
+		ArrayList<Reply> list = adminService.qnaReplyList(serviceNo);
+		return new Gson().toJson(list);
+	}
+	
+	//마이페이지 Q&A 답변 등록
+	@ResponseBody
+	@RequestMapping("qnaReplyInsert.me")
+	public String qnaReplyInsert(Reply r
+							 	,HttpSession session) {
+		
+		int result = adminService.qnaReplyInsert(r);
+		return (result>0)?"success":"fail";
+	}
+	
+	//마이페이지 Q&A 답변 삭제
+	@ResponseBody
+	@RequestMapping("qnaReplyDelete.me")
+	public String qnaReplyDelete(Reply r
+							 	,HttpSession session) {
+		
+		int result = adminService.qnaReplyDelete(r);
+		return (result>0)?"success":"fail";
+	}
+	
 	//프로필 사진 업데이트
 	@PostMapping("/updateImg.me")
 	public ModelAndView updateImg(Attachment a
@@ -532,6 +893,16 @@ public class MemberController {
 		}
 		
 		return "";
+	}
+	
+	//회원가입리트스 폼 이동 메소드
+	@RequestMapping("myCertification.me")
+	public String myCertification(Member m
+								 ,String birthDay
+								 ,ModelAndView mv
+								 ,HttpSession session) {
+		
+		return "member/myPage/certiPopup";
 	}
 	
 	
@@ -1044,11 +1415,23 @@ public class MemberController {
 		}
 		
 		Member loginUser = memberService.loginMember(m);
+		
+		String ipAddress = request.getRemoteAddr(); // 사용자의 IP 주소 추출
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd kk:mm:ss");
+		Date currentTime = new Date();
+		String strdate = dateFormat.format(currentTime);
+		
 
 		if(loginUser!=null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {//로그인 유저 있으면 -> 유저 정보 담기
 //		if(loginUser!=null) {// 이거 쓸거라서 ... 잠깐 둘게요! 제가 안까먹고 꼭 지울게요!!!!!
 			session.setAttribute("loginUser", loginUser);
 			session.setAttribute("alertMsg", "로그인이 완료되었습니다.");
+			if (loginUser != null) {
+				Visit v = Visit.builder().visitIp(ipAddress).visitTime(strdate).visitor(loginUser.getNickname()).build();
+				if (!loginUser.getNickname().equals("관리자")) {
+					memberService.connectData(v);
+				}
+			}
 			//로그인 성공시 전 페이지로 돌려주기
 			return request.getHeader("referer");
 		}else {//로그인 실패시

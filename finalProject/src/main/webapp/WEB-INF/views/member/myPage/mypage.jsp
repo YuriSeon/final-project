@@ -142,7 +142,7 @@
                                     <span>발도장</span>
                                 </li>
                                 <li>
-                                    <a href="myCertification.me" class="icon5"><img src="resources/images/padlock.png" alt="" width="50px" height="50px"></a>
+                                    <a href="javascript:popup();" class="icon5"><img src="resources/images/padlock.png" alt="" width="50px" height="50px"></a>
                                     <span>동행 인증</span>
                                 </li>
                                 <li>
@@ -308,6 +308,12 @@
 			}
 		}
 
+        //동행인증 팝업
+        function popup() {
+			let popOption = "width = 450px, height=550px, top=300, left=300px, scrollbars=yes";
+			let openUrl = 'myCertification.me';
+			window.open(openUrl,'pop',popOption);
+		}
     </script>
     
     <%@include file="../../common/footer.jsp" %>

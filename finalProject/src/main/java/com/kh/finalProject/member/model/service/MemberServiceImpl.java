@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.finalProject.admin.model.vo.Notice;
+import com.kh.finalProject.admin.model.vo.Visit;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.dao.MemberDao;
 import com.kh.finalProject.member.model.vo.Member;
@@ -233,4 +235,66 @@ public class MemberServiceImpl implements MemberService{
 	public int replyDelete(int replyNo) {
 		return memberDao.replyDelete(sqlSession,replyNo);
 	}
+
+	//마이페이지 찜 목록 삭제
+	@Override
+	public int choiceDelete(choice c) {
+		return memberDao.choiceDelete(sqlSession,c);
+	}
+
+	//마이페이지 Q&A 수정 조회
+	@Override
+	public Notice selectQna(int serviceNo) {
+		return memberDao.selectQna(sqlSession,serviceNo);
+	}
+
+	//마이페이지 Q&A 수정
+	@Override
+	public int myQnaUpdate(Notice n) {
+		return memberDao.myQnaUpdate(sqlSession,n);
+	}
+
+	//마이페이지 Q&A 파일 삭제
+	@Override
+	public int deleteFile(Attachment del) {
+		return memberDao.deleteFile(sqlSession,del);
+	}
+
+	//마이페이지 Q&A 삭제파일 changName가져오기
+	@Override
+	public Attachment selectDelFile(Attachment del) {
+		return memberDao.selectDelFile(sqlSession,del);
+	}
+
+	//마이페이지 Q&A 파일 수정
+	@Override
+	public int myQnaFileUpdate(Attachment a) {
+		return memberDao.myQnaFileUpdate(sqlSession,a);
+	}
+
+	//마이페이지 Q&A 삭제
+	@Override
+	public int qnaDelete(int serviceNo) {
+		memberDao.deleteFile(sqlSession, serviceNo);
+		return memberDao.qnaDelete(sqlSession,serviceNo);
+	}
+
+	//마이페이지 Q&A 파일 삭제(serviceNo)
+	@Override
+	public int deleteFile(int serviceNo) {
+		return memberDao.deleteFile(sqlSession, serviceNo);
+	}
+
+	//마이페이지 피드 보기
+	@Override
+	public Board selectFeed(int boardNo) {
+		return memberDao.selectFeed(sqlSession,boardNo);
+	}
+
+	//접속자 ip,접속시간 기록
+	@Override
+	public int connectData(Visit v) {
+		return memberDao.connectData(sqlSession,v);
+	}
+	
 }
