@@ -22,4 +22,5 @@ public class Report {
 	private int boardReport;
 	private String replyWriter;
 	private int replyReport;
+
 }

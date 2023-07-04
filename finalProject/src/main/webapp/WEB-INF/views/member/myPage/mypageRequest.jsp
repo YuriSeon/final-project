@@ -36,7 +36,7 @@
 				<span class="name5"><a href="mypage.me"><span class="ico">My</span>마이페이지</a></span>
 	        </div>
 	        <h2>관광정보 수정/신규 요청</h2>
-	        <a href="myQnaEnroll.me" class="btn_apply btn_greyS">요청등록</a>
+	        <a href="myRequestEnroll.me" class="btn_apply btn_greyS">요청등록</a>
 	    </div>
 	
 	    <div class="wrap_contView clfix">
@@ -80,6 +80,7 @@
 <!-- 					</li> -->
 					<c:forEach var="qna" items="${list}">
                     		<li class="bdr_nor">
+	                    		<input type="text" value="${qna.serviceNo}" class="serviceNo" hidden>	
 								<div class="area_txt">
 									<strong class="tit on">
 										<a href="#">${qna.serviceTitle}</a>
@@ -206,6 +207,45 @@
 			});
 		});
     	
+    	//요청 상세 페이지 이동
+        $(function () {
+    		$(".list_board1>.bdr_nor>.area_txt>strong>a").click(function () {
+    			var sno = $(this).parents("li").find(".serviceNo").val();
+    			location.href = 'goRequestDetail.me?serviceNo='+sno;
+    		});
+    	});
+    	
+    	//요청 수정 페이지 이동
+        $(function () {
+    		$(".list_board1>li>.qna_subMenu>ul>.btn_mod").click(function () {
+    			var sno = $(this).parents("li").find(".serviceNo").val();
+    			location.href = 'goRequestUpdate.me?serviceNo='+sno;
+    		});
+    	});
+    	
+      	//요청 삭제
+        $(function () {
+    		$(".list_board1>li>.qna_subMenu>ul>.btn_del").click(function () {
+    			var sno = $(this).parents("li").find(".serviceNo").val();
+   				$.ajax({
+		            url: "qnaDelete.me",
+		            type: "POST",
+		            data: {
+		                serviceNo: sno
+		            },
+		            success: function(result) {
+		            	if (result == "success") {
+		            		location.reload();
+						}else{
+							alertify.message("게시글 삭제 실패");
+						}
+		            },
+		            error: function() {
+		                console.log("error");
+		            }
+		        });	
+    		});
+    	});
     </script>
     
     <%@include file="../../common/footer.jsp" %>

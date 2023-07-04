@@ -10,6 +10,7 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Good;
 import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.board.model.vo.Zone;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.board.model.vo.choice;

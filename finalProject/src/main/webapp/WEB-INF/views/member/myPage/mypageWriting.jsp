@@ -23,6 +23,54 @@
 		background-size: 4px 100%;
 		color: #333;
 	}
+	.modal{
+		text-align: center;
+	}
+	@media screen and (min-width: 768px) { 
+	    .modal:before {
+		    display: inline-block;
+		    vertical-align: middle;
+		    content: " ";
+		    height: 100%;
+	    }
+	}
+	.modal-content {
+	    background-color: #fff !important;
+	    color: black !important;
+	}
+	.modal-content img{
+		margin-top: 10px;
+	}
+	.modal-dialog{
+		display: inline-block;
+	    text-align: left;
+	    vertical-align: middle;
+	    max-width: 520px !important;
+	    width: 520px !important;
+	}
+	.modal-header2{
+		padding-left: 10px;
+		padding-top: 10px;
+	}
+	.modal-body2{
+		padding: 10px;
+	}
+	.swiper-container {
+		width: 500px !important;
+	    height: 340px !important;
+	}
+	.swiper-button-prev,
+	.swiper-button-next {
+		background-color: #fff;
+		opacity: 0.5;
+		border-radius: 20px;
+		color: black !important;
+	}
+	.swiper-button-prev:after,
+	.swiper-button-next:after {
+		font-size: 1.1rem !important;
+		font-weight: 600 !important;
+	}
     </style>
 </head>
 <body>
@@ -93,14 +141,18 @@
 												</c:choose>
 											</div>
 											<span class="ico">
-												<img src="resources/images/ico_naver.png" alt="네이버">
+												<c:choose>
+													<c:when test="${loginUser.certification == 1}"><img src="resources/images/ico_kakao.png" alt="카카오"></c:when>
+													<c:when test="${loginUser.certification == 2}"><img src="resources/images/ico_naver.png" alt="네이버"></c:when>
+													<c:otherwise></c:otherwise>
+												</c:choose>
 											</span>
 										</div>
 										<div class="txt_reply">
 											<c:choose>
-												<c:when test="${w.category == 4}"><strong><a href="">[피드]</a></strong></c:when>
-												<c:when test="${w.category == 5}"><strong><a href="">[함께가치] ${w.boardTitle}</a></strong></c:when>
-												<c:otherwise><strong><a href="">[일정자랑] ${w.boardTitle}</a></strong></c:otherwise>
+												<c:when test="${w.category == 4}"><strong><a href="javascript:void(0);">[피드]</a></strong></c:when>
+												<c:when test="${w.category == 5}"><strong><a href="javascript:void(0);">[함께가치] ${w.boardTitle}</a></strong></c:when>
+												<c:otherwise><strong><a href="javascript:void(0);">[일정자랑] ${w.boardTitle}</a></strong></c:otherwise>
 											</c:choose>
 											<p><a href="">${w.boardContent }</a></p>
 											<div class="date">
@@ -125,18 +177,98 @@
 		          	</div>
 	          	</div>
 	            <!-- //명소,추천,코스,축제 -->
-	
+	            
+	            <!-- 피드 모달 -->
+	            <div class="modal fade" id="followModal" role="dialog"> 
+                 	<div class="modal-dialog">
+                    	<!-- Modal content-->   
+                    	<div class="modal-content">
+	                      	<div class="modal-header2">
+		                        <h4 class="modal-title"></h4>
+		                        <button type="button" class="close" data-dismiss="modal" style="color: white;">×</button>
+	                      	</div>
+                      		<div class="modal-body2">
+                      			<div class="feed-container" style="height: 500px;">
+                      				<div class="ticket-item" style="width: 400px;">
+				                        <div class="thumb">
+				                        	<div class="nicname">							                        	 
+	                                            <img src="resources/images/profile/빈프로필.jpg" alt="" style="width:25px; height:25px; border-radius:50%; margin-left:5px; position: relative; top: -5px;" id="profile">			                                        		
+			                        			<span><a id="nicknameHover"></a></span>
+				                        	</div>
+				                        	<div class="swiper-container">
+											    <div class="swiper-wrapper">
+											    </div>
+											    <div class="swiper-button-prev">&lt;</div>
+											    <div class="swiper-button-next" style="position: absolute; left: 465px;">&gt;</div>
+											</div>
+<!-- 				                            <div id="slideShow"> -->
+<!-- 												<ul class="slides" id="slides" style="width: 2400px"> -->
+<!-- 											    	<li><img src="resources/feed/2023063013450239722.jpg" alt="" style="width: 500px; height: 300px;"></li> -->
+<!-- 											    	<li></li> -->
+<!-- 											    	<li></li> -->
+<!-- 											    	<li></li>  														     -->
+<!-- 											    </ul> -->
+<!-- 											    <p class="controller" id="controller"> -->
+<!-- 												    &lang: 왼쪽 방향 화살표
+<!-- 												    &rang: 오른쪽 방향 화살표 --> 
+<!-- 													<span class="prev" id="prev">&lang;</span>   -->
+<!-- 													<span class="next" id="next">&rang;</span> -->
+<!-- 												</p> -->
+<!-- 											</div> -->
+				                        </div>
+				                            <div class="prices" style="width: 500px;">
+						                            <div class="price">
+						                                <span></span>
+						                            </div>
+						                        <div class="down-content">
+						                            <h5></h5>
+						                            <br>
+						                            <ul id="address">
+						                            	<li style="float: left;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+															  <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+															</svg>
+														</li>
+						                            	<li></li> 
+						                            </ul>									                            
+							                        <p></p>
+						                        </div>
+						                        <hr>
+				                            </div>
+				                    	</div>
+                      				
+                      			</div>
+                     		</div>
+                   		</div>
+                 	</div>
+               	</div>
+				<!-- //댓글 수정 모달 -->
+	            
 	            <!-- paging -->
 		            <div class="page_box">
 			            <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
 			            	<c:choose>
-				            	<c:when test="${p eq pi.currentPage}">
-	                   				<a class="off" title="선택됨" href="myWriting.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
-		                		</c:when>
-		                		<c:otherwise>
-		                			<a class="on" title="선택됨" href="myWriting.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
-		                		</c:otherwise>
-	                		</c:choose>
+			            		<c:when test="${category != null}">
+			            			<c:choose>
+						            	<c:when test="${p eq pi.currentPage}">
+			                   				<a class="off" title="선택됨" href="selectBoard.me?currentPage=${p}&category=${category}" id="1">${p}<span class="blind">현재 위치</span></a>
+				                		</c:when>
+				                		<c:otherwise>
+				                			<a class="on" title="선택됨" href="selectBoard.me?currentPage=${p}&category=${category}" id="1">${p}<span class="blind">현재 위치</span></a>
+				                		</c:otherwise>
+			                		</c:choose>
+			            		</c:when>
+			            		<c:otherwise>
+			            			<c:choose>
+						            	<c:when test="${p eq pi.currentPage}">
+			                   				<a class="off" title="선택됨" href="myWriting.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
+				                		</c:when>
+				                		<c:otherwise>
+				                			<a class="on" title="선택됨" href="myWriting.me?currentPage=${p}" id="1">${p}<span class="blind">현재 위치</span></a>
+				                		</c:otherwise>
+			                		</c:choose>
+			            		</c:otherwise>
+			            	</c:choose>
+					            	
         		        </c:forEach>
 		            </div>
 	            <!-- //paging -->
@@ -198,6 +330,7 @@
 	
 	</div>
     <script>
+
     	//버튼 클릭시 수정 삭제 나타남
     	$(function() {
 			$(".btn_view").click(function() {
@@ -213,6 +346,48 @@
 			});
 		});
     	
+    	//상세페이지 이동
+    	$(function () {
+    		$(".list_reply>ul>li>div.txt_reply>strong>a").click(function () {
+    			var bno = $(this).parents("li").find(".boardNo").val();
+    			var cate = $(this).parents("li").find(".category").val();
+    			if (cate == 4) {
+    				$.ajax({
+			            url: "selectFeed.me",
+			            type: "GET",
+			            data: {
+			                boardNo: bno
+			            },
+			            dataType: "json",
+			            success: function(response) {
+			            	var feed = response.b;
+			            	var a = response.a;
+			            	var str = "";
+			            	console.log(a);
+			            	$("#nicknameHover").text(feed.boardWriter);
+			            	$(".price>span").text("좋아요 "+feed.good+"개");
+			            	$(".down-content>h5").text(feed.boardContent);
+			            	$("#address>li:last").text(feed.info.infoAddress);
+			            	$(".down-content>p").text(feed.createDate);
+			            	for(var i in a){
+			            		str+='<div class="swiper-slide"><img src="'+a[i].filePath+'" style="width: 500px; height: 300px;"></div>';
+			            		
+			            	}
+			            	$(".swiper-wrapper").html(str);
+		    				replyModifyModal();
+			            },
+			            error: function() {
+			                console.log("error");
+			            }
+			        });
+				}else if (cate == 5) {
+					location.href = 'togetherDetail.bo?boardNo='+bno;
+				}else{
+// 					location.href = '='+bno;
+				}
+    		});
+    	});
+    	
     	//수정페이지 이동
         $(function () {
     		$(".list_reply>ul>li>.wri_subMenu>ul>.modify").click(function () {
@@ -221,7 +396,7 @@
     			if (cate == 4) {
     				location.href = 'updateEnroll.fo?boardNo='+bno;	
 				}else if (cate == 5) {
-// 					location.href = '='+bno;
+					location.href = 'togetherDetail.bo?boardNo='+bno;
 				}else{
 // 					location.href = '='+bno;
 				}
@@ -259,6 +434,36 @@
 // 					location.href = '='+bno;
 				}
     		});
+    	});
+    	
+      	//댓글 수정 모달
+        function replyModifyModal(){
+            $('#followModal').modal(); //id가 "followModal"인 모달창을 열어준다. 
+            $('.modal-title').text("피드"); //modal 의 header 부분에 값을 넣어준다.
+            $('.modal-title').css("font-size","30px");
+        }
+      	
+      	//모달 안의 스와이퍼
+      	$(function() {
+    	    const swiper = new Swiper('.swiper-container', {
+    		    slidesPerView : 1, // 한 슬라이드에 보여줄 갯수
+    		    spaceBetween : 10, // 슬라이드 사이 여백
+    		    loop : false, // 슬라이드 반복 여부
+    		    centeredSlides : true,
+    		    watchOverflow : true,
+//    	 	    loopAdditionalSlides : 1, // 슬라이드 반복 시 마지막 슬라이드에서 다음 슬라이드가 보여지지 않는 현상 수정
+    		    pagination : false, // pager 여부
+//    	 	    autoplay : {  // 자동 슬라이드 설정 , 비 활성화 시 false
+//    	 		    delay : 3000,   // 시간 설정
+//    	 		    disableOnInteraction : false,  // false로 설정하면 스와이프 후 자동 재생이 비활성화 되지 않음
+//    	 	    },
+    		    navigation: {   // 버튼 사용자 지정
+    			    nextEl: '.swiper-button-next',
+    			    prevEl: '.swiper-button-prev',
+    		    },
+    			observer: true,
+    			observeParents : true,
+    	    });
     	});
     </script>
     

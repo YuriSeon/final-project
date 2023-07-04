@@ -21,6 +21,11 @@
     	#QNAcontents{
     		min-height: 70vh;
     	}
+    	.snb_mypage ul li.on a {
+			background: url(resources/images/ico_mypagemenu.png) 0 0 no-repeat;
+			background-size: 4px 100%;
+			color: #333;
+		}
     </style>
 </head>
 <body>
@@ -69,7 +74,6 @@
 <!-- 								<input type="hidden" value="bcf3955b-b26d-4a4a-b4c2-1a5da3ff2cf2" name="fileid" id="fileid"> -->
 <!-- 								<input type="hidden" value="/bc/b2/4a/b4/1a/bcf3955b-b26d-4a4a-b4c2-1a5da3ff2cf2.png" name="fileidfull" id="fileidfull"> -->
 <!-- 							</div> -->
-							
 						</div>
 					</div>
 	            </div>
@@ -83,14 +87,47 @@
 	            <!-- snb -->
 	            <div class="snb_mypage">
 	                <ul>
-	                    <li><a href="/mypage/mypage_list_fav.do">즐겨찾기</a></li>
-	                    <li><a href="/mypage/mypage_list_cos.do">코스</a></li>
-	                    <li><a href="/mypage/mypage_list_reply.do">댓글</a></li>
-	                    <li><a href="/mypage/tourist_info_list.do">관광정보 수정/신규 요청</a></li>
-	                    <li class="on"><a href="myQna.me" id="qna">Q&amp;A (1)</a></li>
-
-	                    <!-- <li><a href="/mypage/mypage_list_event.do" id="event"></a></li> -->
-	                    <li id="stampEnabled"><a href="/mypage/mypage_list_stamp.do" id="stamp">발도장</a></li>
+	                    <c:choose>
+	                    	<c:when test="${w == 0 }">
+	                    		<li><a href="myWriting.me">작성글 보기</a></li>
+	                    	</c:when>
+	                    	<c:otherwise>
+	                    		<li><a href="myWriting.me">작성글 보기(${w})</a></li>
+	                    	</c:otherwise>
+	                    </c:choose>
+	                    <c:choose>
+	                    	<c:when test="${r == 0}">
+	                    		<li><a href="myReply.me">댓글 보기</a></li>
+	                    	</c:when>
+	                    	<c:otherwise>
+	                    		<li><a href="myReply.me">댓글 보기(${r})</a></li>
+	                    	</c:otherwise>
+	                    </c:choose>
+	                    <c:choose>
+	                    	<c:when test="${c == 0 }">
+	                    		<li><a href="myChoice.me">찜 목록</a></li>
+	                    	</c:when>
+	                    	<c:otherwise>
+	                    		<li><a href="myChoice.me">찜 목록(${c})</a></li>
+	                    	</c:otherwise>
+	                    </c:choose>
+	                    <c:choose>
+	                    	<c:when test="${rq == 0 }">
+	                    		<li><a href="myRequest.me">관광정보 수정 / 신규 요청</a></li>
+	                    	</c:when>
+	                    	<c:otherwise>
+	                    		<li><a href="myRequest.me">관광정보 수정 / 신규 요청(${rq})</a></li>
+	                    	</c:otherwise>
+	                    </c:choose>
+	                    <c:choose>
+	                    	<c:when test="${q == 0 }">
+	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A</a></li>
+	                    	</c:when>
+	                    	<c:otherwise>
+	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A(${q})</a></li>
+	                    	</c:otherwise>
+	                    </c:choose>
+	                    <li id="stampEnabled"><a href="myFoot.me" id="stamp">발도장</a></li>
 	                </ul>
 	            </div>
 	            <!-- //snb -->
@@ -124,8 +161,7 @@
 						dataTransfer.items.add(fileArr[i]);
 					}
 					document.getElementById("files").files = dataTransfer.files;
-// 					console.log("dataTransfer =>",dataTransfer.files);
-// 					console.log("input FIles =>", document.getElementById("files").files);
+					
 					// ==========================================
 				}
 				count+=1;
@@ -139,8 +175,8 @@
 	    		var div = $('<div>').addClass('uploadfile');
 	    		var input = $('<input>').attr({
 	    			type: 'text',
-	    		    name: 'filename1',
-	    		    id: 'filename1',
+	    		    name: 'filename'+count,
+	    		    id: 'filename'+count,
 	    		    value: file.name,
 	    		    title: '첨부된 파일',
 	    			disabled: 'disabled'
@@ -151,8 +187,30 @@
 	    		button.append(span);
 	    		div.append(input, button);
 	    	    $('#addfile').append(div);
+	    	    
 			}
 		}
+    	
+    	//추가된 파일 삭제
+    	$(function() {
+			$(document).on('click', '#addfile>.uploadfile>button', function() {
+				
+				const $divs = $('.uploadfile'); // 같은 클래스를 가진 div 요소들을 선택합니다.
+				const index = $divs.index($(this).parent()); // targetDiv가 몇 번째 요소인지 알아냅니다.
+				
+				var fileId = $(this).siblings().eq(0).prop("id");
+				var fileName = $(this).prev().val();
+				
+				$(this).parent().remove();
+				
+				const files = Array.from(dataTransfer.files);
+				var fileArr = document.getElementById("files").files;
+				dataTransfer.items.remove(index);
+				fileArr = dataTransfer.files;
+				count--; 
+				
+			});
+		});
     	
     	//질문 등록
     	function qnaSubmit() {

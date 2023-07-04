@@ -81,8 +81,9 @@
 					<c:forEach var="c" items="${list}">
 						<li class="bdr_nor">
 						<input type="text" class="board-no" value="${c.boardNo}" hidden="hidden">
+						<input type="text" class="category" value="${c.category}" hidden="hidden">
 							<div class="photo">
-								<a href="">
+								<a href="javascript:void(0);">
 									<div class="dim">
 										<span class="txt_mid">여행지</span>
 									</div>
@@ -91,7 +92,7 @@
 							</div>
 							<div class="area_txt">
 								<div class="tit">
-									<a href="">
+									<a href="javascript:void(0);">
 										<c:if test="${c.category==1}">[테마]</c:if>
 										<c:if test="${c.category==2}">[축제]</c:if>
 										<c:if test="${c.category==3}">[명소]</c:if>
@@ -100,8 +101,8 @@
 										<c:if test="${c.category==6}">[일정자랑]</c:if>
 										${c.boardTitle}
 									</a>
-									<p>서울 강남구</p>
-									<p class="tag"><span>#구룡산</span><span>#대모산</span><span>#레포츠</span><span>#서울트래킹</span><span>#시민의숲</span><span>#트래킹</span></p>
+									<p>서울 강남구(예시)</p>
+									<p class="tag"><span>#구룡산</span><span>#대모산</span><span>#레포츠</span><span>#서울트래킹</span><span>#시민의숲</span><span>#트래킹</span>(예시)</p>
 								</div>
 								<button type="button" title="내용 더보기" class="btn_view">더보기</button>
 								<div class="cho_subMenu">
@@ -196,7 +197,7 @@
 			$(".btn_view").click(function() {
 				var targetDiv = $(this).next("div");
 				
-				$(".wri_subMenu").not(targetDiv).css("display","none");
+				$(".cho_subMenu").not(targetDiv).css("display","none");
 				
 				if (targetDiv.css("display") === "block") {
 					targetDiv.css("display","none");
@@ -206,7 +207,51 @@
 			});
 		});
     	
+    	//상세페이지 이동
+    	$(function () {
+    		$(".box_leftType1>ul>li>.area_txt>.tit>a").click(function () {
+    			var bno = $(this).parents("li").find(".board-no").val();
+    			var cate = $(this).parents("li").find(".category").val();
+	   			if (cate == 1) {
+	   				location.href = 'detailTheme.bo?boardNo='+bno;	
+				}else if (cate == 2) {
+					location.href = 'fesDetail.fe?boardNo='+bno;
+				}else if (cate == 3) {
+// 					location.href = '?boardNo='+bno;
+				}else if (cate == 5) {
+// 					location.href = '?boardNo='+bno;
+				}else{
+// 					location.href = 'boardNo='+bno;
+				}
+    		});
+    	});
     	
+    	//찜 목록 삭제
+        $(function () {
+    		$(".list_thumType>li>.area_txt>.cho_subMenu>ul>li").click(function () {
+    			var $select = $(this); 
+    			var bno = $(this).closest(".bdr_nor").find(".board-no").val();
+    			
+   				$.ajax({
+		            url: "choiceDelete.me",
+		            type: "POST",
+		            data: {
+		                boardNo: bno
+		            },
+		            success: function(result) {
+		            	if (result == "success") {
+		            		$select.parents("li").remove();
+		            		location.reload();
+						}else{
+							alertify.message("찜 목록 삭제 실패");
+						}
+		            },
+		            error: function() {
+		                console.log("error");
+		            }
+		        });	
+    		});
+    	});
     </script>
     
     <%@include file="../../common/footer.jsp" %>
