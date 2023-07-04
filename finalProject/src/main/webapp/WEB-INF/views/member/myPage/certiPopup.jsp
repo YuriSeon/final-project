@@ -80,14 +80,75 @@ body{
 	
 	<div class="container">
 		<div class="box">
-			<button id="naver">네이버 인증</button>
-			<button id="kakao">카카오 인증</button>
+			<button id="naver" onclick="naverCerti();">네이버 인증</button>
+			<button id="kakao" onclick="kakaoCerti();">카카오 인증</button>
+<!-- 			<button id="naver" onclick="naverLogout();" style="z-index: 3;">네이버 로그아웃</button> -->
+<!-- 			<button id="naver" onclick="kakaoLogout();" style="z-index: 3;">카카오 로그아웃</button> -->
 		</div>
 	</div>
 </body>
 <script type="text/javascript">
-	$(function() {
-		$("button").clcik
-	});
+	
+	//네이버 인증
+	function naverCerti() {
+		var client_Id = "xezYicDH1SzVKNokPSX2";
+		var urlEnco = encodeURIComponent("http://localhost:8888/finalProject/enrollForm.me");
+		
+		var url = "https://nid.naver.com/oauth2.0/authorize";
+			url += "?response_type=code";
+			url += "&client_id="+client_Id;
+			url += "&redirect_uri=http://localhost:8888/finalProject/certi.me?certification=2";
+			url += "&state=test";
+			
+		location.href=url;
+		
+	}
+	
+	//카카오 인증
+	function kakaoCerti() {
+		//앱키
+		appKey = "04c77a2f5ca75a521a0d0e08cbb740b3";
+		
+		var url = "https://kauth.kakao.com/oauth/authorize";
+		url += "?client_id="+appKey;
+		url += "&redirect_uri=http://localhost:8888/finalProject/certi.me?certification=1";
+		url += "&response_type=code";
+		location.href=url;
+	}
+	
+	//네이버 로그아웃
+	var testPopUp;
+	function openPopUp() {
+	    testPopUp= window.open("https://nid.naver.com/nidlogin.logout", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,width=1,height=1");
+	}
+	function closePopUp(){
+	    testPopUp.close();
+	}
+
+	function naverLogout() {
+		openPopUp();
+		setTimeout(function() {
+			closePopUp();
+			}, 1000);
+	}
+	
+	//카카오 로그아웃
+	var testPopUp;
+	function kopenPopUp() {
+	    testPopUp= window.open("https://kauth.kakao.com/oauth/logout?client_id=04c77a2f5ca75a521a0d0e08cbb740b3&logout_redirect_uri=http://localhost:8888/finalProject/");
+	    
+	}
+	function kclosePopUp(){
+	    testPopUp.close();
+	}
+
+	function kakaoLogout() {
+		kopenPopUp();
+		setTimeout(function() {
+			kclosePopUp();
+			}, 1000);
+	}
+	
+	
 </script>
 </html>

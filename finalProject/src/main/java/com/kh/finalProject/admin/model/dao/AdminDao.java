@@ -16,6 +16,7 @@ import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Festival;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.board.model.vo.Theme;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.vo.Member;
@@ -47,6 +48,11 @@ public class AdminDao {
 	//대시보드 게시판 별 조회수
 	public ArrayList<Board> countList(SqlSessionTemplate sqlSession) {
 		return (ArrayList)sqlSession.selectList("adminMapper.countList");
+	}
+	
+	//대시보드 여행지 방문 횟수
+	public HashMap<String, Integer> countMap(SqlSessionTemplate sqlSession) {
+		return (HashMap)sqlSession.selectList("adminMapper.countMap");
 	}
 	
 	//대시보드 최근 신고 5개
@@ -284,6 +290,21 @@ public class AdminDao {
 		
 		return (ArrayList)sqlSession.selectList("adminMapper.reportSearchList",map,rowBounds);
 	}
+	
+	//신고 게시물 이동
+	public int boardChk(SqlSessionTemplate sqlSession, int boardNo) {
+		return sqlSession.selectOne("adminMapper.boardChk",boardNo);
+	}
+	
+	//신고 댓글 조회
+	public Reply replyChk(SqlSessionTemplate sqlSession, int replyNo) {
+		return sqlSession.selectOne("adminMapper.replyChk",replyNo);
+	}
+	
+	//신고 대댓글 조회
+	public Rereply rereplyChk(SqlSessionTemplate sqlSession, int replyNo) {
+		return sqlSession.selectOne("adminMapper.rereplyChk",replyNo);
+	}
 
 	//=================================================회원관리===========================================================
 	
@@ -358,6 +379,11 @@ public class AdminDao {
 	//회원 계정 복구
 	public int memberRestore(SqlSessionTemplate sqlSession, int userNo) {
 		return sqlSession.update("adminMapper.memberRestore",userNo);
+	}
+	
+	//회원 관리자 전환
+	public int changeAdmin(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.update("adminMapper.changeAdmin",userNo);
 	}
 		
 	//=================================================게시글관리===========================================================
@@ -617,6 +643,8 @@ public class AdminDao {
 	public ArrayList<Attachment> feedSelectFile(SqlSessionTemplate sqlSession, int boardNo) {
 		return (ArrayList)sqlSession.selectList("adminMapper.themeFilePath",boardNo);
 	}
+
+	
 
 	
 

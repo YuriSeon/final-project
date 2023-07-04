@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +59,6 @@ import com.kh.finalProject.member.model.service.MemberService;
 import com.kh.finalProject.member.model.vo.Member;
 
 import lombok.Data;
-import oracle.net.aso.m;
 
 @Controller
 public class MemberController {
@@ -76,6 +74,8 @@ public class MemberController {
 	
 	@Autowired
 	private ServletContext ServletContext;
+	
+	
 	
 	//파일 업로드 처리 메소드 (모듈)
 	public String saveFile(MultipartFile upfile,HttpSession session) {
@@ -1430,7 +1430,7 @@ public class MemberController {
 			session.setAttribute("alertMsg", "로그인이 완료되었습니다.");
 			if (loginUser != null) {
 				Visit v = Visit.builder().visitIp(ipAddress).visitTime(strdate).visitor(loginUser.getNickname()).build();
-				if (!loginUser.getNickname().equals("관리자")) {
+				if (!loginUser.getStatus().equals("A")) {
 					memberService.connectData(v);
 				}
 			}
@@ -1563,4 +1563,283 @@ public class MemberController {
 		}
 		return new Gson().toJson(m);
 	}
+	
+	//카카오 인증 조회 (1.인가 코드 받기 2.인가코드로 토큰 받기 3.토큰으로 정보 조회)
+	//마이페이지 동행인증
+	@RequestMapping("certi.me")
+	public String certificationMember(@RequestParam(value="certification",defaultValue="0") String certification
+									 ,ModelAndView mv
+									 ,String code
+									 ,String error
+									 ,HttpServletRequest request
+									 ,HttpSession session) throws IOException, ParseException{
+		
+		String nickname = ((Member)(session.getAttribute("loginUser"))).getNickname();
+		
+		//인증1번으로 넘어오면 카카오로 토큰 받아오기
+		if(certification.equals("1")) {
+			//url작성
+			String url = "https://kauth.kakao.com/oauth/token";
+			url += "?grant_type=authorization_code";
+			url += "&client_id="+appKey;
+			url += "&redirect_uri=http://localhost:8888/finalProject/certi.me?certification=1";
+			url += "&code="+code;
+			
+			//URL객체생성
+			URL requestUrl = new URL(url);
+			HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
+			urlCon.setRequestMethod("POST");
+			
+			//응답 데이터 읽어오기
+			BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+			
+			String responseText="";
+			String line;
+			
+			while((line=br.readLine())!=null) {
+				responseText += line;
+			}
+			//System.out.println(responseText);
+			
+			//파싱작업
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObj = (JSONObject) jsonParser.parse(responseText);
+			
+			String access_token = (String) jsonObj.get("access_token");
+			//System.out.println(access_token);
+			
+			//토큰으로 사용자 id 조회
+			//url작성
+			String urlId = "https://kapi.kakao.com/v1/user/access_token_info";
+			
+			//객체 생성
+			URL requestUrlId = new URL(urlId);
+			HttpURLConnection urlConId = (HttpURLConnection) requestUrlId.openConnection();
+			urlConId.setRequestMethod("GET");
+			urlConId.setRequestProperty("Authorization", "Bearer "+access_token);
+			
+			//응답데이터 읽어오기
+			BufferedReader brId = new BufferedReader(new InputStreamReader(urlConId.getInputStream()));
+			
+			String responseTextId = "";
+			String lineId;
+			
+			while((lineId=brId.readLine())!=null) {
+				responseTextId += lineId;
+			}
+			//System.out.println(responseTextId);
+			
+			//파싱작업
+			JSONParser jsonParserId = new JSONParser();
+			JSONObject jsonObjId = (JSONObject) jsonParserId.parse(responseTextId);
+			//System.out.println(jsonObjId);
+			
+			//원하는 데이터 추출
+			Long id = (Long) jsonObjId.get("id");
+			String idd = String.valueOf(id);
+			//System.out.println(idd);
+			
+			//토큰으로 사용자 정보 조회
+			//url작성
+			String urlToken = "https://kapi.kakao.com/v2/user/me";
+			
+			//객체 생성
+			URL requestUrlToken = new URL(urlToken);
+			HttpURLConnection urlConToken = (HttpURLConnection) requestUrlToken.openConnection();
+			urlConToken.setRequestMethod("GET");
+			urlConToken.setRequestProperty("Authorization", "Bearer "+access_token);
+			
+			//응답데이터 읽어오기
+			BufferedReader brToken = new BufferedReader(new InputStreamReader(urlConToken.getInputStream()));
+			
+			String responseTextToken="";
+			String lineToken;
+			
+			while((lineToken=brToken.readLine())!=null) {
+				responseTextToken += lineToken;
+			}
+					
+			//System.out.println(responseTextToken);
+			
+			//파싱 작업
+			JSONParser jsonParserToken = new JSONParser();
+			JSONObject jsonObjToken = (JSONObject) jsonParserToken.parse(responseTextToken);
+			//System.out.println(jsonObjToken);
+			
+			JSONObject kakao_account =  (JSONObject) jsonObjToken.get("kakao_account");
+			//System.out.println(kakao_account);
+			
+			String age = (String) kakao_account.get("age_range");
+			String birthday = (String) kakao_account.get("birthday");
+			String gender = (String) kakao_account.get("gender");
+			if (gender.equals("female")) {
+				gender = "F";
+			}else {
+				gender = "M";
+			}
+			int agesub = Integer.parseInt(age.substring(0,2));
+			
+			Member m = memberService.loginMemberNick(nickname);
+			if (m.getAge() == agesub && m.getGender().equals(gender)) {
+				int result = memberService.updateCertik(nickname);
+				if (result>0) {
+					Member member = memberService.loginMemberNick(nickname); 
+					session.setAttribute("loginUser", member);
+					session.setAttribute("alertMsg2", "카카오 인증이 완료되었습니다.");
+				}
+				System.out.println("성공");
+			}else {
+				session.setAttribute("alertMsg2", "카카오 회원 정보와 회원 정보가 일치하지 않아 인증에 실패하였습니다.");
+			}
+			
+//			카카오 로그아웃 (카카오 관련 api만 로그아웃되므로 계정 로그아웃으로 진행)
+			String url2 = "https://kapi.kakao.com/v1/user/logout";
+			try {
+				URL requestUrl2 = new URL(url2);
+				HttpURLConnection urlCon2 = (HttpURLConnection) requestUrl2.openConnection();
+				urlCon.setRequestMethod("GET");
+				urlCon.setRequestProperty("Authorization", "Bearer "+access_token);
+				
+				BufferedReader br2 = new BufferedReader(new InputStreamReader(urlCon2.getInputStream()));
+				
+				String text2 = "";
+				String line2;
+				
+				while((line2=br2.readLine())!=null) {
+					text2 += line2;
+				}
+				
+				System.out.println(text2);
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+		}
+		
+		//인증2번으로 넘어올시 네이버 토큰 발급 후 정보 조회
+		if(certification.equals("2")) {
+			
+			String clientId = "xezYicDH1SzVKNokPSX2";
+			String ClientSecret = "h48MxFzhpW";
+			
+			//토큰 발급
+			String url = "https://nid.naver.com/oauth2.0/token";
+			url += "?grant_type=authorization_code";
+			url += "&client_id="+clientId;
+			url += "&client_secret="+ClientSecret;
+			url += "&code="+code;
+			url += "&state=test";
+			
+			URL requestUrl = new URL(url);
+			HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
+			
+			//응답데이터 읽어오기
+			BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+			
+			String responseText="";
+			String line;
+			
+			while((line=br.readLine())!=null) {
+				responseText += line;
+			}
+					
+			//System.out.println(responseTextToken);
+			
+			//파싱 작업
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObj = (JSONObject) jsonParser.parse(responseText);
+			//System.out.println(jsonObj);
+			
+			String access_token = (String) jsonObj.get("access_token");
+			//System.out.println(access_token);
+			
+			//토큰으로 사용자 정보 가져오기
+			String urlToken = "https://openapi.naver.com/v1/nid/me	";
+			
+			URL requestUrlInfo = new URL(urlToken);
+			HttpURLConnection urlInfoCon = (HttpURLConnection) requestUrlInfo.openConnection();
+			urlInfoCon.setRequestMethod("GET");
+			urlInfoCon.setRequestProperty("Authorization", "Bearer " + access_token);
+			
+			//System.out.println(urlInfoCon);
+			
+			//응답데이터 읽어오기
+			BufferedReader brInfo = new BufferedReader(new InputStreamReader(urlInfoCon.getInputStream()));
+			
+			String infoText="";
+			String lineInfo;
+			
+			while((lineInfo=brInfo.readLine())!=null) {
+				infoText += lineInfo;
+			}
+					
+			//System.out.println(infoText);
+			
+			//파싱 작업
+			JSONParser jsonParserToken = new JSONParser();
+			JSONObject jsonObjToken = (JSONObject) jsonParserToken.parse(infoText);
+			//System.out.println(jsonObjToken);
+			
+			JSONObject responseInfoText =  (JSONObject) jsonObjToken.get("response");
+			//System.out.println(responseInfoText);
+			
+			String mobile = (String) responseInfoText.get("mobile"); //010-1111-1111
+			String name = (String) responseInfoText.get("name");
+			String email = (String) responseInfoText.get("email");
+			String gender = (String) responseInfoText.get("gender");
+			String birthday = (String) responseInfoText.get("birthday"); //12-12
+			String birthyear = (String) responseInfoText.get("birthyear");
+			
+			String phone = mobile.replaceAll("-", "");
+			String birthdayInfo = birthday.replaceAll("-", "");
+			String birthInfo = birthyear+birthdayInfo;
+			
+			//연령대 계산
+			//입력한 나이
+			int birYear = Integer.parseInt(birthInfo.substring(0, 4));
+			int birMonth = Integer.parseInt(birthInfo.substring(4, 6));
+			int birDay = Integer.parseInt(birthInfo.substring(6, 8));
+			
+			LocalDate birth = LocalDate.of(birYear, birMonth, birDay);
+			
+			//현재 날짜
+			LocalDate today = LocalDate.now();
+			
+			//입력나이와 현재 날짜 사이의 기간 알아내기
+			//Period : 날짜 기간을 나타내는 클래스 (두 날짜 사이의 기간을 알 수 있음)
+			Period age = Period.between(birth, today);
+			
+			int manAge = age.getYears();
+
+			//만나이 연령대별로 나누기
+			if(10<=manAge && manAge<20) {
+				manAge = 10;
+			}else if(20<=manAge && manAge<30) {
+				manAge = 20;
+			}else if(30<=manAge && manAge<40) {
+				manAge = 30;
+			}else if(40<=manAge && manAge<50) {
+				manAge = 40;
+			}else {
+				manAge = 50;
+			}
+			
+			Member m = memberService.loginMemberNick(nickname);
+			if (m.getPhone().equals(phone) && m.getAge()==manAge && m.getUserName().equals(name) && m.getGender().equals(gender)) {
+				int result = memberService.updateCerti(nickname);
+				if (result>0) {
+					Member member = memberService.loginMemberNick(nickname); 
+					session.setAttribute("loginUser", member);
+					session.setAttribute("alertMsg2", "네이버 인증이 완료되었습니다.");
+				}
+				System.out.println("성공");
+			}else {
+				session.setAttribute("alertMsg2", "네이버 회원 정보와 회원 정보가 일치하지 않아 인증에 실패하였습니다.");
+			}
+		}
+		
+		return "member/myPage/certiPopdown";
+	}
+	
 }

@@ -296,5 +296,17 @@ public class MemberServiceImpl implements MemberService{
 	public int connectData(Visit v) {
 		return memberDao.connectData(sqlSession,v);
 	}
+
+	//마이페이지 본인인증 네이버
+	@Override
+	public int updateCerti(String nickname) {
+		return memberDao.updateCerti(sqlSession,nickname);
+	}
+
+	//마이페이지 본인인증 카카오
+	@Override
+	public int updateCertik(String nickname) {
+		return memberDao.updateCertik(sqlSession,nickname);
+	}
 	
 }
