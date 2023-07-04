@@ -129,30 +129,14 @@
 			</div>
 			<div id="cerList_Tex">
 				<div class="cerBtn">
-					<button><img src="/finalProject/resources/images/naverImg.png" id="naverImg"></button>
+					<button type="button" onclick="naver();"><img src="/finalProject/resources/images/naverImg.png" id="naverImg"></button>
 				</div>
 				<div class="cerBtn">
-					<button><img src="/finalProject/resources/images/kakaoImg.png" id="kakaoImg"></button>
+					<button type="button" onclick="kakao();"><img src="/finalProject/resources/images/kakaoImg.png" id="kakaoImg"></button>
 				</div>
 			</div>
 		</div>
 	</div>
-
-	
-  <!-- <div id="login_wrap">
-    <div class="btn_wrap">
-    </div>
-    <div class="sns_wrap">
-    	<div><p>뷰페이지 ...</p>
-    	</div>
-    	<div>
-	    	<button type="button" onclick="naver();">네이버인증 로그인</button>
-    	    <button type="button" onclick="kakao();">카카오인증 로그인</button>
-    	    일반 회원가입인지, 카카오인지 네이버인지 구분하기 위해
-    	    <input type="hidden" name="certification" id="certification" value="0">
-    	</div>
-    </div>
-  </div> -->
   
   <jsp:include page="../common/footer.jsp"/>
   
