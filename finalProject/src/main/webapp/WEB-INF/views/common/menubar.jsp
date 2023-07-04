@@ -275,6 +275,8 @@
         			var mbtiCheck = decodeURI("${cookie.mbtiCheck.value}");
         			var cookieNickname = mbtiCheck.split("+")[0];
         			
+        			console.log(survey);
+        			
 								<%if (request.getSession().getAttribute("loginUser") != null) {%>
 								if(nickname == cookieNickname){
 									if (mbtiCheck == "null") {

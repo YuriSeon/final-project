@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.kh.finalProject.admin.model.dao.AdminDao;
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.admin.model.vo.Report;
+import com.kh.finalProject.admin.model.vo.Visit;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Festival;
@@ -40,10 +41,44 @@ public class AdminServiceImpl implements AdminService {
 	private ServletContext ServletContext;
 
 	
+	//대시보드 방문자 통계
+	@Override
+	public HashMap<String, Integer> countVisit() {
+		HashMap<String, Integer> count = new HashMap<String, Integer>();
+		int day = adminDao.dayCount(sqlSession);
+		int week = adminDao.weekCount(sqlSession);
+		int month = adminDao.monthCount(sqlSession);
+		int total = adminDao.totalCount(sqlSession);
+		
+		count.put("day", day);
+		count.put("week", week);
+		count.put("month", month);
+		count.put("total", total);
+		return count;
+	}
+
+	//대시보드 게시판 별 조회수
+	@Override
+	public ArrayList<Board> countList() {
+		return adminDao.countList(sqlSession);
+	}
+	
 	//대시보드 최근 신고 5개
 	@Override
 	public ArrayList<Report> currentReportList() {
 		return adminDao.currentReportList(sqlSession);
+	}
+	
+	//대시보드 최근 작성글 5개
+	@Override
+	public ArrayList<Board> currentBoardList() {
+		return adminDao.currentBoardList(sqlSession);
+	}
+
+	//대시보드 최근 문의 5개
+	@Override
+	public ArrayList<Notice> currentQnatList() {
+		return adminDao.currentQnaList(sqlSession);
 	}
 	
 	//==================================================공지사항===========================================================
@@ -355,6 +390,24 @@ public class AdminServiceImpl implements AdminService {
 		}
 	}
 	
+	//회원 비밀번호 초기화
+	@Override
+	public void pwdUpdate(Member m) {
+		adminDao.pwdUpdate(sqlSession,m);
+	}
+
+	//회원 편집 접속기록 조회
+	@Override
+	public ArrayList<Visit> visitSelect(String nickname) {
+		return adminDao.visitSelect(sqlSession,nickname);
+	}
+	
+	//회원 계정 복구
+	@Override
+	public int memberRestore(int userNo) {
+		return adminDao.memberRestore(sqlSession,userNo);
+	}
+	
 	//==================================================회원관리===========================================================
 
 	//게시글 축제 리스트 개수
@@ -595,7 +648,10 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	
+
 	
-	
+
+
+
 	
 }

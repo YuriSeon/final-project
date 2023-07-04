@@ -154,7 +154,6 @@
     $(function () {
 		$(".theme-table>tbody>tr>td").not(":first-child").click(function () {
 			var bno = $(this).parent().children().eq(1).text();
-			location.href = "";
 		});
 	});
     

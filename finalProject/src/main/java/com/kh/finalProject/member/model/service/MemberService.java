@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.kh.finalProject.admin.model.vo.Notice;
+import com.kh.finalProject.admin.model.vo.Visit;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.vo.Member;
 
@@ -105,4 +107,34 @@ public interface MemberService {
 
 	//마이페이지 댓글 삭제
 	int replyDelete(int replyNo);
+
+	//마이페이지 찜 목록 삭제
+	int choiceDelete(choice c);
+
+	//마이페이지 Q&A 수정 조회
+	Notice selectQna(int serviceNo);
+
+	//마이페이지 Q&A 수정
+	int myQnaUpdate(Notice n);
+
+	//마이페이지 Q&A 파일 삭제
+	int deleteFile(Attachment del);
+
+	//마이페이지 Q&A 삭제파일 changName가져오기
+	Attachment selectDelFile(Attachment del);
+
+	//마이페이지 Q&A 파일 수정
+	int myQnaFileUpdate(Attachment a);
+
+	//마이페이지 Q&A 삭제
+	int qnaDelete(int serviceNo);
+
+	//마이페이지 Q&A 파일 삭제(serviceNo)
+	int deleteFile(int serviceNo);
+
+	//마이페이지 피드 보기
+	Board selectFeed(int boardNo);
+
+	//접속자 ip,접속시간 기록
+	int connectData(Visit v);
 }

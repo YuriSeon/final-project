@@ -80,9 +80,10 @@
 <!-- 					</li> -->
 					<c:forEach var="qna" items="${list}">
                     		<li class="bdr_nor">
+                    			<input type="text" value="${qna.serviceNo}" class="serviceNo" hidden>
 								<div class="area_txt">
 									<strong class="tit on">
-										<a href="#">${qna.serviceTitle}</a>
+										<a href="javascript:void(0);">${qna.serviceTitle}</a>
 									</strong>
 									<div class="date">
 										<em class="line">${qna.writer}</em>
@@ -103,11 +104,11 @@
 								<button type="button" title="열기" class="btn_view">더보기</button>
 								<div class="qna_subMenu" tabindex="0">
 									<ul>
-										<li class="btn_mod" id="" statusid="0">
-											<a href="javascript:">수정</a>
+										<li class="btn_mod">
+											<a href="javascript:void(0);">수정</a>
 										</li>
-										<li class="btn_del" id="" statusid="0">
-											<a href="javascript:">삭제</a>
+										<li class="btn_del">
+											<a href="javascript:void(0);">삭제</a>
 										</li>
 									</ul>
 								</div>
@@ -196,7 +197,7 @@
 			$(".btn_view").click(function() {
 				var targetDiv = $(this).next("div");
 				
-				$(".wri_subMenu").not(targetDiv).css("display","none");
+				$(".qna_subMenu").not(targetDiv).css("display","none");
 				
 				if (targetDiv.css("display") === "block") {
 					targetDiv.css("display","none");
@@ -206,6 +207,47 @@
 			});
 		});
     	
+    	//질문 상세 페이지 이동
+        $(function () {
+    		$(".list_board1>.bdr_nor>.area_txt>strong>a").click(function () {
+    			var sno = $(this).parents("li").find(".serviceNo").val();
+    			location.href = 'goQnaDetail.me?serviceNo='+sno;
+    		});
+    	});
+    	
+    	//질문 수정 페이지 이동
+        $(function () {
+    		$(".list_board1>li>.qna_subMenu>ul>.btn_mod").click(function () {
+    			var sno = $(this).parents("li").find(".serviceNo").val();
+    			location.href = 'goServiceUpdate.me?serviceNo='+sno;
+    		});
+    	});
+    	
+      	//질문 삭제
+        $(function () {
+    		$(".list_board1>li>.qna_subMenu>ul>.btn_del").click(function () {
+    			var sno = $(this).parents("li").find(".serviceNo").val();
+    			
+   				$.ajax({
+		            url: "qnaDelete.me",
+		            type: "POST",
+		            data: {
+		                serviceNo: sno
+		            },
+		            success: function(result) {
+		            	if (result == "success") {
+		            		$select.parents("li").remove();
+		            		location.reload();
+						}else{
+							alertify.message("게시글 삭제 실패");
+						}
+		            },
+		            error: function() {
+		                console.log("error");
+		            }
+		        });	
+    		});
+    	});
     </script>
     
     <%@include file="../../common/footer.jsp" %>

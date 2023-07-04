@@ -39,7 +39,7 @@ public class ServiceController {
 		
 		ArrayList<Service> serList = serviceService.serList(pi);
 		
-		mv.addObject("list",serList).setViewName("board/service");;
+		mv.addObject("list",serList).setViewName("board/service");
 		mv.addObject("pi",pi);
 		
 		return mv;
