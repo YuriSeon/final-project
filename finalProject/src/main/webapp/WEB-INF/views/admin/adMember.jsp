@@ -99,7 +99,7 @@
 	                            		</c:otherwise>
 	                            	</c:choose>
 	       	                    </td>
-	                            <td><button class="btn btn-default manage" style="width: 150px;">관리</button><button class="btn btn-default admin" style="width: 150px;">관리자임명</button></td>
+	                            <td><button class="btn btn-default manage" style="width: 150px;">관리</button><button class="btn btn-default admin" style="width: 150px;">관리자전환</button></td>
                         	</tr>
                     	</c:forEach>
 <!--                         <tr> -->
@@ -209,15 +209,32 @@
     $(function () {
 		$(".member-table>tbody>tr>td>.manage").click(function () {
 			var bno = $(this).closest("tr").children().eq(1).text();
-// 			location.href = 'goMemberUpdate.ad?userNo='+bno;
+			location.href = 'goMemberUpdate.ad?userNo='+bno;
 		});
 	});
     
-  	//관리자 임명 복구
+  	//관리자 전환
     $(function () {
 		$(".member-table>tbody>tr>td>.admin").click(function () {
 			var bno = $(this).closest("tr").children().eq(1).text();
-			console.log("bno");
+			if (confirm("관리자로 전환하시겠습니까?")) {
+				
+				$.ajax({
+		    		type: "post",
+		    		url: "changeAdmin.ad",
+		    		data: {	userNo : bno },
+					success: function(result) {
+						if(result=="success"){
+							location.href="member.ad";
+						}else{
+							alertify.message("관리자 전환 실패");
+						}
+					},
+					error: function(request,status,error) {
+						console.log("통신오류");
+					}
+		    	});
+			}
 		});
 	});
     

@@ -19,6 +19,228 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- css -->
     <title>신고관리</title>
+    <style type="text/css">
+.comments-container {
+	margin: 60px auto 15px;
+	width: 768px;
+}
+
+.comments-container h1 {
+	font-size: 36px;
+	color: #283035;
+	font-weight: 400;
+}
+
+.comments-container h1 a {
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.comments-list {
+	margin-top: 30px;
+	position: relative;
+}
+
+/**
+ * Lineas / Detalles
+ -----------------------*/
+.comments-list:before {
+	content: '';
+	width: 2px;
+	height: 100%;
+	background: #c7cacb;
+	position: absolute;
+	left: 32px;
+	top: 0;
+}
+
+.comments-list:after {
+	content: '';
+	position: absolute;
+	background: #c7cacb;
+	bottom: 0;
+	left: 27px;
+	width: 7px;
+	height: 7px;
+	border: 3px solid #dee1e3;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+}
+
+.reply-list:before, .reply-list:after {display: none;}
+.reply-list li:before {
+	content: '';
+	width: 60px;
+	height: 2px;
+	background: #c7cacb;
+	position: absolute;
+	top: 25px;
+	left: -55px;
+}
+
+
+.comments-list li {
+	margin-bottom: 15px;
+	display: block;
+	position: relative;
+}
+
+.comments-list li:after {
+	content: '';
+	display: block;
+	clear: both;
+	height: 0;
+	width: 0;
+}
+
+.reply-list {
+	padding-left: 88px;
+	clear: both;
+	margin-top: 15px;
+}
+/**
+ * Avatar
+ ---------------------------*/
+.comment-avatar {
+	display: flex;
+	justify-content: center;
+} 
+ #p_img {
+	margin: auto;
+	justify-content: center;
+}
+#p_img>img {
+ 	width: 130px !important;
+ 	height: 130px !important;
+ 	border-radius: 50%;
+ 	margin-bottom: 10px;
+}
+.modal-dialog {
+    width: 700px;
+    max-width: 700px !important;
+}
+/**
+ * Caja del Comentario
+ ---------------------------*/
+.comments-list .comment-box {
+	width: 680px;
+	float: right;
+	position: relative;
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+	-moz-box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+}
+
+.comments-list .comment-box:before, .comments-list .comment-box:after {
+	content: '';
+	height: 0;
+	width: 0;
+	position: absolute;
+	display: block;
+	border-width: 10px 12px 10px 0;
+	border-style: solid;
+	border-color: transparent #FCFCFC;
+	top: 8px;
+	left: -11px;
+}
+
+.comments-list .comment-box:before {
+	border-width: 11px 13px 11px 0;
+	border-color: transparent rgba(0,0,0,0.05);
+	left: -12px;
+}
+
+.reply-list .comment-box {
+	width: 610px;
+}
+.comment-box .comment-head {
+	background: #FCFCFC;
+	padding: 10px 12px;
+	border-bottom: 1px solid #E5E5E5;
+	overflow: hidden;
+	-webkit-border-radius: 4px 4px 0 0;
+	-moz-border-radius: 4px 4px 0 0;
+	border-radius: 4px 4px 0 0;
+}
+
+.comment-box .comment-head i {
+	float: right;
+	margin-left: 14px;
+	position: relative;
+	top: 2px;
+	color: #A6A6A6;
+	cursor: pointer;
+	-webkit-transition: color 0.3s ease;
+	-o-transition: color 0.3s ease;
+	transition: color 0.3s ease;
+}
+
+.comment-box .comment-head i:hover {
+	color: #03658c;
+}
+
+.comment-box .comment-name {
+	color: #283035;
+	font-size: 14px;
+	font-weight: 700;
+	float: left;
+	margin-right: 10px;
+}
+
+.comment-box .comment-name a {
+	color: #283035;
+}
+
+.comment-box .comment-head span {
+	float: left;
+	color: #999;
+	font-size: 13px;
+	position: relative;
+	top: 1px;
+}
+
+.comment-box .comment-content {
+	background: #FFF;
+	padding: 12px;
+	font-size: 15px;
+	color: #595959;
+	-webkit-border-radius: 0 0 4px 4px;
+	-moz-border-radius: 0 0 4px 4px;
+	border-radius: 0 0 4px 4px;
+}
+
+.comment-box .comment-name.by-author, .comment-box .comment-name.by-author a {color: #03658c;}
+.comment-box .comment-name.by-author:after {
+	content: 'autor';
+	background: #03658c;
+	color: #FFF;
+	font-size: 12px;
+	padding: 3px 5px;
+	font-weight: 700;
+	margin-left: 10px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+/** =====================
+ * Responsive
+ ========================*/
+@media only screen and (max-width: 766px) {
+	.comments-container {
+		width: 480px;
+	}
+
+	.comments-list .comment-box {
+		width: 390px;
+	}
+
+	.reply-list .comment-box {
+		width: 320px;
+	}
+}
+    </style>
 </head>
 <body>
 <%@include file="adMenubar.jsp" %>
@@ -57,6 +279,7 @@
                         <tr>
                             <th style="width: 5%;"><input type="checkbox" id="chkAll"></th>
                             <th style="width: 5%;">번호</th>
+                            <th style="width: 5%;">종류</th>
                             <th style="width: 40%;">신고사유</th>
                             <th style="width: 10%;">작성자</th>
                             <th style="width: 10%;">신고횟수</th>
@@ -68,16 +291,33 @@
                     	<c:forEach var="r" items="${list}">
                     		<tr>
 	                            <td class="table-chk"><input type="checkbox" class="check" name="chk" id=""></td>
-	                            <td>${r.reportNo}</td>
+	                            <td>
+	                            	${r.reportNo}
+	                            	<input class="boardNo" value="${r.boardNo}" hidden="hidden">
+	                            	<input class="replyNo" value="${r.replyNo}" hidden="hidden">
+	                            	<input class="rereplyNo" value="${r.rereplyNo}" hidden="hidden">
+	                            </td>
+	                            <c:choose>
+	                            	<c:when test="${r.replyWriter eq null && r.rereplyWriter eq null}">
+	                            		<td>게시글</td>
+	                            	</c:when>
+	                            	<c:otherwise>
+			                            <td>댓글</td>
+	                            	</c:otherwise>
+	                            </c:choose>
 	                            <td>${r.reportReason}</td>
 	                            <c:choose>
-	                            	<c:when test="${r.replyWriter eq null}">
+	                            	<c:when test="${r.replyWriter eq null && r.rereplyWriter eq null}">
 	                            		<td>${r.boardWriter}</td>
 	                            		<td>${r.boardReport}</td>
 	                            	</c:when>
+	                            	<c:when test="${r.boardWriter eq null && r.rereplyWriter eq null}">
+	                            		<td>${r.replyWriter}</td>
+	                            		<td>${r.replyReport}</td>
+	                            	</c:when>
 	                            	<c:otherwise>
-			                            <td>${r.replyWriter}</td>
-			                            <td>${r.replyReport}</td>
+			                            <td>${r.rereplyWriter}</td>
+			                            <td>${r.rereplyReport}</td>
 	                            	</c:otherwise>
 	                            </c:choose>
 	                            <td>${r.writer}</td>
@@ -128,7 +368,41 @@
         </div>
     </div><!-- container-fluid -->
 </div>
-
+<!-- Modal 시작 -->
+<div class="feed-modal">
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title" id="exampleModalLabel">댓글</h2>
+<!-- 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+					<button type="button" class="close" data-dismiss="modal" style="margin-right: 10px;">X</button>
+				</div>
+				<div class="modal-body" style="height: 400px; overflow: hidden; background: #dee1e3; width: 100%;">
+<!-- 					<div class="comment-main-level"> -->
+<!-- 						Avatar -->
+<!-- 						<div class="comment-avatar"><img src="resources/images/blackperson.png" alt="" width="100px;"></div> -->
+<!-- 						Contenedor del Comentario -->
+<!-- 						<div class="comment-box"> -->
+<!-- 							<div class="comment-head"> -->
+<!-- 								<h6 class="comment-name">Agustin Ortiz</h6> -->
+<!-- 								<span style="position: relative; top: 10px;">hace 20 minutos</span> -->
+<!-- 							</div> -->
+<!-- 							<div class="comment-content"> -->
+<!-- 								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo? -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+				</div>
+				<div class="modal-footer">
+<!-- 					<button type="button" class="btn btn-primary">Save changes</button> -->
+<!-- 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal 끝 -->
 <script>
     
     //체크박스 전체선택
@@ -153,7 +427,102 @@
     //클릭 시 상세페이지 이동
     $(function () {
 		$(".theme-table>tbody>tr>td").not(":first-child").click(function () {
-			var bno = $(this).parent().children().eq(1).text();
+			var bno = $(this).parent().children().eq(1).children("input").eq(0).val();
+			var rno = $(this).parent().children().eq(1).children("input").eq(1).val();
+			var rrno = $(this).parent().children().eq(1).children("input").eq(2).val();
+			
+			//게시판
+			if (rno == 0 && rrno == 0) {
+				if (confirm("게시물로 이동하시겠습니까?")) {
+					$.ajax({
+			    		type: "get",
+			    		url: "boardChk.ad",
+			    		data: {	boardNo : bno },
+						success: function(category) {
+							if(category==4){
+								location.href="feed.bo";
+							}else if (category==5) {
+								location.href="togetherDetail.bo?boardNo="+bno;
+							}else if (category==6) {
+								location.href="detail.sc";
+							}else{
+								alertify.message("게시물 이동 실패");
+							}
+						},
+						error: function(request,status,error) {
+							console.log("통신오류");
+						}
+					});
+				}
+				
+			//댓글
+			}else if (bno == 0 && rrno == 0) {
+				$.ajax({
+		    		type: "get",
+		    		url: "replyChk.ad",
+		    		data: {	replyNo : rno },
+		    		dataType: "json",
+					success: function(reply) {
+						var str = "";
+							str += '<div class="comment-main-level">' 
+								+ '<div class="comment-avatar" id="p_img">';
+								if (reply.profileImg == null) {
+									str += '<img src="resources/images/blackperson.png" style="border-radius: 50%;">';
+								}else {
+									str += '<img src="'+reply.profileImg+'" style="border-radius: 50%;">';
+								}
+							str += '</div>'
+								+ '<div class="comment-box">'
+								+ '<div class="comment-head">'
+								+ '<h6 class="comment-name">'+reply.replyWriter+'</h6>'
+								+ '<span style="position: relative; top: 10px;">'+reply.createDate+'</span>'
+								+ '</div>' 
+								+ '<div class="comment-content">' 
+								+ reply.content
+								+ '</div>'
+								+ '</div>'
+								+ '</div>';
+								
+						$(".modal-body").html(str);
+						$("#exampleModal").modal("show");			
+					},
+					error: function(request,status,error) {
+						console.log(error);
+					}
+		    	});
+				
+			//대댓글
+			}else {
+				$.ajax({
+		    		type: "get",
+		    		url: "rereplyChk.ad",
+		    		data: {	replyNo : rrno },
+		    		dataType: "json",
+					success: function(reply) {
+						var str = "";
+							str += '<div class="comment-main-level">' 
+								+ '<div class="comment-avatar" id="p_img">'
+								+ '<img src="'+reply.profileImg+'" style="border-radius: 50%;">'
+								+ '</div>'
+								+ '<div class="comment-box">'
+								+ '<div class="comment-head">'
+								+ '<h6 class="comment-name">'+reply.replyWriter+'</h6>'
+								+ '<span style="position: relative; top: 10px;">'+reply.createDate+'</span>'
+								+ '</div>' 
+								+ '<div class="comment-content">' 
+								+ reply.content
+								+ '</div>'
+								+ '</div>'
+								+ '</div>';
+								
+						$(".modal-body").html(str);
+						$("#exampleModal").modal("show");			
+					},
+					error: function(request,status,error) {
+						console.log(error);
+					}
+		    	});
+			}
 		});
 	});
     

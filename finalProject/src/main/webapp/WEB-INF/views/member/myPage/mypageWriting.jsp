@@ -141,7 +141,11 @@
 												</c:choose>
 											</div>
 											<span class="ico">
-												<img src="resources/images/ico_naver.png" alt="네이버">
+												<c:choose>
+													<c:when test="${loginUser.certification == 1}"><img src="resources/images/ico_kakao.png" alt="카카오"></c:when>
+													<c:when test="${loginUser.certification == 2}"><img src="resources/images/ico_naver.png" alt="네이버"></c:when>
+													<c:otherwise></c:otherwise>
+												</c:choose>
 											</span>
 										</div>
 										<div class="txt_reply">

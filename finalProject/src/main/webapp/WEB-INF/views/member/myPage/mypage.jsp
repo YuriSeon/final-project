@@ -142,8 +142,20 @@
                                     <span>발도장</span>
                                 </li>
                                 <li>
-                                    <a href="javascript:popup();" class="icon5"><img src="resources/images/padlock.png" alt="" width="50px" height="50px"></a>
-                                    <span>동행 인증</span>
+	                                <c:choose>
+	                                	<c:when test="${loginUser.certification == 1}">
+	                                		<a href="javascript:void(0);" class="icon5"><img src="resources/images/icon_kakao.png" alt="" width="50px" height="50px"></a>
+	                                		<span>인증 완료</span>
+	                                	</c:when>
+	                                	<c:when test="${loginUser.certification == 2}">
+	                                		<a href="javascript:void(0);" class="icon5"><img src="resources/images/icon_naver.png" alt="" width="50px" height="50px"></a>
+	                                		<span>인증 완료</span>
+	                                	</c:when>
+	                                	<c:otherwise>
+                                    		<a href="javascript:popup();" class="icon5"><img src="resources/images/padlock.png" alt="" width="50px" height="50px"></a>
+                                    		<span>동행 인증</span>
+	                                	</c:otherwise>
+	                                </c:choose>
                                 </li>
                                 <li>
                                     <a href="survey.me" class="icon6"><img src="resources/images/check.png" alt="" width="50px" height="50px"></a>
@@ -217,7 +229,8 @@
 			</div> <!-- .inr -->
         </div><!-- .mapage_subscribe -->
     </div><!-- #contents -->
-    
+    <button onclick="naverLogout();" style="background-color: white; border: none; width: 50px; height: 50px; position: absolute; top: 130px;"></button>
+    <button onclick="kakaoLogout();" style="background-color: white; border: none; width: 50px; height: 50px; float: right; position: relative; top: -1210px;"></button>
     <script>
     	
     	//최근 본 게시물 슬라이드
@@ -314,6 +327,39 @@
 			let openUrl = 'myCertification.me';
 			window.open(openUrl,'pop',popOption);
 		}
+        
+      //네이버 로그아웃
+    	var testPopUp;
+    	function openPopUp() {
+    	    testPopUp= window.open("https://nid.naver.com/nidlogin.logout", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,width=1,height=1,left=-1000,top=-1000");
+    	}
+    	function closePopUp(){
+    	    testPopUp.close();
+    	}
+    	
+    	function naverLogout() {
+    		openPopUp();
+    		setTimeout(function() {
+    			closePopUp();
+    			}, 100);
+    	}
+    	
+    	//카카오 로그아웃
+    	var test2PopUp;
+    	function kopenPopUp() {
+    	    test2PopUp= window.open("https://kauth.kakao.com/oauth/logout?client_id=04c77a2f5ca75a521a0d0e08cbb740b3&logout_redirect_uri=http://localhost:8888/finalProject/");
+    	    
+    	}
+    	function kclosePopUp(){
+    	    test2PopUp.close();
+    	}
+
+    	function kakaoLogout() {
+    		kopenPopUp();
+    		setTimeout(function() {
+    			kclosePopUp();
+    			}, 1000);
+    	}
     </script>
     
     <%@include file="../../common/footer.jsp" %>

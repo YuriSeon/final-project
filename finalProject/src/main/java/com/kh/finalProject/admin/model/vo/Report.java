@@ -22,5 +22,7 @@ public class Report {
 	private int boardReport;
 	private String replyWriter;
 	private int replyReport;
-
+	private String rereplyWriter;
+	private int rereplyReport;
+	
 }

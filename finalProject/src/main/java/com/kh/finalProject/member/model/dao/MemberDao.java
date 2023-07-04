@@ -79,7 +79,7 @@ public class MemberDao {
 
 	//프로필용 멤버 조회
 	public Member loginMemberNick(SqlSessionTemplate sqlSession, String nickname) {
-		return sqlSession.selectOne("memberMapper.loginMemberNo", nickname);
+		return sqlSession.selectOne("memberMapper.loginMemberNick", nickname);
 	}
 
 	//프로필 사진 삭제
@@ -259,6 +259,16 @@ public class MemberDao {
 	//접속자 ip,접속시간 기록
 	public int connectData(SqlSessionTemplate sqlSession, Visit v) {
 		return sqlSession.insert("adminMapper.connectData",v);
+	}
+
+	//마이페이지 본인인증 네이버
+	public int updateCerti(SqlSessionTemplate sqlSession, String nickname) {
+		return sqlSession.update("memberMapper.updateCerti",nickname);
+	}
+
+	//마이페이지 본인인증 카카오
+	public int updateCertik(SqlSessionTemplate sqlSession, String nickname) {
+		return sqlSession.update("memberMapper.updateCertik",nickname);
 	}
 
 }

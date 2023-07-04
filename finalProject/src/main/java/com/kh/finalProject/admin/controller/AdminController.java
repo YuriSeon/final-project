@@ -49,6 +49,7 @@ import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Festival;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.board.model.vo.Theme;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
@@ -98,6 +99,8 @@ public class AdminController {
 		
 		ArrayList<Board> list = adminService.countList();
 		HashMap<String, Integer> count = adminService.countVisit(); 
+		HashMap<String, Integer> map = adminService.countMap();
+		
 		
 		mv.addObject("vcList", count);
 		mv.addObject("bcList", list).setViewName("admin/dashboard");
@@ -762,7 +765,23 @@ public class AdminController {
 			session.setAttribute("alertMsg","회원 복구 완료");
 			return "success";
 		}else {
-			mv.addObject("errorMsg","회원 복구 실패").setViewName("common/errorPage");
+			return "fail";
+		}
+	}
+	
+	//회원 관리자 전환
+	@ResponseBody
+	@PostMapping("changeAdmin.ad")
+	public String changeAdmin(@RequestParam(value="userNo") int userNo
+							    ,ModelAndView mv
+				  		        ,HttpSession session) {
+
+		int result = adminService.changeAdmin(userNo);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","관리자 전환 완료");
+			return "success";
+		}else {
 			return "fail";
 		}
 	}
@@ -1556,5 +1575,39 @@ public class AdminController {
 		return (result>0)?new Gson().toJson("success"):new Gson().toJson("fail");
 	}
 	
+	//신고 게시물 이동
+	@ResponseBody
+	@RequestMapping(value = "boardChk.ad")
+	public String boardChk(@RequestParam("boardNo") int boardNo
+					   	   ,HttpSession session) {
+		
+		int result = adminService.boardChk(boardNo);
+		String cate= Integer.toString(result);
+		
+		System.out.println(cate);
+		return cate;
+	}
+
+	//신고 댓글 조회
+	@ResponseBody
+	@RequestMapping(value = "replyChk.ad", produces = "application/json; charset=UTF-8")
+	public String replyChk(@RequestParam("replyNo") int replyNo
+					   	   ,HttpSession session) {
+		
+		Reply r = adminService.replyChk(replyNo);
+		
+		return new Gson().toJson(r);
+	}
+	
+	//신고 대댓글 조회
+	@ResponseBody
+	@RequestMapping(value = "rereplyChk.ad", produces = "application/json; charset=UTF-8")
+	public String rereplyChk(@RequestParam("replyNo") int replyNo
+					   	   ,HttpSession session) {
+		
+		Rereply r = adminService.rereplyChk(replyNo);
+		
+		return new Gson().toJson(r);
+	}
 	
 }
