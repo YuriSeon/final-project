@@ -95,36 +95,74 @@
             <div id="pagingArea" align="center">
                 <ul class="pagination">
                 	<c:choose>
-                		<c:when test="${pi.currentPage eq 1}">
-                   			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
+                		<c:when test="${keyword != null}">
+		                	<c:choose>
+		                		<c:when test="${pi.currentPage eq 1}">
+		                   			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
+		                		</c:when>
+		                		<c:otherwise>
+		                			 <li class="page-item"><a class="page-link" href="scheduleSearch.ad?currentPage=${pi.currentPage - 1}&type=${type}&keyword=${keyword}">&lt;</a></li>
+		                		</c:otherwise>
+		                	</c:choose>
+		                	
+		                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
+		                    	<c:choose>
+		                    		<c:when test="${p eq pi.currentPage}">
+		                   				<li class="page-item disabled"><a class="page-link" href="scheduleSearch.ad?currentPage=${p}&type=${type}&keyword=${keyword}">${p}</a></li>
+			                		</c:when>
+			                		<c:otherwise>
+			                			<li class="page-item"><a class="page-link" href="scheduleSearch.ad?currentPage=${p}&type=${type}&keyword=${keyword}">${p}</a></li>
+			                		</c:otherwise>
+		                    	</c:choose>
+		                    </c:forEach>
+		                    
+		                    <c:choose>
+		                    	<c:when test="${pi.currentPage eq pi.maxPage}">
+				                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
+		                    	</c:when>
+		                    	<c:when test="${pi.listCount eq 0}">
+				                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
+		                    	</c:when>
+		                    	<c:otherwise>
+		                    		<li class="page-item"><a class="page-link" href="scheduleSearch.ad?currentPage=${pi.currentPage + 1}&type=${type}&keyword=${keyword}">&gt;</a></li>
+		                    	</c:otherwise>
+		                    </c:choose>
                 		</c:when>
+                		
                 		<c:otherwise>
-                			 <li class="page-item"><a class="page-link" href="schedule.ad?currentPage=${pi.currentPage - 1 }">&lt;</a></li>
+		                	<c:choose>
+		                		<c:when test="${pi.currentPage eq 1}">
+		                   			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
+		                		</c:when>
+		                		<c:otherwise>
+		                			 <li class="page-item"><a class="page-link" href="schedule.ad?currentPage=${pi.currentPage - 1 }">&lt;</a></li>
+		                		</c:otherwise>
+		                	</c:choose>
+		                	
+		                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
+		                    	<c:choose>
+		                    		<c:when test="${p eq pi.currentPage}">
+		                   				<li class="page-item disabled"><a class="page-link" href="schedule.ad?currentPage=${p}">${p}</a></li>
+			                		</c:when>
+			                		<c:otherwise>
+			                			<li class="page-item"><a class="page-link" href="schedule.ad?currentPage=${p}">${p}</a></li>
+			                		</c:otherwise>
+		                    	</c:choose>
+		                    </c:forEach>
+		                    
+		                    <c:choose>
+		                    	<c:when test="${pi.currentPage eq pi.maxPage}">
+				                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
+		                    	</c:when>
+		                    	<c:when test="${pi.listCount eq 0}">
+				                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
+		                    	</c:when>
+		                    	<c:otherwise>
+		                    		<li class="page-item"><a class="page-link" href="schedule.ad?currentPage=${pi.currentPage + 1}">&gt;</a></li>
+		                    	</c:otherwise>
+		                    </c:choose>
                 		</c:otherwise>
                 	</c:choose>
-                	
-                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
-                    	<c:choose>
-                    		<c:when test="${p eq pi.currentPage}">
-                   				<li class="page-item disabled"><a class="page-link" href="schedule.ad?currentPage=${p}">${p}</a></li>
-	                		</c:when>
-	                		<c:otherwise>
-	                			<li class="page-item"><a class="page-link" href="schedule.ad?currentPage=${p}">${p}</a></li>
-	                		</c:otherwise>
-                    	</c:choose>
-                    </c:forEach>
-                    
-                    <c:choose>
-                    	<c:when test="${pi.currentPage eq pi.maxPage}">
-		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
-                    	</c:when>
-                    	<c:when test="${pi.listCount eq 0}">
-		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
-                    	</c:when>
-                    	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="schedule.ad?currentPage=${pi.currentPage + 1}">&gt;</a></li>
-                    	</c:otherwise>
-                    </c:choose>
                 </ul>
             </div> 
             <!-- 페이징 끝 -->

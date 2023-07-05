@@ -392,6 +392,7 @@ transform : scale(1.4);
 	position: relative;
 	background: white;
 	color: #555;
+	table-layout: fixed;
 }
 .current-board th{
 	text-align: center;
@@ -414,6 +415,11 @@ transform : scale(1.4);
 .current-board>table>tbody> tr td,
 .current-board>table>tbody> tr th {
   cursor: pointer;
+  overflow:hidden;
+  white-space : nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  height: 27px;
 }
 .current-board>table>tbody>tr:hover {
 	background: #4189C7;
@@ -517,6 +523,7 @@ transform : scale(1.4);
 	position: relative;
 	background: white;
 	color: #555;
+	table-layout: fixed;
 }
 .theme-board th{
 	text-align: center;
@@ -539,6 +546,9 @@ transform : scale(1.4);
 .theme-board>table>tbody> tr td,
 .theme-board>table>tbody> tr th {
   cursor: pointer;
+  overflow:hidden;
+  white-space : nowrap;
+  text-overflow: ellipsis;
 }
 
 /* ================= 게시판관리 - 피드 =================== */
