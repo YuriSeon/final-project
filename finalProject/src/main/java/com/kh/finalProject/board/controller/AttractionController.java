@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +30,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.service.AttractionService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
@@ -155,22 +160,21 @@ public class AttractionController {
 	}
 	
 	@ResponseBody
-	@GetMapping(value="searchKeyword1", produces = "application/json; charset=UTF-8")
+	@RequestMapping(value="searchKeyword1", produces = "application/json; charset=UTF-8")
 	public String ListSelectApi(@RequestParam(value="currentPage", defaultValue ="1") int currentPage,
 								@RequestParam(value="sort", defaultValue ="O") String sort,
-								String zoneName,
+								@RequestParam(value="keyword")String keyword,
 								@RequestParam(value="searchType", defaultValue ="12") int searchType) throws IOException {
 		// 검색내역변수처리
 		String rowBounds = "&numOfRows=6"; // 한페이지당 보이는 게시물 수 나중에 게시물수 확인해서 값 수정하기
 		String page = "&pageNo="+currentPage; // currentPage넣어주기
 		String arr = "&arrange="+sort; // 정렬기준 (O=제목순, Q=수정일순, R=생성일순)
-		String keyword = "&keyword="+zoneName; // 검색지역 넣기
+		String key = "&keyword="+URLEncoder.encode(keyword,"UTF-8"); // 검색지역 넣기
 		String type = "&contentTypeId="+searchType; // 검색유형 (12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 38:쇼핑, 39:음식점)
 		String etc = "&MobileOS=ETC&MobileApp=AppTest&_type=json&listYN=Y";
 		
 		// 검색해서 보여줄 url 완성
-		String url = BASEURL + SERVICEKEY + rowBounds + page  + arr + keyword + type + etc;
-		
+		String url = BASEURL + SERVICEKEY + rowBounds + page  + arr + key + type + etc;
 		// url 연결 후 값 읽어오기
 		URL requestUrl = new URL(url);
 		HttpURLConnection urlCon = (HttpURLConnection)requestUrl.openConnection();
@@ -217,14 +221,11 @@ public class AttractionController {
 	public String searchInfo(Info in) {
 		Info info = null; // 선언
 		String infoName = in.getInfoName();
-		String infoAddress = in.getInfoAddress();
-		String zone = infoAddress.split(" ")[0]; // 주소에서 지역명 추출
-		// 첫번째 공백 뒤로 잘라서 주소 검색
-		// 서울이나 서울특별시 이렇게 다르게 찾아질 수 있으니 처음 단위 제거
-		String address = infoAddress.substring(infoAddress.indexOf(" ")+1); 
-		int result = atService.checkInfo(address);
+		String[] infoAddress = in.getInfoAddress().split(" ");
+		String zone = infoAddress[0]+" "+infoAddress[1]; // 주소에서 지역명 추출
+		int result = atService.checkInfo(zone);
 		if(result==0) { //이미 등록된게 없다면 검색진행
-			info = new Selenium().searchData(infoName, zone);
+			info = new Selenium().searchData(infoName, infoAddress[0]);
 		}
 		return new Gson().toJson(info);
 	}
@@ -270,7 +271,7 @@ public class AttractionController {
 							@RequestParam("answer") ArrayList<String> answer) {
 		String boardContent = "";
 		for(String str : answer) { // 수정원하는 정보 
-			boardContent += str+" ";
+			boardContent += str+"<br>";
 		}
 		b.setBoardContent(boardContent);
 		atService.modifyinfo(b);
@@ -289,8 +290,15 @@ public class AttractionController {
 	@ResponseBody
 	@RequestMapping(value="selectReplyList.attr", produces ="application/json; charset=UTF-8")
 	public String selectReplyList(int boardNo) {
-		HashMap<String, Object> rList = atService.selectReplyList(boardNo);
+		ArrayList<Rereply> rList = atService.selectReplyList(boardNo);
 		return new Gson().toJson(rList);
+	}
+	
+	// 댓글삭제
+	@ResponseBody
+	@RequestMapping(value="deleteReply.attr", produces ="application/json; charset=UTF-8")
+	public int deleteReply(Rereply r) {
+		return atService.deleteReply(r);
 	}
 	
 	// 좋아요, 찜, 신고여부 조회
@@ -318,6 +326,15 @@ public class AttractionController {
 		return new Gson().toJson(count);
 	}
 	
+	// 신고하기
+	@ResponseBody
+	@RequestMapping(value="report.attr", produces ="application/json; charset=UTF-8")
+	public String sendReport(Report report) {
+		int result = atService.sendReport(report);
+		return new Gson().toJson(result);
+	}
+	
+	
 	// 게시물 수정페이지 이동
 	@GetMapping("update.attr")
 	public String updateAttr(Model model, int boardNo) {
@@ -326,17 +343,60 @@ public class AttractionController {
 		return "board/attraction/attractionUpdate";
 	}
 	
-//	// 게시물 수정 
-//	@PostMapping("update.attr")
-//	public ModelAndView updateAttr(ModelAndView mv, Info info, )
+	// 게시물 수정 
+	// 새롭게 들어온게 있는지 확인하고 파일 업로드 진행 (여기서는 url로 다운받는 과정이 없기때문에 파일업로드만 확인)
+	// url의 배열에서 삭제된거 잘 넘어오는지 확인
+	@PostMapping("update.attr")
+	public ModelAndView updateAttr(HttpSession session, ModelAndView mv, Info info, MultipartFile upfile, 
+									@RequestParam("introduce")String introduce,
+									@RequestParam("changeImg")String changeImg) {
+		String savePath = session.getServletContext().getRealPath("/resources/infoImg/");
+		if(introduce!="") {
+			info.setBoardContent(info.getBoardContent()+"||"+introduce);
+		}
+		ArrayList<Attachment> atList = atService.selectAttachment(info.getBoardNo()); // 원래 있던 이미지 리스트
+		ArrayList<Attachment> removeList = new ArrayList<>(); // 제거된 항목만 담을 배열
+		// 기존이미지 배열에서 순차적으로 확인 후 changeImg에 들어있지 않으면 removeList에 담기
+		// 새로 업로드 된 파일이 있다면 업로드와 이름수정 진행하고 파일추가 진행
+		for(int i=0; i<atList.size(); i++) {
+			if(!changeImg.contains(atList.get(i).getChangeName())) {
+				removeList.add(atList.get(i));
+			}
+		}
+		Attachment at = new Attachment();
+		if(!upfile.getOriginalFilename().equals("")){
+			String originName = upfile.getOriginalFilename();
+			String changeName = getChangeName(upfile.getOriginalFilename());
+			try {
+				upfile.transferTo(new File(savePath+changeName)); // 파일 업로드 구문
+				at.setOriginName(originName);
+				at.setChangeName(changeName);
+				at.setFilePath("resources/infoImg/"+changeName);
+				at.setBoardNo(info.getBoardNo());
+			} catch (IllegalStateException | IOException e) {
+				e.printStackTrace();
+			}
+		}
+		// 게시물 수정 및 첨부파일 테이블 수정
+		int result = atService.updateAttr(info, removeList, at);
+		if(result>0) {
+			session.setAttribute("alertMsg", "수정 성공");
+			mv.setViewName("redirect:attraction.bo");
+		} else {
+			mv.addObject("errorMsg", "수정 실패").setViewName("common/errorPage");
+		}
+		return mv;
+		
+	}
 		
 	// 게시물 삭제 
 	@RequestMapping("delete.attr")
 	public ModelAndView deleteAttr(int boardNo, ModelAndView mv, HttpSession session,
 							@RequestParam("at") ArrayList<String> at) {
-		int result = atService.deleteAttr(boardNo);
+		System.out.println(at.get(0));
+		int result = atService.deleteAttr(boardNo, at);
 		if(result>0) {
-			if(!at.isEmpty()) { // 넘어온 파일정보가 있을때 
+			if(!(at.get(0)).equals("")) { // 넘어온 파일정보가 있을때 
 				for(String path : at) {
 					new File(session.getServletContext().getRealPath(path)).delete();
 				}

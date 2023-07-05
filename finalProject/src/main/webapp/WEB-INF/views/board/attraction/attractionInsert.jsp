@@ -73,6 +73,7 @@
                     <tr>
                         <th>이미지</th>
                         <td id="img-area" colspan="3">
+                        <input type="file" name="fileUpload" id="upfile">
 	                        <div id="wrapSlide">
 		                        <div id="float">
 		                            <div class="float-img">
@@ -178,7 +179,6 @@
                             $("#parking").prop("value",result.parking);
                             for(var i in img){
                             	slideIndex.push(img[i]);
-                            	console.log(img[i]);
                             }
                             /* 사진 슬라이더로 보여주기 */
                             let currentIndex = slideIndex[0];

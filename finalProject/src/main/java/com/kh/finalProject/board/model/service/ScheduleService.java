@@ -3,6 +3,8 @@ package com.kh.finalProject.board.model.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpSession;
+
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Info;
@@ -15,11 +17,7 @@ public interface ScheduleService {
 
 	ArrayList<Board> selectBoardList(PageInfo pi, String sort);
 
-	int insertSchedule(Plan plan);
-
-	int insertInfoAttach(Info info, ArrayList<Attachment> atList);
-
-	int insertPath(String[][] pathArr, int num);
+	int insertSchedule(HttpSession session, Plan plan, ArrayList<Info> infoList, String[][] pathArr);
 
 	int checkInfo(String address);
 

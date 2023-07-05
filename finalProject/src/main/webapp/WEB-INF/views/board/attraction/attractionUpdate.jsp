@@ -4,11 +4,113 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="resources/css/listMap.css?after">
-<link rel="stylesheet" href="resources/css/attraction.css?after">
+<link rel="stylesheet" href="resources/css/listMap.css">
+<link rel="stylesheet" href="resources/css/attraction.css">
 <title>Insert title here</title>
 </head>
-<style type="text/css"></style>
+<style type="text/css">
+.attrUpdate table textarea {
+	width: 100%;
+	height: 97%;
+	border: none;
+	resize: none;
+}
+
+.attrUpdate table #img-area {
+	height: 300px;
+	position: relative;
+}
+
+.attrUpdate table #img-area * {
+	border: none;
+}
+
+.attrUpdate #wrapSlide {
+	width: 100%;
+	height: 90%;
+}
+.attrUpdate #upfile{
+	width: 80%;
+	height: 10%;
+
+}
+.attrUpdate #float {
+	width: 100%;
+	height: 90%;
+}
+
+.attrUpdate #slideArea {
+	width: 60%;
+	height: 100%;
+	text-align: center;
+}
+
+.attrUpdate #slideImage {
+	width: auto;
+	max-height: 240px;
+	height: 100%;
+}
+
+.attrUpdate #float>div {
+	float: left;
+}
+
+.attrUpdate .float-img {
+	width: 20%;
+	height: 100%;
+}
+
+.attrUpdate #prev, .attrUpdate #next {
+	position: relative;
+	opacity: 0.3;
+	width: 60%;
+	height: auto;
+	margin-top: 50%;
+	opacity: calc(0.1);
+	cursor: pointer;
+	margin-left: 25%;
+}
+
+.attrUpdate #dotArea {
+	position: relative;
+	margin-top: 1px;
+	height: 5%;
+	text-align: center;
+}
+
+.attrUpdate #dotArea * {
+	margin-right: 10px;
+}
+
+.attrUpdate table #boardContent2 {
+	height: 200px;
+}
+
+.attrUpdate .btn-area {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.attrUpdate .btn-area button {
+	width: 100px;
+	height: 35px;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+.attrUpdate tr td>input{
+	width:100%;
+	height: 100%;
+	box-sizing: border-box;
+	border : none;
+}
+.attrUpdate #removeImg {
+	float:right; 
+	width:19%;
+	font-size: 15px;
+	margin-top: 5px;
+	margin-right: 7px;
+}
+</style>
 <body>
     <%@include file="../../common/menubar.jsp" %>
     <div class="attrUpdate">
@@ -19,14 +121,10 @@
                 <img src="resources/images/attr2.png">
                 <img src="resources/images/attr1.png">
             </div>
-            <pre> 새롭게 업데이트 된 정보를 조회하고싶다면 검색해주세요 </pre>
-        </div>
-        <div class="serach-area">
-            <input type="search" name="title" id="search-input" placeholder="조회를 원하는 관광지를 입력해주세요">
-            <button onclick="mapSearch();">검색</button>
+            <pre> <mark>정보를 새롭게 업데이트 해주세요</mark> </pre>
         </div>
         <hr>
-        <form action="update.attr" method="post" id="update-form">
+        <form action="update.attr" method="post" id="update-form" enctype="multipart/form-data">
             <table>
                 <thead>
                     <tr>
@@ -69,97 +167,130 @@
                     <tr>
                         <th>이미지</th>
                         <td id="img-area" colspan="3">
-                            <input type="file" name="upfile">
+                            <input type="file" name="upfile" id="upfile">
+	                        <button type="button" id="removeImg">현재이미지삭제</button>
+                            <div id="wrapSlide">
+		                        <div id="float">
+		                            <div class="float-img">
+		                                <img src="resources/images/left.png" id="prev" >
+		                            </div>
+		                            <div id="slideArea">
+		                                <img id="slideImage"/>
+		                            </div>
+		                            <div class="float-img">
+		                                <img src="resources/images/right.png" id="next" >
+		                            </div>
+		                        </div>
+		                        <div id="dotArea"></div>
+		                    </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
             <div class="btn-area">
                 <button onclick="history.back();">목록으로</button>
-                <button type="submit">수정하기</button>
+                <button type="button" id="submitBefore">수정하기</button>
             </div>
+            <input type="hidden" name="boardContent" value="${dataMap.board.boardContent }">
+            <input type="hidden" name="boardNo" value="${dataMap.board.boardNo }">
+            <input type="hidden" name="infoNo" value="${dataMap.info.infoNo }">
         </form>
     </div>
-        <div class="modal fade" id="myMap">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">관광지 등록 검색</h3>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modalBody">
-                        <div class="map">
-                            <div class="map_wrap">
-                                <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
-                                <div id="menu_wrap" class="bg_white">
-                                    <div class="option">
-                                        <div>
-                                            <form id="map-submit" onsubmit="searchPlaces(); return false;">
-                                                키워드 : <input type="text" id="keyword" size="15"> 
-                                                <button type="submit">검색하기</button> 
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <ul id="placesList"></ul>
-                                    <div id="pagination"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     <%@include file="../../common/footer.jsp" %>
-        <!-- <script type="text/javascript" src="resources/js/function.js"></script>
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3f6edea42e65caf1e4e0b7f49028f282&libraries=services"></script>
-        <script type="text/javascript" src="resources/js/listmap.js"></script>  
+        <script type="text/javascript" src="resources/js/function.js"></script>
         <script>
-            /* 지도로 검색어 넘기는 이벤트 */
-            function mapSearch(){
-                $("#keyword").prop("value", $('#search-input').val());
-                $("#map-submit").submit();
-                $("#myMap").modal('show');
-                window.setTimeout(function() {
-                    relayout();
-                }, 0); 
+            /* 사진 슬라이더로 보여주기 */
+            var slideIndex = []; // 이미지경로 담을 배열 선언
+         	// 텍스트 형식으로 넘어오니 객체로 바꿔주기위한 작업
+    	   	const atTextArr = ("${dataMap.at}").replace(/Attachment/g, '').replace(/\(/g, '{').replace(/\)/g, '}').replace(/=/g, ':')
+    	   										.replace(/(\w+):/g, '"$1":').replace(/:([^,{}\[\]]+)/g, ':"$1"');
+    	    // 객체로 바꿔준것을 json화
+    	   	const at = JSON.parse(atTextArr); 
+    	    // 슬라이드에 사용할 배열에 파일경로 추출해서 넣어주기
+    	   	for(var i in at){
+    	   		slideIndex.push(at[i].filePath);
+    	   	}
+	    	$("hr").css("display", "none");
+            $("#insert-form").css("display", "none"); 
+            imgchange();
+            
+            /* 사진 슬라이더 */
+            function imgchange(){
+            	$("#dotArea").empty();
+	            let currentIndex = slideIndex[0];
+	    	    const dotPath = 'resources/images/dot.png';
+		    	$("#slideImage").prop("src", slideIndex[0]);
+		        slideIndex.forEach(function(item, index, array){
+		            let img = document.createElement("img");
+		            img.setAttribute("src", dotPath);
+		            img.setAttribute("width", "15px");
+		            img.setAttribute("height", "15px");
+		            img.setAttribute("id", "dotImage" + index);
+		            img.setAttribute("class", "dotImage");
+		            img.setAttribute("onclick", "dotClickEvent(" + index + ")");
+		            document.querySelector("#dotArea").appendChild(img);
+		        });
+		        if(slideIndex.length==0){ // 사진이 없다면 영역 숨기기
+		        	$("#slideImage").removeAttr("src");
+		        	$("#removeImg").hide();
+		        	$("#next").hide();
+		        	$("#prev").hide();
+		        }
             }
-            /* 지도에서 리스트 클릭시 */
-            $("#placesList").on("click", "li", function(){
-                // 이벤트 대상 객체 매개변수로 넘겨줘서 검색하려는 대상 조회
-                var infoName = infoFind(this, "div", 0); 
-                var infoAddress = infoFind(this, "div", 1);
-                $(".close").click();
-
-                // 가져온 값으로 셀레니움으로 조회 후 값 넣어주기 
-                $.ajax({
-                    url : "searchInfo.attr",
-                    data : {
-                        infoName : infoName,
-                        infoAddress : infoAddress
-                    },
-                    success : function(result){
-                        console.log("성공");
-                        if(result!=null){
-                            $("#infoName").prop("value",result.infoName);
-                            $("#introduce").prop("value",result); // 여기 가져오는 키값 작성하기
-                            $("#infoAddress").prop("value", result.infoAddress);
-                            $("#infoHomepage").prop("value", result.infoHomepage);
-                            $("#infoTime").prop("value", result.infoTime);
-                            $("#dayOff").prop("value", result.dayOff);
-                            $("infoCall").prop("value",result.infoCall);
-                            $("#parking").prop("value",result.parking);
-                            $("#infoType").prop("value", result.infoType);
-                            $("#img-area").append(makeTag("img", {"src":""})); // 이미지 가져오는거 마저작성하기
-                        } else {
-                            alert("맞는 정보가 없어서 가져오지 못했습니다 직접 작성해서 정보를 제공해주세요");
-                        }
-                    },
-                    complete : function(){
-                        console.log("일단 되긴 함");
-                    }
-                });
-            });
-        </script> -->
+	        function dotClickEvent(index){
+		        $("#slideImage").prop("src", slideIndex[index]);
+		        currentIndex = slideIndex[index];
+		    }
+	    
+		    $("#prev").on("click", function(){
+		        slideIndex.some(function(item, index, array){
+		            if(index != 0){
+		                if(item == currentIndex){
+		                    $("#slideImage").prop("src", slideIndex[index - 1]);
+		                    currentIndex = slideIndex[index - 1];
+		                    return true;
+		                }
+		            }else{
+		                if(item == currentIndex){
+		                    $("#slideImage").prop("src", slideIndex[slideIndex.length - 1]);
+		                    currentIndex = slideIndex[slideIndex.length - 1];
+		                    return true;
+		                }
+		            }
+		        });
+		    });
+		    $("#next").on("click", function(){
+		        slideIndex.some(function(item, index, array){
+		            if(index != slideIndex.length - 1){
+		                if(item == currentIndex){
+		                    $("#slideImage").prop("src", slideIndex[index + 1]);
+		                    currentIndex = slideIndex[index + 1];
+		                    return true;
+		                }
+		            }else{
+		                if(item == currentIndex){
+		                    $("#slideImage").prop("src", slideIndex[0]);
+		                    currentIndex = slideIndex[0];
+		                    return true;
+		                }
+		            }
+		        });
+		    });
+		    $("#removeImg").on("click", function(){
+		    	var removeSrc = $("#slideImage").attr("src");
+		    	var i = slideIndex.indexOf(removeSrc); // 이미지 src 들어있는 배열에서 존재하는지 확인
+		    	if (i > -1) {
+		    		slideIndex.splice(i, 1); // 해당 src배열만 제거
+		    		imgchange(); // 도트랑 인덱스지정하는 부분 함수 호출
+		    	}
+		    });
+		    $("#submitBefore").click(function(){
+		    	var form = $("#update-form");
+		    	
+		    	var changeImg = makeTag("input",{"name":"changeImg", "value":JSON.stringify(slideIndex)});
+		    	form.append(changeImg);
+		    	form.submit();
+		    })
+        </script>
 </body>
 </html>

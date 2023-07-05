@@ -1424,7 +1424,7 @@ public class MemberController {
 		String strdate = dateFormat.format(currentTime);
 		
 
-		if(loginUser!=null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {//로그인 유저 있으면 -> 유저 정보 담기
+ 		if(loginUser!=null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {//로그인 유저 있으면 -> 유저 정보 담기
 //		if(loginUser!=null) {// 이거 쓸거라서 ... 잠깐 둘게요! 제가 안까먹고 꼭 지울게요!!!!!
 			session.setAttribute("loginUser", loginUser);
 			session.setAttribute("alertMsg", "로그인이 완료되었습니다.");

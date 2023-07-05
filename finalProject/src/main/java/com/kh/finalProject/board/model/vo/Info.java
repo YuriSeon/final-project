@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Info {
-	
 	private int infoNo; //INFO_NO	NUMBER
 	private int boardNo; //BOARD_NO	NUMBER
 	private int zoneNo; //ZONE_NO	NUMBER

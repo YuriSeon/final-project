@@ -47,10 +47,11 @@ public class AttractionServiceImpl implements AttractionService {
 		// board, info 데이터 등록
 		int result = AttractionDao.insertInfo(sqlSession, info); 
 		// 첨부파일 개수만큼 반복해서 등록
+		int result2 = 1;
 		for(Attachment at : atArr) { 
-			result *= AttractionDao.insertAttachment(sqlSession, at);
+			result2 *= AttractionDao.insertAttachment(sqlSession, at);
 		}
-		return result;
+		return result*result2;
 	}
 	
 	// 조회수 증가
@@ -77,36 +78,35 @@ public class AttractionServiceImpl implements AttractionService {
 	@Override
 	public int insertReply(Rereply r) {
 		int result = 0;
-		if(r.getReplyNo()==0) { // 참조게시글 번호가 없다면 댓글
+		if(r.getRefRno()==0) { // 참조게시글 번호가 없다면 댓글
 			// reply 등록
 			result = atDao.insertReplyList(sqlSession, r);
 		} else {
 			// reReply 등록
-			result = atDao.insertRereplyList(sqlSession, r);
+			result = atDao.insertReplyList(sqlSession, r);
 		}
 		return result;
 	}
-
-	// 댓글 조회 // 댓글들 필드에 filepath추가해도 되는지 물어보기 그러면 프로필 따로조회 안해도 됨
+	
+	// 댓글삭제
 	@Override
-	public HashMap<String, Object> selectReplyList(int boardNo) {
-		HashMap<String, Object> rList = new HashMap<>();
-		// reply 조회
-		rList.put("reply", atDao.selectReplyList(sqlSession, boardNo));
-		// reReply 조회
-		rList.put("reReply", atDao.selectRereplyList(sqlSession, boardNo));
-		return rList;
+	public int deleteReply(Rereply r) {
+		return atDao.deleteReply(sqlSession, r);
+	}
+	// 댓글조회
+	@Override
+	public ArrayList<Rereply> selectReplyList(int boardNo) {
+		return atDao.selectReplyList(sqlSession, boardNo);
 	}
 
-	// 좋아요, 찜, 신고 조회
+	// 좋아요, 찜, 신고 조회 //나중에 if로 수정 !!!
 	@Override
 	public int iconCheck(String btnType, int boardno, String writer) {
 		int result = 100; // 조회 오류 확인용 초기화
-		System.out.println(btnType);
-		switch(btnType) {
-			case "good" : result = atDao.goodSearch(sqlSession,new Good(boardno, writer)); break;
-			case "choice" : result = atDao.choiceSearch(sqlSession,new choice(boardno, writer)); break;
-			case "report" : result = atDao.reportSearch(sqlSession, Report.builder().boardNo(boardno).writer(writer).build()); //댓글이랑 보드 구분해서 작성해야함
+		if(btnType.equals("good")) {
+			result = atDao.goodSearch(sqlSession,new Good(boardno, writer)); 
+		} else {
+			result = atDao.choiceSearch(sqlSession,new choice(boardno, writer));
 		}
 		return result;
 	}
@@ -114,7 +114,7 @@ public class AttractionServiceImpl implements AttractionService {
 	// 좋아요 찜 취소
 	@Override
 	public int iconBefore(String btnType, String tableName, int no, String writer) {
-		int result = 0;
+		int result = 100;
 		if(btnType.equals("good")) {
 			result = atDao.deleteGood(sqlSession,new Good(no, writer));
 		} else {
@@ -126,13 +126,19 @@ public class AttractionServiceImpl implements AttractionService {
 	// 좋아요, 찜 등록
 	@Override
 	public int iconAfter(String btnType, String tableName, int no, String writer) {
-		int result = 0;
+		int result = 100;
 		if(btnType.equals("good")) {
 			result = atDao.insertGood(sqlSession,new Good(no, writer));
 		} else {
 			result = atDao.insertchoice(sqlSession,new choice(no, writer));
 		}
 		return result;
+	}
+	
+	// 신고하기 
+	@Override
+	public int sendReport(Report report) {
+		return atDao.sendReport(sqlSession, report); 
 	}
 
 	// 기존 정보 있는지 체크
@@ -156,11 +162,51 @@ public class AttractionServiceImpl implements AttractionService {
 	// 게시물 삭제 및 첨부파일 삭제
 	@Override
 	@Transactional
-	public int deleteAttr(int boardNo) {
+	public int deleteAttr(int boardNo, ArrayList<String> at) {
 		int result = atDao.deleteBoard(sqlSession, boardNo);
 		result *= atDao.deleteInfo(sqlSession, boardNo);
-		result *= atDao.deleteAttachment(sqlSession, boardNo);
-		return result;
+		int result2= 1;
+		if(!(at.get(0)).equals("")) {
+			result2 *= atDao.deleteAttachment(sqlSession, boardNo);
+		}
+		return result*result2;
 	}
+	
+	// 게시물 수정 및 첨부파일 첨삭
+	@Override
+	@Transactional
+	public int updateAttr(Info info, ArrayList<Attachment> removeList, Attachment at) {
+		// board 수정
+		int result = atDao.updateBoard(sqlSession, info);
+		System.out.println(info);
+		// info 수정
+		result = atDao.updateInfo(sqlSession, info);
+		int result2 = 1;
+		System.out.println("????"+removeList);
+		// attachment 수정
+		for(int i=0; i<removeList.size(); i++) {
+			result2 = atDao.updateAttachment(sqlSession, removeList.get(i));
+		}
+		// 새로운 파일 등록
+		int result3 =1;
+		System.out.println(result);
+		System.out.println(result2);
+		
+		if(at.getOriginName()!=null) { // 비어있지 않다면 
+			result3 = atDao.updateFile(sqlSession, at);
+		}
+		System.out.println(result3);
+		return result*result2*result3;
+	}
+
+	// 첨부파일 변화 확인용 조회 메소드
+	@Override
+	public ArrayList<Attachment> selectAttachment(int boardNo) {
+		return atDao.selectAttachment(sqlSession, boardNo);
+	}
+	
+	
+
+	
 
 }

@@ -3,6 +3,7 @@ package com.kh.finalProject.board.model.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Info;
@@ -23,7 +24,7 @@ public interface AttractionService {
 
 	int insertReply(Rereply r);
 
-	HashMap<String, Object> selectReplyList(int boardNo);
+	ArrayList<Rereply> selectReplyList(int boardNo);
 
 	int iconCheck(String btnType, int boardno, String writer);
 
@@ -37,8 +38,15 @@ public interface AttractionService {
 
 	int modifyinfo(Board b);
 
-	int deleteAttr(int boardNo);
+	int deleteAttr(int boardNo, ArrayList<String> at);
 
-	
+	int updateAttr(Info info, ArrayList<Attachment> removeList, Attachment at);
+
+	int sendReport(Report report);
+
+	int deleteReply(Rereply r);
+
+	ArrayList<Attachment> selectAttachment(int boardNo);
+
 
 }
