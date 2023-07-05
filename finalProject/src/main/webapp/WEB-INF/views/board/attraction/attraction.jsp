@@ -202,6 +202,11 @@
 .thumbnail:hover { 
   transform: scale(1.025); 
 }
+.containers{width: 33%;}
+.rows{
+height: 270px;
+} 
+.rows img{ width:300px; height: 150px;}
 
    	</style>
   </head>
@@ -366,8 +371,8 @@
 					if(zoneName=='서울'||zoneName=='부산'){
 						totalCount = result.count;
 						for(var i in result.info){
-							$(".list-area").append($("<div>").prop("class","container")
-											.append($("<div>").prop("class","row")
+							$(".list-area").append($("<div>").prop("class","containers")
+											.append($("<div>").prop("class","rows")
 													.append($("<div>").prop("class","col-sm-6 col-md-4")
 															,$("<div>").prop("class","thumbnail").append($("<img>")
 															, $("<div>").prop("class","caption"), $("<h3>").text(result.info[i].infoName)
@@ -388,10 +393,9 @@
 		// 데이터 출력해주는 구문 (다른곳에서도 사용하기 위해 함수처리)
 		function dataPrint(data){
 			for(var i in data){
-				$(".list-area").append($("<div>").prop("class","container")
-								.append($("<div>").prop("class","row")
-										.append($("<div>").prop("class","col-sm-6 col-md-4")
-												,$("<div>").prop("class","thumbnail").append($("<img>").attr("src",data[i].firstimage2)
+				$(".list-area").append($("<div>").prop("class","containers")
+								.append($("<div>").prop("class","rows")
+										.append($("<div>").prop("class","thumbnail").append($("<img>").attr("src",data[i].firstimage2)
 												, $("<div>").prop("class","caption"), $("<h3>").text(data[i].title)
 												, $("<p>").text(data[i].addr1)))));
 			}
