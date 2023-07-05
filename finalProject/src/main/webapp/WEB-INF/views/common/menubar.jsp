@@ -343,9 +343,7 @@
 	              <label for="saveId">아이디 저장</label>
 	            </div>
 	            <div id="login-fales">
-	              		<!-- *아이디 또는 비밀번호를 잘못 입력했습니다.<br>
-	              		&nbsp;&nbsp;입력하신 내용을 다시 확인해주세요. -->
-	            </div>
+	     		</div>
 	            <div>
 	              <button type="button" id="login-button" onclick="return loginGo();">로그인</button>
 	            </div>
