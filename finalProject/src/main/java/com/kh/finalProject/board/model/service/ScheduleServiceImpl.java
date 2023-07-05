@@ -2,6 +2,7 @@ package com.kh.finalProject.board.model.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -18,7 +19,6 @@ import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Path;
 import com.kh.finalProject.board.model.vo.Plan;
-import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -100,18 +100,45 @@ public class ScheduleServiceImpl implements ScheduleService {
 		}
 		return result;
 	}
-	
-	
-	
+
+	// 디테일뷰 조회
 	@Override
-	public int selectListCount(String sort) {
-		// TODO Auto-generated method stub
-		return 0;
+	@Transactional
+	public HashMap<String, Object> selectSchedule(int boardNo) {
+		HashMap<String, Object> dataMap = new HashMap<>();
+		// Plan+board조회
+		Plan p = scDao.selectBoard(sqlSession, boardNo);
+		// 게시물 안에 들어있는 infoNo 추출해서 사용
+		String[] pathList = p.getPathList().split("/");
+		// info+ attachment 조회
+		ArrayList<Info> info = new ArrayList<>();
+		HashMap<Integer, ArrayList<Attachment>> atList = new HashMap<>();
+		for(int i =1; i<=pathList.length; i++) { // 맨앞에 /가 있어서 1번부터 길이까지 조회
+			info.add(scDao.selectInfo(sqlSession,Integer.parseInt(pathList[i])));
+			atList.put(Integer.parseInt(pathList[i]), scDao.selectAttachList(sqlSession, Integer.parseInt(pathList[i])));
+		}
+		// path 조회 
+		ArrayList<Path> pList = scDao.selectPathList(sqlSession,boardNo);
+		dataMap.put("plan", p);
+		dataMap.put("info", info);
+		dataMap.put("atList", atList);
+		dataMap.put("pList", pList);
+		return dataMap;
 	}
+
+	// 게시물 삭제 (board, path, plan)
 	@Override
-	public ArrayList<Board> selectBoardList(PageInfo pi, String sort) {
-		// TODO Auto-generated method stub
-		return null;
+	public int deleteSchedule(Plan plan) {
+		// path 삭제
+		int result = scDao.deletePath(sqlSession, plan);
+		// plan 삭제
+		int result2 =  scDao.deletePlan(sqlSession, plan);
+		// board 삭제
+		int result3 = scDao.deleteBoard(sqlSession, plan);
+		return result*result2*result3;
 	}
+	
+	
+	
 
 }

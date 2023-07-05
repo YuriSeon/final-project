@@ -13,13 +13,13 @@ import com.kh.finalProject.common.model.vo.PageInfo;
 
 public interface ScheduleService {
 
-	int selectListCount(String sort);
-
-	ArrayList<Board> selectBoardList(PageInfo pi, String sort);
-
 	int insertSchedule(HttpSession session, Plan plan, ArrayList<Info> infoList, String[][] pathArr);
 
 	int checkInfo(String address);
+
+	HashMap<String, Object> selectSchedule(int boardNo);
+
+	int deleteSchedule(Plan plan);
 
 
 

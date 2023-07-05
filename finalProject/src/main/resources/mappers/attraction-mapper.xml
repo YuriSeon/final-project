@@ -13,7 +13,7 @@
   	<insert id="insertInfo">
   		INSERT ALL
   			INTO BOARD(BOARD_NO, ZONE_NO, INFO_NO, BOARD_WRITER, CATEGORY, BOARD_TITLE, BOARD_CONTENT)
-  				VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, SEQ_INO.NEXTVAL, 'admin', 3, #{infoName}, #{boardContent})
+  				VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, SEQ_INO.NEXTVAL, '관리자', 3, #{infoName}, #{boardContent})
   			INTO INFO VALUES(SEQ_INO.CURRVAL, SEQ_BNO.CURRVAL, #{zoneNo}, #{infoAddress}, #{infoTime}, #{infoHomepage}, #{infoCall}, #{parking}, #{infoName}, #{infoType}, #{dayOff})
   		SELECT * FROM DUAL
   	</insert>
@@ -57,7 +57,7 @@
   		SELECT *
   		FROM INFO
   		<choose>
-  			<when test="keyword=='null'">
+  			<when test="keyword==null">
 		  		WHERE BOARD_NO = #{boardNo}
   			</when>
   			<otherwise>
