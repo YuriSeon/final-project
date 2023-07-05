@@ -288,6 +288,7 @@
 		    	var form = $("#update-form");
 		    	
 		    	var changeImg = makeTag("input",{"name":"changeImg", "value":JSON.stringify(slideIndex)});
+		    	
 		    	form.append(changeImg);
 		    	form.submit();
 		    })

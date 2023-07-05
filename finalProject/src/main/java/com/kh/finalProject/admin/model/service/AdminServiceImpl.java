@@ -68,8 +68,6 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public ArrayList<HashMap<String, Integer>> countMap() {
 		ArrayList<HashMap<String, Integer>> count = adminDao.countMap(sqlSession);
-		System.out.println(count);
-//		return adminDao.countMap(sqlSession);
 		return count;
 	}
 	

@@ -347,7 +347,6 @@ public class AttractionController {
 	public ModelAndView updateAttr(HttpSession session, ModelAndView mv, Info info, MultipartFile upfile, 
 									@RequestParam("introduce")String introduce,
 									@RequestParam("changeImg")String changeImg) {
-		System.out.println("오니?");
 		String savePath = session.getServletContext().getRealPath("/resources/infoImg/");
 		if(introduce!="") {
 			info.setBoardContent(info.getBoardContent()+"||"+introduce);
