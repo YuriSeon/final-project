@@ -45,14 +45,17 @@ public class ScheduleServiceImpl implements ScheduleService {
 		int result = scDao.insertSchedule(sqlSession, plan);
 		// 방금 등록한 bno와 infoNo 조회해와서 사용
 		Board b = scDao.checkBno(sqlSession, plan);
+		System.out.println("조회한 board  " + b);
 		// 3. 가져온 장소 정보안에 img url 추출 (이미지 다운)후 등록
 		// imgsrc 리스트에 담기(infoList의 boardContent ||구분자로 [0] -> 이 안에 url |구분자로 들어있음
 		for(int i=0; i<infoList.size(); i++) {
 			ArrayList<String> imgURL = new ArrayList<>();
-			if(infoList.get(i).getBoardContent()!=null) {
+			if(infoList.get(i).getBoardContent()!=null || infoList.get(i).getBoardContent().equals("")||infoList.get(i).getBoardContent().equals(" ")) {
 				// 기존에 사용하던 메소드 사용해서 json의 형태로 받았기에 한글자씩 문자열의 배열로넘어옴. 원하는 형태로 가공하기 위해 문자열로 합쳐줌
 				String urlString = String.join(infoList.get(i).getBoardContent()); 
+				System.out.println("urlString :  "+urlString);
 				String[] str = urlString.split("||");
+				System.out.println("str배열 || : "+Arrays.toString(str));
 				if(str[0].contains("|")) { //이미지가 여러개
 					System.out.println("str1 :   "+str[1]);
 					infoList.get(i).setBoardContent(str[1]);
@@ -63,10 +66,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 						atList = AttractionController.imgTool(session, imgURL);
 					}
 				} else if(str[0].contains("http")){ // 이미지가 하나
+					System.out.println("이미지 하나인 url : "+str[0]);
 					imgURL.add(str[0]);
 					infoList.get(i).setBoardContent(str[1]);
 					atList = AttractionController.imgTool(session, imgURL);
 				} else { // 이미지 정보가 없을때
+					System.out.println("여기로 빠지니?");
 					atList = null;
 				}
 				// 4. info와 해당하는 img등록 (기존 attraction에서 사용한 메소드 static으로 사용)

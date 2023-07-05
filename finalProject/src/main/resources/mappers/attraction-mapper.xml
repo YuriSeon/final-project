@@ -20,7 +20,7 @@
   	<!-- 첨부파일 등록 -->
   	<insert id="insertAttachment">
   	<choose>
-  		<when test="boardNo==null">
+  		<when test="boardNo==0">
   		INSERT INTO ATTACHMENT (FILE_NO, BOARD_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, FILE_LEVEL)
   						 VALUES(SEQ_FNO.NEXTVAL, SEQ_BNO.CURRVAL, #{originName}, #{changeName}, #{filePath}, #{fileLevel})
   		</when>
@@ -41,7 +41,7 @@
   		SELECT *
   		FROM BOARD
   		<choose>
-  			<when test="keyword!=null">
+  			<when test="keyword==null">
 		  		WHERE BOARD_NO = #{boardNo}
   			</when>
   			<otherwise>

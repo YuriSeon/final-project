@@ -3,6 +3,7 @@ package com.kh.finalProject.board.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -66,6 +67,7 @@ public class ScheduleController {
 			String[] str = path[i].split(","); // 구분자로 구분해서 배열에 넣기
 			pathArr[i] = new String[str.length]; // 이차배열 길이 설정
 			for (int j = 0; j < str.length; j++) {
+				System.out.println(Arrays.toString(pathArr[i]));
 				pathArr[i][j] = str[j];
 				plan.setAddress(pathArr[0][3]); // 가장처음경로의 주소set(지역코드 조회 예정)
 			}
