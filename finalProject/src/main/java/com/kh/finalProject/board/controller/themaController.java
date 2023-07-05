@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -217,10 +218,10 @@ public class themaController {
 	//찜하기
 	@ResponseBody
 	@RequestMapping(value = "choice.mo", produces = "application/json; charset=UTF-8")
-	public String insertChoice(choice c) {
+	public int insertChoice(choice c,HttpServletResponse response) {
 		//찜하기테이블 확인
 		int result = themaService.ckChoice(c);
-		
+		System.out.println(result);
 		if(result>0) {
 			//테이블에 있으면 없애기
 			result = themaService.deleteChoice(c)-1;
@@ -228,7 +229,7 @@ public class themaController {
 			//테이블이 없으면 넣기
 			result = themaService.insertChoice(c);
 		}
-		return new Gson().toJson(result);
+		return result;
 	}
 	
 	//검색

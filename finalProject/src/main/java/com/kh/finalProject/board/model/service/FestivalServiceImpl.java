@@ -44,14 +44,14 @@ public class FestivalServiceImpl implements FestivalService{
 	
 	//축제 총 게시글
 	@Override
-	public int fesCount() {
-		return festivalDao.fesCount(sqlSession);
+	public int fesCount(HashMap<String, String> keyword) {
+		return festivalDao.fesCount(sqlSession, keyword);
 	}
 	
 	//축제 리스트
 	@Override
-	public ArrayList<Board> fesList(PageInfo pi) {
-		return festivalDao.fesList(sqlSession, pi);
+	public ArrayList<Board> fesList(HashMap<String, String> keyword, PageInfo pi) {
+		return festivalDao.fesList(sqlSession, keyword, pi);
 	}
 	
 	//마우스 올렸을시 축제 개수(날짜에 따른)
@@ -139,5 +139,11 @@ public class FestivalServiceImpl implements FestivalService{
 	@Override
 	public int choiAllCount(HashMap<String, String> info) {
 		return festivalDao.choiAllCount(sqlSession, info);
+	}
+
+	//축제 디테일 페이지 로드시 주변 명소 불러오기
+	@Override
+	public ArrayList<Board> myungList(int boardNo) {
+		return festivalDao.myungList(sqlSession, boardNo);
 	}
 }

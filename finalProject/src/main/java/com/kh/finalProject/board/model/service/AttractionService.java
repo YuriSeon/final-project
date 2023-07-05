@@ -3,6 +3,7 @@ package com.kh.finalProject.board.model.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Info;
@@ -13,8 +14,6 @@ public interface AttractionService {
 
 	int selectListCount();
 
-	ArrayList<Board> selectBoardList(PageInfo pi);
-
 	int insertAttr(Info info, ArrayList<Attachment> atArr);
 
 	int increaseCount(int boardNo);
@@ -23,22 +22,31 @@ public interface AttractionService {
 
 	int insertReply(Rereply r);
 
-	HashMap<String, Object> selectReplyList(int boardNo);
+	ArrayList<Rereply> selectReplyList(int boardNo);
 
-	int iconCheck(String btnType, int boardno, String writer);
+	HashMap<String, Object> iconCheck(int boardno, String writer);
 
-	int iconBefore(String btnType, String tableName, int no, String writer);
-
-	int iconAfter(String btnType, String tableName, int no, String writer);
-
+	HashMap<String, Object> iconChange(String btnType, int no, String writer);
+	
 	int checkInfo(String address);
 
 	Info modifyRequestAttr(int boardNo);
 
 	int modifyinfo(Board b);
 
-	int deleteAttr(int boardNo);
+	int deleteAttr(int boardNo, ArrayList<String> at);
 
-	
+	int updateAttr(Info info, ArrayList<Attachment> removeList, Attachment at);
+
+	int sendReport(Report report);
+
+	int deleteReply(Rereply r);
+
+	ArrayList<Attachment> selectAttachment(int boardNo);
+
+	HashMap<String, Object> selectAttrList(String keyword);
+
+
+
 
 }

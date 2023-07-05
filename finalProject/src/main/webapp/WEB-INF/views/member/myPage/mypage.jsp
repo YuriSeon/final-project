@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="resources/css/mypage.css?v=1">
+    <link rel="stylesheet" type="text/css" href="resources/css/mypage.css?after">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -133,14 +133,14 @@
                                     <a href="myChoice.me" class="icon2"><img src="resources/images/star.png" alt="" width="50px" height="50px"></a>
                                     <span>찜 목록</span>
                                 </li>
-                                <li>
-                                    <a href="myChat.me" class="icon3"><img src="resources/images/email.png" alt="" width="50px" height="50px"></a>
-                                    <span>쪽지</span>
-                                </li>
-                                <li>
-                                    <a href="myFoot.me" class="icon4"><img src="resources/images/compass.png" alt="" width="50px" height="50px"></a>
-                                    <span>발도장</span>
-                                </li>
+<!--                                 <li> -->
+<!--                                     <a href="myChat.me" class="icon3"><img src="resources/images/email.png" alt="" width="50px" height="50px"></a> -->
+<!--                                     <span>쪽지</span> -->
+<!--                                 </li> -->
+<!--                                 <li> -->
+<!--                                     <a href="myFoot.me" class="icon4"><img src="resources/images/compass.png" alt="" width="50px" height="50px"></a> -->
+<!--                                     <span>발도장</span> -->
+<!--                                 </li> -->
                                 <li>
 	                                <c:choose>
 	                                	<c:when test="${loginUser.certification == 1}">

@@ -75,11 +75,11 @@
                 <table id="boardTable" style="margin-bottom: 20px;">
                     <thead>
                         <tr>
-                            <th>번호</th>
+                            <th width="10%;">번호</th>
                             <th width="34%;">제목</th>
                             <th>작성자</th>
                             <th>위치</th>
-                            <th>작성시각</th>
+                            <th width="20%;">작성시각</th>
                             <th>좋아요</th>
                             <th>조회수</th>
                         </tr>
@@ -91,11 +91,11 @@
                 <table id="qnaTable">
                     <thead>
                         <tr>
-                            <th>번호</th>
+                            <th width="10%;">번호</th>
                             <th>제목</th>
-                            <th>작성자</th>
-                            <th>작성시각</th>
-                            <th>답변여부</th>
+                            <th width="10%;">작성자</th>
+                            <th width="20%;">작성시각</th>
+                            <th width="15%;">답변여부</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -294,12 +294,15 @@
 	                    +"<td>"+list[i].reportNo+"</td>"
 	                    +"<td>"+list[i].reportReason+"</td>";
 	                    
-                    if (list[i].replyWriter == null) {
+                    if (list[i].replyWriter == null && list[i].rereplyWriter == null) {
                     	str +="<td>"+list[i].boardWriter+"</td>"
                     		+"<td>"+list[i].boardReport+"</td>";
-					}else{
+					}else if (list[i].rereplyWriter == null && list[i].boardWriter == null) {
 						str +="<td>"+list[i].replyWriter+"</td>"
                    			+"<td>"+list[i].replyReport+"</td>";
+					}else{
+						str +="<td>"+list[i].rereplyWriter+"</td>"
+               				+"<td>"+list[i].rereplyReport+"</td>";
 					}
                     
                     str +="<td>"+list[i].writer+"</td>"

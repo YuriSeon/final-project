@@ -81,13 +81,7 @@ public class Selenium {
 					}
 				case "휴무일": in.setDayOff(value); break;
 				case "홈페이지": in.setInfoHomepage(value); break;
-				case "전화번호": 
-					if(value.contains("-")) {
-						String str[] = value.split("-");
-						in.setInfoCall(str[0]+str[1]+str[2]); break;
-					} else {
-						in.setInfoCall(value); break;
-					}
+				case "전화번호": in.setInfoCall(value); break;
 				case "주차장": 
 					if(value.contains("가능")) {
 						in.setParking("Y"); break;

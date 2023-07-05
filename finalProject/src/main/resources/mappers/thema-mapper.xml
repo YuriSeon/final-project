@@ -196,8 +196,8 @@
     
     <!-- 댓글신고 -신고테이블 -->
     <insert id="reportReply">
-    	INSERT INTO REPORT(REPLY_NO,WRITER,REPORT_REASON)
-    	VALUES(#{replyNo},#{writer},#{reportReason})
+    	INSERT INTO REPORT(REPORT_NO,REPLY_NO,WRITER,REPORT_REASON)
+    	VALUES(SEQ_RPO.NEXTVAL,#{replyNo},#{writer},#{reportReason})
     </insert>
     
     <!-- 댓글신고-멤버테이블 -->

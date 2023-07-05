@@ -1424,10 +1424,20 @@ public class MemberController {
 		String strdate = dateFormat.format(currentTime);
 		
 
-		if(loginUser!=null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {//로그인 유저 있으면 -> 유저 정보 담기
-//		if(loginUser!=null) {// 이거 쓸거라서 ... 잠깐 둘게요! 제가 안까먹고 꼭 지울게요!!!!!
+// 		if(loginUser!=null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {//로그인 유저 있으면 -> 유저 정보 담기
+		if(loginUser!=null) {// 이거 쓸거라서 ... 잠깐 둘게요! 제가 안까먹고 꼭 지울게요!!!!!
 			session.setAttribute("loginUser", loginUser);
 			session.setAttribute("alertMsg", "로그인이 완료되었습니다.");
+			//신고 받은 횟수별로 경고
+			if (loginUser.getReport() > 2 && loginUser.getReport() < 6) {
+				session.setAttribute("alertMsg2", "신고 받은 횟수가 3회가 넘었습니다. 2회 경고 후 계정이 정지됩니다. 1회 경고 받으셨습니다.");
+			}else if (loginUser.getReport() > 5 && loginUser.getReport() < 9) {
+				session.setAttribute("alertMsg2", "신고 받은 횟수가 6회가 넘었습니다. 2회 경고 후 계정이 정지됩니다. 2회 경고 받으셨습니다.");
+			}else if (loginUser.getReport() > 8) {
+				session.setAttribute("alertMsg2", "신고 받은 횟수가 9회가 넘었습니다. 계정이 정지됩니다.");
+				session.removeAttribute("loginUser");
+				session.removeAttribute("alertMsg");
+			}
 			if (loginUser != null) {
 				Visit v = Visit.builder().visitIp(ipAddress).visitTime(strdate).visitor(loginUser.getNickname()).build();
 				if (!loginUser.getStatus().equals("A")) {

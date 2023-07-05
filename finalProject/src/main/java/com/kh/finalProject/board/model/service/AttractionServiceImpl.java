@@ -32,11 +32,6 @@ public class AttractionServiceImpl implements AttractionService {
 		return 0;
 	}
 
-	@Override
-	public ArrayList<Board> selectBoardList(PageInfo pi) {
-		return null;
-	}
-	
 	// 게시물 등록
 	@Override
 	@Transactional
@@ -47,10 +42,11 @@ public class AttractionServiceImpl implements AttractionService {
 		// board, info 데이터 등록
 		int result = AttractionDao.insertInfo(sqlSession, info); 
 		// 첨부파일 개수만큼 반복해서 등록
+		int result2 = 1;
 		for(Attachment at : atArr) { 
-			result *= AttractionDao.insertAttachment(sqlSession, at);
+			result2 *= AttractionDao.insertAttachment(sqlSession, at);
 		}
-		return result;
+		return result*result2;
 	}
 	
 	// 조회수 증가
@@ -77,60 +73,68 @@ public class AttractionServiceImpl implements AttractionService {
 	@Override
 	public int insertReply(Rereply r) {
 		int result = 0;
-		if(r.getReplyNo()==0) { // 참조게시글 번호가 없다면 댓글
+		if(r.getRefRno()==0) { // 참조게시글 번호가 없다면 댓글
 			// reply 등록
 			result = atDao.insertReplyList(sqlSession, r);
 		} else {
 			// reReply 등록
-			result = atDao.insertRereplyList(sqlSession, r);
+			result = atDao.insertReplyList(sqlSession, r);
 		}
 		return result;
 	}
-
-	// 댓글 조회 // 댓글들 필드에 filepath추가해도 되는지 물어보기 그러면 프로필 따로조회 안해도 됨
+	
+	// 댓글삭제
 	@Override
-	public HashMap<String, Object> selectReplyList(int boardNo) {
-		HashMap<String, Object> rList = new HashMap<>();
-		// reply 조회
-		rList.put("reply", atDao.selectReplyList(sqlSession, boardNo));
-		// reReply 조회
-		rList.put("reReply", atDao.selectRereplyList(sqlSession, boardNo));
-		return rList;
+	public int deleteReply(Rereply r) {
+		return atDao.deleteReply(sqlSession, r);
+	}
+	// 댓글조회
+	@Override
+	public ArrayList<Rereply> selectReplyList(int boardNo) {
+		return atDao.selectReplyList(sqlSession, boardNo);
 	}
 
-	// 좋아요, 찜, 신고 조회
+	// 좋아요, 찜 조회
 	@Override
-	public int iconCheck(String btnType, int boardno, String writer) {
+	public HashMap<String, Object> iconCheck(int boardno, String writer) {
 		int result = 100; // 조회 오류 확인용 초기화
-		System.out.println(btnType);
-		switch(btnType) {
-			case "good" : result = atDao.goodSearch(sqlSession,new Good(boardno, writer)); break;
-			case "choice" : result = atDao.choiceSearch(sqlSession,new choice(boardno, writer)); break;
-			case "report" : result = atDao.reportSearch(sqlSession, Report.builder().boardNo(boardno).writer(writer).build()); //댓글이랑 보드 구분해서 작성해야함
-		}
-		return result;
+		HashMap<String, Object> iconCheck = new HashMap<>();
+		iconCheck.put("goodCheck", atDao.goodSearch(sqlSession,new Good(boardno, writer)));
+		iconCheck.put("choiceCheck",atDao.choiceSearch(sqlSession,new choice(boardno, writer)));
+		iconCheck.put("goodCount", atDao.goodCount(sqlSession,new Good(boardno, writer)));
+		iconCheck.put("choiceCount",atDao.choiceCount(sqlSession,new choice(boardno, writer)));
+		return iconCheck;
 	}
-
-	// 좋아요 찜 취소
+	// 좋아요 찜 등록 및 취소 + board Count update + Count 
 	@Override
-	public int iconBefore(String btnType, String tableName, int no, String writer) {
-		int result = 0;
+	public HashMap<String, Object> iconChange(String btnType, int no, String writer) {
+		HashMap<String, Object> iconCheck = iconCheck(no, writer);
+		int result = 100;
 		if(btnType.equals("good")) {
-			result = atDao.deleteGood(sqlSession,new Good(no, writer));
+			if((int)iconCheck.get("goodCheck")>0) { // 이미 좋아요 눌렀던 사람 (취소진행)
+				result = atDao.deleteGood(sqlSession,new Good(no, writer));
+			} else { // 좋아요 등록
+				result = atDao.insertGood(sqlSession,new Good(no, writer));
+			}
 		} else {
-			result = atDao.deletechoice(sqlSession,new choice(no, writer));
+			if((int)iconCheck.get("choiceCheck")>0) { // 찜 취소
+				result = atDao.deletechoice(sqlSession,new choice(no, writer));
+			} else {
+				result = atDao.insertchoice(sqlSession,new choice(no, writer));
+			}
 		}
-		return result;
+		iconCheck.put(btnType, result);
+		return iconCheck;
 	}
-
-	// 좋아요, 찜 등록
+	
+	// 신고하기 
 	@Override
-	public int iconAfter(String btnType, String tableName, int no, String writer) {
-		int result = 0;
-		if(btnType.equals("good")) {
-			result = atDao.insertGood(sqlSession,new Good(no, writer));
-		} else {
-			result = atDao.insertchoice(sqlSession,new choice(no, writer));
+	@Transactional
+	public int sendReport(Report report) {
+		int result = atDao.sendReport(sqlSession, report); 
+		if(result>0 && report.getReplyNo()==0 && report.getRereplyNo()==0) {
+			// 신고 성공하고 댓글이나 대댓글 신고 아닌경우 보드 업데이트
+			result = atDao.updateReport(sqlSession, report);
 		}
 		return result;
 	}
@@ -156,11 +160,70 @@ public class AttractionServiceImpl implements AttractionService {
 	// 게시물 삭제 및 첨부파일 삭제
 	@Override
 	@Transactional
-	public int deleteAttr(int boardNo) {
+	public int deleteAttr(int boardNo, ArrayList<String> at) {
 		int result = atDao.deleteBoard(sqlSession, boardNo);
 		result *= atDao.deleteInfo(sqlSession, boardNo);
-		result *= atDao.deleteAttachment(sqlSession, boardNo);
-		return result;
+		int result2= 1;
+		if(!(at.get(0)).equals("")) {
+			result2 *= atDao.deleteAttachment(sqlSession, boardNo);
+		}
+		return result*result2;
 	}
+	
+	// 게시물 수정 및 첨부파일 첨삭
+	@Override
+	@Transactional
+	public int updateAttr(Info info, ArrayList<Attachment> removeList, Attachment at) {
+		// board 수정
+		int result = atDao.updateBoard(sqlSession, info);
+		System.out.println(info);
+		// info 수정
+		result = atDao.updateInfo(sqlSession, info);
+		int result2 = 1;
+		System.out.println("????"+removeList);
+		// attachment 수정
+		for(int i=0; i<removeList.size(); i++) {
+			result2 = atDao.updateAttachment(sqlSession, removeList.get(i));
+		}
+		// 새로운 파일 등록
+		int result3 =1;
+		System.out.println(result);
+		System.out.println(result2);
+		
+		if(at.getOriginName()!=null) { // 비어있지 않다면 
+			result3 = atDao.updateFile(sqlSession, at);
+		}
+		System.out.println(result3);
+		return result*result2*result3;
+	}
+
+	// 첨부파일 변화 확인용 조회 메소드
+	@Override
+	public ArrayList<Attachment> selectAttachment(int boardNo) {
+		return atDao.selectAttachment(sqlSession, boardNo);
+	}
+
+	// 게시물리스트 조회
+	@Override
+	@Transactional
+	public HashMap<String, Object> selectAttrList(String keyword) {
+		HashMap<String, Object> dataMap = new HashMap<>();
+		ArrayList<Info> info = atDao.selectInfo(sqlSession, keyword);
+		HashMap<Integer, ArrayList<Attachment>> attachment = new HashMap<>();
+		for(Info i : info) { // 가져온 No로 조회
+			ArrayList<Attachment> at = atDao.selectAttachment(sqlSession, i.getBoardNo());
+			attachment.put(i.getBoardNo(), at); //boardNo와 묶어서 반환
+		}
+		dataMap.put("count", atDao.selectListCount(sqlSession, keyword));
+		dataMap.put("info", info);
+		dataMap.put("attachment",attachment);
+		return dataMap;
+	}
+
+	
+	
+	
+
+	
 
 }

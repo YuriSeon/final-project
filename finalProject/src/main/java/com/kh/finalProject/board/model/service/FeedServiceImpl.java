@@ -237,6 +237,20 @@ public class FeedServiceImpl implements FeedService{
 		return result * result2;
 	}
 
+	//도시선택 인기순
+	@Override
+	public ArrayList<Board> selectRankingList(PageInfo pi, int city) {
+		ArrayList<Board> list = feedDao.selectRankingList(sqlSession,pi,city);
+		return list;
+	}
+
+	//댓글갯수리스트
+	@Override
+	public ArrayList<Reply> selectRereply() {
+		ArrayList<Reply> list = feedDao.selectReplyList(sqlSession);
+		return list;
+	}
+
 
 	
 
