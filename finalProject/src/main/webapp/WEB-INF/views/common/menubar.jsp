@@ -219,7 +219,7 @@
 	                         </c:choose>
 		                    	${loginUser.nickname }님 환영합니다!&nbsp;&nbsp;&nbsp;
 		                        <button onclick="location.href='mypage.me'">마이페이지</button>
-		                        <button type="button" onclick="location.href='logout.me'">로그아웃</button>
+		                        <button type="button" onclick="removeRecentSession();">로그아웃</button>
 		                    </div>
                 		</c:when>
 						<c:otherwise>
@@ -488,6 +488,12 @@
         		
 				$("#profile").modal('show');
     	};
+    	
+    	//로그아웃 최근 글 세션 삭제
+    	function removeRecentSession() {
+    		sessionStorage.removeItem('recentPages');
+    		location.href='logout.me';
+		}
     </script>
     
 </body>

@@ -173,12 +173,63 @@
     });
 
   	//여행지 그래프
+  	var data = ${mcList};
+  	var pcList = {};
+  	
+ 	// 지역별 게시물 개수 초기화
+  	var zoneNames = ["서울", "부산", "대구", "인천", "광주", "대전", "울산", "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"];
+  	zoneNames.forEach(function(zoneName) {
+  	  pcList[zoneName] = 0;
+  	});
+  	
+  	//zoneName 숫자를 글자로 바꾸기
+  	data.forEach(function(item) {
+  	  var zoneName = item.zoneName;
+  	  if (zoneName == 11) {
+		zoneName = "서울";
+	  }else if (zoneName == 26) {
+		zoneName = "부산";
+	  }else if (zoneName == 27) {
+		zoneName = "대구";
+	  }else if (zoneName == 28) {
+		zoneName = "인천";
+	  }else if (zoneName == 29) {
+		zoneName = "광주";
+	  }else if (zoneName == 30) {
+		zoneName = "대전";
+	  }else if (zoneName == 31) {
+		zoneName = "울산";
+	  }else if (zoneName == 41) {
+		zoneName = "경기";
+	  }else if (zoneName == 42) {
+		zoneName = "강원";
+	  }else if (zoneName == 43) {
+		zoneName = "충북";
+	  }else if (zoneName == 44) {
+		zoneName = "충남";
+	  }else if (zoneName == 45) {
+		zoneName = "전북";
+	  }else if (zoneName == 46) {
+		zoneName = "전남";
+	  }else if (zoneName == 47) {
+		zoneName = "경북";
+	  }else if (zoneName == 48) {
+		zoneName = "경남";
+	  }else {
+		zoneName = "제주";
+	  }
+  	  var postCount = item.postCount;
+  	  
+  	  pcList[zoneName] = postCount;
+  	});
+  	
+  	//그래프 데이터 넣기
     const colors = ['#CEDEFC','#9EBDF9','#6C94EF','#4671DF','#1241CB','#0D31AE','#092492','#051975','#031161','#CAF5FD','#97E5FC','#62CCF6','#3BB1ED','#0088E2','#0069C2','#004EA2'];
     var chBar = $("#myChart2");
     var chartData = {
         labels: ["서울", "부산", "대구", "인천", "광주", "대전", "울산", "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"],
         datasets: [{
-        data: [809, 445, 483, 503, 689, 692, 634, 321, 152, 263, 374, 457, 734, 362, 421, 363],
+        data: [],
         backgroundColor: [
         	colors[0],
         	colors[1],
@@ -199,11 +250,22 @@
         ],
         }]
     };
+    
+    // zoneName에 해당하는 인덱스를 찾아서 data 배열에 postCount를 할당
+    for (var zoneName in pcList) {
+   	  var postCount = pcList[zoneName];
+   	  var index = chartData.labels.indexOf(zoneName);
+ 	  if (index !== -1) {
+ 	    chartData.datasets[0].data[index] = postCount;
+ 	  }
+   	}
+    
+    //그래프 그리는 코드
     var myChart = new Chart(chBar, {
         // 챠트 종류를 선택
         type: 'bar',
 
-        // 챠트를 그릴 데이타
+        // 챠트를 그릴 데이터
         data: chartData,
 
         // 옵션
@@ -214,6 +276,7 @@
         }
     });
     
+    //최신 게시판 불러오기
     $(function() {
 		currentReportList();
 		currentBoardList();

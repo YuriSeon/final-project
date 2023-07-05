@@ -208,7 +208,7 @@
   	<!-- 여행지 방문 횟수 RESULTSET -->
   	<resultMap id="postCountMap" type="java.util.HashMap">
 		<id property="zoneName" column="ZONE_NO"/>
-		<result property="postCount" column="POST_COUNT"/>
+		<id property="postCount" column="POST_COUNT"/>
 	</resultMap>
   	
   	<!-- 대시보드 최근 신고 5개 -->

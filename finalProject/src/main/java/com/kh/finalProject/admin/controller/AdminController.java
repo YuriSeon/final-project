@@ -99,9 +99,12 @@ public class AdminController {
 		
 		ArrayList<Board> list = adminService.countList();
 		HashMap<String, Integer> count = adminService.countVisit(); 
-		HashMap<String, Integer> map = adminService.countMap();
+		ArrayList<HashMap<String, Integer>> map = adminService.countMap();
 		
+		Gson gson = new Gson();
+		String mcList = gson.toJson(map);
 		
+		mv.addObject("mcList", mcList);
 		mv.addObject("vcList", count);
 		mv.addObject("bcList", list).setViewName("admin/dashboard");
 //		System.out.println(list);

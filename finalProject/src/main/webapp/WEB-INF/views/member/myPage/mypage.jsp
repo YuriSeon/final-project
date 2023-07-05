@@ -46,7 +46,7 @@
 										<div class="pop_subMenu pop_myPage" tabindex="0">
 											<ul id="profileMenu">
 												<li class="btn_info01"><a href="goInfoUpdate.me">개인정보 변경</a></li>
-												<li class="btn_logout"><a href="logout.me">로그아웃</a></li>
+												<li class="btn_logout"><a href="javascript:removeRecentSession();">로그아웃</a></li>
 												<li class="btn_out"><a href="goInfoDelete.me">회원탈퇴</a></li>
 											</ul>
 										</div>
@@ -183,46 +183,46 @@
 	                	<button class="swiper-button-prev "><img src="resources/images/prev.png" width="30px"></button>
 	
 	                    <div class="swiper-wrapper" id="recentSwiper" >
-	                    	<div class="swiper-slide swiper-slide-active" style="margin-right: 20px;">
-	                        	<a href="">
-	                            	<img src="" alt="" width="200px" height="200px"><br>
-		                            <p>
-		                            	<strong>신당동 떡볶이 골목</strong>
-		                            </p>
-	                            </a>
-	                        </div>
-	                        <div class="swiper-slide swiper-slide-next" style="margin-right: 20px;">
-	                            <a href="">
-	                                <img src="" alt="" width="200px" height="200px"><br>
-	                                <p>
-	                                	<strong>[서울둘레길 4코스] 대모·우면산코스</strong>
-	                                </p>
-	                            </a>
-	                        </div>
-	                        <div class="swiper-slide" style="margin-right: 20px;">
-	                            <a href="">
-	                                <img src="" alt="" width="200px" height="200px"><br>
-	                                <p>
-	                               		<strong>강강술래 당산점</strong>
-	                                </p>
-	                            </a>
-	                        </div>
-	                        <div class="swiper-slide" style="margin-right: 20px;">
-	                            <a href="">
-	                                <img src="" alt="" width="200px" height="200px"><br>
-	                                <p>
-	                                	<strong>초막골생태공원느티나무야영장</strong>
-	                                </p>
-	                            </a>
-	                        </div>
-	                        <div class="swiper-slide" style="margin-right: 20px;">
-	                            <a href="">
-	                                <img src="" alt="" width="200px" height="200px"><br>
-	                                <p>
-	                                	<strong>가온오토캠핑장</strong>
-	                                </p>
-	                            </a>
-	                        </div>
+<!-- 	                    	<div class="swiper-slide swiper-slide-active" style="margin-right: 20px;"> -->
+<!-- 	                        	<a href=""> -->
+<!-- 	                            	<img src="" alt="" width="200px" height="200px"><br> -->
+<!-- 		                            <p> -->
+<!-- 		                            	<strong>신당동 떡볶이 골목</strong> -->
+<!-- 		                            </p> -->
+<!-- 	                            </a> -->
+<!-- 	                        </div> -->
+<!-- 							<div class="swiper-slide swiper-slide-next" style="margin-right: 20px;"> -->
+<!-- 	                            <a href=""> -->
+<!-- 	                                <img src="" alt="" width="200px" height="200px"><br> -->
+<!-- 	                                <p> -->
+<!-- 	                                	<strong>[서울둘레길 4코스] 대모·우면산코스</strong> -->
+<!-- 	                                </p> -->
+<!-- 	                            </a> -->
+<!-- 	                        </div> -->
+<!-- 	                        <div class="swiper-slide" style="margin-right: 20px;"> -->
+<!-- 	                            <a href=""> -->
+<!-- 	                                <img src="" alt="" width="200px" height="200px"><br> -->
+<!-- 	                                <p> -->
+<!-- 	                               		<strong>강강술래 당산점</strong> -->
+<!-- 	                                </p> -->
+<!-- 	                            </a> -->
+<!-- 	                        </div> -->
+<!-- 	                        <div class="swiper-slide" style="margin-right: 20px;"> -->
+<!-- 	                            <a href=""> -->
+<!-- 	                                <img src="" alt="" width="200px" height="200px"><br> -->
+<!-- 	                                <p> -->
+<!-- 	                                	<strong>초막골생태공원느티나무야영장</strong> -->
+<!-- 	                                </p> -->
+<!-- 	                            </a> -->
+<!-- 	                        </div> -->
+<!-- 	                        <div class="swiper-slide" style="margin-right: 20px;"> -->
+<!-- 	                            <a href=""> -->
+<!-- 	                                <img src="" alt="" width="200px" height="200px"><br> -->
+<!-- 	                                <p> -->
+<!-- 	                                	<strong>가온오토캠핑장</strong> -->
+<!-- 	                                </p> -->
+<!-- 	                            </a> -->
+<!-- 	                        </div> -->
 	                    </div><!-- #recentSwiper -->
 	                </div><!-- .swiper-container -->
 				</div><!-- .lately_cont -->
@@ -360,6 +360,49 @@
     			kclosePopUp();
     			}, 1000);
     	}
+    	
+		function getRecentPageInfo() {
+    		var recentPages = sessionStorage.getItem('recentPages');
+
+    		if (recentPages) {
+    			return JSON.parse(recentPages);
+    		} else {
+    			return [];
+    		}
+    	}
+
+		$(function() {
+			var recentPages = getRecentPageInfo();
+			var str = "";
+			
+			for (var i = 0; i < recentPages.length; i++) {
+				var pageInfo = recentPages[i];
+	
+			  	var thumbnail = pageInfo.thumbnail;
+			  	var title = pageInfo.title;
+			  	var url = pageInfo.url;
+	
+				// 최근 페이지 정보 사용 예시
+				str += '<div class="swiper-slide" style="margin-right: 20px;">' 
+				    + '<a href="' + url + '">'
+				    + '<img src="' + thumbnail + '" alt="" width="200px" height="200px"><br>'
+				    + '<p>'
+				    + '<strong>' + title + '</strong>'
+				    + '</p>'
+				    + '</a>'
+				    + '</div>';
+			}
+			
+			$("#recentSwiper").html(str);
+			mySwiper.update();
+		});
+		
+		//로그아웃 최근 글 세션 삭제
+    	function removeRecentSession() {
+    		sessionStorage.removeItem('recentPages');
+    		location.href='logout.me';
+		}
+
     </script>
     
     <%@include file="../../common/footer.jsp" %>
