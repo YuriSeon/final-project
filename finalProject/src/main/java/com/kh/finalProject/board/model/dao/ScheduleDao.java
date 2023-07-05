@@ -6,7 +6,9 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Path;
 import com.kh.finalProject.board.model.vo.Plan;
 import com.kh.finalProject.common.model.vo.PageInfo;
@@ -21,18 +23,12 @@ public class ScheduleDao {
 	}
 
 	public ArrayList<Board> selectBoardList(SqlSession sqlSession, String sort, PageInfo pi) {
-		
 		int limit = pi.getBoardLimit();
-		
 		int offset = (pi.getCurrentPage()-1)*pi.getBoardLimit();
-		
 		RowBounds rowBounds = new RowBounds(offset, limit);
-
 		return (ArrayList)sqlSession.selectList("scheduleMapper.selectBoardList", sort, rowBounds);
 	}
 	
-	
-
 	// board + plan 등록
 	public int insertSchedule(SqlSession sqlSession, Plan plan) {
 		return sqlSession.insert("scheduleMapper.insertSchedule", plan);
@@ -58,6 +54,38 @@ public class ScheduleDao {
 		return sqlSession.update("scheduleMapper.updatePlanInfoNo", path);
 	}
 
+	// 디테일뷰 info랑 plan 조회
+	public Plan selectBoard(SqlSession sqlSession, int boardNo) {
+		return sqlSession.selectOne("scheduleMapper.selectBoard", boardNo);
+	}
+
+	// 게획에 해당하는 info 목록 조회
+	public Info selectInfo(SqlSession sqlSession, int infoNo) {
+		return sqlSession.selectOne("scheduleMapper.selectInfo", infoNo);
+	}
+
+	// 계획에 해당하는 attach 목록조회
+	public ArrayList<Attachment> selectAttachList(SqlSession sqlSession, int infoNo) {
+		return (ArrayList)sqlSession.selectList("scheduleMapper.selectAttachList", infoNo);
+	}
+
+	// 계획에 해당하는 path목록 조회
+	public ArrayList<Path> selectPathList(SqlSession sqlSession, int boardNo) {
+		return (ArrayList)sqlSession.selectList("scheduleMapper.selectPathList", boardNo);
+	}
+	// board 삭제
+	public int deleteBoard(SqlSession sqlSession, Plan plan) {
+		return sqlSession.delete("scheduleMapper.deleteBoard", plan);
+	}
+	// plan 삭제
+	public int deletePlan(SqlSession sqlSession, Plan plan) {
+		return sqlSession.delete("scheduleMapper.deletePlan", plan);
+	}
+	// path 삭제
+	public int deletePath(SqlSession sqlSession, Plan plan) {
+		return sqlSession.delete("scheduleMapper.deletePlan", plan);
+	}
+	
 	
 
 
