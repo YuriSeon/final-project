@@ -14,14 +14,27 @@
     font-weight: normal;
     font-style: normal;
 }
-    	#mainContentOuter div{
-    		border : 1px solid black;
-    		height:700px;
-    	}
+  #themeOuter{
+  	height:700px;
+  }
+  #attractionOuter{
+  height:700px;
+  }
+  #festivalOuter{
+  height:700px;
+  }
+  #togetherOuter{
+  height:700px;
+  }
 .swiper {
   width: 600px;
   height: 300px;
 } 
+.swiper-slide{
+	width:300px;
+	height:400px;
+	border: 1px solid black;
+}
     </style>
 </head>
     
@@ -80,81 +93,185 @@
 	<br>
 
 	<div id="mainContentOuter">
-			<div id="themeOuter">
-			
+			<div id="themeOuter" >
 					   <div class="themeTextOuter" style="position:absolute; width:100%;">
 		                	<p style="padding:0; margin:16px; font-size: 40px; font-weight: 500; font-family: 'GmarketSansMedium';">다채로운 추천 테마 여행!</p>
-		                	<a style="position:relative; left:1500px; bottom:50px;" class="btn" href="theme.bo" >더 알아보기 ></a>
+		                	<a style="position:relative; left:1700px; bottom:50px;" class="btn" href="theme.bo" >더 알아보기 ></a>
 		                </div>
-
-  <div class="swiper mySwiper">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide">Slide 1</div>
-      <div class="swiper-slide">Slide 2</div>
-      <div class="swiper-slide">Slide 3</div>
-      <div class="swiper-slide">Slide 4</div>
-      <div class="swiper-slide">Slide 5</div>
-      <div class="swiper-slide">Slide 6</div>
-      <div class="swiper-slide">Slide 7</div>
-      <div class="swiper-slide">Slide 8</div>
-    </div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-pagination"></div>
-  </div>
-
-<script>
-var swiper = new Swiper(".mySwiper", {
-    cssMode: true,
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    },
-    pagination: {
-      el: ".swiper-pagination",
-    },
-    mousewheel: true,
-    keyboard: true,
-  });
-// var swiper = new Swiper(".mySwiper", {
-//     slidesPerView: 3,
-//     spaceBetween: 30,
-//     pagination: {
-//       el: ".swiper-pagination",
-//       clickable: true,
-//     },
-//   });
-</script>
+				  <div class="swiper mySwiper" style="width:100%; height:500px; margin-top : 100px; position:absolute;">
+				    <div class="swiper-wrapper">
+				      <div class="swiper-slide"><img src="resources/images/icon_kakao.png"></div>
+				      <div class="swiper-slide">Slide 2</div>
+				      <div class="swiper-slide">Slide 3</div>
+				      <div class="swiper-slide">Slide 4</div>
+				      <div class="swiper-slide">Slide 5</div>
+				      <div class="swiper-slide">Slide 6</div>
+				      <div class="swiper-slide">Slide 7</div>
+				      <div class="swiper-slide">Slide 8</div>
+				    </div>
+				  </div>
+				    <div class="swiper-pagination" style="position:relative; height:50px; top:550px;"></div>
+				    <div class="swiper-button-next" style="position:relative; height:100px; top:220px; left:1850px;"></div>
+				    <div class="swiper-button-prev" style="position:relative; height:100px; top:150px; "></div>
+				    
+			<script>
+					var swiper = new Swiper(".mySwiper", {
+					    slidesPerView: 4,
+					    spaceBetween: 30,
+					    loop : true,
+					    autoplay: {
+					        delay: 1500,
+					        disableOnInteraction: false,
+					    },
+					    navigation: {
+					      nextEl: ".swiper-button-next",
+					      prevEl: ".swiper-button-prev",
+					    },
+					    pagination: {
+					      el: ".swiper-pagination",
+					      clickable: true,
+					    }
+					  });
+			</script>
 
 			</div>
 			
 			<br>
 			
-			<div id="festivalOuter">
-						<div class="festivalTextOuter" style="position:absolute; width:100%;">
+<div id="festivalOuter" >
+					   <div class="festivalTextOuter" style="position:absolute; width:100%;">
 		                	<p style="padding:0; margin:16px; font-size: 40px; font-weight: 500; font-family: 'GmarketSansMedium';">구석구석 축제가는 날</p>
-		                	<a style="position:relative; left:1500px; bottom:50px;" class="btn" href="festival.fe" >더 알아보기 ></a>
+		                	<a style="position:relative; left:1700px; bottom:50px;" class="btn" href="festival.bo" >더 알아보기 ></a>
 		                </div>
-			</div>
-			<br>
-			
-			<div id="attractionOuter">
-						<div class="attractionTextOuter" style="position:absolute; width:100%;">
-		                	<p style="padding:0; margin:16px; font-size: 40px; font-weight: 500; font-family: 'GmarketSansMedium';">이 지역의 명소는 ?</p>
-		                	<a style="position:relative; left:1500px; bottom:50px;" class="btn" href="attraction.bo" >더 알아보기 ></a>
-		                </div>
-			</div>
-			
-			<br>
-			
-			<div id="togetherOuter">
-						<div class="togetherTextOuter" style="position:absolute; width:100%;">
-		                	<p style="padding:0; margin:16px; font-size: 40px; font-weight: 500; font-family: 'GmarketSansMedium';">혼자 여행가기 적적할 때</p>
-		                	<a style="position:relative; left:1500px; bottom:50px;" class="btn" href="together.bo" >더 알아보기 ></a>
-		                </div>
-			</div>
-	</div>
+				  <div class="swiper mySwiper" style="width:100%; height:500px; margin-top : 100px; position:absolute;">
+				    <div class="swiper-wrapper">
+				      <div class="swiper-slide"><img src="resources/images/icon_kakao.png"></div>
+				      <div class="swiper-slide">Slide 2</div>
+				      <div class="swiper-slide">Slide 3</div>
+				      <div class="swiper-slide">Slide 4</div>
+				      <div class="swiper-slide">Slide 5</div>
+				      <div class="swiper-slide">Slide 6</div>
+				      <div class="swiper-slide">Slide 7</div>
+				      <div class="swiper-slide">Slide 8</div>
+				    </div>
+				  </div>
+				    <div class="swiper-pagination" style="position:relative; height:50px; top:550px; background-color:red;"></div>
+				    <div class="swiper-button-next" style="position:relative; height:100px; top:220px; left:1850px;"></div>
+				    <div class="swiper-button-prev" style="position:relative; height:100px; top:150px; "></div>
+				    
+			<script>
+					var swiper = new Swiper(".mySwiper", {
+					    slidesPerView: 4,
+					    spaceBetween: 30,
+					    loop : true,
+					    autoplay: {
+					        delay: 1500,
+					        disableOnInteraction: false,
+					    },
+					    navigation: {
+					      nextEl: ".swiper-button-next",
+					      prevEl: ".swiper-button-prev",
+					    },
+					    pagination: {
+					      el: ".swiper-pagination",
+					      clickable: true,
+					    }
+					  });
+			</script>
 
+			</div>
+			
+			<br>
+<div id="attractionOuter" >
+					   <div class="attractionTextOuter" style="position:absolute; width:100%;">
+		                	<p style="padding:0; margin:16px; font-size: 40px; font-weight: 500; font-family: 'GmarketSansMedium';">전국 방방곡곡 관광 명소</p>
+		                	<a style="position:relative; left:1700px; bottom:50px;" class="btn" href="attraction.bo" >더 알아보기 ></a>
+		                </div>
+				  <div class="swiper mySwiper" style="width:100%; height:500px; margin-top : 100px; position:absolute;">
+				    <div class="swiper-wrapper">
+				      <div class="swiper-slide"><img src="resources/images/icon_kakao.png"></div>
+				      <div class="swiper-slide">Slide 2</div>
+				      <div class="swiper-slide">Slide 3</div>
+				      <div class="swiper-slide">Slide 4</div>
+				      <div class="swiper-slide">Slide 5</div>
+				      <div class="swiper-slide">Slide 6</div>
+				      <div class="swiper-slide">Slide 7</div>
+				      <div class="swiper-slide">Slide 8</div>
+				    </div>
+				  </div>
+				    <div class="swiper-pagination" style="position:relative; height:50px; top:550px;"></div>
+				    <div class="swiper-button-next" style="position:relative; height:100px; top:220px; left:1850px;"></div>
+				    <div class="swiper-button-prev" style="position:relative; height:100px; top:150px; "></div>
+				    
+			<script>
+					var swiper = new Swiper(".mySwiper", {
+					    slidesPerView: 4,
+					    spaceBetween: 30,
+					    loop : true,
+					    autoplay: {
+					        delay: 1500,
+					        disableOnInteraction: false,
+					    },
+					    navigation: {
+					      nextEl: ".swiper-button-next",
+					      prevEl: ".swiper-button-prev",
+					    },
+					    pagination: {
+					      el: ".swiper-pagination",
+					      clickable: true,
+					    }
+					  });
+			</script>
+
+			</div>
+			
+			<br>
+<div id="togetherOuter" >
+					   <div class="togetherTextOuter" style="position:absolute; width:100%;">
+		                	<p style="padding:0; margin:16px; font-size: 40px; font-weight: 500; font-family: 'GmarketSansMedium';">혼자 여행하기 적적할 때는 ?</p>
+		                	<a style="position:relative; left:1700px; bottom:50px;" class="btn" href="together.bo" >더 알아보기 ></a>
+		                </div>
+				  <div class="swiper mySwiper" style="width:100%; height:500px; margin-top : 100px; position:absolute;">
+				    <div class="swiper-wrapper">
+				      <div class="swiper-slide"><img src="resources/images/icon_kakao.png"></div>
+				      <div class="swiper-slide">Slide 2</div>
+				      <div class="swiper-slide">Slide 3</div>
+				      <div class="swiper-slide">Slide 4</div>
+				      <div class="swiper-slide">Slide 5</div>
+				      <div class="swiper-slide">Slide 6</div>
+				      <div class="swiper-slide">Slide 7</div>
+				      <div class="swiper-slide">Slide 8</div>
+				    </div>
+				  </div>
+				    <div class="swiper-pagination" style="position:relative; height:50px; top:550px;"></div>
+				    <div class="swiper-button-next" style="position:relative; height:100px; top:220px; left:1850px;"></div>
+				    <div class="swiper-button-prev" style="position:relative; height:100px; top:150px; "></div>
+				    
+			<script>
+					var swiper = new Swiper(".mySwiper", {
+					    slidesPerView: 4,
+					    spaceBetween: 30,
+					    loop : true,
+					    autoplay: {
+					        delay: 1500,
+					        disableOnInteraction: false,
+					    },
+					    navigation: {
+					      nextEl: ".swiper-button-next",
+					      prevEl: ".swiper-button-prev",
+					    },
+					    pagination: {
+					      el: ".swiper-pagination",
+					      clickable: true,
+					    }
+					  });
+			</script>
+
+			</div>
+			
+			<br>
+			
+</div>
 	
 	<%@include file="WEB-INF/views/common/footer.jsp" %>
     <script src="resources/js/custom.js"></script>
