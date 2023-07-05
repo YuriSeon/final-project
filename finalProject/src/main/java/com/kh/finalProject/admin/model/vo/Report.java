@@ -23,4 +23,8 @@ public class Report {
 	private String replyWriter;
 	private int replyReport;
 
+	private String rereplyWriter;
+	private int rereplyReport;
+	
+
 }

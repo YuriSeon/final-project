@@ -14,8 +14,6 @@ public interface AttractionService {
 
 	int selectListCount();
 
-	ArrayList<Board> selectBoardList(PageInfo pi);
-
 	int insertAttr(Info info, ArrayList<Attachment> atArr);
 
 	int increaseCount(int boardNo);
@@ -26,12 +24,10 @@ public interface AttractionService {
 
 	ArrayList<Rereply> selectReplyList(int boardNo);
 
-	int iconCheck(String btnType, int boardno, String writer);
+	HashMap<String, Object> iconCheck(int boardno, String writer);
 
-	int iconBefore(String btnType, String tableName, int no, String writer);
-
-	int iconAfter(String btnType, String tableName, int no, String writer);
-
+	HashMap<String, Object> iconChange(String btnType, int no, String writer);
+	
 	int checkInfo(String address);
 
 	Info modifyRequestAttr(int boardNo);
@@ -47,6 +43,10 @@ public interface AttractionService {
 	int deleteReply(Rereply r);
 
 	ArrayList<Attachment> selectAttachment(int boardNo);
+
+	HashMap<String, Object> selectAttrList(String keyword);
+
+
 
 
 }

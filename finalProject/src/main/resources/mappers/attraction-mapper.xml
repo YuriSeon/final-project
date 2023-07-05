@@ -40,19 +40,38 @@
   	<select id="selectBoard" resultMap="boardMapper.boardResultSet">
   		SELECT *
   		FROM BOARD
-  		WHERE BOARD_NO = #{boardNo}
+  		<choose>
+  			<when test="keyword!=null">
+		  		WHERE BOARD_NO = #{boardNo}
+  			</when>
+  			<otherwise>
+  				JOIN ZONE USING(ZONE_NO)
+  				WHERE ZONE_NAME LIKE '%'||#{keyword}||'%'
+  			</otherwise>
+  		</choose>
+  		AND STATUS = 'Y'
+  		ORDER BY CREATE_DATE DESC
   	</select>
   	<!-- 디테일뷰 조회 -->
   	<select id="selectInfo" resultMap="adminMapper.infoResultSet">
   		SELECT *
   		FROM INFO
-  		WHERE BOARD_NO = #{boardNo}
+  		<choose>
+  			<when test="keyword=='null'">
+		  		WHERE BOARD_NO = #{boardNo}
+  			</when>
+  			<otherwise>
+  				JOIN ZONE USING(ZONE_NO)
+  				WHERE ZONE_NAME LIKE '%'||#{keyword}||'%'
+  			</otherwise>
+  		</choose>
   	</select>
   	<!-- 게시물 첨부파일 조회 -->
   	<select id="selectAttachment" resultMap="adminMapper.attachmentResultSet">
   		SELECT FILE_NO, FILE_PATH, FILE_LEVEL, CHANGE_NAME
   		FROM ATTACHMENT
   		WHERE BOARD_NO = #{boardNo}
+  		ORDER BY BOARD_NO DESC
   	</select>
   	<!-- 댓글 등록 -->
   	<insert id="insertReplyList">
@@ -159,20 +178,25 @@
   	</select>
   	<insert id="sendReport">
   		<choose>
-  			<when test="replyNo==0">
-  				INSERT INTO REPORT(BOARD_NO, REPLY_NO. WRITER, REPORT_REASON)
-  							VALUES(#{boardNo}, #{replyNo}, #{writer}, #{reportReason})
-  			</when>
-  			<when test="rereplyNo==0">
-  				INSERT INTO REPORT(BOARD_NO, REREPLY_NO, WRITER, REPORT_REASON)
-  						VALUES(#{boardNo}, #{rereplyNo}, #{writer}, #{reportReason})
-  			</when>
   			<when test="rereplyNo==0 and replyNo==0">
   				INSERT INTO REPORT(BOARD_NO WRITER, REPORT_REASON)
   						VALUES(#{boardNo}, #{writer}, #{reportReason})
   			</when>
+  			<when test="replyNo!=0 and rereplyNo==0">
+  				INSERT INTO REPORT(BOARD_NO, REPLY_NO. WRITER, REPORT_REASON)
+  							VALUES(#{boardNo}, #{replyNo}, #{writer}, #{reportReason})
+  			</when>
+  			<when test="rereplyNo!=0 and replyNo==0">
+  				INSERT INTO REPORT(BOARD_NO, REREPLY_NO, WRITER, REPORT_REASON)
+  						VALUES(#{boardNo}, #{rereplyNo}, #{writer}, #{reportReason})
+  			</when>
   		</choose>
   	</insert>
+  	<update id="updateReport">
+  		UPDATE BOARD
+  		SET REPORT = REPORT+1
+  		WHERE BOARD_NO = #{boardNo}
+  	</update>
   	<!-- 기존 등록 내역 조회 -->
   	<select id="checkInfo" resultType="_int">
   		SELECT COUNT(*)
@@ -228,4 +252,10 @@
   		DELETE ATTACHMENT
   		WHERE CHANGE_NAME = #{changeName}
   	</delete>
+  	<select id="selectListCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM BOARD
+  		JOIN ZONE USING(ZONE_NO)
+  		WHERE ZONE_NAME LIKE '%'||#{keyword}||'%'
+  	</select>
   </mapper>
