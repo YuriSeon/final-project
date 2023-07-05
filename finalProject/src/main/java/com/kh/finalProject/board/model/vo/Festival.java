@@ -15,6 +15,6 @@ public class Festival {
 	private String startDate;	//	START_DATE	DATE
 	private String endDate;		//	END_DATE	DATE
 	private int fesCategory;	//	FES_CATEGORY	NUMBER
-	private String fesMoney;		//이용 요금
+	private String fesMoney;	//이용 요금
 	
 }

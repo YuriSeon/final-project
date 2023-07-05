@@ -500,7 +500,7 @@
 			<div style="color:#598c93; font-size:14px; position:relative; top:-30px;">*필수 입력사항입니다.<br>(추후 입력사항과 인증정보가 다를시 게시판 이용이 제한될 수 있습니다.)</div>
 			<!-- 아이디 -->
 		  	<div class="field-wrapper">
-		    	<input type="text" maxlength="12" id="userId" name="userId" class="float-field" placeholder="5~12자의 영문(소문자), 숫자만 사용 가능합니다." required/>
+		    	<input type="text" maxlength="12" id="userId" name="userId2" class="float-field" placeholder="5~12자의 영문(소문자), 숫자만 사용 가능합니다." required/>
 		    	<label for="userId" class="float-label">아이디</label>
 		    	<div class="field-bar"></div>
 		   		<div id="id_check"></div>
@@ -535,7 +535,7 @@
 		  	</div>
 		  	<!-- 생년월일 -->
 		  	<div class="field-wrapper" style="height:23px;">
-		   		<input type="number" id="birthDay" name="birthDay" placeholder="생년월일 8자리를 입력해주십시오.(예: 19940707) (조건 안걸려있음 수정 예정)" class="float-field" required />
+		   		<input type="number" id="birthDay" name="birthDay" placeholder="생년월일 8자리를 입력해주십시오.(예: 19940707)" class="float-field" required />
 	    		<label for="birthDay" class="float-label">생년월일</label>
 		   		<div class="field-bar"></div>
 		   		<!-- <div id="id_fail">숫자만 입력해주십시오.</div> -->
@@ -561,7 +561,7 @@
 		  	</div>
 			<!-- 이메일 -->
 		  	<div class="field-wrapper">
-		    	<input type="email" id="email" name="email" maxlength="30" placeholder="email@email.com (이메일 인증 api가져올거라 조건 안걸려있음)" class="float-field" required style="width: 400px;"/>
+		    	<input type="email" id="email" name="email" maxlength="30" placeholder="email@email.com" class="float-field" required style="width: 400px;"/>
 		    	<label for="email" class="float-label">이메일</label>
 		    	<div class="field-bar"></div>
 		  		<button type="button" onclick="emailCk()" style="position:relative; top: -35px; left:400px; font-size: 9px;">이메일 인증</button>
@@ -820,7 +820,7 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 	$(function(){
 		
 		/* 아이디 중복 및 유효성 검사 */
-		var $userId = $("#insertForm input[name=userId]");
+		var $userId = $("#insertForm input[name=userId2]");
 		//console.log($userId.val());
 		
 		$userId.keyup(function(){
@@ -1069,7 +1069,7 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 	function joinChk(){
 		
 		//아이디
-		var $userId = $("#insertForm input[name=userId]");
+		var $userId = $("#insertForm input[name=userId2]");
 		//중복 검사 포커스
 		if(idResult == "NNNNN"){//중복 아이디 있으면 포커스 맞춤
 			$userId.focus();

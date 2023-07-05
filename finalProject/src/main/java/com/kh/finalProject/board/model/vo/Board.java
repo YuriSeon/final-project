@@ -49,4 +49,5 @@ public class Board {
 	private Zone zone;
 	private Theme theme;
 	
+	private int totalViewCount; //관리자 조회수 비교
 }	

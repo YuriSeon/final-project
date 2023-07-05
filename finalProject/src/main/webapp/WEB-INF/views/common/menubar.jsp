@@ -275,6 +275,8 @@
         			var mbtiCheck = decodeURI("${cookie.mbtiCheck.value}");
         			var cookieNickname = mbtiCheck.split("+")[0];
         			
+        			console.log(survey);
+        			
 								<%if (request.getSession().getAttribute("loginUser") != null) {%>
 								if(nickname == cookieNickname){
 									if (mbtiCheck == "null") {
@@ -323,7 +325,7 @@
 	          <!-- Modal Header -->
 	          <div class="modal-header">
 	            <img src="" alt="" style="width: 200px; height:70px; display: block; margin:auto; position: relative; left: 48px;">
-	            <button type="button" class="close" data-dismiss="modal">&times;</button>
+	            <button type="button" id="loginModal_close" class="close" data-dismiss="modal">&times;</button>
 	          </div>
 	    
 	          <!-- Modal body -->

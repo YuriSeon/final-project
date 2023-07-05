@@ -10,11 +10,13 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.admin.model.vo.Report;
+import com.kh.finalProject.admin.model.vo.Visit;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Festival;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.board.model.vo.Theme;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.vo.Member;
@@ -22,9 +24,50 @@ import com.kh.finalProject.member.model.vo.Member;
 @Repository
 public class AdminDao {
 
+	
+	//대시보드 방문자 통계 일일
+	public int dayCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminMapper.dayCount");
+	}
+
+	//대시보드 방문자 통계 주간
+	public int weekCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminMapper.weekCount");
+	}
+
+	//대시보드 방문자 통계 월간
+	public int monthCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminMapper.monthCount");
+	}
+
+	//대시보드 방문자 통계 전체
+	public int totalCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminMapper.totalCount");
+	}
+	
+	//대시보드 게시판 별 조회수
+	public ArrayList<Board> countList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("adminMapper.countList");
+	}
+	
+	//대시보드 여행지 방문 횟수
+	public HashMap<String, Integer> countMap(SqlSessionTemplate sqlSession) {
+		return (HashMap)sqlSession.selectList("adminMapper.countMap");
+	}
+	
 	//대시보드 최근 신고 5개
 	public ArrayList<Report> currentReportList(SqlSessionTemplate sqlSession) {
 		return (ArrayList)sqlSession.selectList("adminMapper.currentReportList");
+	}
+	
+	//대시보드 최근 작성글 5개
+	public ArrayList<Board> currentBoardList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("adminMapper.currentBoardList");
+	}
+
+	//대시보드 최근 문의 5개
+	public ArrayList<Notice> currentQnaList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("adminMapper.currentQnaList");
 	}
 	
 	//==================================================공지사항===========================================================
@@ -247,6 +290,21 @@ public class AdminDao {
 		
 		return (ArrayList)sqlSession.selectList("adminMapper.reportSearchList",map,rowBounds);
 	}
+	
+	//신고 게시물 이동
+	public int boardChk(SqlSessionTemplate sqlSession, int boardNo) {
+		return sqlSession.selectOne("adminMapper.boardChk",boardNo);
+	}
+	
+	//신고 댓글 조회
+	public Reply replyChk(SqlSessionTemplate sqlSession, int replyNo) {
+		return sqlSession.selectOne("adminMapper.replyChk",replyNo);
+	}
+	
+	//신고 대댓글 조회
+	public Rereply rereplyChk(SqlSessionTemplate sqlSession, int replyNo) {
+		return sqlSession.selectOne("adminMapper.rereplyChk",replyNo);
+	}
 
 	//=================================================회원관리===========================================================
 	
@@ -306,8 +364,28 @@ public class AdminDao {
 	//회원 프로필 이미지 삭제
 	public int delProfileImg(SqlSessionTemplate sqlSession, String nickname) {
 		return sqlSession.delete("adminMapper.delProfileImg", nickname);
+	}	
+	
+	//회원 비밀번호 초기화
+	public void pwdUpdate(SqlSessionTemplate sqlSession, Member m) {
+		sqlSession.update("adminMapper.pwdUpdate",m);
+	}
+
+	//회원 편집 접속기록 조회
+	public ArrayList<Visit> visitSelect(SqlSessionTemplate sqlSession, String nickname) {
+		return (ArrayList)sqlSession.selectList("adminMapper.visitSelect",nickname);
 	}
 	
+	//회원 계정 복구
+	public int memberRestore(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.update("adminMapper.memberRestore",userNo);
+	}
+	
+	//회원 관리자 전환
+	public int changeAdmin(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.update("adminMapper.changeAdmin",userNo);
+	}
+		
 	//=================================================게시글관리===========================================================
 
 	//게시글 축제 리스트 개수
@@ -566,8 +644,9 @@ public class AdminDao {
 		return (ArrayList)sqlSession.selectList("adminMapper.themeFilePath",boardNo);
 	}
 
+	
 
 	
-	
+
 
 }

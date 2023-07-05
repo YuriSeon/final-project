@@ -97,19 +97,23 @@
 									<li>
 									<input type="text" value="${r.replyNo}" class="replyNo" hidden>
 										<div class="profile">
-											<div class="photo" icid="">
+											<div class="photo">
 												<c:choose>
 													<c:when test="${not empty loginUser.profileImg}"><img src="${loginUser.profileImg}" alt="프로필 사진"></c:when>
 													<c:otherwise><img src="https://ssl.pstatic.net/static/pwe/address/img_profile.png" alt="프로필 사진"></c:otherwise>
 												</c:choose>
 											</div>
 											<span class="ico">
-												<img src="resources/images/ico_naver.png" alt="네이버">
+												<c:choose>
+													<c:when test="${loginUser.certification == 1}"><img src="resources/images/ico_kakao.png" alt="카카오"></c:when>
+													<c:when test="${loginUser.certification == 2}"><img src="resources/images/ico_naver.png" alt="네이버"></c:when>
+													<c:otherwise></c:otherwise>
+												</c:choose>
 											</span>
 										</div>
 										<div class="txt_reply">
-											<strong><a href="">${r.boardTitle}</a></strong>
-											<p><a href="">${r.content}</a></p>
+											<strong><a href="javascript:void(0);">${r.boardTitle}</a></strong>
+											<p><a href="javascript:void(0);">${r.content}</a></p>
 											<div class="date">
 												<em class="name">${r.replyWriter}</em><span>${r.createDate}</span>
 											</div>

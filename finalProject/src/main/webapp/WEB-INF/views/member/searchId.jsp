@@ -231,7 +231,7 @@
 							</div>
 							<div class="btn_area" style="width: 450px; position:relative; left: 30px;">
 								<button type="button" onclick="searchId_loginGo();">메인으로</button>
-								<button type="button" onclick="searchPwdForm.me">비밀번호 찾기</button>
+								<button type="button" onclick="location.href='searchPwdForm.me'">비밀번호 찾기</button>
 							</div>
 						</fieldset>
 					</div>

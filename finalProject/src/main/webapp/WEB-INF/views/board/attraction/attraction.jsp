@@ -66,7 +66,7 @@
 		.attr #zone-area #first{
 			margin-top: 20px;
 		}
-		.attr .float>div, .attr #content-area>div, .attr .list, .attr .content_search div {
+		.attr .float>div, .attr #content-area>div, .attr .list, .attr .content_search div, .list-area>div {
 			float: left;
 		}
 		.attr #mini-map {
@@ -76,7 +76,7 @@
 		.attr #content-area {
 			width: 55%;
 			height: 90%;
-			margin-right: 5%;
+/* 			margin-right: 5%; */
 		}
 		.attr .pagination {
 			width: 55%;
@@ -202,6 +202,7 @@
 .thumbnail:hover { 
   transform: scale(1.025); 
 }
+
    	</style>
   </head>
    <body>
@@ -357,30 +358,29 @@
 					searchType : 12,
 					sort : 'O',
 					currentPage: currentPage
-
 				},
 				success : function(result){
+					console.log(result)
 					$(".list-area").empty(); // 지도 다시 클릭하면 누적되어서 나오지 않도록 원래 영역 비워주기
-					// <div class="container">
-					// 	<div class="row">
-					// 		<div class="col-sm-6 col-md-4" >
-					// 		<div class="thumbnail">
-					// 			<img src="" alt="">
-					// 			<div class="caption">
-					// 			<h3></h3>
-					// 			<p></p>
-					// 			</div>
-					// 		</div>
-					// 		</div>
-					// 	</div>
-					// </div> //의 형태로 삽입
-					var totalCount = result.response.body.totalCount; //// 게시물 총 수
-					data = result.response.body.items.item; // 게시글
-					dataPrint(data); // 데이터출력
+					var totalCount = 0;
+					if(zoneName=='서울'||zoneName=='부산'){
+						totalCount = result.count;
+						for(var i in result.info){
+							$(".list-area").append($("<div>").prop("class","container")
+											.append($("<div>").prop("class","row")
+													.append($("<div>").prop("class","col-sm-6 col-md-4")
+															,$("<div>").prop("class","thumbnail").append($("<img>")
+															, $("<div>").prop("class","caption"), $("<h3>").text(result.info[i].infoName)
+															, $("<p>").text(result.info[i].infoAddress)))));
+						}
+					} else {
+						totalCount = result.response.body.totalCount; //// 게시물 총 수
+						data = result.response.body.items.item; // 게시글
+						dataPrint(data); // 데이터출력
+					}
 					var pi = pagination(totalCount); // 페이징바 처리 위한 객체 생성
 					var area = $(".pagination"); // 페이징처리 담을 영역
 					$(area).html(pi);
-					
 				}
 			});
 		});
