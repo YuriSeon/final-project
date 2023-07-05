@@ -508,8 +508,9 @@
 	    function pageLoad(){
 	    	if(nickname !== ""){
 	    		
-		    	boardNo = "${b.boardNo}";
-		    	location.href = "askUpdate.mo?boardNo="+boardNo;
+		    	/* boardNo = "${b.boardNo}";
+		    	location.href = "askUpdate.mo?boardNo="+boardNo; */
+		    	location.href = "myRequestEnroll.me";
 	    	}else{
 	    		alert("로그인시 이용가능합니다.");
 	    	}
