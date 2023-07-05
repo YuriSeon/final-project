@@ -34,7 +34,7 @@
 	#enroll-form input{
 		float :left;
 		box-sizing:border-box;
-		margin-left: 30px;
+		margin-left: 60px;
 		color: black;
 		border: 1px solid black;
 		width: 300px;
@@ -58,7 +58,7 @@
         width: 500px;
         height: 400px;
         position: relative;
-        margin: 0 auto;
+        margin-left: 60px;
         
          overflow: hidden; /*현재 슬라이드 오른쪽에 위치한 나머지 슬라이드 들이 보이지 않도록 가림 */
     }
@@ -138,13 +138,13 @@
     	border:1px solid black;
     }
     b{ margin-left:30px; float :left;}
-	#btn{margin-right: 500px;}
+	#btn{margin-right: 450px;}
     #map{
             width: 370px;
             height: 250px;
             border: 1px solid black;
             margin-top: 20px;
-            margin-left: 30px;
+            margin-left: 60px;
         }
 </style>
 </head>
@@ -207,7 +207,7 @@
 					<tr>
 						<th>내용</th>
 						<td colspan="2">
-							<textarea rows="10" cols="90" name="boardContent">${b.boardContent }</textarea>
+							<textarea rows="10" cols="90" name="boardContent" style="resize: none;">${b.boardContent }</textarea>
 						</td>
 					</tr>
 					<tr height="20"></tr>

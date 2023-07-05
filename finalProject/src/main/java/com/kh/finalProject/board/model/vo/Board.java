@@ -48,5 +48,6 @@ public class Board {
 	private Attachment attachment;
 	private Zone zone;
 	private Theme theme;
+	private Reply reply;
 	
 }	

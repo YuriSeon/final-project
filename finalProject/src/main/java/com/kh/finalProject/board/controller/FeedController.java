@@ -334,6 +334,7 @@ public class FeedController {
 		@RequestMapping("city.bo")
 		public String goFeed(@RequestParam(value="currentPage", defaultValue="1") int currentPage
 							,@RequestParam(value="city",defaultValue = "1") int city
+							,@RequestParam(value="sort",defaultValue = "1") int sort
 							,Model model,HttpServletRequest request) {
 
 			ArrayList<Member> mlist = feedService.selectMember();
@@ -345,8 +346,15 @@ public class FeedController {
 			
 			PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 					
-			ArrayList<Board> list = feedService.selectCityList(pi,city);			
-
+			ArrayList<Board> list = new ArrayList<>();
+			
+			if(sort ==1) {
+				//최신순
+				list = feedService.selectCityList(pi,city);
+			}else if(sort==2) {
+				//인기순
+				list = feedService.selectRankingList(pi,city);
+			}
 							
 			model.addAttribute("list", list);
 			model.addAttribute("blist", new Gson().toJson(list));
@@ -357,6 +365,7 @@ public class FeedController {
 			model.addAttribute("glist",new Gson().toJson(glist));
 			model.addAttribute("mlist",new Gson().toJson(mlist));
 			model.addAttribute("city", city);
+			model.addAttribute("sort", sort);
 
 			return "board/feed";
 		}
