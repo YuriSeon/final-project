@@ -39,12 +39,15 @@
   		AND CATEGORY = 4
   	</select>
   	<select id="selectBoardList" resultMap="feedResultSet">
-  		SELECT BOARD_NO,BOARD_WRITER,BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",GOOD,INFO_ADDRESS
-		FROM BOARD 
-        JOIN INFO USING (BOARD_NO)
-		WHERE STATUS = 'Y'
-        AND CATEGORY = 4
-		ORDER BY CREATE_DATE DESC
+  		SELECT B.BOARD_NO, B.BOARD_WRITER, B.BOARD_CONTENT, TO_CHAR(B.CREATE_DATE, 'YY/MM/DD HH24:MI:SS') AS CREATE_DATE,
+       		   B.GOOD, I.INFO_ADDRESS, COUNT(R.REF_QNO) AS COUNT
+		FROM BOARD B
+		LEFT JOIN REPLY R ON B.BOARD_NO = R.REF_QNO
+		JOIN INFO I ON B.BOARD_NO = I.BOARD_NO
+		WHERE B.STATUS = 'Y'
+		  AND B.CATEGORY = 4
+		GROUP BY B.BOARD_NO, B.BOARD_WRITER, B.BOARD_CONTENT, B.CREATE_DATE, B.GOOD, I.INFO_ADDRESS
+		ORDER BY B.CREATE_DATE DESC
   	</select>
   	
   	<resultMap type="board" id="feedResultSet">
@@ -56,6 +59,7 @@
   		<result column="ZONE_NO" property="zoneNo"/>
   		
   		<collection property="info" resultMap="infoResultSet"></collection>
+  		<collection property="reply" resultMap="replyResultMap"></collection>
   	</resultMap>
   	
   	<resultMap type="info" id="infoResultSet">
@@ -177,16 +181,19 @@
   	</insert>
   	
   	<!-- 댓글삽입 -->
-  	<select id="selectReplyList" resultMap="ReplyResultMap">
-  		SELECT REPLY_NO,CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",REPLY_WRITER,REF_QNO,(FILE_PATH || CHANGE_NAME) PROFILEIMG
-  		FROM REPLY R
-  		LEFT JOIN ATTACHMENT A ON(REPLY_WRITER = WRITER)
-  		WHERE REF_QNO = #{refQno}
-  		AND R.STATUS = 'Y'
-  		ORDER BY CREATE_DATE 
+  	<select id="selectReplyList" resultMap="replyResultMap"> 		
+  		SELECT R.REPLY_NO, R.CONTENT, TO_CHAR(R.CREATE_DATE, 'YY/MM/DD HH24:MI:SS') AS CREATE_DATE,
+		       R.REPLY_WRITER, R.REF_QNO, (A.FILE_PATH || A.CHANGE_NAME) AS PROFILEIMG, COUNT(E.REPLY_NO) AS COUNT
+		FROM REPLY R
+		LEFT JOIN ATTACHMENT A ON (R.REPLY_WRITER = A.WRITER)
+		LEFT JOIN REREPLY E ON (R.REPLY_NO = E.REPLY_NO)
+		WHERE R.REF_QNO = #{refQno}
+		  AND R.STATUS = 'Y'
+		GROUP BY R.REPLY_NO, R.CONTENT, R.CREATE_DATE, R.REPLY_WRITER, R.REF_QNO, (A.FILE_PATH || A.CHANGE_NAME)
+		ORDER BY R.CREATE_DATE
   	</select>
   	
-  	<resultMap type="reply" id="ReplyResultMap">
+  	<resultMap type="reply" id="replyResultMap">
   		<result column="REPLY_NO" property="replyNo"/>
   		<result column="CONTENT" property="content"/>
   		<result column="CREATE_DATE" property="createDate"/>
@@ -195,6 +202,7 @@
   		<result column="REF_RNO" property="refRno"/>
   		<result column="STATUS" property="status"/>
   		<result column="PROFILEIMG" property="profileImg"/>
+  		<result column="COUNT" property="count"/>
   	</resultMap>
   	
   	<!-- 댓글삭제 -->
@@ -222,8 +230,8 @@
   	
   	<!-- 댓글신고 report -->
   	<insert id="report">
-  		INSERT INTO REPORT(REPLY_NO,WRITER,REPORT_REASON)
-  		VALUES(#{replyNo},#{writer},#{reportReason})
+  		INSERT INTO REPORT(REPORT_NO,REPLY_NO,WRITER,REPORT_REASON)
+  		VALUES(SEQ_RPO.NEXTVAL,#{replyNo},#{writer},#{reportReason})
   	</insert>
   	<insert id="insertAnswer">
   		INSERT INTO REREPLY(REF_RNO,CONTENT,REPLY_WRITER,REF_QNO,REPLY_NO)
@@ -232,7 +240,7 @@
   	
   	<!-- 대댓글삽입 -->
   	<select id="selectRereply" resultMap="rereplyresultMap">
-  		SELECT REF_RNO,CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE",REPLY_WRITER,(FILE_PATH || CHANGE_NAME) PROFILEIMG
+  		SELECT REF_RNO,CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH24:MI:SS')"CREATE_DATE",REPLY_WRITER,(FILE_PATH || CHANGE_NAME) PROFILEIMG
   		FROM REREPLY R
   		LEFT JOIN ATTACHMENT A ON(REPLY_WRITER = WRITER)
   		WHERE REPLY_NO = #{replyNo}
@@ -276,8 +284,8 @@
   	
   	<!-- 대댓글 신고 -->
   	<insert id="insertReport">
-  		INSERT INTO REPORT(REREPLY_NO,WRITER,REPORT_REASON)
-  		VALUES(#{rereplyNo},#{writer},#{reportReason})
+  		INSERT INTO REPORT(REPORT_NO,REREPLY_NO,WRITER,REPORT_REASON)
+  		VALUES(SEQ_RPO.NEXTVAL,#{rereplyNo},#{writer},#{reportReason})
   	</insert>
   	
   	<!-- 게시물수정폼board -->
@@ -336,15 +344,17 @@
   	
   	<!-- 도시선택 -->
   	<select id="selectCityList" resultMap="feedResultSet">
-  		SELECT B.BOARD_NO,B.BOARD_WRITER,B.BOARD_CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS')"CREATE_DATE"
-        ,B.GOOD,I.INFO_ADDRESS
+  		SELECT B.BOARD_NO, B.BOARD_WRITER, B.BOARD_CONTENT, TO_CHAR(B.CREATE_DATE, 'YY/MM/DD HH24:MI:SS') AS CREATE_DATE,
+		       B.GOOD, I.INFO_ADDRESS, COUNT(R.REF_QNO) AS COUNT
 		FROM BOARD B
-		JOIN INFO I ON (B.BOARD_NO = I.BOARD_NO)
-		WHERE STATUS = 'Y'
+		LEFT JOIN REPLY R ON B.BOARD_NO = R.REF_QNO
+		JOIN INFO I ON B.BOARD_NO = I.BOARD_NO
+		WHERE B.STATUS = 'Y'
         AND CATEGORY = 4
         <if test="city!=null">
          AND B.ZONE_NO LIKE  CONCAT(#{city}, '%')      
         </if>
+        GROUP BY B.BOARD_NO, B.BOARD_WRITER, B.BOARD_CONTENT, B.CREATE_DATE, B.GOOD, I.INFO_ADDRESS
 		ORDER BY CREATE_DATE DESC
   	</select>
   	
@@ -367,9 +377,24 @@
   	
   	<!-- 게시물신고 신고insert -->
   	<insert id="insertReportBoard"> 		
-  		INSERT INTO REPORT(BOARD_NO,WRITER,REPORT_REASON)
-    	VALUES(#{boardNo},#{writer},#{reportReason})
+  		INSERT INTO REPORT(REPORT_NO,BOARD_NO,WRITER,REPORT_REASON)
+    	VALUES(SEQ_RPO.NEXTVAL,#{boardNo},#{writer},#{reportReason})
   	</insert> 
   	
+  	<!-- 도시선택 인기순 -->
+  	<select id="selectRankingList" resultMap="feedResultSet">
+  		SELECT B.BOARD_NO, B.BOARD_WRITER, B.BOARD_CONTENT, TO_CHAR(B.CREATE_DATE, 'YY/MM/DD HH24:MI:SS') AS CREATE_DATE,
+		       B.GOOD, I.INFO_ADDRESS, COUNT(R.REF_QNO) AS COUNT
+		FROM BOARD B
+		LEFT JOIN REPLY R ON B.BOARD_NO = R.REF_QNO
+		JOIN INFO I ON B.BOARD_NO = I.BOARD_NO
+		WHERE B.STATUS = 'Y'
+        AND CATEGORY = 4
+        <if test="city!=null">
+         AND B.ZONE_NO LIKE  CONCAT(#{city}, '%')      
+        </if>
+        GROUP BY B.BOARD_NO, B.BOARD_WRITER, B.BOARD_CONTENT, B.CREATE_DATE, B.GOOD, I.INFO_ADDRESS
+		ORDER BY GOOD DESC
+  	</select>
   	
   </mapper>

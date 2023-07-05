@@ -101,6 +101,12 @@ public interface FeedService {
 	//게시물 신고
 	int reportBoard(Report re, String nickname);
 
+	//도시선택인기순
+	ArrayList<Board> selectRankingList(PageInfo pi, int city);
+
+	//댓글갯수리스트
+	ArrayList<Reply> selectRereply();
+
 	
 
 	

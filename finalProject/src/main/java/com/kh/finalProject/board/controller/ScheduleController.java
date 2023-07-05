@@ -40,16 +40,13 @@ public class ScheduleController {
 		Info info = null;
 		// 매개변수로 전달받은 배열에서 사용할 값 추출
 		String infoName = pathArr[0];
-		String infoAddress = pathArr[3];
-		String zone = infoAddress.split(" ")[0]; // 주소에서 지역명 추출
-		// 첫번째 공백 뒤로 잘라서 주소 검색
-		// 서울이나 서울특별시 이렇게 다르게 찾아질 수 있으니 처음 단위 제거
-		String address = infoAddress.substring(infoAddress.indexOf(" ")+1); 
-		int result = scService.checkInfo(address);
+		String[] infoAddress = pathArr[3].split(" ");
+		String zone = infoAddress[0]+" "+infoAddress[1]; // 주소에서 지역명 추출
+		int result = scService.checkInfo(zone);
 		System.out.println("infoDataGet  " + result);
 		if(result==0) {
 			System.out.println("들어옴");
-			info = new Selenium().searchData(infoName, zone);
+			info = new Selenium().searchData(infoName, infoAddress[0]);
 			System.out.println("나감");
 		} 
 		return info;
@@ -66,26 +63,19 @@ public class ScheduleController {
 		// 데일리 일정 경로별 데이터 조회
 		ArrayList<Info> infoList = new ArrayList<>(); // 검색한 데이터 담을 리스트 선언 (Info 등록)
 		String[][] pathArr = new String[path.length][]; // 전달받은 값 담을 이차배열 선언 (path 등록)
-		ArrayList<Attachment> atList = new ArrayList<>(); // 첨부파일 담을 리스트 선언 (attachment 등록) 
 		// 전달받은 path 가공해 selenium으로 데이터 찾아오기
 		for(int i=0; i<path.length; i++) {
 			String[] str = path[i].split(","); //구분자로 구분해서 배열에 넣기
 			pathArr[i] = new String[str.length]; // 이차배열 길이 설정
 			for(int j=0; j<str.length; j++) {
 				pathArr[i][j] = str[j]; 
+				plan.setAddress(pathArr[0][3]); // 가장처음경로의 주소set(지역코드 조회 예정)
 			}
-			Info in = infoDataGet(pathArr[i]);
+			Info in = infoDataGet(pathArr[i]); // 기존정보가 있는지를 확인하고 조회해옴
 			System.out.println("가져온 데이터 "+in);
 			if(in!= null) { // 이미 기존에 등록된 정보가 없을때만 리스트에 담기
 				infoList.add(in);
 				System.out.println("찾은 데이터 "+in);
-			}
-		}
-		// 지역코드 조회할 주소 하나 추출해서 plan객체에 담기
-		for(Info i : infoList) {
-			if(i.getInfoAddress()!=null) {
-				plan.setAddress(i.getInfoAddress());
-				break;
 			}
 		}
 		// plan 현재날짜와 비교해서 완료된 일정인지 체크
@@ -100,36 +90,8 @@ public class ScheduleController {
 		} else {
 			plan.setComplete("Y");
 		}
-		// 2. board+ plan 등록
-		int result = scService.insertSchedule(plan);
-		
-		// 3. 가져온 장소 정보안에 img url 추출 (이미지 다운)후 등록
-		// imgsrc 리스트에 담기(infoList의 boardContent ||구분자로 [0] -> 이 안에 url |구분자로 들어있음
-		for(int i=0; i<infoList.size(); i++) {
-			ArrayList<String> imgURL = new ArrayList<>();
-			// 기존에 사용하던 메소드 사용해서 json의 형태로 받았기에ㅔ 한글자씩 문자열의 배열로넘어옴. 원하는 형태로 가공하기 위해 문자열로 합쳐줌
-			String urlString = String.join(infoList.get(i).getBoardContent()); 
-			String[] str = urlString.split("||");
-			if(str[0].contains("|")) { //이미지가 여러개
-				infoList.get(i).setBoardContent(str[1]);
-				String[] url = str[0].split("|"); // info 하나의 url들
-				System.out.println("구분자 제거한 url들 : "+ Arrays.toString(url));
-				for(int j=0; j<url.length; j++) {
-					imgURL.add(url[j]);
-					atList = AttractionController.imgTool(session, imgURL);
-				}
-			} else if(str[0].contains("http")){ // 이미지가 하나
-				imgURL.add(str[0]);
-				infoList.get(i).setBoardContent(str[1]);
-				atList = AttractionController.imgTool(session, imgURL);
-			} else { // 이미지 정보가 없을때
-				atList = null;
-			}
-			// 4. info와 해당하는 img등록
-			result *= scService.insertInfoAttach(infoList.get(i), atList);
-		}
-		// 5. path 등록하면서 plan에 infoNo 추가해주기
-		result *= scService.insertPath(pathArr, infoList.size());
+		// 2. 등록하러 이동
+		int result = scService.insertSchedule(session, plan, infoList, pathArr);
 		
 		if(result!=0) { // 모든 데이터 등록 성공
 			session.setAttribute("alertMsg", "일정 등록 성공");
@@ -144,6 +106,7 @@ public class ScheduleController {
 		return mv;
 	}
 	// path는 글제목으로 조회해서 boardNo 넣고 infoName으로 조회해서 infoNo 넣기
+	// 이미지 url 제거하는 작업이랑 url 구분이 안되니 이미지가 안들어감 지역코드 조회하는거 다시 해보기
 	
 	@GetMapping("detail.sc")
 	public String detailview() {

@@ -257,7 +257,7 @@
                             <li><a href="main.bo">메인</a></li>
                             <li><a href="theme.bo">테마</a></li>
                             <li><a href="festival.fe">축제</a></li>
-                            <li><a href="attraction.bo">명소</a></li> 
+                            <li><a href="attraction.bo?currentPage=1">명소</a></li> 
                             <li><a href="feed.bo">피드</a></li> 
                             <li><a href="schedule.bo">일정 자랑</a></li> 
                             <li><a href="#" onclick="mbtiQuestion();">함께 가치</a></li> 
@@ -351,9 +351,7 @@
 	              <label for="saveId">아이디 저장</label>
 	            </div>
 	            <div id="login-fales">
-	              		<!-- *아이디 또는 비밀번호를 잘못 입력했습니다.<br>
-	              		&nbsp;&nbsp;입력하신 내용을 다시 확인해주세요. -->
-	            </div>
+	     		</div>
 	            <div>
 	              <button type="button" id="login-button" onclick="return loginGo();">로그인</button>
 	            </div>
