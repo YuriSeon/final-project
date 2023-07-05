@@ -8,10 +8,111 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="resources/css/attraction.css?after">
 <title>Insert title here</title>
-<style type="text/css"></style>
+<style type="text/css">
+#content-pack *{
+	border:1px solid;
+}
+.attracDetail #reply-area {
+	margin-top: 1%;
+	width: 70%;
+}
+
+.attracDetail #reply-area>div {
+	margin-bottom: 2%;
+}
+
+.attracDetail #reply-title {
+	font-size: 22px;
+}
+
+.attracDetail #reply-back {
+	background-color: lightgray;
+	width: 100%;
+	height: 50px;
+}
+
+.attracDetail #reply-back input {
+	width: 80%;
+	height: 60%;
+	margin-top: 1%;
+	margin-left: 2%;
+}
+
+.attracDetail #reply-area button {
+	width: 90px;
+	height: 34px;
+}
+
+.attracDetail #reply-content {
+	width: 100%;
+}
+
+.attracDetail .reply {
+	width: 100%;
+	height: auto;
+    min-height: 120px;
+}
+.attracDetail .reply *{
+    text-align: left;
+    padding: 1px;
+}
+
+.attracDetail .reply div {
+	float: left;
+}
+
+.attracDetail .reply .pro {
+	width: 10%;
+	height: 100%;
+    min-height: 120px;
+}
+.attracDetail .reply .pro img{
+    width: 95%;
+    max-height: 50px;
+    height: auto;
+    margin: 2.5%;
+}
+.attracDetail .reply .con {
+	width: 90%;
+	height: auto;
+    min-height: 55px;
+    padding: 10px;
+}
+/* 여기 나중에 확인해서 수정 필요함  */
+.attracDetail .reply .date, .attracDetail .reply-btn {
+	width: 90%;
+	height: 20%;
+}
+
+.attracDetail #reply-area #btn {
+	text-align: center;
+}
+
+.attracDetail #btn button {
+	margin-left: 2%;
+}
+.attracDetail #reply-area .ico {
+    width: 35px;
+    min-height: 37px
+}
+.attracDetail #reply-area .ico img{
+	width: auto;
+    max-height: 35px;
+}
+.attracDetail .reply-btn input {
+    height: 100%;
+    width: 75%;
+    box-sizing: border-box;
+}
+.attracDetail .reply-btn button {
+    text-align: center;
+}
+
+</style>
 <body>
 <%@include file="../../common/menubar.jsp" %>
 <!-- 맛집 추천 상세정보 출력구문작성, 댓글조회 원래 양식 확인하고 지우기 -->
+<!-- 좋아요 찜 되는데 두번 클릭하면 아이콘이 다시 안바뀌는것만 수정 -->
     <div class="attracDetail">
         <div id="contents">
             <!-- 상단 -->
@@ -26,18 +127,19 @@
                     </span>
                 </div>
                 <div class="board-area">
-                    <span class="ico"><img src="resources/images/view.png"></span>
-                    <span class="num" id="conRead">${dataMap.board.count }</span>
-                    <span class="ico">
+                    <span class="icon"><img src="resources/images/view.png"></span>
+                    <span class="num">${dataMap.board.count }</span>
+                    <span class="ico" onclick="iconChange('board', 'good', '${dataMap.board.boardNo}');">
                         <img class="good" src="resources/images/Like-before.png">
                     </span>
-                    <span class="num" id="conLike">${dataMap.board.good }</span>
-                    <span class="ico">
+                    <span class="num good">${dataMap.board.good }</span>
+                    <span class="ico" onclick="iconChange('board', 'choice', '${dataMap.board.boardNo}');">
                         <img class="choice" src="resources/images/star-before.png">
                     </span>
-                    <!-- 스크립트 부분에서 사용하기위해서 숨겨둠 -->
-                    <input type="hidden" id="boardNo" name="boardNo" value="${dataMap.board.boardNo}"> 
+                    <span class="num chioce">${dataMap.board.choice }</span>
                 </div>
+                <!-- 스크립트 부분에서 사용하기위해서 숨겨둠 -->
+                <input type="hidden" id="boardNo" name="boardNo" value="${dataMap.board.boardNo}"> 
             </div>
             <hr>
             <!-- 내용 -->
@@ -75,9 +177,6 @@
                         <div class="inr_wrap">
                             <div class="inr text">
                                 ${fn:split(dataMap.board.boardContent, '||')[0] }
-                            </div>
-                            <div class="cont_more">
-                                <button type="button" id="btn_more" title="내용더보기">+ 더보기</button>
                             </div>
                         </div>
                     </div>
@@ -127,10 +226,12 @@
             <div>
                 <div id="reply-back">
                     <input type="text" id="reply-content" placeholder="지금 보고계신 명소에 대해 댓글을 작성해주세요!">
-                    <button class="insertReply">작성</button>
+                    <button class="replyInsert">작성</button>
                 </div>
             </div>
-            <div id="content-pack"></div>
+            <div id="content-pack">
+            <!-- 댓글 들어갈 영역 -->
+            </div>
         </div>
         <div class="btn-area">
             <button onclick="history.back();">목록</button>
@@ -190,8 +291,24 @@
             </div>
         </div>
     </div>
-    
-    <%@include file="../../common/footer.jsp" %>
+	<div class="modal" id="reportModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">신고하시겠습니까?</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<div class="modal-body">
+					<textarea id="reportReason" name="reportReason" placeholder="신고사유를 작성해주세요"></textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="reportSubmit" class="btn btn-outline-danger" data-dismiss="modal">제출</button>
+					<button type="button" class="btn btn-outline-success" data-dismiss="modal">취소</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<%@include file="../../common/footer.jsp" %>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3f6edea42e65caf1e4e0b7f49028f282&libraries=services"></script>
     <script type="text/javascript" src="resources/js/function.js"></script> 
     <script>
@@ -199,12 +316,13 @@
             /* 페이지로드되면 바로 실행해야 할 부분 */ 
             // 1. 숨길영역 숨기기
             $("#myModal").modal('hide'); 
+            $("#reportModal").modal('hide');
 //             $(".text").hide(); 
             // 2. 댓글 조회
             selectReplyList(); 
-            // 3. 좋아요 신고 아이콘 변경
+            // 3. 좋아요 신고 아이콘 조회
             $(".ico").each(function(){
-                iconChange(this);
+                iconCheck(this);
             });
             // 4. 로그인 확인 후 댓글 비활성화
 //             if("${empty loginUser}"){
@@ -213,7 +331,7 @@
 //             }
             // 5. 장소 상세정보 출력
             var list = ['infoAddress','infoTime','infoHomepage','infoCall','parking','infoType','dayOff']; // 출력할 내용 배열에 담기
-            	//key로 꺼내 사용할 수 있도록 객체형식으로 변경
+            	// key로 꺼내 사용할 수 있도록 객체형식으로 변경
             	// 처음과 마지막 ()만 변경되도록/ =은 :로 변경/ :의 앞 뒤 ""로 감싸주는데 http:는 추가로 감싸지 않도록 설정
            	var info =("${dataMap.info}").replace(/Info/g, '').replace(/^./, '{').replace(/.$/, '}').replace(/=/g, ':')
 										.replace(/(\w+):/g, '"$1":').replace(/:([^,{}\[\]]+)/g, ':"$1"').replace('"http"', 'http');
@@ -229,15 +347,29 @@
 	            	case 'dayOff' : label = '휴무일';
             	}
             	if(infoObj[list[i]]!="null"){ // 정규표현식으로 ""전부 감싸줬기에 이렇게 비교
-            		$("#infoDetail").append($("<tr>").append($("<th>").append(label),$("<td>").append(infoObj[list[i]])));
+		            $("#infoDetail").append($("<tr>").append($("<th>").append(label),$("<td>").append(infoObj[list[i]])));
             	}
             }
-            
-            /* 상세정보 더보기 버튼 슬라이드 이벤트 */
-            $("#btn_more").click(function(){
-                $(".text").slideToggle();
+            /* 장소 종류에 맞춰서 숫자에서 값으로 바꿔주기 */
+            $("#infoDetail tbody tr th").each(function(){
+                var thisText = $(this).siblings().text();
+            	if($(this).text()== '장소 종류'){
+                    var changeText = "";
+                    switch(thisText){
+                        case '1' : changeText = '여행'; break;
+                        case '2' : changeText = '맛집'; break;
+                        case '3' : changeText = '기타'; 
+                    }
+            	} else if($(this).text()== '주차장'){
+                    if(thisText=='Y'){
+                        changeText = '주차 가능';
+                    } else {
+                        changeText = '주차 불가능';
+                    }
+                }
+                $(this).siblings().text(changeText); 
             });
-
+            
             /* 맛집추천 게시글 조회해오기 */
             $.ajax({
                 url : "foodSearch.attr",
@@ -311,152 +443,229 @@
         function selectReplyList(){
             var replyDiv = $("#content-pack"); // 댓글 넣을 영역
             $.ajax({
-                url : "replyList.attr",
+                url : "selectReplyList.attr",
                 data : { boardNo : "${dataMap.board.boardNo}" },
                 success : function(result){
-                 /*     <div class="reply">
-                            <div class="pro">프로필</div>
-                            <div class="con">댓글내용</div>
-                            <div class="date"><a id="nicknameHover" onclick="whoareyou();">닉네임</a>/작성일</div>
-                            <div class="reply-btn">
-                                <span class="ico">
-                                    <img class="good" src="resources/images/Like-before.png">
-                                </span>
-                                <span class="ico">
-                                    <img class="choice" src="resources/images/bell-before.png">
-                                </span>
-                                <input type="text" id="reReply-content" placeholder="댓글을 작성해주세요!">
-                                <button onclick="replyinsert();"></button>
-                                <input type="hidden" id="replyNo" value="">
-                            </div>
-                            대댓글 영역 조건문 걸기 있을때만 생성
-                            <div class="reply re">
-                                <div class="pro">프로필</div>
-                                <div class="con">댓글내용</div>
-                                <div class="date"><a id="nicknameHover" onclick="whoareyou();">닉네임</a>/작성일</div>
-                                <span class="ico">
-                                    <img class="good" src="resources/images/Like-before.png">
-                                </span>
-                                <span class="ico">
-                                    <img class="choice" src="resources/images/bell-before.png">
-                                </span>
-                            </div>
-                        </div>
-                    원래 넣으려고 했던 형태. 추후 코드작성 끝나면 지우기 
-                */ 
-                    for(var i in result){
-                        // 넣을 태그 생성해서 key:value 
+                	replyDiv.empty(); // 기존 생성해놓은 것들 지워주기
+                	/* 
+	                    <div class="reply">
+	                        <input type="hidden" name="replyNo" value="번호넣기">
+	                        <div class="pro">프로필</div>
+	                        <div class="nick">
+	                            <a id="nicknameHover" onclick="whoareyou();">닉네임</a>
+	                            <img class="report" src="resources/images/bell-before.png">
+	                        </div>
+	                        <div class="con">댓글내용</div>
+	                        <span class="ico">
+	                            <span>댓글작성일</span>
+	                            <button type="button" onclick="rereplyToggle();">답글달기</button>
+	                        </span>
+	                        <div>
+	                            <input type="text" name="rereplyInput" id="reinput"><button type="button" onclick="replyinsert(2);">작성</button>
+	                        </div>
+	                        <div class="rereply">
+	                            <input type="hidden" name="replyNo" value="번호넣기">
+	                            <div class="pro">프로필</div>
+	                            <div class="nick">
+	                                <a id="nicknameHover" onclick="whoareyou();">닉네임</a>
+	                                <img class="report" src="resources/images/bell-before.png">
+	                            </div>
+	                            <div class="con">댓글내용</div>
+	                            <span class="ico">
+	                                <span>댓글작성일</span>
+	                            </span>
+	                        </div>
+	                    </div>
+	                */
+	                for(var i in result){
                         var r = {
                             reply : makeTag("div",{"class":"reply"}),
-                            pro : makeTag("div",{"class":"pro"}).append(makeTag("img",{"src":"/*프로필사진경로*/"})),
-                            date : makeTag("div",{"class":"date"}).text("/*댓글 작성일 들어갈 부분*/").append(makeTag("a",{"id":"nicknameHover","onclick":"whoareyou();"}).text("/*닉네임들어갈부분*/")),
-                            good : makeTag("span",{"class":"ico"}).append(makeTag("img",{"class":"good","src":"resources/images/Like-before.png"})),
-                            choice : makeTag("span",{"class":"ico"}).append(makeTag("img",{"class":"choice","src":"resources/images/star-before.png"})),
-                            reReplyinput : makeTag("intup",{"type":"text","id":"reReply-content","placeholder":"댓글을 작성해주세요!"}),
-                            reReplyBtn : makeTag("button", {"class":"replyinsert"}),
-                            replyNo : makeTag("input",{"type":"hidden", "id":"replyNo","class":"replyNo","value":"/*댓글번호넣어주기*/"}),
-                            reReplyNo : makeTag("input",{"type":"hidden","class":"reReplyNo","value":"/*댓글번호넣어주기*/"})
+                            reReply : makeTag("div",{"class":"rereply"}),
+                            replyNo : makeTag("input",{"type":"hidden", "id":"replyNo","value":result[i].replyNo}),
+                            pro : makeTag("div",{"class":"pro"}),
+                           	nick : makeTag("div",{"class":"nick"}),
+                            name : makeTag("a",{"id":"nicknameHover","onclick":"whoareyou();"}).text(result[i].replyWriter),
+                            report : makeTag("span",{"class":"ico"}).append(makeTag("img",{"class":"report","src":"resources/images/bell-before.png","onclick":"sendReport(reply, 0)"})),
+                            recon : makeTag("div", {"class": "con"}).append(makeTag("textarea",{"class":"replycontent"}).text(result[i].content)),
+                           	rerecon : makeTag("div", {"class": "con"}).append(makeTag("textarea",{"class":"replycontent"})),
+                            redate : makeTag("div",{"class":"date"}).text(result[i].createDate),
+                            reRedate : makeTag("div",{"class":"date"}),
+                            reReplyinput : makeTag("input",{"type":"text","class":"reReplyContent","placeholder":"이 댓글에 대한 생각을 적어주세요!"}),
+                            reReplyBtn : makeTag("button", {"class":"replyInsert"}).text("작성")
                         }
-                        var replyBtn = makeTag("div",{"class":"reply-btn"}).append(r.good, r.choice, r.reReplyinput, r.reReplyBtn, r.replyNo);
-                        var reply_re = makeTag("div",{"class":"reply re"}).append(r.pro, r.con, r.date, r.good, r.choice,r.reReplyNo);
-                        if(result[i].refRno==null){ // 대댓글이 아닌경우
-                            $("#content-pack").append(r.reply.append(r.pro, r.con, r.date, replyBtn));
-                        } else { // 대댓글인경우
-                            $(".replyNo").each(function(){
-                                if($(this).val()==result[i].refRno){
-                                    $(this).parent().after(reply_re);
-                                }
-                            });
+                        var nickName = r.nick.append(r.name.append(makeTag("img",{"src":result[i].profileImg})), r.report);
+                        var replyarea = r.reply.append(r.replyNo, r.pro, nickName, r.recon, r.redate, $("<div>").append(r.reReplyinput, r.reReplyBtn));
+                        replyDiv.append(replyarea);
+                        if(result[i].refRno!=0){
+                            nickName = r.nick.append(r.name.append(makeTag("img",{"src":result[i].profileImg})));
+                            r.reReply.append(r.replyNo.attr("value",result[i].refRno), r.pro, nickName, r.reRecon,r.reRedate);
                         }
-                        // 태그 재성성 할 수 있도록 초기화시키기
-                        r = null;
-                        replyBtn = null;
-                        reply_re = null;
-                    }
-                },
-                error : function(){
-                    console.log("실패");
-                },
-                complete : function(){
-                    console.log("되기는 함");
+                        r= null;
+	                }
+                        
                 }
             });
         }
 
         /* 댓글 등록 */
-        $(".insertReply").on("click",function(){
+        $(document).on("click",".replyInsert", function(){
+        	var replyNo = $(this).parents().eq(1).children().eq(0).val();
+        	var refRno = 0;
+        	if(replyNo!=''){ // 대댓글
+                refRno = replyNo;
+            }
             $.ajax({
                 url : "insertReply.attr",
                 data : {
                     content : $(this).prev().val(),
-                    replyWriter : "abc"/* "${loginUser.nickName}" */,
+                    replyWriter : "${loginUser.nickname}",
                     refQno : "${dataMap.board.boardNo}",
-	                replyNo : $(this).next().val()
+	                refRno : refRno
                 },
                 success : function(result){
                     if(result>0){
                         alert("댓글 등록 성공");
-//                         selectReplyList(); // 리스트 추가됐으니 다시 조회
+                        selectReplyList(); // 리스트 추가됐으니 다시 조회
                         $(this).prev().val() = ""; // 댓글 등록됐으니 비워주기 
                     } else {
                         alert("댓글 등록 실패")
                     }
-                },
-                error : function(){
-                    console.log("등록 실패");
                 }
             });
-        });
-
-         /* 좋아요 찜 버튼 클릭 이벤트 */
-         $(".ico").click(function(){
-            iconChange(this);
-        });
+        })
+        /* 댓글 삭제 */
+        function replydelete(type, no){
+            var refRno = 0;
+            var replyNo = $(this).parents.eq(0).val();
+            if(type=='rereply'){
+                refRno = no;
+            }
+            $.ajax({
+                url : "deleteReply.attr",
+                data : {
+                    refQno : "${dataMap.board.boardNo}",
+	                refRno : refRno,
+                    replyNo : replyNo
+                },
+                success : function(result){
+                    if(result>0){
+                        alert("댓글 삭제 성공");
+                        selectReplyList(); // 리스트 추가됐으니 다시 조회
+                    } else {
+                        alert("댓글 삭제 실패")
+                    }
+                }
+            });
+        }
         
+        
+        /* 신고 이벤트 */ /* 댓글부분 정리해서 다시 넣고 이벤트 부분에 매개변수 넣어주기 */
+        function sendReport(sort, ref){
+        	$("#reportModal").show(); // 신고누르면 모달 보여주기
+        	// 게시판 신고면 변수 선언해놓은 값 넣기
+        	var replyNo = 0;
+        	var rereplyNo = 0;
+        	var num = $(this).parent().siblings().eq(0).val();
+        	if(sort=='reply' && ref==0){ //댓글
+        		replyNo = num;
+        	} else if(sort=='rereply'){ // 대댓글
+        		replyNo = ref;
+        		rereplyNo = num;
+        	}
+        	$.ajax({
+        		url : "report.attr",
+        		data : {
+        			writer : "${loginUser.nickname}",
+        			boardNo : "${dataMap.board.boardNo}",
+        			replyNo : replyNo,
+        			rereplyNo : rereplyNo,
+        			reportReason : $("#reportReason")
+        		},
+        		success : function(result){
+        			if(result>0){
+        				alert("신고에 성공하셨습니다.");
+        			} else {
+        				alert("신고에 실패하셨습니다.");
+        			}
+        		}
+        	});
+        }
+
         /* 페이지 이동 이벤트 */
         function pageLoad(num){
-            
             var obj = $(".attracDetail"); 
             var form = makeTag("form", {"method":"get"});
-            // var boardNo = makeTag("input", {"type":"hidden", "name":"boardNo", "value":"${b.boardNo}"}); // 게시물번호 변수처리
+            var boardNo = makeTag("input", {"type":"hidden", "name":"boardNo", "value":"${dataMap.board.boardNo}"}); // 게시물 번호
+            var at = makeTag("input", {"type":"hidden", "name":"at", "value":"${dataMap.at})"}); // 파일경로
             switch(num){
                 case 1 : form.attr("action", "modify.attr"); break; // 관리자에게 정보수정요청
                 case 2 : form.attr("action", "update.attr"); break; // 게시물 수정
                 case 3 : form.attr("action", "delete.attr"); break; // 게시물 삭제
             }
-            obj.append(form/*.append(boardNo)*/);
+            obj.append(form.append(boardNo, at));
             form.submit();
         }
+        
+        /* 좋아요 찜 신고여부 조회 */
+       function iconCheck(obj){
+        	var type = $(obj).children();
+        	$.ajax({
+        		url : "iconCheck.attr",
+        		data : {
+        			btnType : type.attr("class"),
+        			boardNo : $("#boardNo").val(),
+        			writer : "${loginUser.nickname}"
+        		},
+        		success : function(result){
+        			changeSrc(type, result);
+        		}
+        	});
+        }
 
-        /* 좋아요 신고 아이콘 변경 */
-        function iconChange(obj){ // 이벤트 대상 객체 매개변수로 받음
-            var btnType = $(obj).children().attr("class");
+        /* 좋아요 찜 아이콘 변경 */  
+        function iconChange(sort, type, no){ // 이벤트 대상 객체 매개변수로 받음
+            var btnType = $(obj).children();
             var realClass = $(obj).parent().attr("class"); // 아이콘이 들어있는 실제 태그 class명
             var tableName = realClass.split("-")[0]; // 부모 클래스값에서 - 앞까지만 값 추출 
-            var no = $(obj).parent().last().val();
+            var noParents = $(obj).parent().siblings();
+            var no = noParents.eq(noParents.length-1).val();
             var imgsrc = ($(obj).children().attr("src"));
+            
             $.ajax({
                 url : "iconChange.attr",
                 data : {
-                    btnType : btnType,
-                    tableName : tableName,
+                    btnType : type,
+                    tableName : sort,
                     no : no,
-                    writer : "${loginUser.nickName}"
+                    writer : "${loginUser.nickname}"
                 },
                 success : function(result){
-                    var changeSrc = ""; 
-                    if(result!=null){ // 좋아요 신고 찜을 눌렀다
-                        if(imgsrc.find("before")!=-1){
-                            changeSrc = imgsrc.replace("before","after");
-                        }
-                    } else {
-                        if(imgsrc.find("after")!=-1){
-                            changeSrc = imgsrc.replace("after","before");
-                        }
-                    }
-                    $(obj).children().attr("src", changeSrc);
+                	var count = result - $(this).next().text();
+                	// 조회할때 사용했던 함수 사용하기위해 값 반대로 넣어줌
+                	if(count>0){ // 수 증가해서 아이콘 변경해주기
+                		result = 0;
+                	} else {
+                		result = 1;
+                	}
+                	$(this).next().attr("text",result);
+                	changeSrc(btnType, result);
                 }
             });
+            
+        }
+        
+        // 아이콘 src 변경 함수
+        function changeSrc(obj, result){
+        	var imgsrc = $(obj).attr("src");
+        	var changeSrc = ""; 
+            if(result==0){ // 좋아요 찜 신고 안누름
+            	console.log("be");
+                changeSrc = imgsrc.replace("before","after");
+            } else {
+            	console.log("af");
+                changeSrc = imgsrc.replace("after","before");
+            }
+            $(obj).attr("src", changeSrc);
         }
 
         /* kakao map api 내 주소 좌표로 바꾸는 부분 호출해 사용하기위해 함수처리 */
@@ -500,7 +709,7 @@
 	        });
 	    });
 	    function dotClickEvent(index){
-	        $("#slideImage").prop("src", slideIndex[index]);
+	        $("#slideImage").attr("src", slideIndex[index]);
 	        currentIndex = slideIndex[index];
 	    }
     
@@ -508,13 +717,13 @@
 	        slideIndex.some(function(item, index, array){
 	            if(index != 0){
 	                if(item == currentIndex){
-	                    $("#slideImage").prop("src", slideIndex[index - 1]);
+	                    $("#slideImage").attr("src", slideIndex[index - 1]);
 	                    currentIndex = slideIndex[index - 1];
 	                    return true;
 	                }
 	            }else{
 	                if(item == currentIndex){
-	                    $("#slideImage").prop("src", slideIndex[slideIndex.length - 1]);
+	                    $("#slideImage").attr("src", slideIndex[slideIndex.length - 1]);
 	                    currentIndex = slideIndex[slideIndex.length - 1];
 	                    return true;
 	                }
@@ -525,19 +734,20 @@
 	        slideIndex.some(function(item, index, array){
 	            if(index != slideIndex.length - 1){
 	                if(item == currentIndex){
-	                    $("#slideImage").prop("src", slideIndex[index + 1]);
+	                    $("#slideImage").attr("src", slideIndex[index + 1]);
 	                    currentIndex = slideIndex[index + 1];
 	                    return true;
 	                }
 	            }else{
 	                if(item == currentIndex){
-	                    $("#slideImage").prop("src", slideIndex[0]);
+	                    $("#slideImage").attr("src", slideIndex[0]);
 	                    currentIndex = slideIndex[0];
 	                    return true;
 	                }
 	            }
 	        });
 	    });
+	    
         /* 지도 영역 */
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
         mapOption = {

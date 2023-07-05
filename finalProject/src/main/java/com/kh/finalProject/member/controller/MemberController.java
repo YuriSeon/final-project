@@ -45,15 +45,20 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+import com.kh.finalProject.admin.model.service.AdminService;
 import com.kh.finalProject.admin.model.vo.Notice;
+import com.kh.finalProject.admin.model.vo.Visit;
 import com.kh.finalProject.board.model.service.FeedService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
 import com.kh.finalProject.member.model.service.MemberService;
 import com.kh.finalProject.member.model.vo.Member;
+
+import lombok.Data;
 
 @Controller
 public class MemberController {
@@ -65,7 +70,12 @@ public class MemberController {
 	public FeedService feedService;
 	
 	@Autowired
+	public AdminService adminService;
+	
+	@Autowired
 	private ServletContext ServletContext;
+	
+	
 	
 	//파일 업로드 처리 메소드 (모듈)
 	public String saveFile(MultipartFile upfile,HttpSession session) {
@@ -227,6 +237,31 @@ public class MemberController {
 		return mv;
 	}
 	
+	//마이페이지 게시글 피드 보기
+	@ResponseBody
+	@RequestMapping(value = "selectFeed.me",produces = "application/json; charset=UTF-8")
+	public feedResponse selectFeed(@RequestParam("boardNo") int boardNo
+					        	  ,HttpSession session) {
+		
+		Board feed = memberService.selectFeed(boardNo);
+		ArrayList<Attachment> a = memberService.fileSelect(boardNo);
+		
+		feedResponse response = new feedResponse(feed, a);
+		return response;
+	}
+	
+	//마이페이지 피드 보기 객체 2개 보낼때 사용
+	@Data
+	private static class feedResponse {
+	    private Board b;
+	    private ArrayList<Attachment> a;
+	    
+	    public feedResponse(Board b, ArrayList<Attachment> a) {
+	      this.b = b;
+	      this.a = a;
+	    }
+	}
+	
 	//마이페이지 게시글 피드 삭제
 	@ResponseBody
 	@RequestMapping(value = "deleteFeed.me", method = RequestMethod.POST)
@@ -250,7 +285,6 @@ public class MemberController {
         	resultString = "fail";
 		}
 		return resultString;
-    
 	}
 	
 	//마이페이지 댓글 보기 이동
@@ -350,6 +384,27 @@ public class MemberController {
 		return mv;
 	}
 	
+	//마이페이지 찜 목록 삭제
+	@ResponseBody
+	@RequestMapping(value = "choiceDelete.me", method = RequestMethod.POST)
+	public String choiceDelete(@RequestParam("boardNo") int boardNo
+												       ,HttpSession session) {
+
+		String writer = ((Member)session.getAttribute("loginUser")).getNickname();
+		choice c = choice.builder().boardNo(boardNo).writer(writer).build();
+		
+		int result = memberService.choiceDelete(c);
+		String resultString = "";
+		if (result>0) {
+			session.setAttribute("alertMsg", "찜 목록 삭제 성공");
+			resultString = "success";
+		}else {
+			resultString = "fail";
+		}
+
+		return resultString;
+	}
+	
 	//마이페이지 수정요청 이동
 	@RequestMapping("myRequest.me")
 	public ModelAndView goMyRequest(@RequestParam(value="currentPage", defaultValue="1") int currentPage
@@ -378,6 +433,78 @@ public class MemberController {
 		mv.addObject("q",qnaCount);
 		mv.setViewName("member/myPage/mypageRequest");
 		
+		return mv;
+	}
+	
+	//마이페이지 수정요청 등록 이동
+	@RequestMapping("myRequestEnroll.me")
+	public ModelAndView goMyRequestEnroll(ModelAndView mv
+	  								 	 ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageRequestEnroll");
+		return mv;
+	}
+	
+	//마이페이지 수정요청 상세 페이지 이동
+	@RequestMapping("goRequestDetail.me")
+	public ModelAndView goMyRequestDetail(int serviceNo
+										 ,ModelAndView mv
+										 ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Notice n = memberService.selectQna(serviceNo);
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.addObject("a",a);
+		mv.addObject("n",n).setViewName("member/myPage/mypageRequestDetail");
+		
+		return mv;
+	}
+	
+	//마이페이지 Q&A 수정 이동
+	@RequestMapping("goRequestUpdate.me")
+	public ModelAndView goRequestUpdate(@RequestParam(value="serviceNo") int serviceNo
+																	    ,ModelAndView mv
+																	    ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Notice n  = memberService.selectQna(serviceNo);
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.addObject("n", n);
+		mv.addObject("a", a).setViewName("member/myPage/mypageRequestUpdate");
 		return mv;
 	}
 	
@@ -414,8 +541,23 @@ public class MemberController {
 	
 	//마이페이지 Q&A 질문등록 이동
 	@RequestMapping("myQnaEnroll.me")
-	public String goMyQnaEnroll() {
-		return "member/myPage/mypageQnaEnroll";
+	public ModelAndView goMyQnaEnroll(ModelAndView mv
+	  								 ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.setViewName("member/myPage/mypageQnaEnroll");
+		return mv;
 	}
 	
 	//마이페이지 Q&A 질문 등록
@@ -434,8 +576,6 @@ public class MemberController {
 			model.addAttribute("errorMsg","질문 등록 실패");
 			return "common/errorPage";
 		}
-		
-		
 	}
 	
 	//마이페이지 Q&A 질문 파일 등록
@@ -464,7 +604,228 @@ public class MemberController {
 		
 		return (result>0)?"1":"0";
 	}
+	
+	//마이페이지 Q&A 수정 이동
+	@RequestMapping("goServiceUpdate.me")
+	public ModelAndView goServiceUpdate(@RequestParam(value="serviceNo") int serviceNo
+																	    ,ModelAndView mv
+																	    ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Notice n  = memberService.selectQna(serviceNo);
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.addObject("n", n);
+		mv.addObject("a", a).setViewName("member/myPage/mypageQnaUpdate");
+		return mv;
+	}
+	
+	//마이페이지 Q&A 수정
+	@ResponseBody
+	@RequestMapping("myQnaUpdate.me")
+	public String myQnaUpdate(@RequestParam("serviceNo") int serviceNo
+								   ,@RequestParam("category") int category
+								   ,@RequestParam("serviceTitle") String serviceTitle
+								   ,@RequestParam("serviceContent") String serviceContent
+								   ,@RequestParam("writer") String writer
+								   ,@RequestParam("fileNames[]") String[] names
+								   ,Model model
+								   ,HttpSession session) {
+		
+		ArrayList<Attachment> oldList = memberService.fileSelect(serviceNo);
+		ArrayList<String> different = new ArrayList<>();
+		ArrayList<Attachment> delName = new ArrayList<Attachment>();
+		
+		//원래 있던 파일과 새로 들어온 파일 비교 같지 않은 이름 추출
+		for (Attachment a : oldList) {
+            boolean found = false;
+            for (String name : names) {
+                if (a.getOriginName().equals(name)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                different.add(a.getOriginName());
+            }
+        }
+		//같지 않은 이름 새로운 arraylist에 담기
+		for (String diff : different) {
+			Attachment a = Attachment.builder().boardNo(serviceNo).originName(diff).build();
+			delName.add(a);
+		}
+		//없어진 파일 삭제
+		for (Attachment del : delName) {
+			Attachment a = memberService.selectDelFile(del);
+			int result = memberService.deleteFile(del);
+			if (result>0) {
+				new File(session.getServletContext().getRealPath(a.getFilePath()+a.getChangeName())).delete();
+			}
+		}
+		
+		Notice n = Notice.builder().serviceNo(serviceNo).category(category).serviceTitle(serviceTitle).serviceContent(serviceContent).writer(writer).build();
+		int result = memberService.myQnaUpdate(n);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","질문 수정 완료");
+			return (result>0)?"1":"0";
+		}else {
+			model.addAttribute("errorMsg","질문 수정 실패");
+			return "common/errorPage";
+		}
+		
+	}
+	
+	//마이페이지 Q&A 파일없는 수정
+	@ResponseBody
+	@RequestMapping("myQnaUpdateNf.me")
+	public String myQnaUpdateNf(@RequestParam("serviceNo") int serviceNo
+							   ,@RequestParam("category") int category
+							   ,@RequestParam("serviceTitle") String serviceTitle
+							   ,@RequestParam("serviceContent") String serviceContent
+							   ,@RequestParam("writer") String writer
+							   ,Model model
+							   ,HttpSession session) {
+		
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		if (a!=null) {
+			int result = memberService.deleteFile(serviceNo);
+			if (result>0) {
+				for (Attachment del : a) {
+					new File(session.getServletContext().getRealPath(del.getFilePath()+del.getChangeName())).delete();
+				}
+			}
+		}
+		
+		Notice n = Notice.builder().serviceNo(serviceNo).category(category).serviceTitle(serviceTitle).serviceContent(serviceContent).writer(writer).build();
+		int result = memberService.myQnaUpdate(n);
+		
+		if(result>0) {
+			session.setAttribute("alertMsg","질문 수정 완료");
+			return (result>0)?"1":"0";
+		}else {
+			model.addAttribute("errorMsg","질문 수정 실패");
+			return "common/errorPage";
+		}
+		
+	}
+	
+	//마이페이지 Q&A 질문 파일 수정
+	@ResponseBody
+	@PostMapping("myQnaFileUpdate.me")
+	public String myQnaFileUpdate(@RequestParam("file") MultipartFile[] files
+								 ,Notice n
+								 ,HttpSession session) {
+		
+		int result = 0;
+		for (MultipartFile file : files) {
+			if (file != null) {
+				Attachment a = new Attachment();
+				
+				if(!file.getOriginalFilename().equals("")) {
+					String changeName = saveFile(file, session);
+					
+					a.setOriginName(file.getOriginalFilename());
+					a.setChangeName(changeName);
+					a.setFilePath("resources/images/qna/");
+					a.setBoardNo(n.getServiceNo());
+				}
+				result = memberService.myQnaFileUpdate(a);
+			}
+		}
+		return (result>0)?"1":"0";
+	}
+	
+	//마이페이지 Q&A 삭제
+	@ResponseBody
+	@RequestMapping(value = "qnaDelete.me", method = RequestMethod.POST)
+	public String qnaDelete(@RequestParam("serviceNo") int serviceNo
+												       ,HttpSession session) {
 
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+		if (a!=null) {
+			for (Attachment del : a) {
+				new File(session.getServletContext().getRealPath(del.getFilePath()+del.getChangeName())).delete();
+			}
+		}
+		int result = memberService.qnaDelete(serviceNo);
+		
+		String resultString = "";
+		if (result>0) {
+			session.setAttribute("alertMsg", "질문 삭제 완료");
+			resultString = "success";
+		}else {
+			resultString = "fail";
+		}
+
+		return resultString;
+	}
+	
+	//마이페이지 Q&A 상세 페이지 이동
+	@RequestMapping("goQnaDetail.me")
+	public ModelAndView goMyQnaDetail(int serviceNo
+									 ,ModelAndView mv
+									 ,HttpSession session) {
+		
+		String nick = ((Member)session.getAttribute("loginUser")).getNickname();
+		Notice n = memberService.selectQna(serviceNo);
+		ArrayList<Attachment> a = memberService.fileSelect(serviceNo);
+ 		int writingCount = memberService.myWritingCount(nick);
+		int replyCount = memberService.myReplyCount(nick);
+		int choiceCount = memberService.myChoiceCount(nick);
+		int requestCount = memberService.myRequestCount(nick);
+		int qnaCount = memberService.myQnaCount(nick);
+		
+		mv.addObject("w",writingCount);
+		mv.addObject("r",replyCount);
+		mv.addObject("c",choiceCount);
+		mv.addObject("rq",requestCount);
+		mv.addObject("q",qnaCount);
+		mv.addObject("a",a);
+		mv.addObject("n",n).setViewName("member/myPage/mypageQnaDetail");
+		
+		return mv;
+	}
+	
+	//마이페이지 Q&A 답변 조회
+	@ResponseBody
+	@RequestMapping(value = "qnaReplyList.me",produces = "application/json; charset=UTF-8")
+	public String qnaReplyList(int serviceNo) {
+		
+		ArrayList<Reply> list = adminService.qnaReplyList(serviceNo);
+		return new Gson().toJson(list);
+	}
+	
+	//마이페이지 Q&A 답변 등록
+	@ResponseBody
+	@RequestMapping("qnaReplyInsert.me")
+	public String qnaReplyInsert(Reply r
+							 	,HttpSession session) {
+		
+		int result = adminService.qnaReplyInsert(r);
+		return (result>0)?"success":"fail";
+	}
+	
+	//마이페이지 Q&A 답변 삭제
+	@ResponseBody
+	@RequestMapping("qnaReplyDelete.me")
+	public String qnaReplyDelete(Reply r
+							 	,HttpSession session) {
+		
+		int result = adminService.qnaReplyDelete(r);
+		return (result>0)?"success":"fail";
+	}
+	
 	//프로필 사진 업데이트
 	@PostMapping("/updateImg.me")
 	public ModelAndView updateImg(Attachment a
@@ -532,6 +893,16 @@ public class MemberController {
 		}
 		
 		return "";
+	}
+	
+	//회원가입리트스 폼 이동 메소드
+	@RequestMapping("myCertification.me")
+	public String myCertification(Member m
+								 ,String birthDay
+								 ,ModelAndView mv
+								 ,HttpSession session) {
+		
+		return "member/myPage/certiPopup";
 	}
 	
 	
@@ -638,7 +1009,9 @@ public class MemberController {
 		
 	//회원가입 메소드
 	@RequestMapping("insert.me")
-	public ModelAndView insertMember(Member m,String birthDay, @RequestParam(value = "certification", defaultValue = "0")int certification, String kakaoId, String access_token, ModelAndView mv, HttpSession session) throws IOException, ParseException {
+	public ModelAndView insertMember(@RequestParam("userId2")String userId, Member m,String birthDay, @RequestParam(value = "certification", defaultValue = "0")int certification, String kakaoId, String access_token, ModelAndView mv, HttpSession session) throws IOException, ParseException {
+		m.setUserId(userId);
+		
 		//비밀번호 암호화
 		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
 		//System.out.println(encPwd);
@@ -688,32 +1061,32 @@ public class MemberController {
 			//카카오 인증 회원가입
 			if(m.getCertification()==1) {
 //				카카오 로그아웃 (카카오 관련 api만 로그아웃되므로 계정 로그아웃으로 진행)
-//				String url = "https://kapi.kakao.com/v1/user/logout";
+				String url = "https://kapi.kakao.com/v1/user/logout";
 				
-//				URL requestUrl = new URL(url);
-//				HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
-//				urlCon.setRequestMethod("POST");
-//				urlCon.setRequestProperty("Authorization", "Bearer "+access_token);
-//		
-//				BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
-//				
-//				String text = "";
-//				String line;
-//				
-//				while((line=br.readLine())!=null) {
-//					text += line;
-//				}
-//				
-//				//System.out.println(text);
-//				
-//				mv.setViewName("redirect:/");
+				URL requestUrl = new URL(url);
+				HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
+				urlCon.setRequestMethod("POST");
+				urlCon.setRequestProperty("Authorization", "Bearer "+access_token);
+		
+				BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+				
+				String text = "";
+				String line;
+				
+				while((line=br.readLine())!=null) {
+					text += line;
+				}
+				
+				//System.out.println(text);
+				
+				mv.setViewName("redirect:/");
 
 				//카카오 계정 로그아웃
-				String url = "https://kauth.kakao.com/oauth/logout";
-				url += "?client_id="+appKey;
-				url += "&logout_redirect_uri=http://localhost:8888/finalProject/";
-				
-				mv.setViewName("redirect:"+url);
+//				String url = "https://kauth.kakao.com/oauth/logout";
+//				url += "?client_id="+appKey;
+//				url += "&logout_redirect_uri=http://localhost:8888/finalProject/";
+//				
+//				mv.setViewName("redirect:"+url);
 			}
 			//네이버 인증 후 회원가입 시
 			if(m.getCertification()==2) {
@@ -1044,10 +1417,23 @@ public class MemberController {
 		}
 		
 		Member loginUser = memberService.loginMember(m);
+		
+		String ipAddress = request.getRemoteAddr(); // 사용자의 IP 주소 추출
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd kk:mm:ss");
+		Date currentTime = new Date();
+		String strdate = dateFormat.format(currentTime);
+		
 
-		if(loginUser!=null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {//로그인 유저 있으면 -> 유저 정보 담기
+ 		if(loginUser!=null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {//로그인 유저 있으면 -> 유저 정보 담기
+//		if(loginUser!=null) {// 이거 쓸거라서 ... 잠깐 둘게요! 제가 안까먹고 꼭 지울게요!!!!!
 			session.setAttribute("loginUser", loginUser);
 			session.setAttribute("alertMsg", "로그인이 완료되었습니다.");
+			if (loginUser != null) {
+				Visit v = Visit.builder().visitIp(ipAddress).visitTime(strdate).visitor(loginUser.getNickname()).build();
+				if (!loginUser.getStatus().equals("A")) {
+					memberService.connectData(v);
+				}
+			}
 			//로그인 성공시 전 페이지로 돌려주기
 			return request.getHeader("referer");
 		}else {//로그인 실패시
@@ -1178,5 +1564,282 @@ public class MemberController {
 		return new Gson().toJson(m);
 	}
 	
-	    
+	//카카오 인증 조회 (1.인가 코드 받기 2.인가코드로 토큰 받기 3.토큰으로 정보 조회)
+	//마이페이지 동행인증
+	@RequestMapping("certi.me")
+	public String certificationMember(@RequestParam(value="certification",defaultValue="0") String certification
+									 ,ModelAndView mv
+									 ,String code
+									 ,String error
+									 ,HttpServletRequest request
+									 ,HttpSession session) throws IOException, ParseException{
+		
+		String nickname = ((Member)(session.getAttribute("loginUser"))).getNickname();
+		
+		//인증1번으로 넘어오면 카카오로 토큰 받아오기
+		if(certification.equals("1")) {
+			//url작성
+			String url = "https://kauth.kakao.com/oauth/token";
+			url += "?grant_type=authorization_code";
+			url += "&client_id="+appKey;
+			url += "&redirect_uri=http://localhost:8888/finalProject/certi.me?certification=1";
+			url += "&code="+code;
+			
+			//URL객체생성
+			URL requestUrl = new URL(url);
+			HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
+			urlCon.setRequestMethod("POST");
+			
+			//응답 데이터 읽어오기
+			BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+			
+			String responseText="";
+			String line;
+			
+			while((line=br.readLine())!=null) {
+				responseText += line;
+			}
+			//System.out.println(responseText);
+			
+			//파싱작업
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObj = (JSONObject) jsonParser.parse(responseText);
+			
+			String access_token = (String) jsonObj.get("access_token");
+			//System.out.println(access_token);
+			
+			//토큰으로 사용자 id 조회
+			//url작성
+			String urlId = "https://kapi.kakao.com/v1/user/access_token_info";
+			
+			//객체 생성
+			URL requestUrlId = new URL(urlId);
+			HttpURLConnection urlConId = (HttpURLConnection) requestUrlId.openConnection();
+			urlConId.setRequestMethod("GET");
+			urlConId.setRequestProperty("Authorization", "Bearer "+access_token);
+			
+			//응답데이터 읽어오기
+			BufferedReader brId = new BufferedReader(new InputStreamReader(urlConId.getInputStream()));
+			
+			String responseTextId = "";
+			String lineId;
+			
+			while((lineId=brId.readLine())!=null) {
+				responseTextId += lineId;
+			}
+			//System.out.println(responseTextId);
+			
+			//파싱작업
+			JSONParser jsonParserId = new JSONParser();
+			JSONObject jsonObjId = (JSONObject) jsonParserId.parse(responseTextId);
+			//System.out.println(jsonObjId);
+			
+			//원하는 데이터 추출
+			Long id = (Long) jsonObjId.get("id");
+			String idd = String.valueOf(id);
+			//System.out.println(idd);
+			
+			//토큰으로 사용자 정보 조회
+			//url작성
+			String urlToken = "https://kapi.kakao.com/v2/user/me";
+			
+			//객체 생성
+			URL requestUrlToken = new URL(urlToken);
+			HttpURLConnection urlConToken = (HttpURLConnection) requestUrlToken.openConnection();
+			urlConToken.setRequestMethod("GET");
+			urlConToken.setRequestProperty("Authorization", "Bearer "+access_token);
+			
+			//응답데이터 읽어오기
+			BufferedReader brToken = new BufferedReader(new InputStreamReader(urlConToken.getInputStream()));
+			
+			String responseTextToken="";
+			String lineToken;
+			
+			while((lineToken=brToken.readLine())!=null) {
+				responseTextToken += lineToken;
+			}
+					
+			//System.out.println(responseTextToken);
+			
+			//파싱 작업
+			JSONParser jsonParserToken = new JSONParser();
+			JSONObject jsonObjToken = (JSONObject) jsonParserToken.parse(responseTextToken);
+			//System.out.println(jsonObjToken);
+			
+			JSONObject kakao_account =  (JSONObject) jsonObjToken.get("kakao_account");
+			//System.out.println(kakao_account);
+			
+			String age = (String) kakao_account.get("age_range");
+			String birthday = (String) kakao_account.get("birthday");
+			String gender = (String) kakao_account.get("gender");
+			if (gender.equals("female")) {
+				gender = "F";
+			}else {
+				gender = "M";
+			}
+			int agesub = Integer.parseInt(age.substring(0,2));
+			
+			Member m = memberService.loginMemberNick(nickname);
+			if (m.getAge() == agesub && m.getGender().equals(gender)) {
+				int result = memberService.updateCertik(nickname);
+				if (result>0) {
+					Member member = memberService.loginMemberNick(nickname); 
+					session.setAttribute("loginUser", member);
+					session.setAttribute("alertMsg2", "카카오 인증이 완료되었습니다.");
+				}
+				System.out.println("성공");
+			}else {
+				session.setAttribute("alertMsg2", "카카오 회원 정보와 회원 정보가 일치하지 않아 인증에 실패하였습니다.");
+			}
+			
+//			카카오 로그아웃 (카카오 관련 api만 로그아웃되므로 계정 로그아웃으로 진행)
+			String url2 = "https://kapi.kakao.com/v1/user/logout";
+			try {
+				URL requestUrl2 = new URL(url2);
+				HttpURLConnection urlCon2 = (HttpURLConnection) requestUrl2.openConnection();
+				urlCon.setRequestMethod("GET");
+				urlCon.setRequestProperty("Authorization", "Bearer "+access_token);
+				
+				BufferedReader br2 = new BufferedReader(new InputStreamReader(urlCon2.getInputStream()));
+				
+				String text2 = "";
+				String line2;
+				
+				while((line2=br2.readLine())!=null) {
+					text2 += line2;
+				}
+				
+				System.out.println(text2);
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+		}
+		
+		//인증2번으로 넘어올시 네이버 토큰 발급 후 정보 조회
+		if(certification.equals("2")) {
+			
+			String clientId = "xezYicDH1SzVKNokPSX2";
+			String ClientSecret = "h48MxFzhpW";
+			
+			//토큰 발급
+			String url = "https://nid.naver.com/oauth2.0/token";
+			url += "?grant_type=authorization_code";
+			url += "&client_id="+clientId;
+			url += "&client_secret="+ClientSecret;
+			url += "&code="+code;
+			url += "&state=test";
+			
+			URL requestUrl = new URL(url);
+			HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
+			
+			//응답데이터 읽어오기
+			BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+			
+			String responseText="";
+			String line;
+			
+			while((line=br.readLine())!=null) {
+				responseText += line;
+			}
+					
+			//System.out.println(responseTextToken);
+			
+			//파싱 작업
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObj = (JSONObject) jsonParser.parse(responseText);
+			//System.out.println(jsonObj);
+			
+			String access_token = (String) jsonObj.get("access_token");
+			//System.out.println(access_token);
+			
+			//토큰으로 사용자 정보 가져오기
+			String urlToken = "https://openapi.naver.com/v1/nid/me	";
+			
+			URL requestUrlInfo = new URL(urlToken);
+			HttpURLConnection urlInfoCon = (HttpURLConnection) requestUrlInfo.openConnection();
+			urlInfoCon.setRequestMethod("GET");
+			urlInfoCon.setRequestProperty("Authorization", "Bearer " + access_token);
+			
+			//System.out.println(urlInfoCon);
+			
+			//응답데이터 읽어오기
+			BufferedReader brInfo = new BufferedReader(new InputStreamReader(urlInfoCon.getInputStream()));
+			
+			String infoText="";
+			String lineInfo;
+			
+			while((lineInfo=brInfo.readLine())!=null) {
+				infoText += lineInfo;
+			}
+					
+			//System.out.println(infoText);
+			
+			//파싱 작업
+			JSONParser jsonParserToken = new JSONParser();
+			JSONObject jsonObjToken = (JSONObject) jsonParserToken.parse(infoText);
+			//System.out.println(jsonObjToken);
+			
+			JSONObject responseInfoText =  (JSONObject) jsonObjToken.get("response");
+			//System.out.println(responseInfoText);
+			
+			String mobile = (String) responseInfoText.get("mobile"); //010-1111-1111
+			String name = (String) responseInfoText.get("name");
+			String email = (String) responseInfoText.get("email");
+			String gender = (String) responseInfoText.get("gender");
+			String birthday = (String) responseInfoText.get("birthday"); //12-12
+			String birthyear = (String) responseInfoText.get("birthyear");
+			
+			String phone = mobile.replaceAll("-", "");
+			String birthdayInfo = birthday.replaceAll("-", "");
+			String birthInfo = birthyear+birthdayInfo;
+			
+			//연령대 계산
+			//입력한 나이
+			int birYear = Integer.parseInt(birthInfo.substring(0, 4));
+			int birMonth = Integer.parseInt(birthInfo.substring(4, 6));
+			int birDay = Integer.parseInt(birthInfo.substring(6, 8));
+			
+			LocalDate birth = LocalDate.of(birYear, birMonth, birDay);
+			
+			//현재 날짜
+			LocalDate today = LocalDate.now();
+			
+			//입력나이와 현재 날짜 사이의 기간 알아내기
+			//Period : 날짜 기간을 나타내는 클래스 (두 날짜 사이의 기간을 알 수 있음)
+			Period age = Period.between(birth, today);
+			
+			int manAge = age.getYears();
+
+			//만나이 연령대별로 나누기
+			if(10<=manAge && manAge<20) {
+				manAge = 10;
+			}else if(20<=manAge && manAge<30) {
+				manAge = 20;
+			}else if(30<=manAge && manAge<40) {
+				manAge = 30;
+			}else if(40<=manAge && manAge<50) {
+				manAge = 40;
+			}else {
+				manAge = 50;
+			}
+			
+			Member m = memberService.loginMemberNick(nickname);
+			if (m.getPhone().equals(phone) && m.getAge()==manAge && m.getUserName().equals(name) && m.getGender().equals(gender)) {
+				int result = memberService.updateCerti(nickname);
+				if (result>0) {
+					Member member = memberService.loginMemberNick(nickname); 
+					session.setAttribute("loginUser", member);
+					session.setAttribute("alertMsg2", "네이버 인증이 완료되었습니다.");
+				}
+				System.out.println("성공");
+			}else {
+				session.setAttribute("alertMsg2", "네이버 회원 정보와 회원 정보가 일치하지 않아 인증에 실패하였습니다.");
+			}
+		}
+		
+		return "member/myPage/certiPopdown";
+	}
+	
 }

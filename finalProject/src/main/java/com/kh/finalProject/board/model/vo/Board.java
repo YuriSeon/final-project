@@ -50,4 +50,5 @@ public class Board {
 	private Theme theme;
 	private Reply reply;
 	
+	private int totalViewCount; //관리자 조회수 비교
 }	

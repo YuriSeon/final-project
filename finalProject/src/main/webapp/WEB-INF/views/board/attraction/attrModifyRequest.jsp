@@ -62,13 +62,16 @@
             </div>
         </div>
         <hr>
-        <form action="modifyRequest.attr">
+        <form action="modifyRequest.attr" method="post" id="form">
+            <input type="hidden" name="boardNo" value="${param.boardNo}">
+            <input type="hidden" name="boardWriter" value="${loginUser.nickname}">
+            
             <div class="modify-area">
                 <div class="title">※ 요청사항 작성 </div>
             </div>
             <div class="btn-area">
                 <button type="button" onclick="history.back();">뒤로가기</button>
-                <button type="submit" id="submit">전송하기</button>
+                <button type="button" id="submit" onclick="submitBefore();">전송하기</button>
             </div>
         </form>
     </div>
@@ -137,10 +140,9 @@
                 }
             });
 
-            /* 제출버튼 인풋창 모두 작성됐을때만 나오도록 설정 마저하기 */
+            /* 제출버튼 인풋창 모두 작성됐을때만 나오도록 설정 */
             $(document).on("input", input, function(){
             	var allInputsFilled = true; // 모든 인풋창
-
                 // 비어있는지 확인
                 $(".modifyRequest input.after").each(function() {
                   if ($(this).val() === "") {
@@ -150,25 +152,39 @@
                 });
              	// 인풋창 비었는지 확인 후 제출버튼 숨김 or 보이기
                 if (allInputsFilled) {
-                  $("#submit").show();
+                    btn.show();
                 } else {
-                  $("#submit").hide();
+                    btn.hide();
                 }
             });
         });
 
         /* checkbox 선택시 영역생성 함수 */
         function createModifyArea(id, checkedLength){
+            // 조회해온 값 넣어주기위해 객체 생성
+            var sort = {
+                infoName : "${info.infoName}",
+                introduce : "${fn:split(dataMap.board.boardContent,'||')[1] }",
+                infoAddress : "${info.infoAddress}",
+                infoHomepage : "${info.infoHomepage}",
+                infoTime : "${info.infoTime}",
+                dayOff : "${info.dayOff}",
+                infoCall : "${info.infoCall}",
+                parking : "${info.parking}",
+                infoType : "${info.infoType}"
+            }
             var modifyArea = makeTag("div",{"class":"modify"})
                                     .append(makeTag("div",{"class":"name"}).text("기존정보")
-                                            , makeTag("div",{"class":"input-area"}).append(makeTag("input",{"type":"text","class":"before","readonly":"true","value":id+"의 값 불러와서 넣기"}))
+                                            , makeTag("div",{"class":"input-area"}).append(makeTag("input",{"type":"text","class":"before","readonly":"true","value":sort[id]}))
                                             , makeTag("div",{"class":"name"}).text("수정사항")
-                                            , makeTag("div",{"class":"input-area"}).append(makeTag("input",{"type":"text","class":"after","name":id})));
+                                            , makeTag("div",{"class":"input-area"}).append(makeTag("input",{"type":"text","class":"after","name":"answer"})));
             var column = makeTag("div",{"class":"column"}).text($("#"+id).siblings().text()); // checked label
             var conArea = makeTag("div",{"class":"con"}).append(column,modifyArea);
             var checkImgArea = makeTag("div", {"class":"checkImg"}).append(makeTag("img",{"src":"resources/images/check-red.png"}));
             var conwrap = makeTag("div", {"class":"conwrap"}).append(checkImgArea,conArea); // 필요한 영역 전부 생성 후 담은 변수 
             $(".modify-area").append(conwrap); // form태그 안에 생성한 태그들 추가
+
+            
             conwrap = ""; // 변수 비워주기 (중복생성막기)
             // 숨겼던 영역 보여주기
             hr.show();
@@ -190,7 +206,13 @@
                 });
             }
         }
-
+        // 제출 전 작업
+        function submitBefore(){
+            $("input[name=answer]").each(function(){
+                $(this).val = $(this).attr("class")+$(this).val();
+                form.submit();
+            })
+        }
     </script>
 </body>
 </html>

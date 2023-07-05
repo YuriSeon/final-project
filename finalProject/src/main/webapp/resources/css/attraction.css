@@ -61,7 +61,7 @@
 	margin-right: 5%;
 }
 
-.attracDetail .board-area .ico img, #myModal .ico img {
+.attracDetail .board-area .ico img, #myModal .ico img, .attracDetail .board-area .icon img {
 	width: 30px;
 	margin-left: 13px;
 }
@@ -482,7 +482,8 @@
 }
 
 .attrInsert table textarea {
-	width: 100% height: 97%;
+	width: 100%;
+	height: 97%;
 	border: none;
 	resize: none;
 }
@@ -498,7 +499,12 @@
 
 .attrInsert #wrapSlide {
 	width: 100%;
-	height: 100%;
+	height: 90%;
+}
+.attrInsert #upfile{
+	width: 100%;
+	height: 10%;
+
 }
 
 .attrInsert #float {
@@ -514,7 +520,7 @@
 
 .attrInsert #slideImage {
 	width: auto;
-	max-height: 405px;
+	max-height: 240px;
 	height: 100%;
 }
 
@@ -564,7 +570,6 @@
 	margin-left: 15px;
 	margin-right: 15px;
 }
-
 #myMap .modal-content {
 	padding: 20px;
 }
@@ -618,6 +623,11 @@
 	font-size: 13px;
 	font-weight: 500;
 	width: 100%;
+	text-align: left;
+}
+
+.attrUpdate mark {
+	background-color: #ffced7ad;
 }
 
 .attrUpdate hr {
@@ -673,14 +683,82 @@
 	border: 2px solid darkgray;
 }
 
-.attrUpdate table input {
+.attrUpdate table textarea {
 	width: 100%;
-	height: 100%;
+	height: 97%;
 	border: none;
+	resize: none;
 }
 
 .attrUpdate table #img-area {
 	height: 300px;
+	position: relative;
+}
+
+.attrUpdate table #img-area * {
+	border: none;
+}
+
+.attrUpdate #wrapSlide {
+	width: 100%;
+	height: 90%;
+}
+.attrUpdate #upfile{
+	width: 100%;
+	height: 10%;
+
+}
+
+.attrUpdate #float {
+	width: 100%;
+	height: 90%;
+}
+
+.attrUpdate #slideArea {
+	width: 60%;
+	height: 100%;
+	text-align: center;
+}
+
+.attrUpdate #slideImage {
+	width: auto;
+	max-height: 240px;
+	height: 100%;
+}
+
+.attrUpdate #float>div {
+	float: left;
+}
+
+.attrUpdate .float-img {
+	width: 20%;
+	height: 100%;
+}
+
+.attrUpdate #prev, .attrUpdate #next {
+	position: relative;
+	opacity: 0.3;
+	width: 60%;
+	height: auto;
+	margin-top: 50%;
+	opacity: calc(0.1);
+	cursor: pointer;
+	margin-left: 25%;
+}
+
+.attrUpdate #dotArea {
+	position: relative;
+	margin-top: 1px;
+	height: 5%;
+	text-align: center;
+}
+
+.attrUpdate #dotArea * {
+	margin-right: 10px;
+}
+
+.attrUpdate table #boardContent2 {
+	height: 200px;
 }
 
 .attrUpdate .btn-area {

@@ -249,7 +249,7 @@
                             <li><a href="main.bo">메인</a></li>
                             <li><a href="theme.bo">테마</a></li>
                             <li><a href="festival.fe">축제</a></li>
-                            <li><a href="attraction.bo">명소</a></li> 
+                            <li><a href="attraction.bo?currentPage=1">명소</a></li> 
                             <li><a href="feed.bo">피드</a></li> 
                             <li><a href="schedule.bo">일정 자랑</a></li> 
                             <li><a href="#" onclick="mbtiQuestion();">함께 가치</a></li> 
@@ -274,6 +274,8 @@
 
         			var mbtiCheck = decodeURI("${cookie.mbtiCheck.value}");
         			var cookieNickname = mbtiCheck.split("+")[0];
+        			
+        			console.log(survey);
         			
 								<%if (request.getSession().getAttribute("loginUser") != null) {%>
 								if(nickname == cookieNickname){
@@ -323,7 +325,7 @@
 	          <!-- Modal Header -->
 	          <div class="modal-header">
 	            <img src="" alt="" style="width: 200px; height:70px; display: block; margin:auto; position: relative; left: 48px;">
-	            <button type="button" class="close" data-dismiss="modal">&times;</button>
+	            <button type="button" id="loginModal_close" class="close" data-dismiss="modal">&times;</button>
 	          </div>
 	    
 	          <!-- Modal body -->

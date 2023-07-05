@@ -26,6 +26,37 @@
   		<result column="COMPLETE" property="complete"/>
   	</resultMap>
   	
-  	
+  	<insert id="insertSchedule">
+  		INSERT ALL
+  			INTO BOARD (BOARD_NO, ZONE_NO, BOARD_WRITER, CATEGORY, BOARD_TITLE, BOARD_CONTENT)
+  				 VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, #{boardWriter}, 6, #{boardTitle}, #{boardContent})
+  			INTO PLAN (BOARD_NO, WRITER, TOGETHER, TOGETHER_COUNT, CONCEPT, START_DATE, END_DATE, TRANSPORT ,TOTAL_DATE, TOTAL_PAY, COMPLETE)
+  				VALUES(SEQ_BNO.CURRVAL, #{boardWriter}, #{together}, #{togetherCount}, #{concept}, #{startDate}, #{endDate}, #{transport}, #{totalDate}, #{totalPay}, #{complete})
+  		SELECT * FROM DUAL
+  	</insert>
+  	<select id="checkBno" resultMap="adminMapper.boardResultSet">
+  		SELECT BOARD_NO, INFO_NO
+  		FROM BOARD
+  		WHERE BOARD_WRITER = #{boardWriter}
+  		AND CATEGORY = 6
+  		AND BOARD_TITLE = #{boardTitle}
+  		AND BOARD_CONTENT = #{boardContent}
+  	</select>
+  	<select id="searchInfoNo" resultType="_int">
+  		SELECT INFO_NO
+  		FROM INFO
+  		WHERE INFO_NAME = #{infoName}
+  	</select>
+  	<insert id="insertPath">
+  		INSERT INTO PATH VALUES(#{boardNo},
+  								(SELECT INFO_NO FROM INFO WHERE INFO_NAME = #{infoName}),
+  								#{daily}, #{pathNo}, #{pay})
+  	</insert>
+  	<!-- 기본으로 처음에 /가 들어있으니 제거하고 구분자로 구분해야 인덱스 맞음 잊지말기-->
+  	<update id="updatePlanInfoNo">
+  		UPDATE PLAN
+  		SET INFO_NO = INFO_NO||'/'||#{infoNo}
+  		WHERE BOARD_NO = #{boardNo}
+  	</update>
   </mapper>
   

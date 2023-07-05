@@ -3,11 +3,13 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="attractionMapper">
+  	<!-- 주소로 지역번호 조회 -->
   	<select id="selectZoneNo" resultType="_int">
   		SELECT ZONE_NO
   		FROM ZONE 
   		WHERE ZONE_NAME LIKE '%'||#{zoneName}||'%'
   	</select>
+  	<!-- 게시물과 장소 등록 -->
   	<insert id="insertInfo">
   		INSERT ALL
   			INTO BOARD(BOARD_NO, ZONE_NO, INFO_NO, BOARD_WRITER, CATEGORY, BOARD_TITLE, BOARD_CONTENT)
@@ -15,36 +17,215 @@
   			INTO INFO VALUES(SEQ_INO.CURRVAL, SEQ_BNO.CURRVAL, #{zoneNo}, #{infoAddress}, #{infoTime}, #{infoHomepage}, #{infoCall}, #{parking}, #{infoName}, #{infoType}, #{dayOff})
   		SELECT * FROM DUAL
   	</insert>
+  	<!-- 첨부파일 등록 -->
   	<insert id="insertAttachment">
+  	<choose>
+  		<when test="boardNo==null">
   		INSERT INTO ATTACHMENT (FILE_NO, BOARD_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, FILE_LEVEL)
   						 VALUES(SEQ_FNO.NEXTVAL, SEQ_BNO.CURRVAL, #{originName}, #{changeName}, #{filePath}, #{fileLevel})
+  		</when>
+  		<otherwise>
+  		INSERT INTO ATTACHMENT (FILE_NO, BOARD_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH)
+  						 VALUES(SEQ_FNO.NEXTVAL, #{boardNo}, #{originName}, #{changeName}, #{filePath})
+  		</otherwise>
+  	</choose>
   	</insert>
+  	<!-- 조회수 증가 -->
   	<update id="increaseCount">
   		UPDATE BOARD
   		SET COUNT = COUNT +1
   		WHERE BOARD_NO = #{boardNo}
   	</update>
+  	<!-- 디테일뷰 조회 -->
   	<select id="selectBoard" resultMap="boardMapper.boardResultSet">
   		SELECT *
   		FROM BOARD
   		WHERE BOARD_NO = #{boardNo}
   	</select>
+  	<!-- 디테일뷰 조회 -->
   	<select id="selectInfo" resultMap="adminMapper.infoResultSet">
   		SELECT *
   		FROM INFO
   		WHERE BOARD_NO = #{boardNo}
   	</select>
+  	<!-- 게시물 첨부파일 조회 -->
   	<select id="selectAttachment" resultMap="adminMapper.attachmentResultSet">
-  		SELECT *
+  		SELECT FILE_NO, FILE_PATH, FILE_LEVEL, CHANGE_NAME
   		FROM ATTACHMENT
   		WHERE BOARD_NO = #{boardNo}
   	</select>
+  	<!-- 댓글 등록 -->
   	<insert id="insertReplyList">
-  		INSERT INTO REPLY (REPLY_NO, CONTENT, REPLY_WRITER, REF_QNO)
-  					VALUES(SEQ_RNO.NEXTVAL, #{content}, #{replyWriter}, #{refQno})
+  		<choose>
+  			<when test="refRno==0">
+		  		INSERT INTO REPLY (REPLY_NO, CONTENT, REPLY_WRITER, REF_QNO)
+		  					VALUES(SEQ_RNO.NEXTVAL, #{content}, #{replyWriter}, #{refQno})
+  			</when>
+  			<otherwise>
+		  		INSERT INTO REREPLY (REF_RNO, CONTENT, REPLY_WRITER, REF_QNO, REPLY_NO)
+		  					  VALUES(SEQ_RRO.NEXTVAL, #{content}, #{replyWriter}, #{refQno}, #{refRno})
+  			</otherwise>
+  		</choose>
   	</insert>
-  	<insert id="insertRereplyList">
-  		INSERT INTO REREPLY (REF_RNO, CONTENT, REPLY_WRITER, REF_QNO,REPLY_NO)
-  					  VALUES(SEQ_RRO.NEXTVAL, #{content}, #{replyWriter}, #{refQno}, #{replyNo})
+  	
+  	<!-- 댓글 조회 -->
+  	<select id="selectReplyList" resultMap="boardMapper.rereplyResultSet">
+  		SELECT * 
+        FROM REPLY R
+        FULL JOIN REREPLY E USING(REPLY_NO)
+        WHERE R.REF_QNO = #{refRno}
+  		AND R.STATUS = 'Y'
+  		ORDER BY R.CREATE_DATE DESC
+  	</select>
+  	<!-- 댓글 삭제 -->
+  	<update id="deleteReply">
+		<choose>
+			<when test="refRno==0">
+				UPDATE REPLY
+				SET STATUS = 'N'
+				WHERE REPLY_NO = #{replyNo}
+			</when>
+			<otherwise>
+				UPDATE REREPLY
+				SET STATUS = 'N'
+				WHERE REF_RNO = #{replyNo}
+			</otherwise>
+		</choose>
+				AND BOARD_NO = #{boardNo}
+  	</update>
+  	<!-- 좋아요 조회 -->
+    <select id="goodSearch" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM GOOD
+  		WHERE BOARD_NO = #{boardNo}
+  		AND WRITER = #{writer}
+  	</select>
+  	<!-- 좋아요 삭제 -->
+  	<delete id="deleteGood">
+  		DELETE FROM GOOD
+  		WHERE BOARD_NO = #{boardNo}
+  		AND WRITER = #{writer}
+  	</delete>
+  	<!-- 좋아요 등록 -->
+  	<insert id="insertGood">
+  		INSERT INTO GOOD VALUES(#{boardNo}, #{writer})
   	</insert>
+  	<update id="deletegoodcount">
+  		UPDATE BOARD
+  		SET GOOD = GOOD-1
+  		WHERE BOARD_NO= #{boardNo}
+  	</update>
+  	<update id="updategoodcount">
+  		UPDATE BOARD
+  		SET GOOD = GOOD+1
+  		WHERE BOARD_NO= #{boardNo}
+  	</update>
+  	<select id="goodCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM GOOD
+  		WHERE BOARD_NO = #{boardNo}
+  	</select>
+  	<!-- 찜 조회 -->
+  	<select id="choiceSearch" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM CHOICE
+  		WHERE BOARD_NO = #{boardNo}
+  		AND WRITER = #{writer}
+  	</select>
+  	<!-- 찜 삭제 -->
+  	<delete id="deletechoice">
+  		DELETE FROM CHOICE
+  		WHERE BOARD_NO = #{boardNo}
+  		AND WRITER = #{writer}
+  	</delete>
+  	<!-- 찜 등록 -->
+  	<insert id="insertchoice">
+  		INSERT INTO CHOICE VALUES(#{boardNo}, #{writer})
+  	</insert>
+  	<update id="deletechoicecount">
+  		UPDATE BOARD
+  		SET CHOICE = CHOICE-1
+  		WHERE BOARD_NO= #{boardNo}
+  	</update>
+  	<update id="updatechiocecount">
+  		UPDATE BOARD
+  		SET CHOICE = CHOICE+1
+  		WHERE BOARD_NO= #{boardNo}
+  	</update>
+  	<select id="choiceCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM CHOICE
+  		WHERE BOARD_NO = #{boardNo}
+  	</select>
+  	<insert id="sendReport">
+  		<choose>
+  			<when test="replyNo==0">
+  				INSERT INTO REPORT(BOARD_NO, REPLY_NO. WRITER, REPORT_REASON)
+  							VALUES(#{boardNo}, #{replyNo}, #{writer}, #{reportReason})
+  			</when>
+  			<when test="rereplyNo==0">
+  				INSERT INTO REPORT(BOARD_NO, REREPLY_NO, WRITER, REPORT_REASON)
+  						VALUES(#{boardNo}, #{rereplyNo}, #{writer}, #{reportReason})
+  			</when>
+  			<when test="rereplyNo==0 and replyNo==0">
+  				INSERT INTO REPORT(BOARD_NO WRITER, REPORT_REASON)
+  						VALUES(#{boardNo}, #{writer}, #{reportReason})
+  			</when>
+  		</choose>
+  	</insert>
+  	<!-- 기존 등록 내역 조회 -->
+  	<select id="checkInfo" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM INFO
+  		WHERE INFO_ADDRESS LIKE '%'||#{address}||'%'
+  	</select>
+  	<select id="modifyRequestAttr"  resultMap="adminMapper.infoResultSet" resultType="info">
+  		SELECT I.INFO_NO , I.BOARD_NO ,I.ZONE_NO ,INFO_ADDRESS ,INFO_TIME ,INFO_HOMEPAGE ,INFO_CALL ,PARKING ,INFO_NAME ,INFO_TYPE ,DAY_OFF, B.BOARD_CONTENT
+  		FROM INFO I
+  		JOIN BOARD B ON(B.BOARD_NO=I.BOARD_NO)
+  		WHERE I.BOARD_NO = #{boardNo}
+  	</select>
+  	<!-- 관리자에게 수정내용요청 -->
+  	<insert id="modifyinfo">
+  		INSERT INTO SERVICE(SERVICE_NO, WRITER ,CATEGORY ,SERVICE_TITLE ,SERVICE_CONTENT ,ANSWER_STATUS)
+  					VALUES(SEQ_BNO.NEXTVAL, #{boardWriter}, 3, '정보수정요청', #{boardContent}, 'N')
+  	</insert>
+  	<update id="deleteBoard">
+  		UPDATE BOARD
+  		SET STATUS = 'N'
+  		WHERE BOARD_NO = #{boardNo}
+  		AND STATUS = 'Y'
+  	</update>
+  	<update id="deleteInfo">
+  		DELETE INFO
+  		WHERE BOARD_NO = #{boardNo}
+  	</update>
+  	<delete id="deleteAttachment">
+ 		DELETE ATTACHMENT
+ 		WHERE BOARD_NO = #{boardNo}
+  	</delete>
+  	<update id="updateBoard">
+  		UPDATE BOARD
+  		SET BOARD_TITLE = #{infoName}
+  		, BOARD_CONTENT = #{boardContent}
+  		WHERE BOARD_NO = #{boardNo}
+  		AND STATUS= 'Y'
+  	</update>
+  	<update id="updateInfo">
+  		UPDATE INFO
+  		SET INFO_NAME = #{infoName}
+  		, INFO_ADDRESS = #{infoAddress}
+  		, INFO_TIME = #{infoTime}
+  		, INFO_HOMEPAGE = #{infoHomepage}
+  		, INFO_CALL = #{infoCall}
+  		, PARKING = #{parking}
+  		, INFO_TYPE = #{infoType}
+  		, DAY_OFF = #{dayOff}
+  		WHERE BOARD_NO = #{boardNo}
+  	</update>
+  	<!-- 나중에 합칠수있으면 위에꺼랑 합치기 -->
+  	<delete id="updateAttachment">
+  		DELETE ATTACHMENT
+  		WHERE CHANGE_NAME = #{changeName}
+  	</delete>
   </mapper>

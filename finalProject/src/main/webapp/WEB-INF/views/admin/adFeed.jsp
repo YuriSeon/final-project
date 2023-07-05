@@ -253,8 +253,6 @@
 	    });
 	});
   	
-  	
-    
     //체크박스 선택한 항목 삭제
     function chkDelete() {
     	var list = [];

@@ -6,19 +6,36 @@ import java.util.List;
 
 import com.kh.finalProject.admin.model.vo.Notice;
 import com.kh.finalProject.admin.model.vo.Report;
+import com.kh.finalProject.admin.model.vo.Visit;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Festival;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Reply;
+import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.board.model.vo.Theme;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.member.model.vo.Member;
 
 public interface AdminService {
 
+	//대시보드 방문자 통계
+	HashMap<String, Integer> countVisit();
+	
+	//대시보드 게시판 별 조회수
+	ArrayList<Board> countList();
+	
+	//대시보드 여행지 방문 횟수
+	HashMap<String, Integer> countMap();
+	
 	//대시보드 최근 신고 5개
 	ArrayList<Report> currentReportList();
+	
+	//대시보드 최근 작성글 5개
+	ArrayList<Board> currentBoardList();
+
+	//대시보드 최근 문의글 5개
+	ArrayList<Notice> currentQnatList();
 
 	//==================================================공지사항===========================================================
 	
@@ -127,7 +144,15 @@ public interface AdminService {
 
 	//신고 검색 리스트 조회
 	ArrayList<Notice> reportSearchList(HashMap<String, String> map, PageInfo pi);
+	
+	//신고 게시물 이동
+	int boardChk(int boardNo);
 
+	//신고 댓글 조회
+	Reply replyChk(int replyNo);
+	
+	//신고 대댓글 조회
+	Rereply rereplyChk(int replyNo);
 	//==================================================회원관리===========================================================
 	
 	//회원 리스트 개수
@@ -163,6 +188,18 @@ public interface AdminService {
 	//회원 프로필 이미지 수정
 	int memberUpdateImg(Attachment a);
 
+	//회원 비밀번호 초기화
+	void pwdUpdate(Member m);
+	
+	//회원 편집 접속기록 조회
+	ArrayList<Visit> visitSelect(String nickname);
+	
+	//회원 계정 복구
+	int memberRestore(int userNo);
+
+	//회원 관리자 전환
+	int changeAdmin(int userNo);
+	
 	//==================================================게시판관리===========================================================
 
 	//게시글 축제 리스트 개수
@@ -269,9 +306,6 @@ public interface AdminService {
 
 	//게시글 피드 사진 출력
 	ArrayList<Attachment> feedSelectFile(int boardNo);
-
-	
-
 
 
 
