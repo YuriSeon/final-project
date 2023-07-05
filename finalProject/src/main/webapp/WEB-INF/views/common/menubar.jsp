@@ -249,7 +249,7 @@
                             <li><a href="main.bo">메인</a></li>
                             <li><a href="theme.bo">테마</a></li>
                             <li><a href="festival.fe">축제</a></li>
-                            <li><a href="attraction.bo">명소</a></li> 
+                            <li><a href="attraction.bo?currentPage=1">명소</a></li> 
                             <li><a href="feed.bo">피드</a></li> 
                             <li><a href="schedule.bo">일정 자랑</a></li> 
                             <li><a href="#" onclick="mbtiQuestion();">함께 가치</a></li> 

@@ -27,5 +27,5 @@ public class Reply {
 	private String status;
 	private String profileImg; // 프로필이미지 경로+바뀐이름
 	private String boardTitle;
-
+	private int count; //댓글갯수
 }

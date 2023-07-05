@@ -227,7 +227,7 @@
 						+ "<div class='profile'>"					
            				+ "<div class='photo'>";
            				if (list[i].replyWriter == nickname) {
-  							str	+= "<img src='"+profileImg+"'>";							
+  							str	+= "<img src='"+profileImg+"'>";
 						}else{
            					str	+= "<img src='resources/images/blackperson.png'>";
 						}

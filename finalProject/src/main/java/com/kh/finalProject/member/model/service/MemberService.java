@@ -137,4 +137,10 @@ public interface MemberService {
 
 	//접속자 ip,접속시간 기록
 	int connectData(Visit v);
+
+	//마이페이지 본인인증 네이버
+	int updateCerti(String nickname);
+
+	//마이페이지 본인인증 카카오
+	int updateCertik(String nickname);
 }

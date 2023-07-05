@@ -100,6 +100,7 @@
 		float: right;
 		margin-top: 10px;
      }
+     
 </style>
 </head>
 <body>
@@ -145,7 +146,7 @@
 			</li>
 			<li>
 				<strong>홈페이지</strong>
-				<span>${b.info.getInfoHomepage() }</span>
+				<a href="${b.info.getInfoHomepage() }" style="color: black;">${b.info.getInfoHomepage() }</a>		
 			</li>			
 		</ul>
 	
@@ -170,10 +171,19 @@
 	</div>
 	
 	<div class="reply-area">
-		<b style="font-size: 20px;">댓글(${reply })</b>
+		<b style="font-size: 20px;" id="reply">댓글(${reply })</b>
 		<div style="margin: 10px;">
-			<textarea rows="3" cols="100" id="replyContent" placeholder="로그인 후 이용가능합니다."></textarea>
-			<button id="btn" class="btn btn-warning" style="height: 80px;">댓글</button>
+		 <c:choose>
+		 	<c:when test="${empty loginUser }">
+			 	<textarea rows="3" cols="100" id="replyContent" placeholder="로그인 후 이용가능합니다." style="resize: none;"></textarea>
+				<button id="btn" class="btn btn-warning" style="height: 80px;">댓글</button>
+		 	</c:when>
+		 	<c:otherwise>
+		 		<textarea rows="3" cols="100" id="replyContent" style="resize: none;"></textarea>
+				<button id="btn" class="btn btn-warning" style="height: 80px;">댓글</button>
+		 	</c:otherwise>
+		 </c:choose>
+			
 		</div>
 						                        	
 		<div id="replyBox">
@@ -269,9 +279,10 @@
 	    		alert("로그인 후 가능합니다.");
 	    	}
 	    });
+	    console.log($("#reply").text());
+	    var count = $("#reply");
 	    //댓글 입력
 	    $(".reply-area").on("click","#btn",function(){
-	    		
 		    	$.ajax({
 		    		url:"insertReply.mo",
 		    		data:{replyWriter:nickname,
@@ -281,6 +292,7 @@
 		    		success:function(result){
 		    			if(result == "success"){
 		    				selectReply();
+		    				count.text("댓글 (${reply+1})");
 		    				$("#replyContent").val("");
 		    			}
 		    		},
@@ -300,7 +312,7 @@
 		    		var str = "";
 		    		
 		    		for(i in list){		    			
-		    		 str +="<div id='reply-text'>"
+		    		 str +="<div id='reply-text' style='margin-bottom:15px;border-bottom:1px solid gray;'>"
 		    		 if(!list[i].profileImg){		    			 
 		    			 str+="<img src='resources/images/profile/빈프로필.jpg' style='width:30px; height:30px; border-radius:50%; margin-left:5px;margin-bottom: 4px;'>"
 		    		 }else{
@@ -315,10 +327,7 @@
              		 str +="<button  onclick='deleteReply(\"" + list[i].replyNo + "\")' style='color: black;font-size: 11px;padding: 3px;float: right;border: solid white;'>삭제</button>"
 						 +"<button onclick='updateReplyForm(\"" + list[i].replyNo + "\",\"" + list[i].content + "\",\"" + list[i].replyWriter + "\",this)' style='color: black;font-size: 11px;padding: 3px;float: right;border-right: 1px solid;border: solid white;'>수정</button>"
              		   }
-					 str +="<p style='font-size: 15px; margin-top: 5px;'>"+list[i].createDate+"</p>"
-					 	 +"<button onclick='rere(\"" + list[i].replyNo + "\",\"" + list[i].refQno + "\",this);' style='color: black;font-size: 11px;padding: 3px;border: solid white;margin-top: 8px;'>답글</button>"	
-						 +"<div id='rreply-box'>"								 	
-					 	 +"</div>"		
+					 str +="<p style='font-size: 15px; margin-top: 5px;'>"+list[i].createDate+"</p>"					 	 	
 					 	 +"</div>"	
 		    		}
 		    		
@@ -333,6 +342,7 @@
 	    	selectReply();
 	    })
 	    
+	    //댓글 삭제
 	    function deleteReply(replyNo){
 	    	var chk = confirm("정말 댓글 삭제 하실건가요?");
 	    	if(chk === true){
@@ -343,6 +353,8 @@
 		    		success:function(result){
 		    			if(result == "success"){
 		    				alert("댓글을 삭제하였습니다.");
+		    				selectReply();
+		    				count.text("댓글 (${reply})");
 		    			}
 		    		},
 		    		error:function(){
@@ -450,10 +462,12 @@
 	    				writer: nickname
 	    			},
 	    			success:function(result){
-	    				if(result>0){
+	    				console.log(result);
+	    				if(result === 2){
 	    					$("#star").attr("src", "resources/images/star-after.png");
-	    				}else{
+	    				}else if(result === 1){
 	    					$("#star").attr("src", "resources/images/star-before.png");
+	    					
 	    				}
 	    			},
 	    			error:function(){
@@ -492,8 +506,14 @@
 	   
 	    //사용자 정보수정 요청
 	    function pageLoad(){
-	    	boardNo = "${b.boardNo}";
-	    	location.href = "askUpdate.mo?boardNo="+boardNo;
+	    	if(nickname !== ""){
+	    		
+		    	/* boardNo = "${b.boardNo}";
+		    	location.href = "askUpdate.mo?boardNo="+boardNo; */
+		    	location.href = "myRequestEnroll.me";
+	    	}else{
+	    		alert("로그인시 이용가능합니다.");
+	    	}
 	    }
 	
 </script>

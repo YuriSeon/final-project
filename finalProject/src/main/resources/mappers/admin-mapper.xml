@@ -114,6 +114,16 @@
   		<result column="REF_QNO" property="refQno"/>
   		<result column="REF_RNO" property="refRno"/>
   		<result column="STATUS" property="status"/>
+  		<result column="PROFILEIMG" property="profileImg"/>
+  	</resultMap>
+  	
+  	<!-- REREPLY RESULT MAP -->
+  	<resultMap type="rereply" id="rereplyResultSet">
+  		<result column="REF_RNO" property="refRno"/>
+  		<result column="CONTENT" property="content"/>
+  		<result column="CREATE_DATE" property="createDate"/>
+  		<result column="REPLY_WRITER" property="replyWriter"/>
+  		<result column="PROFILEIMG" property="profileImg"/>
   	</resultMap>
   	
   	<!-- REPORT RESULT MAP -->
@@ -121,13 +131,16 @@
   		<result column="REPORT_NO" property="reportNo"/>
   		<result column="BOARD_NO" property="boardNo"/>
   		<result column="REPLY_NO" property="replyNo"/>
+  		<result column="REREPLY_NO" property="rereplyNo"/>
   		<result column="WRITER" property="writer"/>
   		<result column="REPORT_REASON" property="reportReason"/>
   		<result column="CREATE_DATE" property="createDate"/>
   		<result column="BOARD_WRITER" property="boardWriter"/>
   		<result column="REPLY_WRITER" property="replyWriter"/>
+  		<result column="REREPLY_WRITER" property="rereplyWriter"/>
   		<result column="REPORT1" property="boardReport"/>
   		<result column="REPORT2" property="replyReport"/>
+  		<result column="REPORT3" property="rereplyReport"/>
   	</resultMap>
   	
 	<!-- VISIT RESULT MAP -->
@@ -184,6 +197,19 @@
 		GROUP BY CATEGORY
 		ORDER BY CATEGORY
 	</select>
+	
+	<!-- 대시보드 여행지 방문 횟수 -->
+	<select id="countMap" resultMap="postCountMap">
+		SELECT SUBSTR(ZONE_NO,1,2) "ZONE_NO", COUNT(*) AS POST_COUNT
+		FROM BOARD
+		GROUP BY SUBSTR(ZONE_NO,1,2)
+	</select>
+  	
+  	<!-- 여행지 방문 횟수 RESULTSET -->
+  	<resultMap id="postCountMap" type="java.util.HashMap">
+		<id property="zoneName" column="ZONE_NO"/>
+		<result property="postCount" column="POST_COUNT"/>
+	</resultMap>
   	
   	<!-- 대시보드 최근 신고 5개 -->
 	<select id="currentReportList" resultMap="reportResultSet">
@@ -244,7 +270,7 @@
   		FROM BOARD
 		WHERE STATUS = 'Y'
 		AND CATEGORY = 1
-		ORDER BY BOARD_NO
+		ORDER BY CREATE_DATE DESC
   	</select>
 	
 	<!-- 게시글 테마 검색 개수-->
@@ -280,7 +306,7 @@
 			</otherwise>
 		</choose>
 		LIKE '%'||#{keyword}||'%'
-		ORDER BY BOARD_NO
+		ORDER BY CREATE_DATE DESC
 	</select>
 	
 	<!-- 게시글 테마 보드 삭제 -->
@@ -373,7 +399,7 @@
   			  ,GOOD,REPORT,COUNT,STATUS,BOARD_WRITER 
   		FROM BOARD
 		WHERE CATEGORY = 2
-		ORDER BY BOARD_NO
+		ORDER BY CREATE_DATE DESC
   	</select>
 	
 	<!-- 게시글 축제 검색 개수-->
@@ -407,7 +433,7 @@
 			</otherwise>
 		</choose>
 		LIKE '%'||#{keyword}||'%'
-		ORDER BY BOARD_NO
+		ORDER BY CREATE_DATE DESC
 	</select>
 	
 	<!-- 게시글 축제 수정 보드 조회 -->
@@ -488,7 +514,7 @@
   		FROM BOARD
 		WHERE STATUS = 'Y'
 		AND CATEGORY = 3
-		ORDER BY BOARD_NO
+		ORDER BY CREATE_DATE DESC
   	</select>
 	
 	<!-- 게시글 명소 검색 개수-->
@@ -524,7 +550,7 @@
 			</otherwise>
 		</choose>
 		LIKE '%'||#{keyword}||'%'
-		ORDER BY BOARD_NO
+		ORDER BY CREATE_DATE DESC
 	</select>
 
 	<!-- =====================게시글 피드========================= -->
@@ -546,7 +572,7 @@
   		FROM BOARD
 		WHERE STATUS = 'Y'
 		AND CATEGORY = 4
-		ORDER BY BOARD_NO
+		ORDER BY CREATE_DATE DESC
   	</select>
   	
   	<!-- 게시글 피드 검색 개수-->
@@ -614,7 +640,7 @@
 		<if test="status == 'writer'">
 		AND BOARD_WRITER LIKE '%'||#{keyword}||'%'
 		</if>
-		ORDER BY BOARD_NO
+		ORDER BY CREATE_DATE DESC
 	</select>
   	
   	<!-- =====================게시글 일정자랑========================= -->
@@ -636,7 +662,7 @@
   		FROM BOARD
 		WHERE STATUS = 'Y'
 		AND CATEGORY = 5 
-		ORDER BY BOARD_NO
+		ORDER BY CREATE_DATE DESC
   	</select>
 
 	<!-- =====================게시글 함께가치========================= -->
@@ -658,7 +684,7 @@
   		FROM BOARD
 		WHERE STATUS = 'Y'
 		AND CATEGORY = 6
-		ORDER BY BOARD_NO
+		ORDER BY CREATE_DATE DESC
   	</select>
   		
 <!-- ===========================================회원관리============================================= -->
@@ -675,7 +701,7 @@
   		SELECT USER_NO,USER_ID,NICKNAME,USER_PWD,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') ENROLL_DATE,CERTIFICATION,STATUS,INTEREST
 		FROM MEMBER
 		WHERE STATUS IN ('Y','N')
-		ORDER BY USER_NO
+		ORDER BY ENROLL_DATE DESC
   	</select>
   	
   	<!-- 회원 검색 개수-->
@@ -723,7 +749,7 @@
 			 OR (certification = 2 AND '네이버' LIKE '%'||#{keyword}||'%')
 			</otherwise>
 		</choose>
-		ORDER BY USER_NO
+		ORDER BY ENROLL_DATE DESC
 	</select>
 
 	<!-- 회원 탈퇴 -->
@@ -803,7 +829,14 @@
 	<!-- 회원 계정 복구 -->
 	<update id="memberRestore">
 		UPDATE MEMBER
-		SET STATUS = 'Y'
+		SET STATUS = 'Y',
+		WHERE USER_NO = #{userNo}
+	</update>
+	
+	<!-- 회원 관리자 전환 -->
+	<update id="changeAdmin">
+		UPDATE MEMBER
+		SET STATUS = 'A'
 		WHERE USER_NO = #{userNo}
 	</update>
 	
@@ -835,7 +868,7 @@
 		FROM SERVICE
 		WHERE STATUS = 'Y'
         AND CATEGORY = 1
-		ORDER BY SERVICE_NO
+		ORDER BY CREATE_DATE DESC
   	</select>
   	
 	<!-- 공지사항 수정 조회 -->
@@ -944,7 +977,7 @@
 			</otherwise>
 		</choose>
 		LIKE '%'||#{keyword}||'%'
-		ORDER BY SERVICE_NO
+		ORDER BY CREATE_DATE DESC
 	</select>
 	
 	<!-- ===========================================FAQ============================================= -->
@@ -963,7 +996,7 @@
 		FROM SERVICE
 		WHERE STATUS = 'Y'
         AND CATEGORY = 2
-		ORDER BY SERVICE_NO
+		ORDER BY CREATE_DATE DESC
   	</select>
 	
 	<!-- FAQ 검색 개수-->
@@ -1000,7 +1033,7 @@
 			</otherwise>
 		</choose>
 		LIKE '%'||#{keyword}||'%'
-		ORDER BY SERVICE_NO
+		ORDER BY CREATE_DATE DESC
 	</select>
 	
 	<!-- ===========================================FAQ============================================= -->
@@ -1019,7 +1052,7 @@
 		FROM SERVICE
 		WHERE STATUS = 'Y'
         AND CATEGORY = 3
-		ORDER BY SERVICE_NO
+		ORDER BY CREATE_DATE DESC
   	</select>
   	
   	<!-- Q&A 검색 개수-->
@@ -1062,7 +1095,7 @@
 			</otherwise>
 		</choose>
 		LIKE '%'||#{keyword}||'%'
-		ORDER BY SERVICE_NO
+		ORDER BY CREATE_DATE DESC
 	</select>
   	
   	<!-- 마이페이지 Q&A 수정 조회 -->
@@ -1164,13 +1197,27 @@
   	
   	<!-- 신고 리스트 조회 -->
   	<select id="selectReportList" resultMap="reportResultSet">
-  		SELECT REPORT_NO,BOARD_NO,REPLY_NO,WRITER,REPORT_REASON,P.CREATE_DATE,B.BOARD_WRITER,M1.REPORT REPORT1,R.REPLY_WRITER,M2.REPORT REPORT2
+  		SELECT P.REPORT_NO,
+		       P.BOARD_NO,
+		       P.REPLY_NO,
+		       P.REREPLY_NO,
+		       P.WRITER,
+		       P.REPORT_REASON,
+		       P.CREATE_DATE,
+		       B.BOARD_WRITER,
+		       M1.REPORT AS REPORT1,
+		       R.REPLY_WRITER,
+		       M2.REPORT AS REPORT2,
+		       RR.REPLY_WRITER AS REREPLY_WRITER,
+		       M3.REPORT AS REPORT3
 		FROM REPORT P
-		LEFT JOIN BOARD B USING(BOARD_NO)
-		LEFT JOIN REPLY R USING(REPLY_NO)
-		LEFT JOIN MEMBER M1 ON(B.BOARD_WRITER=M1.NICKNAME)
-		LEFT JOIN MEMBER M2 ON(R.REPLY_WRITER=M2.NICKNAME)
-		ORDER BY CREATE_DATE DESC, REPORT_NO ASC
+		LEFT JOIN BOARD B ON P.BOARD_NO = B.BOARD_NO
+		LEFT JOIN REPLY R ON P.REPLY_NO = R.REPLY_NO
+		LEFT JOIN REREPLY RR ON P.REREPLY_NO = RR.REF_RNO
+		LEFT JOIN MEMBER M1 ON B.BOARD_WRITER = M1.NICKNAME
+		LEFT JOIN MEMBER M2 ON R.REPLY_WRITER = M2.NICKNAME
+		LEFT JOIN MEMBER M3 ON RR.REPLY_WRITER = M3.NICKNAME
+		ORDER BY P.CREATE_DATE DESC, P.REPORT_NO ASC
   	</select>
   	
   	<!-- 신고 삭제 -->
@@ -1183,16 +1230,18 @@
   	<select id="reportSearchCount" resultType="_int">
 		SELECT COUNT(*)
 		FROM REPORT P
-		LEFT JOIN BOARD B USING(BOARD_NO)
-		LEFT JOIN REPLY R USING(REPLY_NO)
-		LEFT JOIN MEMBER M1 ON(B.BOARD_WRITER=M1.NICKNAME)
-		LEFT JOIN MEMBER M2 ON(R.REPLY_WRITER=M2.NICKNAME)
+		LEFT JOIN BOARD B ON P.BOARD_NO = B.BOARD_NO
+		LEFT JOIN REPLY R ON P.REPLY_NO = R.REPLY_NO
+		LEFT JOIN REREPLY RR ON P.REREPLY_NO = RR.REF_RNO
+		LEFT JOIN MEMBER M1 ON B.BOARD_WRITER = M1.NICKNAME
+		LEFT JOIN MEMBER M2 ON R.REPLY_WRITER = M2.NICKNAME
+		LEFT JOIN MEMBER M3 ON RR.REPLY_WRITER = M3.NICKNAME
 		WHERE 
 		<if test="status == 'title'">
 		 	REPORT_REASON
 		</if>
 		<if test="status == 'writer'">
-			B.BOARD_WRITER LIKE '%'||#{keyword}||'%' OR R.REPLY_WRITER
+			B.BOARD_WRITER LIKE '%'||#{keyword}||'%' OR R.REPLY_WRITER LIKE '%'||#{keyword}||'%' OR RR.REPLY_WRITER
 		</if>
 		<if test="status == 'reporter'">
 		 	WRITER
@@ -1202,26 +1251,66 @@
 	
 	<!-- 신고 검색 리스트-->
   	<select id="reportSearchList" resultMap="reportResultSet">
-		SELECT REPORT_NO,BOARD_NO,REPLY_NO,WRITER,REPORT_REASON,P.CREATE_DATE,B.BOARD_WRITER,M1.REPORT REPORT1,R.REPLY_WRITER,M2.REPORT REPORT2
+		SELECT P.REPORT_NO,
+		       P.BOARD_NO,
+		       P.REPLY_NO,
+		       P.REREPLY_NO,
+		       P.WRITER,
+		       P.REPORT_REASON,
+		       P.CREATE_DATE,
+		       B.BOARD_WRITER,
+		       M1.REPORT AS REPORT1,
+		       R.REPLY_WRITER,
+		       M2.REPORT AS REPORT2,
+		       RR.REPLY_WRITER AS REREPLY_WRITER,
+		       M3.REPORT AS REPORT3
 		FROM REPORT P
-		LEFT JOIN BOARD B USING(BOARD_NO)
-		LEFT JOIN REPLY R USING(REPLY_NO)
-		LEFT JOIN MEMBER M1 ON(B.BOARD_WRITER=M1.NICKNAME)
-		LEFT JOIN MEMBER M2 ON(R.REPLY_WRITER=M2.NICKNAME)
+		LEFT JOIN BOARD B ON P.BOARD_NO = B.BOARD_NO
+		LEFT JOIN REPLY R ON P.REPLY_NO = R.REPLY_NO
+		LEFT JOIN REREPLY RR ON P.REREPLY_NO = RR.REF_RNO
+		LEFT JOIN MEMBER M1 ON B.BOARD_WRITER = M1.NICKNAME
+		LEFT JOIN MEMBER M2 ON R.REPLY_WRITER = M2.NICKNAME
+		LEFT JOIN MEMBER M3 ON RR.REPLY_WRITER = M3.NICKNAME
 		WHERE 
 		<choose>
 			<when test="status=='title'">
 				 REPORT_REASON
 			</when>
 			<when test="status=='writer'">
-				 B.BOARD_WRITER LIKE '%'||#{keyword}||'%' OR R.REPLY_WRITER
+				 B.BOARD_WRITER LIKE '%'||#{keyword}||'%' OR R.REPLY_WRITER LIKE '%'||#{keyword}||'%' OR RR.REPLY_WRITER 
 			</when>
 			<otherwise>
 				WRITER
 			</otherwise>
 		</choose>
 		LIKE '%'||#{keyword}||'%'
-		ORDER BY CREATE_DATE DESC, REPORT_NO ASC
+		ORDER BY P.CREATE_DATE DESC, REPORT_NO ASC
 	</select>
+	
+	<!-- 신고 게시물 이동 -->
+	<select id="boardChk" resultType="_int">
+		SELECT CATEGORY
+		FROM BOARD
+		WHERE BOARD_NO = #{boardNo}
+	</select>
+	
+	<!-- 신고 댓글 조회 -->
+  	<select id="replyChk" resultMap="replyResultSet">
+  		SELECT REPLY_NO,CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH24:MI:SS')"CREATE_DATE",REPLY_WRITER,REF_QNO,(FILE_PATH || CHANGE_NAME) PROFILEIMG
+  		FROM REPLY R
+  		LEFT JOIN ATTACHMENT A ON(REPLY_WRITER = WRITER)
+  		WHERE REPLY_NO = #{replyNo}
+  		AND R.STATUS = 'Y'
+  		ORDER BY CREATE_DATE 
+  	</select>
+	
+	<!-- 신고 대댓글 조회 -->
+  	<select id="rereplyChk" resultMap="rereplyResultSet">
+  		SELECT REF_RNO,CONTENT,TO_CHAR(CREATE_DATE,'YY/MM/DD HH24:MI:SS')"CREATE_DATE",REPLY_WRITER,(FILE_PATH || CHANGE_NAME) PROFILEIMG
+  		FROM REREPLY R
+  		LEFT JOIN ATTACHMENT A ON(REPLY_WRITER = WRITER)
+  		WHERE REF_RNO = #{replyNo}
+  		AND R.STATUS = 'Y'
+  	</select>
   	
   </mapper>

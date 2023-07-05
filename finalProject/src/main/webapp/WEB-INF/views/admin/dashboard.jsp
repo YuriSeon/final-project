@@ -23,7 +23,7 @@
 </head>
 <body>
 <%@include file="adMenubar.jsp" %>
-<!-- Content - Start  -->
+<!-- Content - Startt  -->
 <div id="content-wrapper" style="height: auto; background-color: #EEEEEE;">
     <div class="container-fluid">
         <div class="dash-title">
@@ -173,25 +173,30 @@
     });
 
   	//여행지 그래프
-    const colors = ['red','yellow','blue','#c3e6cb','#dc3545','#6c757d'];
+    const colors = ['#CEDEFC','#9EBDF9','#6C94EF','#4671DF','#1241CB','#0D31AE','#092492','#051975','#031161','#CAF5FD','#97E5FC','#62CCF6','#3BB1ED','#0088E2','#0069C2','#004EA2'];
     var chBar = $("#myChart2");
     var chartData = {
-        labels: ["S", "M", "T", "W", "T", "F", "S"],
+        labels: ["서울", "부산", "대구", "인천", "광주", "대전", "울산", "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"],
         datasets: [{
-        data: [809, 445, 483, 503, 689, 692, 634],
-        backgroundColor: colors[0]
-        },
-        {
-        data: [209, 245, 383, 403, 589, 692, 580],
-        backgroundColor: colors[1]
-        },
-        {
-        data: [489, 135, 483, 290, 189, 603, 600],
-        backgroundColor: colors[2]
-        },
-        {
-        data: [639, 465, 493, 478, 589, 632, 674],
-        backgroundColor: colors[4]
+        data: [809, 445, 483, 503, 689, 692, 634, 321, 152, 263, 374, 457, 734, 362, 421, 363],
+        backgroundColor: [
+        	colors[0],
+        	colors[1],
+        	colors[2],
+        	colors[3],
+        	colors[4],
+        	colors[5],
+        	colors[6],
+        	colors[7],
+        	colors[8],
+        	colors[9],
+        	colors[10],
+        	colors[11],
+        	colors[12],
+        	colors[13],
+        	colors[14],
+        	colors[15],
+        ],
         }]
     };
     var myChart = new Chart(chBar, {

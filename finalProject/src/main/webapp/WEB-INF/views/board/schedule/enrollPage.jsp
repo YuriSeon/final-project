@@ -8,12 +8,51 @@
 <link rel="stylesheet" type="text/css" href="resources/css/schedule.css?after">
 <link rel="stylesheet" type="text/css" href="resources/css/listMap.css?v=1">
 <title>schedule enroll form</title>
-<style type="text/css"></style>
+<style type="text/css">
+	.logo{
+		background-color: light-gray;
+		text-decoration: none;
+		width : 100%;
+		height : 40px;
+		margin :0;
+		padding :0;
+	}
+	#t {
+		font-size : 30px;
+		font-weight: 600;
+		color: gray;
+	}
+</style>
 </head>
 <body>
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 <!-- 동행구하는거 작성하는거 체크시 해당 게시물 작성완료시 모달창으로 바로 연결할까요 물어보기 , 모달 배경색 수정 -->
-<%@include file="../../common/menubar.jsp" %>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    <!-- ***** Logo Start ***** -->
+                    <img class="logo" src="resources/images/menu.png">
+                    <span id="t">여행</span><span id="g">가보자고</span>
+                    <!-- ***** Logo End ***** -->
+                    <!-- ***** Menu Start ***** -->
+                    <ul class="nav">
+                        <li><a href="main.bo">메인</a></li>
+                        <li><a href="theme.bo">테마</a></li>
+                        <li><a href="festival.fe">축제</a></li>
+                        <li><a href="attraction.bo?currentPage=1">명소</a></li> 
+                        <li><a href="feed.bo">피드</a></li> 
+                        <li><a href="schedule.bo">일정 자랑</a></li> 
+                        <li><a href="#" onclick="mbtiQuestion();">함께 가치</a></li> 
+                    </ul>        
+                    <a class='menu-trigger'>
+                        <span>Menu</span>
+                    </a>
+                    <!-- ***** Menu End ***** -->
+                </nav>
+            </div>
+        </div>
+    </div>
 	<div class="enroll-sc" >
 		<form action="insert.sc" method="post" id="insertForm">
 	        <div>

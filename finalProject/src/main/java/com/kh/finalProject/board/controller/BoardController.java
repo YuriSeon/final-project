@@ -1,17 +1,12 @@
 package com.kh.finalProject.board.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +24,7 @@ import com.kh.finalProject.board.model.service.TogetherService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Good;
+import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.board.model.vo.TogetherVO;
 import com.kh.finalProject.common.model.vo.PageInfo;
 import com.kh.finalProject.common.template.Pagination;
@@ -74,6 +70,8 @@ public class BoardController {
 		ArrayList<Member> mlist = feedService.selectMember();
 		ArrayList<Good> glist = feedService.selectGood();
 		ArrayList<Attachment> alist = feedService.selectAttachmentList();
+		//댓글갯수리스트
+		ArrayList<Reply> rlist = feedService.selectRereply();
 		int listCount = feedService.selectListCount();
 		int pageLimit = 5;
 		int boardLimit = 5;
@@ -97,6 +95,7 @@ public class BoardController {
 		model.addAttribute("size", alist.size());
 		model.addAttribute("glist",new Gson().toJson(glist));
 		model.addAttribute("mlist",new Gson().toJson(mlist));
+		model.addAttribute("sort", sort);
 
 		return "board/feed";
 	}

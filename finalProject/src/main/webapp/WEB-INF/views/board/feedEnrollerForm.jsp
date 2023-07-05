@@ -34,7 +34,7 @@
 	#enroll-form input{
 		float :left;
 		box-sizing:border-box;
-		margin-left: 30px;
+		margin-left: 60px;
 		color: black;
 		border: 1px solid black;
 		width: 300px;
@@ -58,7 +58,7 @@
         width: 500px;
         height: 400px;
         position: relative;
-        margin: 0 auto;
+        margin-left:60px;
         
          overflow: hidden; /*현재 슬라이드 오른쪽에 위치한 나머지 슬라이드 들이 보이지 않도록 가림 */
     }
@@ -141,13 +141,13 @@
     	float :left;
     	margin-left: 30px;
     } 
-    #btn{margin-right: 500px;}
+    #btn{margin-right: 450px;}
     #map{
             width: 370px;
             height: 250px;
             border: 1px solid black;
             margin-top: 20px;
-            margin-left: 30px;
+            margin-left: 60px;
         }
 </style>
 </head>
@@ -209,9 +209,14 @@
 					<tr height="20"></tr>
 					<tr>
 						<th>내용</th>
-						<td colspan="2">
-							<textarea rows="10" cols="90" name="boardContent"></textarea>
+						<td>
+							<textarea rows="10" cols="90" name="boardContent" style="resize: none;" onkeyup="fn_checkByte(this)" required></textarea>
 						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+				            <sup style="margin-right: 70px;float: right;">(<span id="nowByte">0</span>/500bytes)</sup>
+				        </td>
 					</tr>
 					<tr height="20"></tr>
 					
@@ -348,6 +353,35 @@
      	    }
      	}).open();
      }
+     
+   //textarea 바이트 수 체크하는 함수
+     function fn_checkByte(obj){
+         const maxByte = 500; //최대 100바이트
+         const text_val = obj.value; //입력한 문자
+         const text_len = text_val.length; //입력한 문자수
+         
+         let totalByte=0;
+         for(let i=0; i<text_len; i++){
+         	const each_char = text_val.charAt(i);
+             const uni_char = escape(each_char); //유니코드 형식으로 변환
+             if(uni_char.length>4){
+             	// 한글 : 2Byte
+                 totalByte += 2;
+             }else{
+             	// 영문,숫자,특수문자 : 1Byte
+                 totalByte += 1;
+             }
+         }
+         
+         if(totalByte>maxByte){
+         	alert('최대 100Byte까지만 입력가능합니다.');
+             	document.getElementById("nowByte").innerText = totalByte;
+                 document.getElementById("nowByte").style.color = "red";
+             }else{
+             	document.getElementById("nowByte").innerText = totalByte;
+                 document.getElementById("nowByte").style.color = "green";
+             }
+         }
 	
 </script>
 </html>

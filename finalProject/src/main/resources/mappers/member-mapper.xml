@@ -124,11 +124,12 @@
 	</update>
 	
 	<!-- 프로필용 조회 -->
-	<select id="loginMemberNo" parameterType="member" resultMap="memberResultSet">
-		SELECT *
-		FROM MEMBER
+	<select id="loginMemberNick" parameterType="member" resultMap="memberResultSet">
+		SELECT USER_NO,USER_ID,NICKNAME,USER_PWD,USER_NAME,GENDER,AGE,EMAIL,PHONE,MBTI,SURVEY,STYLE,REPORT,WARNING,M.ENROLL_DATE,CERTIFICATION,M.STATUS,INTEREST, FILE_PATH||CHANGE_NAME "PROFILEIMG"
+		FROM MEMBER M
+		LEFT JOIN ATTACHMENT A ON (NICKNAME=WRITER)
 		WHERE NICKNAME = #{nickname}
-		AND STATUS IN ('Y','A')
+		AND M.STATUS IN ('Y','A')
 	</select>
 	
 	<update id="updateSurvey">
@@ -375,4 +376,18 @@
   		DELETE FROM ATTACHMENT
   		WHERE BOARD_NO = #{serviceNo}
   	</delete>
+  	
+  	<!-- 마이페이지 본인인증 네이버 -->
+  	<update id="updateCerti">
+  		UPDATE MEMBER
+  		SET CERTIFICATION = 2
+  		WHERE NICKNAME = #{nickname}
+  	</update>
+  	
+  	<!-- 마이페이지 본인인증 카카오 -->
+  	<update id="updateCertik">
+  		UPDATE MEMBER
+  		SET CERTIFICATION = 1
+  		WHERE NICKNAME = #{nickname}
+  	</update>
 </mapper>
