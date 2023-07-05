@@ -4,7 +4,7 @@
 <html>
 <style>
 	.special_box .bg {
-	     height: 350px; 
+	     height: 550px; 
 	}
 			
 	.special_box {
@@ -32,14 +32,16 @@
 		width: 350px;
 	}
 	
-	#pagingArea{
-		/* border: 1px solid; */
-		position: relative;
-		margin-left: 850px; 
+	.pagination {
 		margin-top: 100px;
+    	justify-content: center !important;
 	}
-	.selected-link {
+	.link:hover ,.link.active{
         font-weight: bold;
+    }
+    tbody>tr:hover{
+    	cursor: pointer;
+    	background-color: rgb(154, 154, 154, 0.3);
     }
 </style>
 <head>
@@ -53,7 +55,7 @@
 	<!-- 맨위 사진 -->
 	
     <div class="special_box">
-         <div class="bg" style="background-color: purple;">	               
+         <div class="bg" style="background-image: url('resources/images/강아지 산책.png');background-size: cover;">	               
           </div>
     </div>
     
@@ -91,7 +93,7 @@
     	</form>
     	
     </div>
-    <br><br><br><br><br><br>
+    <br><br><br><br>
     	<!-- 리스트뷰 -->
     <!-- 카테고리 그대로 -->
     <c:if test="${not empty zone and not empty country }">
@@ -108,15 +110,15 @@
     		<tr style="border-bottom: 2px solid gray; padding-bottom: 30px;">
     			<th style="padding-left: 20px;">총${count }건</th>
     			<td style="float: right;padding-right: 30px;">
-    				<a href="themaList.bo" style="color: black;font-size: 20px;">전체 </a>|
+    				<a href="themaList.bo?sort=1" style="color: black;font-size: 20px;" class="link">전체 </a>|
     				<c:choose>
     					<c:when test="${not empty zone and not empty country}">   						
-    						<a href="search.mo?zone=${zone}&country=${country}&sort=1" style="color: black;font-size: 20px;">최신순 </a>|
-    						<a href="search.mo?zone=${zone}&country=${country}&sort=2" style="color: black;font-size: 20px;">인기순 </a>
+    						<a href="search.mo?zone=${zone}&country=${country}&sort=1" style="color: black;font-size: 20px;" class="link">최신순 </a>|
+    						<a href="search.mo?zone=${zone}&country=${country}&sort=2" style="color: black;font-size: 20px;" class="link">인기순 </a>
     					</c:when>
     					<c:otherwise>
-    						<a href="themaList.bo" style="color: black;font-size: 20px;" class="link">최신순 </a>|
-    						<a href="themaList.bo?currentPage=1&sort=2" style="color: black;font-size: 20px;" class="link">인기순 </a>
+    						<a href="themaList.bo?sort=1" style="color: black;font-size: 20px;" class="link">최신순 </a>|
+    						<a href="themaList.bo?sort=2" style="color: black;font-size: 20px;" class="link">인기순 </a>
     					</c:otherwise>
     				</c:choose>
     				
@@ -155,10 +157,10 @@
                 <ul class="pagination">
                 	<c:choose>
                 		<c:when test="${pi.currentPage eq 1}">
-                   			 <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                   			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
                 		</c:when>
                 		<c:otherwise>
-                			 <li class="page-item"><a class="page-link" href="search.mo?currentPage=${pi.currentPage - 1 }&zone=${zone}&country=${country}&sort=${sort}">Previous</a></li>
+                			 <li class="page-item"><a class="page-link" href="search.mo?currentPage=${pi.currentPage - 1 }&zone=${zone}&country=${country}&sort=${sort}">&lt;</a></li>
                 		</c:otherwise>
                 	</c:choose>
                 	
@@ -168,10 +170,10 @@
                     
                     <c:choose>
                     	<c:when test="${pi.currentPage eq pi.maxPage}">
-		                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
                     	</c:when>
                     	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="search.mo?currentPage=${pi.currentPage + 1}&zone=${zone}&country=${country}&sort=${sort}">Next</a></li>
+                    		<li class="page-item"><a class="page-link" href="search.mo?currentPage=${pi.currentPage + 1}&zone=${zone}&country=${country}&sort=${sort}">&gt;</a></li>
                     	</c:otherwise>
                     </c:choose>
                 </ul>
@@ -183,10 +185,10 @@
                 <ul class="pagination">
                 	<c:choose>
                 		<c:when test="${pi.currentPage eq 1}">
-                   			 <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                   			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
                 		</c:when>
                 		<c:otherwise>
-                			 <li class="page-item"><a class="page-link" href="themaList.bo?currentPage=${pi.currentPage - 1 }&sort=${sort}">Previous</a></li>
+                			 <li class="page-item"><a class="page-link" href="themaList.bo?currentPage=${pi.currentPage - 1 }&sort=${sort}">&lt;</a></li>
                 		</c:otherwise>
                 	</c:choose>
                 	
@@ -196,10 +198,10 @@
                     
                     <c:choose>
                     	<c:when test="${pi.currentPage eq pi.maxPage}">
-		                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
                     	</c:when>
                     	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="themaList.bo?currentPage=${pi.currentPage + 1}&sort=${sort}">Next</a></li>
+                    		<li class="page-item"><a class="page-link" href="themaList.bo?currentPage=${pi.currentPage + 1}&sort=${sort}">&gt;</a></li>
                     	</c:otherwise>
                     </c:choose>
                 </ul>
@@ -242,7 +244,7 @@
 	    }         
 	}
 	
-	
+	//디테일로 
 	$(function(){
 		$("tbody>tr").click(function(){
 			var bno = $(this).children().eq(0).children("input").val();
@@ -251,14 +253,29 @@
 		});
 	});
 
-	 $(function() {
-	        $('.link').on('click', function() {
-	        	 if (!$(this).hasClass('selected-link')) {
-	                 $('.link').removeClass('selected-link');
-	                 $(this).addClass('selected-link');
-	             }
-	        });
-	    });
+	 //전체,최신순,인기순 호버 그대로		 
+	 $(document).ready(function(){
+		 var zone = "${zone}";
+		 var country = "${country}";
+		 var sort = "${sort}";
+		 
+		 if (zone && country && (sort === '1' || sort === '2')) {
+			    $('.link[href="search.mo?zone='+zone+'&country='+country+'&sort='+sort+'"]').addClass('selected-link');
+			  } else if (!zone && !country && (sort === '1' || sort === '2')) {
+			    $('.link[href="themaList.bo"]').addClass('selected-link');
+			  }
+		 
+		// 링크를 클릭했을 때의 동작을 정의합니다.
+		  $('.link').click(function() {
+		    // 모든 링크에서 .selected-link 클래스를 제거합니다.
+		    $('.link').removeClass('selected-link');
+		    
+		    // 클릭한 링크에 .selected-link 클래스를 추가합니다.
+		    $(this).addClass('selected-link');
+		  });
+	 });
+	 
+
 	
 </script>
 </html>

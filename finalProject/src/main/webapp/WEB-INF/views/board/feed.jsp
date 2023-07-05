@@ -239,24 +239,23 @@
 }
 
 .circle:hover, .circle.active {
-  background-color: #dddcdc;
+  background-color: #57667e;
   width: 100px;
   height: 50px;
   border-radius: 90%;
   position: relative;
-  color: rgb(60, 59, 59);
+  color: white;
   font-size: 17px;
   font-weight: bold;
 }
+ #head:hover, #head.active{border: 2px solid red;}
  .massge{cursor: pointer;}
  #reply-area{display: none;}
  #nicknameHover{cursor: pointer;}
- #pagingArea{
-		/* border: 1px solid; */
-		position: relative;
-		margin-left: 900px; 
-		margin-top: 100px;
-	}
+ 
+ .pagination {
+    justify-content: center !important;
+}
 #sild2{display: none;}
 
 </style>
@@ -280,17 +279,7 @@
 			});
 		});
 	</script>
-    <!-- ***** About Us Page ***** -->
-    <!-- <div class="page-heading-shows-events">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h2>Our Shows & Events</h2>
-                    <span>Check out upcoming and past shows & events.</span>
-                </div>
-            </div>
-        </div>
-    </div> -->
+    
 
     <div class="shows-events-tab">
         <div class="container">
@@ -308,8 +297,16 @@
                                                     <div class="col-lg-12">
                                                         <div class="heading-sidebar">
                                                            <ul>
-				                                        		<li><button class="btn btn-info" style="margin-left:20px;" onclick="newerList();">최신순</button></li>
-				                                        		<li><button class="btn btn-warning" onclick="ranking();">인기순</button></li>
+                                                           		<c:choose>
+                                                           			<c:when test="${not empty city }">
+                                                           				<li><button class="btn btn-outline-info" id="head" style="margin-left:20px;" onclick="newerList(1);">최신순</button></li>
+						                                        		<li><button class="btn btn-outline-warning" id="head" onclick="ranking(1);">인기순</button></li>
+                                                           			</c:when>
+                                                           			<c:otherwise>
+						                                        		<li><button class="btn btn-outline-info" id="head" style="margin-left:20px;" onclick="newerList(2);">최신순</button></li>
+						                                        		<li><button class="btn btn-outline-warning" id="head" onclick="ranking(2);">인기순</button></li>
+                                                           			</c:otherwise>
+                                                           		</c:choose>
 				                                        	</ul>                     
                                                         </div>
                                                     </div>
@@ -336,9 +333,7 @@
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-12">
-                                                       	
-                                                        	
+                                                    <div class="col-lg-12">                                                       	                                                     	
 																<button type="button" id="category1" onclick="enrollerForm();">
 																	<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
 																	  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
@@ -356,6 +351,13 @@
                                             
 							                						                        		
                                              <div class="col" >
+                                             	<c:choose>
+                                             		<c:when test="${empty list }">
+                                             			<div>
+                                             				<h2>조회된 결과가 없습니다.</h2>
+                                             			</div>
+                                             		</c:when>
+                                             		<c:otherwise>                                       
 							                        	<c:forEach var="f" items="${list}">
 							                    <div class="ticket-item" style="width: 400px;">
 							                        <div class="thumb">
@@ -404,8 +406,9 @@
         						                   
 							                        </div>
 							                            <div class="prices" style="width: 500px;">
-									                            <div class="price">
-									                                <span>좋아요 ${f.good }개</span>
+									                            <div class="price" style="margin-bottom: 5px;">
+									                                <span id="count" style="margin-left: 3px;">좋아요 ${f.good }개</span>
+									                                <input type="hidden" id="gcount" value="${f.good }">
 									                                <div  id="heart-area">		                                
 									                               		 <img src="resources/images/하트.png" alt="" id="heart">
 									                                </div>
@@ -418,7 +421,7 @@
 									                            </div>
 									                        <div class="down-content">
 									                          
-									                            <h5>${f.boardContent }</h5>
+									                            <h6 style="font-weight: bold;">${f.boardContent }</h6>
 									                            
 									                            <br>
 									                            <ul id="address">
@@ -429,6 +432,7 @@
 									                            	<li>${f.info.getInfoAddress() }</li> 
 									                            </ul>									                            
 										                        <p>${f.createDate }</p>
+										                        <p style="color: gray;margin-left: 3px;" class="massge">댓글 ${f.reply.count }개</p>
 										                        <button style='border: solid white; float: right;background-color: white;' onclick="report('${f.boardNo}', '${f.boardWriter}');">
 																	<img alt='' src='resources/images/980829.png' style='width:15px; height:15px; float: right;'>
 																</button>
@@ -436,7 +440,7 @@
 									                        <hr>
 									                        <div id="reply-area">
 									                        	<div>
-										                        	<textarea rows="2" cols="1" id="reply" ></textarea>
+										                        	<textarea rows="2" cols="1" id="reply" style="resize: none;"></textarea>
 										                        	<button id="btn" class="btn btn-warning">댓글</button>
 									                        	</div>
 									                        	
@@ -451,6 +455,8 @@
 							                    	</div>
 							                    	<br><br><br><br><br>
 							                      </c:forEach> 
+							                   </c:otherwise>
+                                             </c:choose>
 							                </div>
                                             </div>
                                         </div>
@@ -496,23 +502,23 @@
 	                <ul class="pagination">
 	                	<c:choose>
 	                		<c:when test="${pi.currentPage eq 1}">
-	                   			 <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+	                   			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
 	                		</c:when>
 	                		<c:otherwise>
-	                			 <li class="page-item"><a class="page-link" href="city.bo?currentPage=${pi.currentPage - 1 }&city=${city}">Previous</a></li>
+	                			 <li class="page-item"><a class="page-link" href="city.bo?currentPage=${pi.currentPage - 1 }&city=${city}&sort=${sort}">&lt;</a></li>
 	                		</c:otherwise>
 	                	</c:choose>
 	                	
 	                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
-		                    <li class="page-item"><a class="page-link" href="city.bo?currentPage=${p}&city=${city}">${p}</a></li>
+		                    <li class="page-item"><a class="page-link" href="city.bo?currentPage=${p}&city=${city}&sort=${sort}">${p}</a></li>
 	                    </c:forEach>
 	                    
 	                    <c:choose>
 	                    	<c:when test="${pi.currentPage eq pi.maxPage}">
-			                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+			                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<li class="page-item"><a class="page-link" href="city.bo?currentPage=${pi.currentPage + 1}&city=${city}">Next</a></li>
+	                    		<li class="page-item"><a class="page-link" href="city.bo?currentPage=${pi.currentPage + 1}&city=${city}&sort=${sort}">&gt;</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 	                </ul>
@@ -526,23 +532,23 @@
 		                <ul class="pagination">
 		                	<c:choose>
 		                		<c:when test="${pi.currentPage eq 1}">
-		                   			 <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+		                   			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
 		                		</c:when>
 		                		<c:otherwise>
-		                			 <li class="page-item"><a class="page-link" href="feed.bo?currentPage=${pi.currentPage - 1 }">Previous</a></li>
+		                			 <li class="page-item"><a class="page-link" href="feed.bo?currentPage=${pi.currentPage - 1 }&sort=${sort}">&lt;</a></li>
 		                		</c:otherwise>
 		                	</c:choose>
 		                	
 		                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
-			                    <li class="page-item"><a class="page-link" href="feed.bo?currentPage=${p}">${p}</a></li>
+			                    <li class="page-item"><a class="page-link" href="feed.bo?currentPage=${p}&sort=${sort}">${p}</a></li>
 		                    </c:forEach>
 		                    
 		                    <c:choose>
 		                    	<c:when test="${pi.currentPage eq pi.maxPage}">
-				                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+				                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
 		                    	</c:when>
 		                    	<c:otherwise>
-		                    		<li class="page-item"><a class="page-link" href="feed.bo?currentPage=${pi.currentPage + 1}">Next</a></li>
+		                    		<li class="page-item"><a class="page-link" href="feed.bo?currentPage=${pi.currentPage + 1}&sort=${sort}">&gt;</a></li>
 		                    	</c:otherwise>
 		                    </c:choose>
 		                </ul>
@@ -712,7 +718,9 @@ var loginUser =  "${loginUser}";
 
 	 var heartImage = $(this).closest(".ticket-item").find("#heart");	 
 	  var boardNo = $(this).closest(".ticket-item").find("#up").find(".boardNo").val(); 
-	  /* console.log(boardNo);  */
+	  boardNo = parseInt(boardNo);
+	  var count = $(this).closest(".ticket-item").find("#count");
+	 var list = ${blist};
 	 var writer =  "${loginUser.nickname}";		 
 	      if (writer !== ""){ 		 
 	 	$.ajax({
@@ -723,10 +731,22 @@ var loginUser =  "${loginUser}";
 	 			
 	 			if (result > 0) {
 	 				heartImage.attr("src", "resources/images/free-icon-heart-833472좋아요후.png");
-	 				location.reload();
+	 				for(var i =0; i<list.length; i++){
+	 					var b = list[i];
+	 					/* console.log(b); */
+	 					if(b.boardNo === boardNo){
+	 						b.good++;
+	 						count.text("좋아요 "+b.good+"개");
+	 					}
+	 				}
                 } else {
                 	heartImage.attr("src", "resources/images/하트.png");
-                	location.reload();
+                	for(var i =0; i<list.length; i++){
+	 					var b = list[i];
+	 					if(b.boardNo === boardNo){	 						
+	 						count.text("좋아요 "+b.good+"개");
+	 					}
+	 				}
                 }
                  
 	 		},	 			 				 		
@@ -751,8 +771,7 @@ var loginUser =  "${loginUser}";
 		    /*  console.log(boardNo);  */
 		    var heartImage = $(this).find("#heart");
 		    /* console.log(heartImage); */
-		    var writer = "${loginUser.nickname}";
-		   
+		    var writer = "${loginUser.nickname}";		    		   
 		    var isLiked = false; 
 		    var glist = ${glist};
 		    for (var i = 0; i < glist.length; i++){
@@ -789,6 +808,9 @@ var loginUser =  "${loginUser}";
 
 			 //댓글삽입			
 			 var replyBox = $(this).find("#replyBox");//댓글 넣을 div
+			 
+			/*  function selectReplyList(){ */
+				 
 				 $.ajax({
 					 url:"selectReplyList.fo",
 					 data:{refQno:boardNo},
@@ -798,7 +820,6 @@ var loginUser =  "${loginUser}";
 							 var str ="";
 							
 							 for(i in list){
-								/*   console.log(list[i].replyWriter); */
 
 								 str +="<div id='reply-text'>"
 								if(!list[i].profileImg){		    			 
@@ -808,7 +829,7 @@ var loginUser =  "${loginUser}";
 						    	}
 								 	 
 			             		 str+="<b style='margin-bottom: 3px;'>"+list[i].replyWriter+"</b>"
-			             			 +"<button style='border: solid white; float: right;background-color: white;' id='report' onclick='report(\"" + list[i].replyWriter + "\",\"" + list[i].replyNo + "\")'>"
+			             			 +"<button style='border: solid white; float: right;background-color: white;' id='report' onclick='replyReport(\"" + list[i].replyWriter + "\",\"" + list[i].replyNo + "\")'>"
 			             			 +"<img alt='' src='resources/images/980829.png' style='width:15px; height:15px; float: right;'>"
 			             			 +"</button>"
 			             			 +"<p style='font-size: 12px;font-weight: bold;line-height: 15px;'>"+list[i].content+"</p>"   
@@ -817,7 +838,7 @@ var loginUser =  "${loginUser}";
 									 +"<button onclick='updateReplyForm(\"" + list[i].replyNo + "\",\"" + list[i].content + "\",\"" + list[i].replyWriter + "\",this)' style='color: black;font-size: 11px;padding: 3px;float: right;border-right: 1px solid;border: solid white;'>수정</button>"
 			             		   }
 								 str +="<p style='font-size: 11px'>"+list[i].createDate+"</p>"
-								 	 +"<button onclick='rere(\"" + list[i].replyNo + "\",\"" + list[i].refQno + "\",this);' style='color: black;font-size: 11px;padding: 3px;border: solid white;'>답글</button>"	
+								 	 +"<button onclick='rere(\"" + list[i].replyNo + "\",\"" + list[i].refQno + "\",this);' style='color: black;font-size: 11px;padding: 3px;border: solid white;'>답글"+list[i].count+"</button>"	
 									 +"<div id='rreply-box'>"								 	
 								 	 +"</div>"																				
 			             			 +"</div>"
@@ -832,15 +853,9 @@ var loginUser =  "${loginUser}";
 						 console.log("error");
 					 }
 				 });
-				
-		
-				
-										
-				
-				
-
-			 
-	     
+			/*  }
+	
+			 selectReplyList(); */
 		});
 	//------------------------------------------------------------------------------------------------------------
 	 
@@ -848,7 +863,7 @@ var loginUser =  "${loginUser}";
 	  $(".col > .ticket-item").on("click", "#btn", function (){
 		 /*   console.log($(this).closest(".ticket-item").find("#up").find(".boardNo").val());   */
 		 var loginUser = "${loginUser}";
-
+		 var btn = $(this);
 		 if(loginUser !==""){
 			 
 			  $.ajax({
@@ -858,10 +873,10 @@ var loginUser =  "${loginUser}";
 					  replyWriter:"${loginUser.nickname}"
 					  },
 				success:function(result){
-					if(result =="success"){					
-						 /* selectReplyList();  */
-						$(this).prev("#reply").val("");
-						location.reload();
+					if(result =="success"){						
+						  /* selectReplyList();   */
+						 btn.prev("#reply").val("");
+						location.reload(); 
 					}
 				},
 				error:function(){
@@ -900,7 +915,7 @@ var loginUser =  "${loginUser}";
 		
 		 var form ="";
 			 form +="<b>"+replyWriter+"</b>"
-				  +"<textarea rows='2' cols='50' style='margin-left: 20px' id='upcontent'>"+content+"</textarea>"
+				  +"<textarea rows='2' cols='50' style='margin-left: 20px' id='upcontent' style='resize: none;''>"+content+"</textarea>"
    		          +"<button class='btn btn-warning' style='margin-left: 200px' onclick='updateReply("+replyNo+")'>수정</button>"
 				  		    
    		       $(tg).parents("#reply-text").html(form);
@@ -930,7 +945,7 @@ var loginUser =  "${loginUser}";
 	};
 	
 	//댓글신고
-	function report(replyWriter,replyNo){
+	function replyReport(replyWriter,replyNo){
 		console.log(replyNo);
 		 var loginUser = "${loginUser.nickname}";
 
@@ -963,30 +978,38 @@ var loginUser =  "${loginUser}";
 	
 	//대댓글폼
 	function rere(replyNo,refQno,aw){
-		 /* console.log($(aw).next("#rreply-box").children("#rereply"+replyNo)); */ 
-		var loginUser = "${loginUser}";
-		 if(loginUser !==""){
-			 
-				$(aw).hide();
+		 /* console.log($(aw).next("#rreply-box").children("#rereply"+replyNo)); */ 					 
+				var rreplyBox = $(aw).next("#rreply-box");
 				var form ="";
 				
-					form += "<i class='bi bi-arrow-return-right' style='float: left;margin-left: 10px;'></i>"
-						  +"<textarea rows='2' cols='40' style='margin-left: 20px' id='rereply-content'></textarea>"
+					form +="<i class='bi bi-arrow-return-right' style='float: left;margin-left: 10px;'></i>"
+						  +"<textarea rows='2' cols='40' style='margin-left: 20px' id='rereply-content' style='resize: none;'></textarea>"
 						  +"<button  class='btn btn-warning' style='margin-left: 200px' onclick='answer("+replyNo+","+refQno+");'>답글</button>"
 				
 			
 						  
-		 }else{
-			 alert("로그인 후 이용가능합니다.");
-		 }
-		 $(aw).hide();
+		 
 		 $(aw).next("#rreply-box").html(form);
 			selectAnswer(replyNo, function(result) {
 	            $(aw).next("#rreply-box").append(result);
 	        });
+			
+		//대댓글 로그인 안했을 시
+		$(aw).next("#rreply-box").on("click", "#rereply-content", function() {
+			  var loginUser = "${loginUser}";
+			  if (loginUser === "") {
+			      alert("로그인 후 이용 가능합니다.");
+			      return false;
+			     }
+			});
+		//답글누르면 답글박스 올라오게 하기
+		$(aw).on("click", function() {	        
+	          rreplyBox.slideUp();	        
+	    });
 		  
 		
 	}
+	
 	
 	//대댓글입력
 	function answer(replyNo,refQno){
@@ -1142,33 +1165,45 @@ var loginUser =  "${loginUser}";
 			location.href="updateEnroll.fo?boardNo="+boardNo;
  }
 	
-	//city호버스타일 그대로하기
-	 $(function(){
-		 var circles = document.getElementsByClassName("circle");
-		  var activeLink = document.querySelector(".circle.active");
-
-		  if (activeLink) {
-		    activeLink.classList.add("active");
+	//city호버스타일 그대로하기		 
+	 $(document).ready(function() {
+		  // 현재 URL에서 city 매개변수 값을 가져옵니다.		  
+		  var city = "${city}";
+		  /* console.log(city); */
+		  
+		  // 가져온 city 값으로 해당 링크에 .active 클래스를 추가합니다.
+		  if (city) {
+		    $('.circle[href="city.bo?city=' + city + '"]').addClass('active');
 		  }
+		  
+		  // 링크를 클릭했을 때의 동작을 정의합니다.
+		  $('.circle').click(function() {
+		    // 모든 링크에서 .active 클래스를 제거합니다.
+		    $('.circle').removeClass('active');
+		    
+		    // 클릭한 링크에 .active 클래스를 추가합니다.
+		    $(this).addClass('active');
+		  });
+		});
 
-		  for (var i = 0; i < circles.length; i++) {
-		    circles[i].addEventListener("click", function() {
-		      var currentActiveLink = document.querySelector(".circle.active");
-		      if (currentActiveLink) {
-		        currentActiveLink.classList.remove("active");
-		      }
-		      this.classList.add("active");
-		    });
-		  }
-	 })
 	 
 	 //최신순
-	 function newerList(){
-		 location.href ="feed.bo";
+	 function newerList(num){
+		 var city= "${city}";
+		 if(num ===1){
+			 location.href="city.bo?sort=1&city="+city;
+		 }else{			 
+		 	location.href ="feed.bo";
+		 }
 	 }
 	 //인기순
-	 function ranking(){
-		 location.href = "feed.bo?currentPage=1&sort=2";
+	 function ranking(num){
+		 var city= "${city}";
+		 if(num ===1){
+			 location.href="city.bo?currentPage=1&sort=2&city="+city;
+		 }else{			 
+		 	location.href = "feed.bo?currentPage=1&sort=2";
+		 }
 	 }
 	 
 	 //메세지버튼 누르면 밑으로 나오게 하기

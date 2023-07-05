@@ -279,6 +279,21 @@ public class FeedDao {
 		return sqlSession.insert("feedMapper.insertReportBoard", re);
 	}
 
+	//도시선택 인기순
+	public ArrayList<Board> selectRankingList(SqlSessionTemplate sqlSession, PageInfo pi, int city) {
+		int offset = (pi.getCurrentPage()-1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("feedMapper.selectRankingList", city, rowBounds);
+	}
+
+	//댓글갯수 리스트
+	public ArrayList<Reply> selectReplyList(SqlSessionTemplate sqlSession) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 	
