@@ -129,16 +129,18 @@
                 <div class="board-area">
                     <span class="icon"><img src="resources/images/view.png"></span>
                     <span class="num">${dataMap.board.count }</span>
-                    <span class="ico" onclick="iconChange('board', 'good', '${dataMap.board.boardNo}');">
-                        <img class="good" src="resources/images/Like-before.png">
+                    <span class="ico">
+                        <img class="good" src="resources/images/Like-before.png" onclick="iconChange('good');">
                     </span>
-                    <span class="num good">${dataMap.board.good }</span>
-                    <span class="ico" onclick="iconChange('board', 'choice', '${dataMap.board.boardNo}');">
-                        <img class="choice" src="resources/images/star-before.png">
+                    <span class="num goodNum">${dataMap.board.good }</span>
+                    <span class="ico">
+                        <img class="choice" src="resources/images/star-before.png" onclick="iconChange('chioce');">
                     </span>
-                    <span class="num chioce">${dataMap.board.choice }</span>
+                    <span class="num chioceNum">${dataMap.board.choice }</span>
+                    <span class="ico">
+	                    <img class="report" src="resources/images/bell-after.png">
+                    </span>
                 </div>
-                <!-- 스크립트 부분에서 사용하기위해서 숨겨둠 -->
                 <input type="hidden" id="boardNo" name="boardNo" value="${dataMap.board.boardNo}"> 
             </div>
             <hr>
@@ -321,9 +323,7 @@
             // 2. 댓글 조회
             selectReplyList(); 
             // 3. 좋아요 신고 아이콘 조회
-            $(".ico").each(function(){
-                iconCheck(this);
-            });
+            iconCheck();
             // 4. 로그인 확인 후 댓글 비활성화
 //             if("${empty loginUser}"){
 //                 $("#reply-back").children().siblings().attr("disabled", "true"); // 비활성화 시키기
@@ -485,20 +485,22 @@
                             pro : makeTag("div",{"class":"pro"}),
                            	nick : makeTag("div",{"class":"nick"}),
                             name : makeTag("a",{"id":"nicknameHover","onclick":"whoareyou();"}).text(result[i].replyWriter),
-                            report : makeTag("span",{"class":"ico"}).append(makeTag("img",{"class":"report","src":"resources/images/bell-before.png","onclick":"sendReport(reply, 0)"})),
+                            report : makeTag("span",{"class":"ico"}).append(makeTag("img",{"id":"reply","class":"report","src":"resources/images/bell-after.png"})),
                             recon : makeTag("div", {"class": "con"}).append(makeTag("textarea",{"class":"replycontent"}).text(result[i].content)),
-                           	rerecon : makeTag("div", {"class": "con"}).append(makeTag("textarea",{"class":"replycontent"})),
                             redate : makeTag("div",{"class":"date"}).text(result[i].createDate),
-                            reRedate : makeTag("div",{"class":"date"}),
                             reReplyinput : makeTag("input",{"type":"text","class":"reReplyContent","placeholder":"이 댓글에 대한 생각을 적어주세요!"}),
                             reReplyBtn : makeTag("button", {"class":"replyInsert"}).text("작성")
                         }
                         var nickName = r.nick.append(r.name.append(makeTag("img",{"src":result[i].profileImg})), r.report);
                         var replyarea = r.reply.append(r.replyNo, r.pro, nickName, r.recon, r.redate, $("<div>").append(r.reReplyinput, r.reReplyBtn));
                         replyDiv.append(replyarea);
-                        if(result[i].refRno!=0){
-                            nickName = r.nick.append(r.name.append(makeTag("img",{"src":result[i].profileImg})));
-                            r.reReply.append(r.replyNo.attr("value",result[i].refRno), r.pro, nickName, r.reRecon,r.reRedate);
+                        if(result[i].refRno!= 0){
+                        	$(".reply").each(function(){
+                        		if($(this).children().eq(0).val() == result[i].refRno){
+		                            nickName = r.nick.append(r.name.append(makeTag("img",{"src":result[i].profileImg})));
+		                            r.reReply.append(r.replyNo.attr("value",result[i].refRno), r.pro, nickName, r.recon,r.redate);
+                        		}
+                        	});
                         }
                         r= null;
 	                }
@@ -560,36 +562,40 @@
         
         
         /* 신고 이벤트 */ /* 댓글부분 정리해서 다시 넣고 이벤트 부분에 매개변수 넣어주기 */
-        function sendReport(sort, ref){
+       $(document).on("click",".report", function(){
         	$("#reportModal").show(); // 신고누르면 모달 보여주기
-        	// 게시판 신고면 변수 선언해놓은 값 넣기
+        	var type = $(this).parents().eq(2).attr("class");
+        	console.log(type);
         	var replyNo = 0;
         	var rereplyNo = 0;
-        	var num = $(this).parent().siblings().eq(0).val();
-        	if(sort=='reply' && ref==0){ //댓글
-        		replyNo = num;
-        	} else if(sort=='rereply'){ // 대댓글
-        		replyNo = ref;
-        		rereplyNo = num;
-        	}
-        	$.ajax({
-        		url : "report.attr",
-        		data : {
-        			writer : "${loginUser.nickname}",
-        			boardNo : "${dataMap.board.boardNo}",
-        			replyNo : replyNo,
-        			rereplyNo : rereplyNo,
-        			reportReason : $("#reportReason")
-        		},
-        		success : function(result){
-        			if(result>0){
-        				alert("신고에 성공하셨습니다.");
-        			} else {
-        				alert("신고에 실패하셨습니다.");
-        			}
-        		}
-        	});
-        }
+        	var num = $(this).parents().eq(2).children().eq(0).val();
+        	console.log($("#reportReason").text())
+	        /* 신고사유 제출 */
+	        $("#reportSubmit").click(function(){
+	        	if(type=='reply'){ //댓글
+	        		replyNo = num;
+	        	} else if(type=='rereply'){ // 대댓글
+	        		rereplyNo = num;
+	        	}
+	        	$.ajax({
+	        		url : "report.attr",
+	        		data : {
+	        			writer : "${loginUser.nickname}",
+	        			boardNo : "${dataMap.board.boardNo}",
+	        			replyNo : replyNo,
+	        			rereplyNo : rereplyNo,
+	        			reportReason : $("#reportReason").text()
+	        		},
+	        		success : function(result){
+	        			if(result>0){
+	        				alert("신고에 성공하셨습니다.");
+	        			} else {
+	        				alert("신고에 실패하셨습니다.");
+	        			}
+	        		}
+	        	});
+	        })
+       });
 
         /* 페이지 이동 이벤트 */
         function pageLoad(num){
@@ -606,66 +612,58 @@
             form.submit();
         }
         
-        /* 좋아요 찜 신고여부 조회 */
-       function iconCheck(obj){
-        	var type = $(obj).children();
+        /* 좋아요 찜 여부 조회 */
+       function iconCheck(){
         	$.ajax({
         		url : "iconCheck.attr",
         		data : {
-        			btnType : type.attr("class"),
         			boardNo : $("#boardNo").val(),
         			writer : "${loginUser.nickname}"
         		},
         		success : function(result){
-        			changeSrc(type, result);
+        			changeSrc(result);
         		}
         	});
         }
 
         /* 좋아요 찜 아이콘 변경 */  
-        function iconChange(sort, type, no){ // 이벤트 대상 객체 매개변수로 받음
-            var btnType = $(obj).children();
-            var realClass = $(obj).parent().attr("class"); // 아이콘이 들어있는 실제 태그 class명
-            var tableName = realClass.split("-")[0]; // 부모 클래스값에서 - 앞까지만 값 추출 
-            var noParents = $(obj).parent().siblings();
-            var no = noParents.eq(noParents.length-1).val();
-            var imgsrc = ($(obj).children().attr("src"));
-            
+        function iconChange(type){ // 이벤트 대상 객체 매개변수로 받음
             $.ajax({
                 url : "iconChange.attr",
                 data : {
                     btnType : type,
-                    tableName : sort,
-                    no : no,
+                    no : "${dataMap.board.boardNo}",
                     writer : "${loginUser.nickname}"
                 },
                 success : function(result){
-                	var count = result - $(this).next().text();
                 	// 조회할때 사용했던 함수 사용하기위해 값 반대로 넣어줌
-                	if(count>0){ // 수 증가해서 아이콘 변경해주기
-                		result = 0;
+                	if(result[type]>0){ // 수 증가해서 아이콘 변경해주기
+                		result[type] = 0;
                 	} else {
-                		result = 1;
+                		result[type] = 1;
                 	}
-                	$(this).next().attr("text",result);
-                	changeSrc(btnType, result);
+                	changeSrc(result);
                 }
             });
-            
         }
         
         // 아이콘 src 변경 함수
-        function changeSrc(obj, result){
-        	var imgsrc = $(obj).attr("src");
-        	var changeSrc = ""; 
-            if(result==0){ // 좋아요 찜 신고 안누름
-            	console.log("be");
-                changeSrc = imgsrc.replace("before","after");
-            } else {
-            	console.log("af");
-                changeSrc = imgsrc.replace("after","before");
-            }
-            $(obj).attr("src", changeSrc);
+        function changeSrc(result){
+        	
+        	var goodSrc = $(".good").attr("src");
+        	var choiceSrc = $(".choice").attr("src");
+        	if(result.goodCheck>0){
+        		$(".good").attr("src",goodSrc.replace("before","after"));
+        	}else{
+        		$(".good").attr("src",goodSrc.replace("after","before"));
+        	}
+        	if(result.choiceCheck>0){
+        		$(".choice").attr("src",choiceSrc.replace("before","after"));
+        	}else{
+        		$(".choice").attr("src",choiceSrc.replace("after","before"));
+        	}
+        	$(".goodNum").text(result.goodCount);
+        	$(".choiceNum").text(result.choiceCount);
         }
 
         /* kakao map api 내 주소 좌표로 바꾸는 부분 호출해 사용하기위해 함수처리 */

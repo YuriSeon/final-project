@@ -159,38 +159,46 @@ public class AttractionController {
 		return atArr;
 	}
 	
+	//지도 클릭시 API사용해 지역별 정보 추출
 	@ResponseBody
 	@RequestMapping(value="searchKeyword1", produces = "application/json; charset=UTF-8")
 	public String ListSelectApi(@RequestParam(value="currentPage", defaultValue ="1") int currentPage,
 								@RequestParam(value="sort", defaultValue ="O") String sort,
 								@RequestParam(value="keyword")String keyword,
 								@RequestParam(value="searchType", defaultValue ="12") int searchType) throws IOException {
-		// 검색내역변수처리
-		String rowBounds = "&numOfRows=6"; // 한페이지당 보이는 게시물 수 나중에 게시물수 확인해서 값 수정하기
-		String page = "&pageNo="+currentPage; // currentPage넣어주기
-		String arr = "&arrange="+sort; // 정렬기준 (O=제목순, Q=수정일순, R=생성일순)
-		String key = "&keyword="+URLEncoder.encode(keyword,"UTF-8"); // 검색지역 넣기
-		String type = "&contentTypeId="+searchType; // 검색유형 (12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 38:쇼핑, 39:음식점)
-		String etc = "&MobileOS=ETC&MobileApp=AppTest&_type=json&listYN=Y";
-		
-		// 검색해서 보여줄 url 완성
-		String url = BASEURL + SERVICEKEY + rowBounds + page  + arr + key + type + etc;
-		// url 연결 후 값 읽어오기
-		URL requestUrl = new URL(url);
-		HttpURLConnection urlCon = (HttpURLConnection)requestUrl.openConnection();
-		urlCon.setRequestMethod("GET");
-		BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
-		String responseText = "";
-		String line;
-		while((line=br.readLine())!=null) { // 조건문 영역에서 바로 확인시 결과 누락할 수 있어서 변수에 담으며 확인
-			responseText += line;
+		if(keyword.equals("부산")||keyword.equals("서울")) {
+			System.out.println("들어오니?");
+			HashMap<String, Object> dataMap = atService.selectAttrList(keyword);
+			return new Gson().toJson(dataMap);
+		} else {
+			System.out.println("여기들어온다");
+			// 검색내역변수처리
+			String rowBounds = "&numOfRows=6"; // 한페이지당 보이는 게시물 수 
+			String page = "&pageNo="+currentPage; // currentPage넣어주기
+			String arr = "&arrange="+sort; // 정렬기준 (O=제목순, Q=수정일순, R=생성일순)
+			String key = "&keyword="+URLEncoder.encode(keyword,"UTF-8"); // 검색지역 넣기
+			String type = "&contentTypeId="+searchType; // 검색유형 (12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 38:쇼핑, 39:음식점)
+			String etc = "&MobileOS=ETC&MobileApp=AppTest&_type=json&listYN=Y";
+			
+			// 검색해서 보여줄 url 완성
+			String url = BASEURL + SERVICEKEY + rowBounds + page  + arr + key + type + etc;
+			System.out.println(url);
+			// url 연결 후 값 읽어오기
+			URL requestUrl = new URL(url);
+			HttpURLConnection urlCon = (HttpURLConnection)requestUrl.openConnection();
+			urlCon.setRequestMethod("GET");
+			BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+			String responseText = "";
+			String line;
+			while((line=br.readLine())!=null) { // 조건문 영역에서 바로 확인시 결과 누락할 수 있어서 변수에 담으며 확인
+				responseText += line;
+			}
+			// 사용 끝나면 닫아주기
+			br.close();
+			urlCon.disconnect(); 
+			
+			return responseText;
 		}
-		
-		// 사용 끝나면 닫아주기
-		br.close();
-		urlCon.disconnect(); 
-		
-		return responseText;
 	}
 	
 	// 디테일뷰 페이지로 이동
@@ -301,29 +309,23 @@ public class AttractionController {
 		return atService.deleteReply(r);
 	}
 	
-	// 좋아요, 찜, 신고여부 조회
+	// 좋아요, 찜 조회
 	@ResponseBody
 	@RequestMapping(value="iconCheck.attr", produces ="application/json; charset=UTF-8")
-	public String iconCheck(@RequestParam("btnType") String btnType, 
-							@RequestParam("boardNo") int boardNo, 
+	public String iconCheck(@RequestParam("boardNo") int boardNo, 
 							@RequestParam("writer") String writer) {
-		int result = atService.iconCheck(btnType, boardNo, writer);
-		return new Gson().toJson(result);
+		HashMap<String, Object> iconCheck = atService.iconCheck(boardNo, writer);
+		return new Gson().toJson(iconCheck);
 	}
 	
 	// 좋아요, 찜 아이콘 변경
 	@ResponseBody
 	@RequestMapping(value="iconChange.attr", produces ="application/json; charset=UTF-8")
-	public String iconChange(@RequestParam("btnType") String btnType, @RequestParam("tableName")String tableName,
-							 @RequestParam("no") int no, @RequestParam("writer") String writer) {
-		int count = 0;
-		int result = atService.iconCheck(btnType, no, writer);
-		if(result>0) { // 이미 눌렀던 사람 (취소하기)
-			count = atService.iconBefore(btnType, tableName, no, writer);
-		} else { // 새로 등록할 사람
-			count = atService.iconAfter(btnType, tableName, no, writer);
-		}
-		return new Gson().toJson(count);
+	public String iconChange(@RequestParam("btnType") String btnType,
+							 @RequestParam("no") int no, 
+							 @RequestParam("writer") String writer) {
+		HashMap<String, Object> iconChange = atService.iconChange(btnType,no,writer);
+		return new Gson().toJson(iconChange);
 	}
 	
 	// 신고하기

@@ -32,11 +32,6 @@ public class AttractionServiceImpl implements AttractionService {
 		return 0;
 	}
 
-	@Override
-	public ArrayList<Board> selectBoardList(PageInfo pi) {
-		return null;
-	}
-	
 	// 게시물 등록
 	@Override
 	@Transactional
@@ -99,46 +94,49 @@ public class AttractionServiceImpl implements AttractionService {
 		return atDao.selectReplyList(sqlSession, boardNo);
 	}
 
-	// 좋아요, 찜, 신고 조회 //나중에 if로 수정 !!!
+	// 좋아요, 찜 조회
 	@Override
-	public int iconCheck(String btnType, int boardno, String writer) {
+	public HashMap<String, Object> iconCheck(int boardno, String writer) {
 		int result = 100; // 조회 오류 확인용 초기화
-		if(btnType.equals("good")) {
-			result = atDao.goodSearch(sqlSession,new Good(boardno, writer)); 
-		} else {
-			result = atDao.choiceSearch(sqlSession,new choice(boardno, writer));
-		}
-		return result;
+		HashMap<String, Object> iconCheck = new HashMap<>();
+		iconCheck.put("goodCheck", atDao.goodSearch(sqlSession,new Good(boardno, writer)));
+		iconCheck.put("choiceCheck",atDao.choiceSearch(sqlSession,new choice(boardno, writer)));
+		iconCheck.put("goodCount", atDao.goodCount(sqlSession,new Good(boardno, writer)));
+		iconCheck.put("choiceCount",atDao.choiceCount(sqlSession,new choice(boardno, writer)));
+		return iconCheck;
 	}
-
-	// 좋아요 찜 취소
+	// 좋아요 찜 등록 및 취소 + board Count update + Count 
 	@Override
-	public int iconBefore(String btnType, String tableName, int no, String writer) {
+	public HashMap<String, Object> iconChange(String btnType, int no, String writer) {
+		HashMap<String, Object> iconCheck = iconCheck(no, writer);
 		int result = 100;
 		if(btnType.equals("good")) {
-			result = atDao.deleteGood(sqlSession,new Good(no, writer));
+			if((int)iconCheck.get("goodCheck")>0) { // 이미 좋아요 눌렀던 사람 (취소진행)
+				result = atDao.deleteGood(sqlSession,new Good(no, writer));
+			} else { // 좋아요 등록
+				result = atDao.insertGood(sqlSession,new Good(no, writer));
+			}
 		} else {
-			result = atDao.deletechoice(sqlSession,new choice(no, writer));
+			if((int)iconCheck.get("choiceCheck")>0) { // 찜 취소
+				result = atDao.deletechoice(sqlSession,new choice(no, writer));
+			} else {
+				result = atDao.insertchoice(sqlSession,new choice(no, writer));
+			}
 		}
-		return result;
-	}
-
-	// 좋아요, 찜 등록
-	@Override
-	public int iconAfter(String btnType, String tableName, int no, String writer) {
-		int result = 100;
-		if(btnType.equals("good")) {
-			result = atDao.insertGood(sqlSession,new Good(no, writer));
-		} else {
-			result = atDao.insertchoice(sqlSession,new choice(no, writer));
-		}
-		return result;
+		iconCheck.put(btnType, result);
+		return iconCheck;
 	}
 	
 	// 신고하기 
 	@Override
+	@Transactional
 	public int sendReport(Report report) {
-		return atDao.sendReport(sqlSession, report); 
+		int result = atDao.sendReport(sqlSession, report); 
+		if(result>0 && report.getReplyNo()==0 && report.getRereplyNo()==0) {
+			// 신고 성공하고 댓글이나 대댓글 신고 아닌경우 보드 업데이트
+			result = atDao.updateReport(sqlSession, report);
+		}
+		return result;
 	}
 
 	// 기존 정보 있는지 체크
@@ -204,6 +202,25 @@ public class AttractionServiceImpl implements AttractionService {
 	public ArrayList<Attachment> selectAttachment(int boardNo) {
 		return atDao.selectAttachment(sqlSession, boardNo);
 	}
+
+	// 게시물리스트 조회
+	@Override
+	@Transactional
+	public HashMap<String, Object> selectAttrList(String keyword) {
+		HashMap<String, Object> dataMap = new HashMap<>();
+		ArrayList<Info> info = atDao.selectInfo(sqlSession, keyword);
+		HashMap<Integer, ArrayList<Attachment>> attachment = new HashMap<>();
+		for(Info i : info) { // 가져온 No로 조회
+			ArrayList<Attachment> at = atDao.selectAttachment(sqlSession, i.getBoardNo());
+			attachment.put(i.getBoardNo(), at); //boardNo와 묶어서 반환
+		}
+		dataMap.put("count", atDao.selectListCount(sqlSession, keyword));
+		dataMap.put("info", info);
+		dataMap.put("attachment",attachment);
+		return dataMap;
+	}
+
+	
 	
 	
 

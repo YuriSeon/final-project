@@ -10,8 +10,6 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Good;
 import com.kh.finalProject.board.model.vo.Info;
-import com.kh.finalProject.board.model.vo.Zone;
-import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.board.model.vo.choice;
 
@@ -108,18 +106,13 @@ public class AttractionDao {
 		return sqlSession.selectOne("attractionMapper.choiceSearch", choice);
 	}
 
-	// 신고 조회
-	public int reportSearch(SqlSession sqlSession, Report report) {
-		return sqlSession.selectOne("attractionMapper.reportSearch", report);
-	}
-
-	// 좋아요 취소 // board에서 값 수정하는거 넣어줘야함 좋아요찜 둘다 
+	// 좋아요 취소
 	public int deleteGood(SqlSession sqlSession, Good good) {
 		int result = sqlSession.delete("attractionMapper.deleteGood", good);
 		result *= sqlSession.update("attractionMapper.deletegoodcount", good);
 		if(result>0) {
 			result = sqlSession.selectOne("attractionMapper.goodCount",good);
-		}
+		} 
 		return result;
 	}
 
@@ -152,10 +145,25 @@ public class AttractionDao {
 		}
 		return result;
 	}
+	// 좋아요 수
+	public int goodCount(SqlSession sqlSession, Good good) {
+		return sqlSession.selectOne("attractionMapper.goodCount",good);
+	}
+
+	// 찜 수
+	public int choiceCount(SqlSession sqlSession, choice choice) {
+		return sqlSession.selectOne("attractionMapper.choiceCount",choice);
+	}
 
 	// 신고등록
 	public int sendReport(SqlSession sqlSession, Report report) {
+		System.out.println(report);
 		return sqlSession.insert("attractionMapper.sendReport", report);
+	}
+
+	// 게시물 신고수 업데이트
+	public int updateReport(SqlSession sqlSession, Report report) {
+		return sqlSession.update("attractionMapper.updateReport", report);
 	}
 
 	// 관리자에게 내용 수정 요정 페이지 로드 전 조회
@@ -202,5 +210,23 @@ public class AttractionDao {
 	public int updateFile(SqlSession sqlSession, Attachment at) {
 		return sqlSession.insert("attractionMapper.insertAttachment", at);
 	}
+
+	// 키워드로 보드 검색
+	// 리스트 수
+	public int selectListCount(SqlSession sqlSession, String keyword) {
+		return sqlSession.selectOne("attractionMapper.selectListCount", keyword);
+	}
+	// 게시글 
+	public ArrayList<Board> selectBoardList(SqlSession sqlSession, String keyword) {
+		return (ArrayList)sqlSession.selectList("attractionMapper.selectBoard", keyword);
+	}
+	//info 정보
+	public ArrayList<Info> selectInfo(SqlSession sqlSession, String keyword) {
+		return (ArrayList)sqlSession.selectList("attractionMapper.selectInfo", keyword);
+	}
+	
+
+	
+
 
 }
