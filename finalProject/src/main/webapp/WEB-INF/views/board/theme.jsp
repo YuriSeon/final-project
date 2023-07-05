@@ -65,7 +65,7 @@
     content: "#평생 친구와 함께";
     position: absolute;
     top: 40%;
-    right: 3%;
+    right: 5%;
     transform: translate(-50%, -50%);
     color: white;
     font-weight: bold;
@@ -117,7 +117,7 @@
 	content: "#캠핑";
     position: absolute;
     bottom: 10%;
-    right: 44%;
+    right: 45%;
     transform: translate(-50%, -50%);
     color: white;
     font-weight: bold;
@@ -129,7 +129,7 @@
 	content: "#전시회";
     position: absolute;
     bottom: 10%;
-    right: 12%;
+    right: 13%;
     transform: translate(-50%, -50%);
     color: white;
     font-weight: bold;
