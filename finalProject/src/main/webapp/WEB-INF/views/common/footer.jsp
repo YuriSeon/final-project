@@ -32,6 +32,9 @@
       padding: 20px 10px 10px 10px;
       font-size: 13px;
     }
+    #footerBanner>img,#footerBanner>div{
+    	float:left;
+    }
 </style>
 </head>
 <body>
@@ -42,8 +45,8 @@
                 <div class="col-lg-12">
                     <div class="sub-footer" style="border-top: 0; margin-top: 0; padding-top: 0;">
                         <div class="row" style="position:relative; left:130px;">
-                            <div class="col-lg-3">
-                                <div class="logo"><span>Art<em>Xibition</em></span></div>
+                            <div class="col-lg-3" id="footerBanner">
+                                <img src="/finalProject/resources/images/koreaMap.jpeg" id="bannerImg" style="width:96px; height:80px; margin-bottom:20px; position:relative;"><div class="logo" style="margin-top:10px;"><span>여행<em>가보자고</em></span></div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="menu">

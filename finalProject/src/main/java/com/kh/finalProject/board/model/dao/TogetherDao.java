@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.finalProject.board.model.vo.TogetherApplyVO;
 import com.kh.finalProject.board.model.vo.TogetherVO;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Repository
@@ -35,6 +36,26 @@ public class TogetherDao {
 
 	public TogetherVO togetherDetail(SqlSession sqlSession, int boardNo) {
 		return sqlSession.selectOne("togetherMapper.togetherDetail",boardNo);
+	}
+
+	public ArrayList<TogetherApplyVO> applyParticipate(SqlSession sqlSession, int boardNo) {
+		return (ArrayList)sqlSession.selectList("togetherMapper.applyParticipate",boardNo);
+	}
+
+	public int applyParticipateReject(SqlSession sqlSession, TogetherApplyVO ta) {
+		return sqlSession.update("togetherMapper.applyParticipateReject",ta);
+	}
+
+	public int togetherChoiceCheck(SqlSession sqlSession, choice c) {
+		return sqlSession.selectOne("togetherMapper.togetherChoiceCheck",c);
+	}
+
+	public int togetherYes(SqlSession sqlSession, choice c) {
+		return sqlSession.insert("togetherMapper.togetherYes",c);
+	}
+
+	public int togetherNo(SqlSession sqlSession, choice c) {
+		return sqlSession.delete("togetherMapper.togetherNo",c);
 	}
 
 

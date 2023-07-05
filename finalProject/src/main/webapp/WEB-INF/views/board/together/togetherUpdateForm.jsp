@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>함께 가치 글쓰기</title>
+<title>함께 가치 게시글 수정</title>
     <link rel="stylesheet" type="text/css" href="/finalProject/resources/css/bootstrap.min.css">
 
     <link rel="stylesheet" type="text/css" href="/finalProject/resources/css/font-awesome.css">
@@ -73,7 +73,7 @@ input::-webkit-inner-spin-button {
 <body>
 	<%@include file="../../common/menubar.jsp" %>
 		<div id="writeTitle">
-				함께 가치 글쓰기
+				함께 가치 게시글 수정
 		</div>
 		<div id="outer">
 				
@@ -82,19 +82,19 @@ input::-webkit-inner-spin-button {
 						<div class="col-lg-4">
 	                    <div class="ticket-item" align="center">
 	                        <div class="thumb" style="margin-top:10px;">
-	                            <img src="" alt="" id="upfile">
+	                            <img src="/finalProject${t.filePath}" alt="" id="upfile">
 	                        </div>
 	                        <div class="down-content" style="width:290px;" align="center"> <br>
-	                            <h4 id="dateConcept"></h4>
-	                           	<h4 id="previewTitle"></h4> <br>
+	                            <h4 id="dateConcept">[${t.totalDate }박 ${t.totalDate +1 }일]</h4>
+	                           	<h4 id="previewTitle">&lt; ${t.zoneName } ${t.concept } 여행 &gt; <br> ${t.boardTitle }</h4> <br>
 	                            <ul id="optionIcons">
-	                                <li id="previewDate"><i class="fa fa-clock-o"></i><i id="previewDateIn"></i> ~ <i id="previewDateOut"></i></li>
-	                                <li><i class="fa fa-map-marker"></i><i id="previewLocation"></i></li>
-	                                <li><img src="/finalProject/resources/images/together_won.png"><i id="previewPay"></i></li> 
-	                                <li><img src="${loginUser.profileImg}" style="border-radius:50%;"> ${nickname }</li> 
+	                                <li id="previewDate"><i class="fa fa-clock-o"></i><i id="previewDateIn">${t.startDate }</i> ~ <i id="previewDateOut">${t.endDate }</i></li>
+	                                <li><i class="fa fa-map-marker"></i><i id="previewLocation">${t.zoneName }</i></li>
+	                                <li><img src="/finalProject/resources/images/together_won.png"><i id="previewPay">${t.totalPay }원 이하</i></li> 
+	                                <li><img src="${loginUser.profileImg}" style="border-radius:50%;"> ${loginUser.nickname }</li> 
 	                            </ul>
 	                            <div class="main-dark-button">
-	                                <a href="#" id="previewBtn" disabled>참여하기 0 / <i id="previewBtn1"></i></a>
+	                                <a href="#" id="previewBtn" disabled>참여하기 0 / ${t.togetherCount }<i id="previewBtn1"></i></a>
 	                            </div>
 	                        </div>
 	                    </div>
@@ -105,10 +105,11 @@ input::-webkit-inner-spin-button {
 						<form id="enrollForm" method="post" action="togetherInsert.bo" enctype="multipart/form-data">
 							<input type="hidden" name="nickname" value="${loginUser.nickname }">
 							<input type="hidden" name="totalDate" id="totalDate">
+							<input type="hidden" name="boardNo" id="boardNo" value="${t.boardNo }">
 									<table id="enrollTable" border="1" align="center">
 											<tr>
 													<td style="width:100px;">제목 </td>
-													<td colspan="3"><input type="text" name="boardTitle" id="boardTitle" style="width:800px;"></td>
+													<td colspan="3"><input type="text" name="boardTitle" id="boardTitle" style="width:800px;" value="${t.boardTitle }"></td>
 											</tr>
 											<tr>
 													<td style="width:100px;">기간  </td>
@@ -154,7 +155,7 @@ input::-webkit-inner-spin-button {
 		                                            	</select>
 													</td>
 													<td style="width:100px;">동행 인원 수  </td>
-													<td><input type="number" id="togetherCount" name="togetherCount" style="text-align:center;" placeholder="최대 6명까지 가능" max="6"></td>
+													<td><input type="number" id="togetherCount" name="togetherCount" style="text-align:center;" placeholder="최대 6명까지 가능" max="6" value="${t.togetherCount }"></td>
 											</tr>
 											<tr>
 													<td>컨셉  </td>
@@ -174,7 +175,7 @@ input::-webkit-inner-spin-button {
 											</tr>
 											<tr>
 													<td style="width:100px; height:350px;">내용 </td>
-													<td colspan="3"><textarea name="boardContent" style="height:370px; width:800px; resize:none;" required></textarea></td>
+													<td colspan="3"><textarea name="boardContent" style="height:370px; width:800px; resize:none;" required >${t.boardContent }</textarea></td>
 											</tr>
 											<tr>
 													<td>사진  </td>
@@ -216,7 +217,38 @@ input::-webkit-inner-spin-button {
 										                                  for (i=0; i < cnt[add].length;i++){              
 										                                	  	$("#country").append("<option>"+cnt[add][i]+"</option>");
 										                                    }         
-										                                }              
+										                                }           
+										                            
+										                    $(function(){
+// 										                    	var d = new Date("20"+result[0][i].endDate).getTime();
+										                    	
+										                    		var startDate = new Date("20${t.startDate}");
+										                    		var endDate = new Date("20${t.endDate}");
+										                    		var zoneName = "${t.zoneName}"
+										                    		var city = zoneName.split(" ")[0];
+										                    		var country = zoneName.split(" ")[1];
+										                    		var totalPay = "${t.totalPay}";
+										                    		var concept = "${t.concept}";
+										                    		
+										                    		console.log(startDate);
+										                    		
+										                    		$("#dateIn").val(startDate);
+										                    		$("#dateOut").val(endDate);
+										                    		$("#city").val(city).attr("selected",true);
+										                    		
+										                    		for(var i=0; i<cnt[document.getElementById('city').selectedIndex].length;i++){
+												                    		$("#country").append("<option value='"+cnt[document.getElementById('city').selectedIndex][i]+"'>"+cnt[document.getElementById('city').selectedIndex][i]+"</option>");
+										                    		}
+										                    		$("#country").val(country).attr("selected",true);
+										                    		$("#pay").val(totalPay).attr("selected",true);
+										                    		$("input[class=check]").each(function(){
+										                    				$(this).attr("disabled",true);
+										                    				if($(this).val() == concept){
+																					$(this).attr("disabled",false);										                    					
+																					$(this).attr("checked",true);										                    					
+										                    				}
+										                    		});
+										                    }) ;       
 								</script>
 						</form>
 	             </div>
@@ -248,7 +280,6 @@ input::-webkit-inner-spin-button {
 	            	});
 	            	
 	            	var totalDate = $("#dateIn").val() - $("#dateOut").val();
-	            	console.log(totalDate);
 	            	
 	            	$("#checkBox>input").on("change",function(){
 	            		if($(this).prop("checked")){

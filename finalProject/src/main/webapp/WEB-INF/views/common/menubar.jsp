@@ -151,6 +151,9 @@
       	#nicknameHover:hover{
       		cursor:pointer;
       	}
+      	#bannerImg:hover{
+      		cursor:pointer;
+      	}
     </style>
 
 </head>
@@ -242,7 +245,12 @@
                 <div class="col-12">
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
-                        <a href="main.bo" class="logo">여행<em>가보자고</em></a>
+                        <img src="/finalProject/resources/images/koreaMap.jpeg" id="bannerImg" onclick="goMain();" style="width:96px; height:80px; position:relative; right:240px;"><a href="main.bo" class="logo">여행<em>가보자고</em></a>
+                        <script>
+                        	function goMain(){
+                        		location.href="main.bo";
+                        	}
+                        </script>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
