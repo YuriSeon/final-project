@@ -628,8 +628,8 @@
 	        		$(this).text(count+'개의 축제보기').css({"font-size":"13px","width":"115px","height":"90px","cursor":"pointer",
 	        											"transition":"0.5s","background-color":"#93dda4"});
 	        		$(this).on('click',function(){
-	        			$("#nowDay").text(nowDay);
-	        			location.href="festival.fe?nowDay="+nowDay+"date=${date }&searchArea=${area }&searchCate=${cate}";
+	        			$("#nowDay").val(nowDay);
+	        			location.href="festival.fe?nowDay="+nowDay+"&date=${date }&searchArea=${area }&searchCate=${cate}";
 	        		})
 	        		
 	        	}.bind(this),

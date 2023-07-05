@@ -261,7 +261,7 @@
 												var boardMbti = $(this).val().split(" ")[0];
 												
 												if(boardMbti == plusMbti){
-													$(this).siblings().eq(1).children().children().eq(0).css("background-color","lightgreen").html("회원님과 잘 맞을 것 같아요!").css("color","white").css("display","block");
+													$(this).siblings().eq(1).children().children().eq(0).css("background-color","green").html("회원님과 잘 <br>맞을 것 같아요!").css("color","white").css("display","block").css("font-weight","500");
 												}
 												
 												if(boardMbti == minusMbti){
@@ -281,21 +281,12 @@
 										});
 								});
 								
-// 								$(function(){
-// 									$("#mbtiCheckBox").attr("checked",true);
-// 									$("#mbtiCheckBox").css("display","inline-block");
-// 									$("#mbtiCheckBoxLabel").css("display","inline-block");
-									
-// 									$("#mbtiCheckBox").on("change",function(){
-// 										if($(this).prop("checked")){
-// 											$("#mbtiRecommend").css("display","block");
-// 										}else{
-// 											$("#mbtiRecommend").css("display","none");
-// 										}
-// 									});
-									
-// 								});
-									
+								$("#endDate").on("change",function(){
+									if($("#startDate").val()>$("#endDate").val()){
+											$("#endDate").val("");
+											alert("여행 종료 날짜는 시작 날짜보다 빠를 수 없습니다. \n다시 선택해주세요.");										
+									}
+								})
 								</script>
 							</c:if>
 							
@@ -374,7 +365,7 @@
 									                            				}else if("${loginUser.certification}" != 0){
 												                            		    str += "<button type='button' class='togetherBtn' data-toggle='modal' data-target='#applyModal'>참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>";
 									                            				}else{
-									                            					str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>";
+									                            					str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>참여하기 "+result[0][i].togetherCount+"/"+result[0][i].together+"</button>"
 													                           		+"<p>참여하려면 본인 인증을 해주세요.</p>";
 									                            				}
 												                           <%}else{%>
@@ -382,7 +373,8 @@
 														                           		+"<p>참여하려면 로그인을 해주세요.</p>";
 												                           <%}%>
 																}else{
-									                            		str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>마감되었습니다.</button>";
+									                            		str += "<button type='button' class='togetherBtn' style='background-color:lightgray;'>마감되었습니다.</button>"
+									                            			+"<p>다음 여행 때 함께해요~!</p>";
 																}
 																str += "</div></div></div></div></div>";
 											}
@@ -479,6 +471,7 @@
 					                            </c:when>
 					                            <c:otherwise>
 					                            		<button type="button" class="togetherBtn" style="background-color:lightgray;"disabled>마감되었습니다.</button>
+					                            		<p>다음 여행 때 함께해요~!</p>
 					                            </c:otherwise>
 					                            </c:choose>
 					                            </div>
@@ -516,7 +509,7 @@
                 				alert("참여하기를 취소합니다.");
                 			}
                 		}
-                		e.stopImmediatePropagation();
+                		 e.stopImmediatePropagation();
                 	});
                 	
                 	//최근 본 페이지 세션에 저장

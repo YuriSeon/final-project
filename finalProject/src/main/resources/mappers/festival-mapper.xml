@@ -130,58 +130,6 @@
 		        <!-- WHERE STATUS = 'Y' -->
 		        WHERE #{nowDay} BETWEEN START_DATE AND END_DATE) A)
 	</select>
-	
-	<!-- 축제 검색시 검색 게시글 수 -->
-	<select id="searchCount" resultType="_int" parameterType="hashmap">
-		SELECT COUNT(*) COUNT
-		FROM(SELECT A.*
-			FROM(SELECT *
-				FROM FESTIVAL F
-				JOIN BOARD USING(BOARD_NO)
-				JOIN ZONE Z ON (F.ZONE_NO = Z.ZONE_NO)
-				WHERE STATUS = 'Y'
-				<if test="date != 00">
-				AND #{date} BETWEEN TO_NUMBER(SUBSTR(TO_CHAR(START_DATE),4,2)) AND TO_NUMBER(SUBSTR(TO_CHAR(END_DATE),4,2))
-				</if>
-				<if test="area != 'all'">
-				AND ZONE_NAME LIKE #{area}||'%'
-				</if>
-				<if test="cate != 0">
-				AND FES_CATEGORY = #{cate}
-				</if>
-				<if test="day != 'SYSDATE'">
-				AND #{day} BETWEEN START_DATE AND END_DATE
-				</if>
-				ORDER BY CREATE_DATE DESC) A)
-	</select>
-	<!-- 축제 검색시 게시글 리트스 -->
-	<select id="searchList" resultMap="boardResultSet">
-	SELECT BOARD_NO, BOARD_TITLE, BOARD_CONTENT, INFO_ADDRESS, TO_CHAR(START_DATE,'YYYY-MM-DD') "START_DATE",
-				 TO_CHAR(END_DATE,'YYYY-MM-DD') "END_DATE", FILE_PATH
-	FROM BOARD B
-	JOIN INFO USING(BOARD_NO)
-	JOIN FESTIVAL F USING(BOARD_NO)
-	JOIN ATTACHMENT USING(BOARD_NO)
-	JOIN ZONE Z ON (F.ZONE_NO = Z.ZONE_NO)
-	<!-- WHERE B.STATUS = 'Y' -->
-	WHERE FILE_LEVEL = 1
-	<if test="date != 00">
-	AND #{date} BETWEEN TO_NUMBER(SUBSTR(TO_CHAR(START_DATE),4,2)) AND TO_NUMBER(SUBSTR(TO_CHAR(END_DATE),4,2))
-	</if>
-	<if test="area != 'all'">
-	AND ZONE_NAME LIKE #{area}||'%'
-	</if>
-	<if test="cate != 0">
-	AND FES_CATEGORY = #{cate}
-	</if>
-	<if test="day != 'SYSDATE'">
-	AND #{day} BETWEEN START_DATE AND END_DATE
-	</if>
-	<![CDATA[ORDER BY (CASE WHEN SYSDATE BETWEEN START_DATE AND END_DATE THEN 1
-              					WHEN SYSDATE < START_DATE THEN 2 ELSE 3 END), (CASE WHEN (CASE WHEN SYSDATE BETWEEN START_DATE AND END_DATE THEN 1
-                                                                            					WHEN SYSDATE < START_DATE THEN 2
-                                                                            					ELSE 3 END) = 3 THEN START_DATE END) DESC, START_DATE ASC]]>
-	</select>
 
 	<!-- 보드(게시글) 등록 -->
 	<insert id="insertBoard" parameterType="board" >
