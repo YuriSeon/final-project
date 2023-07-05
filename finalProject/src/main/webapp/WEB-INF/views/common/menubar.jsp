@@ -325,7 +325,7 @@
 	          <!-- Modal Header -->
 	          <div class="modal-header">
 	            <img src="" alt="" style="width: 200px; height:70px; display: block; margin:auto; position: relative; left: 48px;">
-	            <button type="button" id="loginModal_close" class="close" data-dismiss="modal">&times;</button>
+	            <button type="button" id="loginModal_close" onclick="closeMo();" class="close" data-dismiss="modal">&times;</button>
 	          </div>
 	    
 	          <!-- Modal body -->
@@ -406,6 +406,10 @@
   				}
   			});
   			return false;
+  		}
+  		
+  		function closeMo(){
+  			$("#loginModal_close").hide();
   		}
   		
   	</script>

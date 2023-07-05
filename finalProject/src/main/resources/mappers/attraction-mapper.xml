@@ -57,7 +57,7 @@
   		SELECT *
   		FROM INFO
   		<choose>
-  			<when test="keyword=='null'">
+  			<when test="keyword==null">
 		  		WHERE BOARD_NO = #{boardNo}
   			</when>
   			<otherwise>
