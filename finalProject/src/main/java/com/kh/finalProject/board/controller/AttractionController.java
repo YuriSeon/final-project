@@ -336,6 +336,7 @@ public class AttractionController {
 	public String updateAttr(Model model, int boardNo) {
 		HashMap<String, Object> dataMap = atService.attrDetail(boardNo);
 		model.addAttribute("dataMap", dataMap);
+		System.out.println(boardNo);
 		return "board/attraction/attractionUpdate";
 	}
 	

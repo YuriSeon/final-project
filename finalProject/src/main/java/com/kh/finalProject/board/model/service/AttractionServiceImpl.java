@@ -63,6 +63,7 @@ public class AttractionServiceImpl implements AttractionService {
 		dataMap.put("board", atDao.selectBoard(sqlSession, boardNo));
 		// info 조회
 		dataMap.put("info", atDao.selectInfo(sqlSession, boardNo));
+		System.out.println(atDao.selectInfo(sqlSession, boardNo));
 		// attachment 조회
 		dataMap.put("at", atDao.selectAttachment(sqlSession, boardNo));
 		

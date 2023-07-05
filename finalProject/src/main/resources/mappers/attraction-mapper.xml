@@ -40,15 +40,7 @@
   	<select id="selectBoard" resultMap="boardMapper.boardResultSet">
   		SELECT *
   		FROM BOARD
-  		<choose>
-  			<when test="keyword==null">
-		  		WHERE BOARD_NO = #{boardNo}
-  			</when>
-  			<otherwise>
-  				JOIN ZONE USING(ZONE_NO)
-  				WHERE ZONE_NAME LIKE '%'||#{keyword}||'%'
-  			</otherwise>
-  		</choose>
+		WHERE BOARD_NO = #{boardNo}
   		AND STATUS = 'Y'
   		ORDER BY CREATE_DATE DESC
   	</select>
@@ -56,22 +48,13 @@
   	<select id="selectInfo" resultMap="adminMapper.infoResultSet">
   		SELECT *
   		FROM INFO
-  		<choose>
-  			<when test="keyword==null">
-		  		WHERE BOARD_NO = #{boardNo}
-  			</when>
-  			<otherwise>
-  				JOIN ZONE USING(ZONE_NO)
-  				WHERE ZONE_NAME LIKE '%'||#{keyword}||'%'
-  			</otherwise>
-  		</choose>
+ 		WHERE BOARD_NO = #{boardNo}
   	</select>
   	<!-- 게시물 첨부파일 조회 -->
   	<select id="selectAttachment" resultMap="adminMapper.attachmentResultSet">
   		SELECT FILE_NO, FILE_PATH, FILE_LEVEL, CHANGE_NAME
   		FROM ATTACHMENT
   		WHERE BOARD_NO = #{boardNo}
-  		ORDER BY BOARD_NO DESC
   	</select>
   	<!-- 댓글 등록 -->
   	<insert id="insertReplyList">
@@ -235,7 +218,7 @@
   		WHERE BOARD_NO = #{boardNo}
   		AND STATUS= 'Y'
   	</update>
-  	<update id="updateInfo">
+  	<update id="updateInfoList">
   		UPDATE INFO
   		SET INFO_NAME = #{infoName}
   		, INFO_ADDRESS = #{infoAddress}
@@ -257,5 +240,19 @@
   		FROM BOARD
   		JOIN ZONE USING(ZONE_NO)
   		WHERE ZONE_NAME LIKE '%'||#{keyword}||'%'
+  	</select>
+  	<select id="selectBoardList" resultMap="boardMapper.boardResultSet">
+  		SELECT *
+  		FROM BOARD
+		JOIN ZONE USING(ZONE_NO)
+		WHERE ZONE_NAME LIKE '%'||#{keyword}||'%'
+  		AND STATUS = 'Y'
+  		ORDER BY CREATE_DATE DESC
+  	</select>
+  	<select id="selectInfoList" resultMap="adminMapper.infoResultSet">
+  		SELECT *
+  		FROM INFO
+		JOIN ZONE USING(ZONE_NO)
+		WHERE ZONE_NAME LIKE '%'||#{keyword}||'%'
   	</select>
   </mapper>
