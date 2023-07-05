@@ -26,7 +26,7 @@ public interface AdminService {
 	ArrayList<Board> countList();
 	
 	//대시보드 여행지 방문 횟수
-	HashMap<String, Integer> countMap();
+	ArrayList<HashMap<String, Integer>> countMap();
 	
 	//대시보드 최근 신고 5개
 	ArrayList<Report> currentReportList();

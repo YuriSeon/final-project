@@ -29,11 +29,6 @@ public interface FestivalService {
 	//마우스 올렸을시 축제 개수
 	int mouCount(String nowDay);
 
-	//게시글 검색 시 게시글 수
-	int selectSearchCount(HashMap<String, String> keyword);
-	//게시글 검색시 게시글 리스트
-	ArrayList<Festival> selectSearchList(HashMap<String, String> keyword, PageInfo pi);
-
 	/* 축제 등록 */
 	int insertFes(Board b, Info in, ArrayList<Attachment> list, Festival f);
 

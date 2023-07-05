@@ -51,8 +51,8 @@ public class AdminDao {
 	}
 	
 	//대시보드 여행지 방문 횟수
-	public HashMap<String, Integer> countMap(SqlSessionTemplate sqlSession) {
-		return (HashMap)sqlSession.selectList("adminMapper.countMap");
+	public ArrayList<HashMap<String, Integer>> countMap(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("adminMapper.countMap");
 	}
 	
 	//대시보드 최근 신고 5개

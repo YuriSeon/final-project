@@ -60,17 +60,6 @@ public class FestivalServiceImpl implements FestivalService{
 		return festivalDao.mouCount(sqlSession, nowDay);
 	}
 	
-	//게시글 검색시 게시글 수
-	@Override
-	public int selectSearchCount(HashMap<String, String> keyword) {
-		return festivalDao.searchCount(sqlSession, keyword);
-	}
-	//게시글 검색시 게시글 리스트
-	@Override
-	public ArrayList<Festival> selectSearchList(HashMap<String, String> keyword, PageInfo pi) {
-		return festivalDao.searchList(sqlSession, keyword, pi);
-	}
-	
 	//축제 등록
 	//트랜잭션 처리로 일괄처리
 	@Override
