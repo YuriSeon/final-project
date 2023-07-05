@@ -99,7 +99,7 @@ public class AdminController {
 		
 		ArrayList<Board> list = adminService.countList();
 		HashMap<String, Integer> count = adminService.countVisit(); 
-		HashMap<String, Integer> map = adminService.countMap();
+		ArrayList<HashMap<String, Integer>> map = adminService.countMap();
 		
 		
 		mv.addObject("vcList", count);

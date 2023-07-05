@@ -1014,7 +1014,6 @@ public class MemberController {
 		
 		//비밀번호 암호화
 		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
-		//System.out.println(encPwd);
 		m.setUserPwd(encPwd);
 
 		//연령대 계산
@@ -1060,7 +1059,7 @@ public class MemberController {
 			
 			//카카오 인증 회원가입
 			if(m.getCertification()==1) {
-//				카카오 로그아웃 (카카오 관련 api만 로그아웃되므로 계정 로그아웃으로 진행)
+//				카카오 로그아웃
 				String url = "https://kapi.kakao.com/v1/user/logout";
 				
 				URL requestUrl = new URL(url);
@@ -1076,8 +1075,6 @@ public class MemberController {
 				while((line=br.readLine())!=null) {
 					text += line;
 				}
-				
-				//System.out.println(text);
 				
 				mv.setViewName("redirect:/");
 
@@ -1101,7 +1098,6 @@ public class MemberController {
 						url += "&access_token="+access_token;
 						url += "&redirect_uri=http://localhost:8888/finalProject/";
 						url += "&service_provider=NAVER";
-				//System.out.println(url);
 				
 				URL requestUrl = new URL(url);
 				HttpURLConnection urlCon = (HttpURLConnection) requestUrl.openConnection();
@@ -1116,12 +1112,9 @@ public class MemberController {
 					responseText += line;
 				}
 						
-				//System.out.println(responseTextToken);
-				
 				//파싱 작업
 				JSONParser jsonParser = new JSONParser();
 				JSONObject jsonObj = (JSONObject) jsonParser.parse(responseText);
-				//System.out.println(jsonObj);
 				
 				String resultNaver = (String) jsonObj.get("result");
 				
@@ -1161,14 +1154,12 @@ public class MemberController {
 			while((line=br.readLine())!=null) {
 				responseText += line;
 			}
-			//System.out.println(responseText);
 			
 			//파싱작업
 			JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObj = (JSONObject) jsonParser.parse(responseText);
 			
 			String access_token = (String) jsonObj.get("access_token");
-			//System.out.println(access_token);
 			
 			//토큰으로 사용자 id 조회
 			//url작성
@@ -1189,17 +1180,14 @@ public class MemberController {
 			while((lineId=brId.readLine())!=null) {
 				responseTextId += lineId;
 			}
-			//System.out.println(responseTextId);
 			
 			//파싱작업
 			JSONParser jsonParserId = new JSONParser();
 			JSONObject jsonObjId = (JSONObject) jsonParserId.parse(responseTextId);
-			//System.out.println(jsonObjId);
 			
 			//원하는 데이터 추출
 			Long id = (Long) jsonObjId.get("id");
 			String idd = String.valueOf(id);
-			//System.out.println(idd);
 			
 			//토큰으로 사용자 정보 조회
 			//url작성
@@ -1221,15 +1209,11 @@ public class MemberController {
 				responseTextToken += lineToken;
 			}
 					
-			//System.out.println(responseTextToken);
-			
 			//파싱 작업
 			JSONParser jsonParserToken = new JSONParser();
 			JSONObject jsonObjToken = (JSONObject) jsonParserToken.parse(responseTextToken);
-			//System.out.println(jsonObjToken);
 			
 			JSONObject kakao_account =  (JSONObject) jsonObjToken.get("kakao_account");
-			//System.out.println(kakao_account);
 			
 			String age = (String) kakao_account.get("age_range");
 			String birthday = (String) kakao_account.get("birthday");
@@ -1239,9 +1223,6 @@ public class MemberController {
 			}else {
 				gender = "M";
 			}
-			//System.out.println(age);
-			//System.out.println(birthday);
-			//System.out.println(gender);
 			
 			Map<String,String> kakaoInfo = new HashMap();
 			kakaoInfo.put("age", age);
@@ -1280,17 +1261,13 @@ public class MemberController {
 			while((line=br.readLine())!=null) {
 				responseText += line;
 			}
-					
-			//System.out.println(responseTextToken);
 			
 			//파싱 작업
 			JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObj = (JSONObject) jsonParser.parse(responseText);
-			//System.out.println(jsonObj);
 			
 			String access_token = (String) jsonObj.get("access_token");
-			//System.out.println(access_token);
-			
+
 			//토큰으로 사용자 정보 가져오기
 			String urlToken = "https://openapi.naver.com/v1/nid/me	";
 			
@@ -1298,8 +1275,6 @@ public class MemberController {
 			HttpURLConnection urlInfoCon = (HttpURLConnection) requestUrlInfo.openConnection();
 			urlInfoCon.setRequestMethod("GET");
 			urlInfoCon.setRequestProperty("Authorization", "Bearer " + access_token);
-			
-			//System.out.println(urlInfoCon);
 			
 			//응답데이터 읽어오기
 			BufferedReader brInfo = new BufferedReader(new InputStreamReader(urlInfoCon.getInputStream()));
@@ -1311,15 +1286,11 @@ public class MemberController {
 				infoText += lineInfo;
 			}
 					
-			//System.out.println(infoText);
-			
 			//파싱 작업
 			JSONParser jsonParserToken = new JSONParser();
 			JSONObject jsonObjToken = (JSONObject) jsonParserToken.parse(infoText);
-			//System.out.println(jsonObjToken);
 			
 			JSONObject responseInfoText =  (JSONObject) jsonObjToken.get("response");
-			//System.out.println(responseInfoText);
 			
 			String mobile = (String) responseInfoText.get("mobile"); //010-1111-1111
 			String name = (String) responseInfoText.get("name");
@@ -1599,14 +1570,12 @@ public class MemberController {
 			while((line=br.readLine())!=null) {
 				responseText += line;
 			}
-			//System.out.println(responseText);
 			
 			//파싱작업
 			JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObj = (JSONObject) jsonParser.parse(responseText);
 			
 			String access_token = (String) jsonObj.get("access_token");
-			//System.out.println(access_token);
 			
 			//토큰으로 사용자 id 조회
 			//url작성
@@ -1627,17 +1596,14 @@ public class MemberController {
 			while((lineId=brId.readLine())!=null) {
 				responseTextId += lineId;
 			}
-			//System.out.println(responseTextId);
 			
 			//파싱작업
 			JSONParser jsonParserId = new JSONParser();
 			JSONObject jsonObjId = (JSONObject) jsonParserId.parse(responseTextId);
-			//System.out.println(jsonObjId);
 			
 			//원하는 데이터 추출
 			Long id = (Long) jsonObjId.get("id");
 			String idd = String.valueOf(id);
-			//System.out.println(idd);
 			
 			//토큰으로 사용자 정보 조회
 			//url작성
@@ -1659,15 +1625,11 @@ public class MemberController {
 				responseTextToken += lineToken;
 			}
 					
-			//System.out.println(responseTextToken);
-			
 			//파싱 작업
 			JSONParser jsonParserToken = new JSONParser();
 			JSONObject jsonObjToken = (JSONObject) jsonParserToken.parse(responseTextToken);
-			//System.out.println(jsonObjToken);
 			
 			JSONObject kakao_account =  (JSONObject) jsonObjToken.get("kakao_account");
-			//System.out.println(kakao_account);
 			
 			String age = (String) kakao_account.get("age_range");
 			String birthday = (String) kakao_account.get("birthday");
@@ -1744,15 +1706,11 @@ public class MemberController {
 				responseText += line;
 			}
 					
-			//System.out.println(responseTextToken);
-			
 			//파싱 작업
 			JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObj = (JSONObject) jsonParser.parse(responseText);
-			//System.out.println(jsonObj);
 			
 			String access_token = (String) jsonObj.get("access_token");
-			//System.out.println(access_token);
 			
 			//토큰으로 사용자 정보 가져오기
 			String urlToken = "https://openapi.naver.com/v1/nid/me	";
@@ -1761,8 +1719,6 @@ public class MemberController {
 			HttpURLConnection urlInfoCon = (HttpURLConnection) requestUrlInfo.openConnection();
 			urlInfoCon.setRequestMethod("GET");
 			urlInfoCon.setRequestProperty("Authorization", "Bearer " + access_token);
-			
-			//System.out.println(urlInfoCon);
 			
 			//응답데이터 읽어오기
 			BufferedReader brInfo = new BufferedReader(new InputStreamReader(urlInfoCon.getInputStream()));
@@ -1774,15 +1730,11 @@ public class MemberController {
 				infoText += lineInfo;
 			}
 					
-			//System.out.println(infoText);
-			
 			//파싱 작업
 			JSONParser jsonParserToken = new JSONParser();
 			JSONObject jsonObjToken = (JSONObject) jsonParserToken.parse(infoText);
-			//System.out.println(jsonObjToken);
 			
 			JSONObject responseInfoText =  (JSONObject) jsonObjToken.get("response");
-			//System.out.println(responseInfoText);
 			
 			String mobile = (String) responseInfoText.get("mobile"); //010-1111-1111
 			String name = (String) responseInfoText.get("name");

@@ -66,8 +66,8 @@ public class AdminServiceImpl implements AdminService {
 	
 	//대시보드 여행지 방문 횟수
 	@Override
-	public HashMap<String, Integer> countMap() {
-		HashMap<String, Integer> count = adminDao.countMap(sqlSession);
+	public ArrayList<HashMap<String, Integer>> countMap() {
+		ArrayList<HashMap<String, Integer>> count = adminDao.countMap(sqlSession);
 		System.out.println(count);
 //		return adminDao.countMap(sqlSession);
 		return count;

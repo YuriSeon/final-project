@@ -17,7 +17,7 @@
 		margin:auto;
 		margin-top:20px;
 /* 		border: 1px solid black; */
-		width:70%;
+		width:80%;
 		height:1000px;
 	}
 	#outer>div{
@@ -48,7 +48,7 @@
 	}
 	#writeTitle{
 		border-bottom : 1px solid black;
-		width: 70%;
+		width: 80%;
 		margin : auto;
 		margin-top : 30px;
 		padding : 10px 0px 10px 20px;
@@ -63,6 +63,11 @@
 	#checkBox>input{
 		margin-left : 5px;
 	}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 </style>
 </head>
 <body>
@@ -139,6 +144,7 @@
 													<td style="width:100px;">경비 </td>
 													<td style="width:400px;">
 														 <select id="pay" name="pay" style="width:300px; text-align:center;">
+				                                                <option>경비를 선택해주세요.</option>
 				                                                <option value="100000">100,000원 이하</option>
 				                                                <option value="200000">200,000원 이하</option>
 				                                                <option value="300000">300,000원 이하</option>
@@ -148,7 +154,7 @@
 		                                            	</select>
 													</td>
 													<td style="width:100px;">동행 인원 수  </td>
-													<td><input type="number" id="togetherCount" name="togetherCount" style="text-align:center;"></td>
+													<td><input type="number" id="togetherCount" name="togetherCount" style="text-align:center;" placeholder="최대 6명까지 가능" max="6"></td>
 											</tr>
 											<tr>
 													<td>컨셉  </td>
@@ -168,7 +174,7 @@
 											</tr>
 											<tr>
 													<td style="width:100px; height:350px;">내용 </td>
-													<td colspan="3"><textarea name="boardContent" style="height:370px; width:800px; resize:none;"></textarea></td>
+													<td colspan="3"><textarea name="boardContent" style="height:370px; width:800px; resize:none;" required></textarea></td>
 											</tr>
 											<tr>
 													<td>사진  </td>
@@ -261,6 +267,10 @@
 	            			$("#previewBtn1").html($(this).val());
 	            		}else{
 	            			$("#previewBtn").html("동행을 구하지 않습니다.");
+	            		}
+	            		if($(this).val()>6){
+	            			$(this).val("");
+	            			alert("동행 인원 수는 6명을 넘을 수 없습니다. \n다시 입력해주세요.");
 	            		}
 	            	});
 	            	

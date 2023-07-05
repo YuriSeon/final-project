@@ -204,6 +204,23 @@
 		background-color: rgb(142, 195, 142) !important;
 		border-radius: 50%;
 	}
+	
+	#festi_go{
+		border: 2px solid rgb(111, 207, 135);;
+		width: 80px;
+		height: 40px;
+		display: flex;
+		justify-content: center;
+		line-height: 2.5;
+		position: absolute;
+		z-index: 10;
+		top: 10px;
+		left: 10px;
+		background-color: red;
+		border-radius: 7px;
+		color: white;
+		font-weight: 600;
+	}
     </style>
 
     <!-- Additional CSS Files -->
@@ -246,6 +263,7 @@
 					<span class="img"></span>
 					<div class="list">
 						<!-- ***** 달력 ***** -->
+						<input type="hidden" name="nowDay" id="nowDay">
 						<br>
 						<div class="fes_container calendar" id="fes_con">
 					        <header>
@@ -271,7 +289,7 @@
         <!-- 검색 -->
         <div class="search_slide_wrap">
             <div class="inner">
-                <form action="search.fe" name="festivalSearch" id="festivalSearch" class="festival_search">
+                <form action="festival.fe?currentPage=1&date=${date }&searchArea=${area }&searchCate=${cate}" name="festivalSearch" id="festivalSearch" class="festival_search">
                     <fieldset>
                         <div class="search_box_wrap">
                             <div class="select_box select_date" id="date">
@@ -318,7 +336,7 @@
                                     <option value="1">공연</option>
                                     <option value="2">문화관광</option>
                                     <option value="3">자연</option>
-                                    <option value="4">먹거리</option>
+                                    <option value="4">환경</option>
                                     <option value="5">꽃</option>
                                     <option value="6">가족과함께</option>
                                 </select>
@@ -365,6 +383,13 @@
 		                    <div class="thumb">
 		                    	<input type="hidden" class="boardNo" name="boardNo" value="${b.boardNo }">
 		                        <img src="${b.attachment.filePath }" alt="" style="height: 300px;">
+		                        <c:choose>
+		                        	<c:when test="${b.status eq 'Y' }">
+				                    	<div id="festi_go">개최중</div>		                        	
+		                        	</c:when>
+		                        	<c:otherwise>
+		                        	</c:otherwise>
+		                        </c:choose>
 		                    </div>
 		                    <div id="good_div"><img src="/finalProject/resources/images/Like-before.png" id="good_img" onclick="goodCk(event, '${b.boardNo}', this)"></div>
 		                    <div class="down-content">
@@ -594,6 +619,7 @@
 	        }
 	        var nowDay = nowYear+'-'+nowMonth+'-'+clickDate;
 	        
+	        //클릭시
 	        $.ajax({
 	        	url : "mouCount.fe",
 	        	data :	{nowDay : nowDay},
@@ -602,7 +628,8 @@
 	        		$(this).text(count+'개의 축제보기').css({"font-size":"13px","width":"115px","height":"90px","cursor":"pointer",
 	        											"transition":"0.5s","background-color":"#93dda4"});
 	        		$(this).on('click',function(){
-	        			location.href="search.fe?nowDay="+nowDay;
+	        			$("#nowDay").val(nowDay);
+	        			location.href="festival.fe?nowDay="+nowDay+"&date=${date }&searchArea=${area }&searchCate=${cate}";
 	        		})
 	        		
 	        	}.bind(this),

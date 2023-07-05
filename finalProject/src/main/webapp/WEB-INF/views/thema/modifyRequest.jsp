@@ -29,10 +29,10 @@
                             <input type="checkbox" id="allCheck"><label for="allCheck">전체 선택</label>
                         </td>
                         <td>
-                            <input type="checkbox" name="info" id="${b.info.infoName }"><label for="infoName">관광지명</label>
+                            <input type="checkbox" name="info" id="infoName" value=""><label for="infoName">관광지명</label>
                         </td>
                         <td>
-                            <input type="checkbox" name="info" id="${b.boardTitle }"><label for="introduce">소개 문구</label>
+                            <input type="checkbox" name="info" id="introduce"><label for="introduce">소개 문구</label>
                         </td>
                         <td>
                             <input type="checkbox" name="info" id="infoAddress"><label for="infoAddress">주소(도로명 주소)</label>
@@ -101,6 +101,16 @@
             
             $(checkbox).on("change",function(){
                 var id = $(this).attr("id") // 이벤트 대상의 id값
+                var sort = {
+                    infoName : "${b.info.infoName}",
+                    introduce : "${b.boardTitle }",
+                    infoAddress : "${b.info.infoAddress}",
+                    infoHomepage : "${b.info.infoHomepage}",
+                    infoTime : "${b.info.infoTime}",
+                    dayOff : "${b.info.dayOff}",
+                    infoCall : "${b.info.infoCall}",                   
+                }
+                console.log(sort[id]);
                 var checkedLength = $("input[name=info]:checked").length; // checkbox 선택된 개수
 
                 /* 체크 개수로 전체선택 체크 여부 확인*/
@@ -155,7 +165,7 @@
         function createModifyArea(id, checkedLength){
             var modifyArea = makeTag("div",{"class":"modify"})
                                     .append(makeTag("div",{"class":"name"}).text("기존정보")
-                                            , makeTag("div",{"class":"input-area"}).append(makeTag("input",{"type":"text","class":"before","readonly":"true","value":id}))
+                                            , makeTag("div",{"class":"input-area"}).append(makeTag("input",{"type":"text","class":"before","readonly":"true","value":sort[id]}))
                                             , makeTag("div",{"class":"name"}).text("수정사항")
                                             , makeTag("div",{"class":"input-area"}).append(makeTag("input",{"type":"text","class":"after","name":id})));
             var column = makeTag("div",{"class":"column"}).text($("#"+id).siblings().text()); // checked label
