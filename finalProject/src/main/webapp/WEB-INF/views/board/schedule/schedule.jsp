@@ -9,6 +9,7 @@
     <style type="text/css"></style>
    </head>
    <body>
+   <!-- 페이징처리 -->
     <%@include file="../../common/menubar.jsp" %>
 	<script>
 		/* 현재 페이지에 해당하는 메뉴바 체크되도록 설정 */
@@ -20,7 +21,6 @@
  			});
  		});
 	</script>
-    <a href="detail.sc?boardNo=103">상세페이지로</a>
    <div class="main-schedule"></div>
    <div class="schedule">
         <div class="title-area">
@@ -41,56 +41,89 @@
             </div>
         </div>
         <div class="content-area">
-            <div class="list" onclick="pageLoad(2)">
-            	<input type="hidden" name="boardNo" value="">
-                <div class="list1">
-                    <div class="left-content">
-                        <div class="list-title">
-                            <h5>제목</h5>
-                        </div>
-                        <div class="list-concept">
-                            <p>여행 컨셉 : 힐링 맛집탐방</p>
-                        </div>
-                        <div class="main-dark-button"><a href="event-details.html">동행하러가기</a></div>
-                    </div>
-                </div>
-                <div class="thumb">
-                    <img src="resources/images/star-after.png">
-                </div>
-                <div class="list2">
-                    <div class="right-content">
-                        <ul>
-                            <li>
-                                <i class="fa fa-clock-o"></i>
-                                <h6>2023-07-08 <br>&nbsp;&nbsp;&nbsp; ~ 2023-07-10<br> (3days)</h6>
-                            </li>
-                            <li>
-                                <i class="fa fa-map-marker"></i>
-                                <h6>강원도 강릉시</h6>
-                            </li>
-                            <li>
-                                <i class="fa fa-users"></i>
-                                <h6>3-4인</h6>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+      		<c:forEach var="i" items="${dataMap.plan}">
+            	<div class="list" onclick="pageLoad(2)">
+	                <div class="boardList">
+	            		<input type="hidden" name="boardNo" value="${i.boardNo}">
+	            		<input type="hidden" name="writer" value="${i.writer }">
+	                    <div class="left-content">
+	                        <div class="list-title">
+	                            <h5>${i.boardTitle }</h5>
+	                        </div>
+	                        <div class="list-concept">
+	                        	<c:choose>
+	                        		<c:when test="${ i.concept ne null}">
+			                            <p>여행컨셉 : ${fn:split(i.concept,'/')}</p>
+	                        		</c:when>
+	                        		<c:otherwise>
+	                        			<p>여행컨셉 : 자유</p>
+	                        		</c:otherwise>
+	                        	</c:choose>
+	                        </div>
+	                        <!-- 동행하러가는 보드넘버 조회해와서 연결하기 인원수 가득찼다면 비활성화시키기 -->
+	                        <!-- 작성자 시작일 종료일만 맞춰서 조회 -->
+	                        <c:if test="${i.together eq 0}">
+	                        	<div class="main-dark-button"><a href="">동행하러가기</a></div>
+	                        </c:if>
+	                    </div>
+	                </div>
+	                <div class="thumb">
+	                    <img class="boardImg">
+	                </div>
+	                <div class="list2">
+	                    <div class="right-content">
+	                        <ul>
+	                            <li>
+	                                <i class="fa fa-clock-o"></i>
+	                                <h6>${i.startDate}<br>&nbsp;&nbsp;&nbsp; ~ ${i.endDate }<br> (${i.totalDate }days)</h6>
+	                            </li>
+	                            <li>
+	                                <i class="fa fa-map-marker"></i>
+	                                <h6>${i.address }</h6>
+	                            </li>
+	                            <li>
+	                            	<c:choose>
+	                            		<c:when test="${i.together eq 0 }">
+			                                <i class="fa fa-users"></i>
+				                            <h6>${i.togetherCount }인</h6>
+	                            		</c:when>
+	                            		<c:otherwise>
+	                            			<i class="fa fa-users"></i>
+				                            <h6>${i.together }인</h6>
+	                            		</c:otherwise>
+	                            	</c:choose>
+	                            </li>
+	                        </ul>
+	                    </div>
+	                </div>
+	            </div>
+       		</c:forEach>
         </div>
    </div>
-	
-  
 	<%@include file="../../common/footer.jsp" %>
 	<script>
 		/* 페이지 이동 이벤트 */
         function pageLoad(num){
         	if(num==1){ // 등록하기 페이지
-        		location.href="insert.sc";
+        		if("${empty loginUser}"){
+        			alert("로그인이 필요한 서비스입니다.");
+        		} else {
+	        		location.href="insert.sc";
+        		}
         	} else { // 디테일뷰 페이지
-        		var bno = $(this).children().eq(0).val(); // 이벤트 해당 게시물번호
+        		var bno = $(this).children().eq(1).children().eq(0).val(); // 이벤트 해당 게시물번호
 				location.href="detail.sc?boardNo="+bno;
         	}
         }
+		$(".boardList").each(function(){
+			var bno = $(this).children().eq(1).val();
+			var writer = $(this).children().eq(1).next().val();
+			var startDate = ${dataMap.plan}
+			var togetherList = "${dataMap.together}";
+			for(var i=0; i<togetherList.size(); i++){
+				if(bno==togetherList)
+			}
+		});
 	</script>
 	
   </body>

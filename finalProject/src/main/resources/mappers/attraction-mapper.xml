@@ -218,7 +218,7 @@
   		WHERE BOARD_NO = #{boardNo}
   		AND STATUS= 'Y'
   	</update>
-  	<update id="updateInfoList">
+  	<update id="updateInfo">
   		UPDATE INFO
   		SET INFO_NAME = #{infoName}
   		, INFO_ADDRESS = #{infoAddress}

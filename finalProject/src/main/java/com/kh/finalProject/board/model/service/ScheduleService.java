@@ -21,6 +21,11 @@ public interface ScheduleService {
 
 	int deleteSchedule(Plan plan);
 
+	int mainListCount();
+
+	HashMap<String, Object> mainSelectList(PageInfo pi, String sort);
+
+
 
 
 }

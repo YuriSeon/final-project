@@ -9,9 +9,6 @@
 <link rel="stylesheet" type="text/css" href="resources/css/attraction.css?after">
 <title>Insert title here</title>
 <style type="text/css">
-#content-pack *{
-	border:1px solid;
-}
 .attracDetail #reply-area {
 	margin-top: 1%;
 	width: 70%;
@@ -114,7 +111,8 @@
 	width: 100%;
 }
 #test2{
-	width: 91.8%;
+	width: 88%;
+	height: 35px;
 }
 .replycontent {
     width: 99%;
@@ -125,7 +123,7 @@
 <body>
 <%@include file="../../common/menubar.jsp" %>
 <!-- 맛집 추천 상세정보 출력구문작성, 댓글조회 원래 양식 확인하고 지우기 -->
-<!-- 좋아요 찜 되는데 두번 클릭하면 아이콘이 다시 안바뀌는것만 수정 -->
+<!-- 좋아요 찜 되는데 두번 클릭하면 아이콘이 다시 안바뀌는것만 수정 댓글 삭제 더보기 버튼-->
     <div class="attracDetail">
         <div id="contents">
             <!-- 상단 -->

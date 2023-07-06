@@ -12,20 +12,20 @@
   	</resultMap>
   	<resultMap type="plan" id="planResultSet" extends="boardMapper.boardResultSet">
   		<result column="BOARD_NO" property="boardNo"/>
-  		<result column="INFO_NO" property="pathList"/>
-  		<result column="USER_NO" property="writer"/>
+  		<result column="INFONO" property="pathList"/>
+  		<result column="WRITER" property="writer"/>
   		<result column="TOGETHER" property="together"/>
   		<result column="TOGETHER_COUNT" property="togetherCount"/>
   		<result column="CONCEPT" property="concept"/>
   		<result column="START_DATE" property="startDate"/>
   		<result column="END_DATE" property="endDate"/>
-  		<result column="STAY" property="stay"/>
   		<result column="TRANSPORT" property="transport"/>
   		<result column="TOTAL_DATE" property="totalDate"/>
   		<result column="TOTAL_PAY" property="totalPay"/>
   		<result column="COMPLETE" property="complete"/>
+  		<result column="ZONE_NAME" property="address"/>
   	</resultMap>
-  	
+  	<!-- 일정등록 게시판+계획 -->
   	<insert id="insertSchedule">
   		INSERT ALL
   			INTO BOARD (BOARD_NO, ZONE_NO, BOARD_WRITER, CATEGORY, BOARD_TITLE, BOARD_CONTENT)
@@ -34,6 +34,7 @@
   				VALUES(SEQ_BNO.CURRVAL, #{boardWriter}, #{together}, #{togetherCount}, #{concept}, #{startDate}, #{endDate}, #{transport}, #{totalDate}, #{totalPay}, #{complete})
   		SELECT * FROM DUAL
   	</insert>
+  	<!-- insert시 다른테이블에 맞춰서 넣기위해 조회 -->
   	<select id="checkBno" resultMap="adminMapper.boardResultSet">
   		SELECT BOARD_NO, INFO_NO
   		FROM BOARD
@@ -42,16 +43,19 @@
   		AND BOARD_TITLE = #{boardTitle}
   		AND BOARD_CONTENT = #{boardContent}
   	</select>
+  	<!-- 기존에 등록이 되어있는 장소인지 조회 -->
   	<select id="searchInfoNo" resultType="_int">
   		SELECT INFO_NO
   		FROM INFO
   		WHERE INFO_NAME = #{infoName}
   	</select>
+  	<!-- 경로 등록 -->
   	<insert id="insertPath">
   		INSERT INTO PATH VALUES(#{boardNo},
   								(SELECT INFO_NO FROM INFO WHERE INFO_NAME = #{infoName}),
   								#{daily}, #{pathNo}, #{pay})
   	</insert>
+  	<!-- plan에 infoNo 추가업데이트 조회시 사용위한 작업 -->
   	<!-- 기본으로 처음에 /가 들어있으니 제거하고 구분자로 구분해야 인덱스 맞음 잊지말기-->
   	<update id="updatePlanInfoNo">
   		UPDATE PLAN
@@ -70,27 +74,46 @@
   		FROM INFO
   		WHERE INFO_NO = #{infoNo}
   	</select>
+  	<!-- 첨부파일 조회 -->
   	<select id="selectAttachList" resultMap="adminMapper.attachmentResultSet">
   		SELECT FILE_NO, FILE_PATH, FILE_LEVEL, CHANGE_NAME
   		FROM ATTACHMENT
   		WHERE BOARD_NO = #{infoNo}
   	</select>
+  	<!-- 경로조회 -->
   	<select id="selectPathList" resultMap="pathResultSet">
   		SELECT *
   		FROM PATH
   		WHERE BOARD_NO = #{boardNo}
   	</select>
+  	<!-- 경로 삭제 -->
   	<delete id="deletePath">
   		DELETE FROM PATH
   		WHERE BOARD_NO = #{boardNo}
   	</delete>
+  	<!-- 계획 삭제 -->
   	<delete id="deletePlan">
   		DELETE FROM PLAN
   		WHERE BOARD_NO = #{boardNo}
   	</delete>
+  	<!-- 게시글 삭제 -->
   	<delete id="deleteBoard">
   		DELETE FROM BOARD
   		WHERE BOARD_NO = #{boardNo}
   	</delete>
+  	<!-- 메인 리스트 개수 -->
+  	<select id="mainListCount" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM BOARD
+  		WHERE CATEGORY = 6
+  		AND STATUS = 'Y'
+  	</select>
+  	<!-- 메인 리스트 조회 -->
+  	<select id="planList" resultMap="planResultSet">
+  		SELECT BOARD_NO, B.BOARD_TITLE, P.INFO_NO "INFONO", P.WRITER, TOGETHER, TOGETHER_COUNT, CONCEPT, START_DATE, END_DATE, TOTAL_DATE, COMPLETE, ZONE_NAME
+  		FROM PLAN P
+  		JOIN BOARD B USING(BOARD_NO)
+  		JOIN ZONE Z ON(Z.ZONE_NO=B.ZONE_NO)
+  	</select>
   </mapper>
   

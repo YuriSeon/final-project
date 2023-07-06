@@ -19,6 +19,7 @@ import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Path;
 import com.kh.finalProject.board.model.vo.Plan;
+import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -141,6 +142,45 @@ public class ScheduleServiceImpl implements ScheduleService {
 		// board 삭제
 		int result3 = scDao.deleteBoard(sqlSession, plan);
 		return result*result2*result3;
+	}
+
+	// 일정 메인페이지 리스트 개수
+	@Override
+	public int mainListCount() {
+		return scDao.mainListCount(sqlSession);
+	}
+
+	// 일정 메인 전체 리스트 조회
+	@Override
+	public HashMap<String, Object> mainSelectList(PageInfo pi, String sort) {
+		HashMap<String, Object> dataMap = new HashMap<>();
+		ArrayList<Plan> pList= scDao.planList(sqlSession, pi, sort);
+		ArrayList<Attachment> at = new ArrayList<>();
+		for(Plan p : pList) {
+			// 조회해온 infoNo에 들어있는 구분자 제거해서 배열로 만든 뒤 조회 요청보내기
+			// (맨앞부터 '/' 들어있어 인덱스 1번부터 진행)
+			if(p.getPathList()!=null && p.getPathList().equals("") && p.getPathList().equals(" ")) {
+				String[] infoNo = p.getPathList().split("/");
+				System.out.println(Arrays.toString(infoNo));
+				for(int i=1; i<=infoNo.length; i++ ) {
+					// 첨부파일 조회
+					at = scDao.selectAttachList(sqlSession, Integer.parseInt(infoNo[i]));
+					for(int j=0; j<at.size(); j++) {
+						Attachment a = null;
+						if(at.get(j).getFileLevel()==1) { //대표이미지가 있다면 반복문 빠져나가기
+							a = at.get(j);
+							break;
+						} else if(j==at.size()&& a==null){ // 반복문 동안에 대표이미지가 없었다면 
+							a = at.get(0); // 첫번째 사진 가져가기
+						}
+						at.add(a); // 조회한 사진 반환할 리스트에 담아주기
+					}
+				}
+			}
+		}
+		dataMap.put("plan", pList);
+		dataMap.put("attachment", at);
+		return dataMap;
 	}
 	
 	

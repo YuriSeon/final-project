@@ -31,7 +31,7 @@
 }
 .attrUpdate #upfile{
 	width: 80%;
-	height: 10%;
+	height: 28px;
 
 }
 .attrUpdate #float {
@@ -110,6 +110,10 @@
 	margin-top: 5px;
 	margin-right: 7px;
 }
+#upfile{
+		height: 28px;
+		width :
+	}
 </style>
 <body>
     <%@include file="../../common/menubar.jsp" %>
@@ -288,6 +292,7 @@
 		    	var form = $("#update-form");
 		    	
 		    	var changeImg = makeTag("input",{"name":"changeImg", "value":JSON.stringify(slideIndex)});
+		    	
 		    	form.append(changeImg);
 		    	form.submit();
 		    })

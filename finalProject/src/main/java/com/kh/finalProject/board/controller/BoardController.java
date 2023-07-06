@@ -3,6 +3,7 @@ package com.kh.finalProject.board.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
-import com.kh.finalProject.board.model.service.AttractionService;
 import com.kh.finalProject.board.model.service.FeedService;
 import com.kh.finalProject.board.model.service.ScheduleService;
 import com.kh.finalProject.board.model.service.TogetherService;
@@ -32,9 +32,6 @@ import com.kh.finalProject.member.model.vo.Member;
 
 @Controller
 public class BoardController {
-	
-	@Autowired
-	private AttractionService atService;
 	
 	@Autowired
 	private ScheduleService scService;
@@ -57,8 +54,7 @@ public class BoardController {
 	}
 	
 	@RequestMapping("attraction.bo")
-	public String goAttraction(@RequestParam(value="currentPage", defaultValue="1") int currentPage
-								, String sort, Model model) {
+	public String goAttraction() {
 		return "board/attraction/attraction";
 	}
 	
@@ -100,12 +96,25 @@ public class BoardController {
 		return "board/feed";
 	}
 	
+	// 일정자랑 메인 게시물 조회
+	// plan + attach 조회
+	// attach는 infoNo로 info와 묶여있음 plan의 infoNo로 attach조회
 	@RequestMapping("schedule.bo")
 	public String goSchedule(@RequestParam(value="sort", defaultValue="recently") String sort
-								,@RequestParam(value="currentPage", defaultValue="1") int currentPage, Model model) {
-		
+							,@RequestParam(value="currentPage", defaultValue="1") int currentPage
+							, Model model) {
+		// 페이징처리 위한 작업
+		int listCount = scService.mainListCount();
+		int boardLimit = 5;
+		int pageLimit = 5;
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		// plan을 조회한 뒤 조회해온 infoNo내역으로 반복문 사용해 attach조회
+		HashMap<String, Object> dataMap = scService.mainSelectList(pi,sort);
+		System.out.println(dataMap);
+		model.addAttribute("dataMap", dataMap);
 		return "board/schedule/schedule";
 	}
+	
 	
 	public String getCookie(HttpServletRequest request){
 	    Cookie[] cookies=request.getCookies(); // 모든 쿠키 가져오기
