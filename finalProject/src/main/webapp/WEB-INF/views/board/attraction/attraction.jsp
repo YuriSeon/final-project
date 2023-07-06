@@ -183,7 +183,6 @@
 	.경남:hover,
 	.제주:hover{
 		fill: #242779;
-		background-color: #242779;
 		transform: translateY(-10px);
 	}
 	
@@ -285,7 +284,7 @@ height: 270px;
 					</g>
 				</svg>
 			</div>
-			<div id="zone-area">
+			<div id="zone-area" style="width: 150px; position: relative; top: 20%;">
 				<div class="zone" id="first"><span class="OUTLINE 서울">서울</span></div>
 				<div class="zone"><span class="OUTLINE 부산">부산</span></div>
 				<div class="zone"><span class="OUTLINE 대구">대구</span></div>
@@ -442,8 +441,27 @@ height: 270px;
 			  }
 			  str += '</ul>';
 			  return str;
-
 		}
+		
+		//지도에 호버이벤트
+		$(function() {
+			$("path").hover(
+				function() {
+					var location = $(this).attr("class");
+					location = location.substring(8,10);
+					location = "."+location;
+					var $span = $(this).closest("#main-map").next().find(location).parent();
+					$span.css({"background":"#242779","color":"white"});
+				},
+				function() {
+					var location = $(this).attr("class");
+					location = location.substring(8,10);
+					location = "."+location;
+					var $span = $(this).closest("#main-map").next().find(location).parent();
+					$span.css({"background":"#fff","color":"black"});
+				}
+			);
+		});
 	</script>
   </body>
 </html>
