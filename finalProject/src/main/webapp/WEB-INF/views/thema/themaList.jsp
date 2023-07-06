@@ -310,11 +310,15 @@
 
 	//게시물 클릭시 저장 후 이동
 	function handlePostClick(bno, post) {
+		var loginUser = '${loginUser}';
 		var thumbnail = post.querySelector('img').src;
 		var title = post.querySelector('b').innerText;
 		var url = "http://localhost:8888/finalProject/detailTheme.bo?boardNo=" + bno;
-
-		setRecentPageInfo(thumbnail, title, url);
+		
+		//로그인 한 경우에만 세션스토리지 생성
+		if (loginUser) {
+			setRecentPageInfo(thumbnail, title, url);
+		}
 
 		location.href = url;
 	}

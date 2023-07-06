@@ -54,6 +54,7 @@
   		<result column="STATUS" property="status"/>
   		<result column="BOARD_WRITER" property="boardWriter"/>
   		<result column="FILE_PATH" property="filePath"/>
+  		<result column="CHANGE_NAME" property="changeName"/>
   		
   		<collection property="info" resultMap="infoResultSet"></collection>
   	</resultMap>
@@ -307,7 +308,7 @@
   	
   	<!-- 마이페이지 찜 목록 리스트 조회 -->
   	<select id="myChoiceList" resultMap="boardResultSet">
-		SELECT C.BOARD_NO,CATEGORY,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,FILE_PATH
+		SELECT C.BOARD_NO,CATEGORY,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,FILE_PATH,CHANGE_NAME
 		FROM CHOICE C
 		JOIN BOARD B ON(C.BOARD_NO = B.BOARD_NO)
 		JOIN ATTACHMENT A ON (B.BOARD_NO=A.BOARD_NO)

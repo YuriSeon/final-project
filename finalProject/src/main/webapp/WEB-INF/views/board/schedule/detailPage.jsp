@@ -64,12 +64,14 @@
 .schedule-detail #content-area {
 	width: 85%;
 	height: 600px;
+ 	padding-top: 60px; 
+ 	padding-left: 50px; 
 }
 
 .schedule-detail #content-area div {
 	float: left;
-	margin-left: 3%;
-	margin-top: 2%;
+/* 	margin-left: 3%; */
+/* 	margin-top: 2%;  */
 }
 
 .schedule-detail #map-area {
@@ -283,6 +285,16 @@
 	margin-right: 10px;
 }
 
+#wrapSlide #float div{
+	margin: 0;
+}
+.float-img{
+	display: flex;
+}
+#dotArea img{
+	height: 5%;
+	width: 5%;
+}
 </style>
 </head>
 <body>
@@ -332,9 +344,9 @@
 	<div id="content-area">
 		<!-- 경로 전체 위치 마커 표시된 지도 -->
 		<div id="map-area">
-			<div id="mapwrap"> 
+			<div id="mapwrap" style="width: 100%; height: 100%;"> 
     <!-- 지도가 표시될 div -->
-    <div id="map"></div>
+    <div id="map" style="width: 100%; height: 100%;"></div>
     <!-- 지도 위에 표시될 마커 카테고리 -->
     <div class="category">
         <ul>
@@ -357,19 +369,19 @@
 		<div id="img-path">
 			<!-- info에 저장된 여행지 사진들 -->
 			<div class="img_area">
-                  <div id="wrapSlide">
-                      <div id="float">
+                  <div id="wrapSlide" style="margin: 0;">
+                      <div id="float" style="margin: 0; width: 100%; display: flex; justify-content: space-between;">
                           <div class="float-img">
                               <img src="resources/images/left.png" id="prev" onclick="prev()">
                           </div>
-                          <div id="slideArea">
-                              <img id="slideImage"/>
+                          <div id="slideArea" style="display: flex;">
+                              <img id="slideImage" style="width: 40%;"/>
                           </div>
                           <div class="float-img">
                               <img src="resources/images/right.png" id="next" onclick="next()">
                           </div>
                       </div>
-                      <div id="dotArea"></div>
+                      <div id="dotArea" style="margin: 0; width: 100%; text-align: center;"></div>
                   </div>
               </div>
 			<div id="path-area">

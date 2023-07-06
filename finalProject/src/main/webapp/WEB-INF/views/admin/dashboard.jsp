@@ -312,10 +312,9 @@
 				
 				$("#reportTable>tbody").html(str);
 				
-// 				$("#boardList>tbody>tr").click(function () {
-// 					var bno = $(this).children().eq(0).text();
-// 					location.href = 'detail.bo?boardNo='+bno;
-// 				});
+				$("#reportTable>tbody>tr").click(function () {
+					location.href = 'report.ad';
+				});
 				
 			},
 			error: function() {

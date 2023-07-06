@@ -245,7 +245,7 @@
                 <div class="col-12">
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
-                        <img src="/finalProject/resources/images/koreaMap.jpeg" id="bannerImg" onclick="goMain();" style="width:96px; height:80px; position:relative; right:240px;"><a href="main.bo" class="logo">여행<em>가보자고</em></a>
+                        <img src="/finalProject/resources/images/koreaMap.jpeg" id="bannerImg" onclick="goMain();" style="width:96px; height:80px; display: inline-block; float: left;"><a href="main.bo" class="logo" style="display: inline-block;">여행<em>가보자고</em></a>
                         <script>
                         	function goMain(){
                         		location.href="main.bo";
