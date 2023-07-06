@@ -111,17 +111,24 @@ public class AttractionServiceImpl implements AttractionService {
 	public HashMap<String, Object> iconChange(String btnType, int no, String writer) {
 		HashMap<String, Object> iconCheck = iconCheck(no, writer);
 		int result = 100;
+		Good good = new Good(no, writer);
+		choice choice = new choice(no, writer);
 		if(btnType.equals("good")) {
 			if((int)iconCheck.get("goodCheck")>0) { // 이미 좋아요 눌렀던 사람 (취소진행)
-				result = atDao.deleteGood(sqlSession,new Good(no, writer));
+				result = atDao.deleteGood(sqlSession,good);
+				result *= atDao.deletegoodcount(sqlSession, good);
 			} else { // 좋아요 등록
-				result = atDao.insertGood(sqlSession,new Good(no, writer));
+				result = atDao.insertGood(sqlSession,good);
+				result *= atDao.updategoodcount(sqlSession, good);
 			}
+			int result2 = atDao.goodCount(sqlSession, good);
 		} else {
 			if((int)iconCheck.get("choiceCheck")>0) { // 찜 취소
-				result = atDao.deletechoice(sqlSession,new choice(no, writer));
+				result = atDao.deletechoice(sqlSession,choice);
+				result *= atDao.deletechoicecount(sqlSession, choice);
 			} else {
-				result = atDao.insertchoice(sqlSession,new choice(no, writer));
+				result = atDao.insertchoice(sqlSession,choice);
+				result *= atDao.updatechiocecount(sqlSession, choice);
 			}
 		}
 		iconCheck.put(btnType, result);
