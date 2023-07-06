@@ -183,6 +183,7 @@
 	.경남:hover,
 	.제주:hover{
 		fill: #242779;
+		background-color: #242779;
 		transform: translateY(-10px);
 	}
 	
@@ -285,7 +286,7 @@ height: 270px;
 				</svg>
 			</div>
 			<div id="zone-area">
-				<div class="zone" id="first"><span class="OUTLINE서울">서울</span></div>
+				<div class="zone" id="first"><span class="OUTLINE 서울">서울</span></div>
 				<div class="zone"><span class="OUTLINE 부산">부산</span></div>
 				<div class="zone"><span class="OUTLINE 대구">대구</span></div>
 				<div class="zone"><span class="OUTLINE 인천">인천</span></div>
