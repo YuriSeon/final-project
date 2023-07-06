@@ -16,15 +16,36 @@
 }
   #themeOuter{
   	height:700px;
+  	background-image:linear-gradient(
+        rgba(255, 255, 255, 0.7),
+        rgba(255, 255, 255, 1)
+      ), url("resources/images/자연.jpg");
+  	background-size: cover;
   }
   #attractionOuter{
   height:700px;
+  background-image:linear-gradient(
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 1)
+      ), url("resources/images/main-attraction.jpg");
+  background-size: cover;
   }
   #festivalOuter{
   height:700px;
+  background-image:linear-gradient(
+        rgba(255, 255, 255, 0.7),
+        rgba(255, 255, 255, 1)
+      ), url("https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=1072c599-d65c-440c-ab62-db163e3a41d7");
+  background-size: cover;
   }
   #togetherOuter{
   height:700px;
+  background-image:linear-gradient(
+        rgba(255, 255, 255, 0.7),
+        rgba(255, 255, 255, 1)
+      ), url('/finalProject/resources/images/함께가치배너.jpg');
+  background-size: cover;
+  
   }
 .swiper-slide{
 	width:400px;
@@ -198,6 +219,7 @@
         	width : 400px;
         	height: 600px;
         	box-shadow:5px 5px 5px 5px gray;
+        	background-color: white;
         }
         #mainTogetherList>div:hover{
         	width:415px;
