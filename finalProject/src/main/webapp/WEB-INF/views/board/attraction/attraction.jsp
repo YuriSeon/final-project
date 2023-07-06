@@ -348,7 +348,7 @@ height: 270px;
 		// 지도지역 클릭시 관광정보 조회해오는 API
 		$(document).on("click","svg path", function(){
 			var map = $("#main-map svg"); // 지도 태그
-			// 지도 선택시 위치 변경하며 리스트 보여주기
+			// 지도 선택시 위치 변경하며 리스트 보여줌
 			$("svg path").css("fill","#e9eaea").css("transform", "translateY(0px)"); // 재호출시 css 초기화
 			$("#main-map").parent().remove(); // 원래 들어있던 영역 지우기
 			$(map).css("padding","0");
