@@ -63,6 +63,7 @@ public class AttractionServiceImpl implements AttractionService {
 		dataMap.put("board", atDao.selectBoard(sqlSession, boardNo));
 		// info 조회
 		dataMap.put("info", atDao.selectInfo(sqlSession, boardNo));
+		System.out.println(atDao.selectInfo(sqlSession, boardNo));
 		// attachment 조회
 		dataMap.put("at", atDao.selectAttachment(sqlSession, boardNo));
 		
@@ -180,20 +181,16 @@ public class AttractionServiceImpl implements AttractionService {
 		// info 수정
 		result = atDao.updateInfo(sqlSession, info);
 		int result2 = 1;
-		System.out.println("????"+removeList);
 		// attachment 수정
 		for(int i=0; i<removeList.size(); i++) {
 			result2 = atDao.updateAttachment(sqlSession, removeList.get(i));
 		}
 		// 새로운 파일 등록
 		int result3 =1;
-		System.out.println(result);
-		System.out.println(result2);
 		
 		if(at.getOriginName()!=null) { // 비어있지 않다면 
 			result3 = atDao.updateFile(sqlSession, at);
 		}
-		System.out.println(result3);
 		return result*result2*result3;
 	}
 

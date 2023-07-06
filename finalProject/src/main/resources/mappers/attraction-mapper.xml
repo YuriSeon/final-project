@@ -11,16 +11,27 @@
   	</select>
   	<!-- 게시물과 장소 등록 -->
   	<insert id="insertInfo">
-  		INSERT ALL
+  	<choose>
+  		<when test="infoType==1 or infoType==2">
+  			INSERT ALL
   			INTO BOARD(BOARD_NO, ZONE_NO, INFO_NO, BOARD_WRITER, CATEGORY, BOARD_TITLE, BOARD_CONTENT)
-  				VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, SEQ_INO.NEXTVAL, 'admin', 3, #{infoName}, #{boardContent})
+  				VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, SEQ_INO.NEXTVAL, '관리자', 3, #{infoName}, #{boardContent})
   			INTO INFO VALUES(SEQ_INO.CURRVAL, SEQ_BNO.CURRVAL, #{zoneNo}, #{infoAddress}, #{infoTime}, #{infoHomepage}, #{infoCall}, #{parking}, #{infoName}, #{infoType}, #{dayOff})
-  		SELECT * FROM DUAL
+  			SELECT * FROM DUAL
+  		</when>
+  		<otherwise>
+  			INSERT ALL
+  			INTO BOARD(BOARD_NO, ZONE_NO, INFO_NO, BOARD_WRITER, CATEGORY, BOARD_TITLE, BOARD_CONTENT)
+  				VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, SEQ_INO.NEXTVAL, '관리자', 3, #{infoName}, #{boardContent})
+  			INTO INFO VALUES(SEQ_INO.CURRVAL, SEQ_BNO.CURRVAL, #{zoneNo}, #{infoAddress}, #{infoTime}, #{infoHomepage}, #{infoCall}, #{parking}, #{infoName}, 3, #{dayOff})
+  			SELECT * FROM DUAL
+  		</otherwise>
+  	</choose>
   	</insert>
   	<!-- 첨부파일 등록 -->
   	<insert id="insertAttachment">
   	<choose>
-  		<when test="boardNo==null">
+  		<when test="boardNo==0">
   		INSERT INTO ATTACHMENT (FILE_NO, BOARD_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, FILE_LEVEL)
   						 VALUES(SEQ_FNO.NEXTVAL, SEQ_BNO.CURRVAL, #{originName}, #{changeName}, #{filePath}, #{fileLevel})
   		</when>
@@ -40,15 +51,7 @@
   	<select id="selectBoard" resultMap="boardMapper.boardResultSet">
   		SELECT *
   		FROM BOARD
-  		<choose>
-  			<when test="keyword!=null">
-		  		WHERE BOARD_NO = #{boardNo}
-  			</when>
-  			<otherwise>
-  				JOIN ZONE USING(ZONE_NO)
-  				WHERE ZONE_NAME LIKE '%'||#{keyword}||'%'
-  			</otherwise>
-  		</choose>
+		WHERE BOARD_NO = #{boardNo}
   		AND STATUS = 'Y'
   		ORDER BY CREATE_DATE DESC
   	</select>
@@ -56,22 +59,13 @@
   	<select id="selectInfo" resultMap="adminMapper.infoResultSet">
   		SELECT *
   		FROM INFO
-  		<choose>
-  			<when test="keyword==null">
-		  		WHERE BOARD_NO = #{boardNo}
-  			</when>
-  			<otherwise>
-  				JOIN ZONE USING(ZONE_NO)
-  				WHERE ZONE_NAME LIKE '%'||#{keyword}||'%'
-  			</otherwise>
-  		</choose>
+ 		WHERE BOARD_NO = #{boardNo}
   	</select>
   	<!-- 게시물 첨부파일 조회 -->
   	<select id="selectAttachment" resultMap="adminMapper.attachmentResultSet">
   		SELECT FILE_NO, FILE_PATH, FILE_LEVEL, CHANGE_NAME
   		FROM ATTACHMENT
   		WHERE BOARD_NO = #{boardNo}
-  		ORDER BY BOARD_NO DESC
   	</select>
   	<!-- 댓글 등록 -->
   	<insert id="insertReplyList">
@@ -235,7 +229,7 @@
   		WHERE BOARD_NO = #{boardNo}
   		AND STATUS= 'Y'
   	</update>
-  	<update id="updateInfo">
+  	<update id="updateInfoList">
   		UPDATE INFO
   		SET INFO_NAME = #{infoName}
   		, INFO_ADDRESS = #{infoAddress}
@@ -257,5 +251,19 @@
   		FROM BOARD
   		JOIN ZONE USING(ZONE_NO)
   		WHERE ZONE_NAME LIKE '%'||#{keyword}||'%'
+  	</select>
+  	<select id="selectBoardList" resultMap="boardMapper.boardResultSet">
+  		SELECT *
+  		FROM BOARD
+		JOIN ZONE USING(ZONE_NO)
+		WHERE ZONE_NAME LIKE '%'||#{keyword}||'%'
+  		AND STATUS = 'Y'
+  		ORDER BY CREATE_DATE DESC
+  	</select>
+  	<select id="selectInfoList" resultMap="adminMapper.infoResultSet">
+  		SELECT *
+  		FROM INFO
+		JOIN ZONE USING(ZONE_NO)
+		WHERE ZONE_NAME LIKE '%'||#{keyword}||'%'
   	</select>
   </mapper>
