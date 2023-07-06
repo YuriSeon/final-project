@@ -30,12 +30,19 @@ public class ScheduleDao {
 
 		return (ArrayList)sqlSession.selectList("scheduleMapper.selectBoardList", sort, rowBounds);
 	}
+	
+	
 
 	// board + plan 등록
 	public int insertSchedule(SqlSession sqlSession, Plan plan) {
 		return sqlSession.insert("scheduleMapper.insertSchedule", plan);
 	}
 
+	// 등록한 bno와 infoNo 조회해와서 등록에 이용
+	public Board checkBno(SqlSession sqlSession, Plan plan) {
+		return sqlSession.selectOne("scheduleMapper.checkBno", plan);
+	}
+		
 	// path 등록
 	public int insertPath(SqlSession sqlSession, Path path) {
 		return sqlSession.insert("scheduleMapper.insertPath", path);
@@ -43,7 +50,6 @@ public class ScheduleDao {
 
 	// path에 해당하는 infoNo 조회
 	public int searchInfoNo(SqlSession sqlSession, Path path) {
-		System.out.println("dao    "+path);
 		return sqlSession.selectOne("scheduleMapper.searchInfoNo", path);
 	}
 	
@@ -51,6 +57,8 @@ public class ScheduleDao {
 	public int updatePlanInfoNo(SqlSession sqlSession, Path path) {
 		return sqlSession.update("scheduleMapper.updatePlanInfoNo", path);
 	}
+
+	
 
 
 	

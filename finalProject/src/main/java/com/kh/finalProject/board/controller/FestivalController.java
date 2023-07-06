@@ -38,7 +38,11 @@ public class FestivalController {
 	
 	//축제 페이지로 이동
 	@RequestMapping("festival.fe")
-	public String fesList(@RequestParam(value="currentPage",defaultValue="1")int currentPage, Model model) {
+	public String fesList(@RequestParam(value="searchDate", defaultValue="00")String date,
+						@RequestParam(value="searchArea", defaultValue="all")String area,
+						@RequestParam(value="searchCate", defaultValue="0")String cate,
+						@RequestParam(value="nowDay", defaultValue="SYSDATE")String nowDay,
+						@RequestParam(value="currentPage",defaultValue="1")int currentPage, Model model) {
 		
 		//축제 페이지 로드시 찜 리스트 불러오기
 		ArrayList<choice> choiceList = festivalService.choiList();
@@ -48,16 +52,27 @@ public class FestivalController {
 		//축제 페이지 로드시 축제 기간이면 상태값 y로 바꿔주기(예정 축제도 N으로 바뀌어져있기때문)
 		int result2 = festivalService.FesIng();
 		
-		int listCount = festivalService.fesCount();
+		//검색시 카테고리
+		HashMap<String, String> keyword = new HashMap<>();
+			keyword.put("date", date);
+			keyword.put("area", area);
+			keyword.put("cate", cate);
+			keyword.put("day", nowDay);
+		
+		int listCount = festivalService.fesCount(keyword);
 		int pageLimit = 10;
 		int boardLimit = 6;
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		
-		ArrayList<Board> list = festivalService.fesList(pi);
+		ArrayList<Board> list = festivalService.fesList(keyword, pi);
 		
 		model.addAttribute("list",list);
 		model.addAttribute("pi",pi);
+		
+		model.addAttribute("date", date);
+		model.addAttribute("area", area);
+		model.addAttribute("cate", cate);
 		
 		model.addAttribute("choiceList", new Gson().toJson(choiceList));
 		
@@ -147,46 +162,7 @@ public class FestivalController {
 		System.out.println(count);
 		System.out.println(nowDay);
 		
-		
-		
 		return 1;
-	}
-	
-	//축제 검색 리스트
-	@RequestMapping("search.fe")
-	public String search(@RequestParam(value="searchDate", defaultValue="00")String date,
-						@RequestParam(value="searchArea", defaultValue="all")String area,
-						@RequestParam(value="searchCate", defaultValue="0")String cate,
-						@RequestParam(value="nowDay", defaultValue="SYSDATE")String nowDay,
-						@RequestParam(value="currentPage",defaultValue="1")int currentPage, Model model) {
-		
-		//축제 페이지 로드시 찜 리스트 불러오기
-		ArrayList<choice> choiceList = festivalService.choiList();
-		
-		HashMap<String, String> keyword = new HashMap<>();
-			keyword.put("date", date);
-			keyword.put("area", area);
-			keyword.put("cate", cate);
-			keyword.put("day", nowDay);
-		
-		int searchCount = festivalService.selectSearchCount(keyword);
-		int pageLimit = 10;
-		int boardLimit = 6;
-		
-		PageInfo pi = Pagination.getPageInfo(searchCount, currentPage, pageLimit, boardLimit);
-		
-		ArrayList<Festival> list = festivalService.selectSearchList(keyword, pi);
-		
-		model.addAttribute("list", list);
-		model.addAttribute("pi", pi);
-		
-		model.addAttribute("date", date);
-		model.addAttribute("area", area);
-		model.addAttribute("cate", cate);
-		
-		model.addAttribute("choiceList", new Gson().toJson(choiceList));
-		 
-		return "board/festival";
 	}
 	
 	//축제 디테일 페이지 이동
@@ -196,6 +172,9 @@ public class FestivalController {
 		//축제 디테일 페이지 로드시 찜  불러오기
 		ArrayList<choice> choiceList = festivalService.choiList();
 		
+		//축제 디테일 페이지 로드시 주변 명소 불러오기
+		ArrayList<Board> myungList = festivalService.myungList(boardNo); 
+		System.out.println(myungList);
 		//조회수 올려주기
 		int count = festivalService.countUp(boardNo);
 		
@@ -207,6 +186,7 @@ public class FestivalController {
 				mv.addObject("b", b);
 				mv.addObject("at", at);
 				mv.addObject("choiceList", new Gson().toJson(choiceList));
+				mv.addObject("m", myungList);
 				mv.setViewName("board/festivalDetailView");
 			}else {
 				mv.addObject("errorMsg", "축제 페이지를 불러오는데 실패하였습니다.").setViewName("common/errorPage");

@@ -19,7 +19,7 @@ public class Selenium {
 	
 	private WebDriver wd;
 	private static String WEB_DRIVER_ID = "webdriver.chrome.driver"; // Properties 설정(정해져있는 키값)
-	private static String WEB_DRIVER_PATH = (Selenium.class.getResource("/").getPath()).replace("target/classes/", "src/main/webapp/WEB-INF/lib/chromedriver");
+	private static String WEB_DRIVER_PATH = (Selenium.class.getResource("/").getPath()).replace("target/classes/", "src/main/webapp/WEB-INF/lib/chromedriver.exe");
 	
 	// chrome driver연결
 	private void chrome() {
@@ -81,13 +81,7 @@ public class Selenium {
 					}
 				case "휴무일": in.setDayOff(value); break;
 				case "홈페이지": in.setInfoHomepage(value); break;
-				case "전화번호": 
-					if(value.contains("-")) {
-						String str[] = value.split("-");
-						in.setInfoCall(str[0]+str[1]+str[2]); break;
-					} else {
-						in.setInfoCall(value); break;
-					}
+				case "전화번호": in.setInfoCall(value); break;
 				case "주차장": 
 					if(value.contains("가능")) {
 						in.setParking("Y"); break;
