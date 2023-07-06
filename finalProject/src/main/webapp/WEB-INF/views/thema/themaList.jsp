@@ -249,11 +249,12 @@
 		$("tbody>tr").click(function(){
 			var bno = $(this).children().eq(0).children("input").val();
 			/* console.log($(this).children().eq(0).children("input").val()); */
-			 location.href="detailTheme.bo?boardNo="+bno; 
+// 			location.href="detailTheme.bo?boardNo="+bno;
+			handlePostClick(bno, this);
 		});
 	});
 
-	 //전체,최신순,인기순 호버 그대로		 
+	//전체,최신순,인기순 호버 그대로		 
 	 $(document).ready(function(){
 		 var zone = "${zone}";
 		 var country = "${country}";
@@ -275,7 +276,48 @@
 		  });
 	 });
 	 
+	//최근 본 페이지 세션에 저장
+	function setRecentPageInfo(thumbnail, title, url) {
+		// 세션에서 이전에 저장된 최근 페이지 정보 배열 가져오기
+		var recentPages = sessionStorage.getItem('recentPages');
 
-	
+		if (recentPages) {
+			// 이미 저장된 최근 페이지 정보 배열이 있을 경우 파싱하여 가져옴
+		    recentPages = JSON.parse(recentPages);
+		} else {
+		    // 저장된 최근 페이지 정보 배열이 없을 경우 빈 배열로 초기화
+		    recentPages = [];
+		}
+
+		// 새로운 페이지 정보 객체 생성
+		var pageInfo = {
+		    thumbnail: thumbnail,
+		    title: title,
+		    url: url
+		};
+
+		// 배열 맨 앞에 새로운 페이지 정보 추가
+		recentPages.unshift(pageInfo);
+
+		// 최대 5개까지만 유지하기 위해 배열 길이 조정
+		if (recentPages.length > 5) {
+		    recentPages = recentPages.slice(0, 5);
+		}
+
+		// 최근 페이지 정보 배열을 세션에 저장
+		sessionStorage.setItem('recentPages', JSON.stringify(recentPages));
+	}
+
+	//게시물 클릭시 저장 후 이동
+	function handlePostClick(bno, post) {
+		var thumbnail = post.querySelector('img').src;
+		var title = post.querySelector('b').innerText;
+		var url = "http://localhost:8888/finalProject/detailTheme.bo?boardNo=" + bno;
+
+		setRecentPageInfo(thumbnail, title, url);
+
+		location.href = url;
+	}
+
 </script>
 </html>

@@ -13,6 +13,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -30,9 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.kh.finalProject.admin.model.vo.Report;
 import com.kh.finalProject.board.model.service.AttractionService;
 import com.kh.finalProject.board.model.vo.Attachment;
@@ -84,7 +82,6 @@ public class AttractionController {
 			String[] strArr = imageURL.get(i).split("/"); // 기존이름과 확장자명 추출위해 배열 변수처리
 			originName = strArr[strArr.length-1]; // 마지막 인덱스가 파일명
 			changeName = getChangeName(originName); // 랜덤 파일이름 부여 
-			
 			try {
 				URL url = new URL(imageURL.get(i));
 				URLConnection conn = url.openConnection();
@@ -98,7 +95,6 @@ public class AttractionController {
 				    outputStream.write(buffer, 0, bytesRead);
 				}
 				byte[] imageBytes = outputStream.toByteArray();
-
 				// 디렉토리 생성
 				File directory = new File(savePath);
 				if (!directory.exists()) {
@@ -167,11 +163,9 @@ public class AttractionController {
 								@RequestParam(value="keyword")String keyword,
 								@RequestParam(value="searchType", defaultValue ="12") int searchType) throws IOException {
 		if(keyword.equals("부산")||keyword.equals("서울")) {
-			System.out.println("들어오니?");
 			HashMap<String, Object> dataMap = atService.selectAttrList(keyword);
 			return new Gson().toJson(dataMap);
 		} else {
-			System.out.println("여기들어온다");
 			// 검색내역변수처리
 			String rowBounds = "&numOfRows=6"; // 한페이지당 보이는 게시물 수 
 			String page = "&pageNo="+currentPage; // currentPage넣어주기
@@ -182,7 +176,6 @@ public class AttractionController {
 			
 			// 검색해서 보여줄 url 완성
 			String url = BASEURL + SERVICEKEY + rowBounds + page  + arr + key + type + etc;
-			System.out.println(url);
 			// url 연결 후 값 읽어오기
 			URL requestUrl = new URL(url);
 			HttpURLConnection urlCon = (HttpURLConnection)requestUrl.openConnection();
@@ -256,6 +249,7 @@ public class AttractionController {
 				atArr.get(i).setFileLevel(2);
 			}
 		}
+		
 		int result = atService.insertAttr(info, atArr);
 		if(result!=0) { // 0이 아니면 한번도 실패 안한거라서 성공
 			session.setAttribute("alertMsg", "게시물등록 성공");
@@ -342,6 +336,7 @@ public class AttractionController {
 	public String updateAttr(Model model, int boardNo) {
 		HashMap<String, Object> dataMap = atService.attrDetail(boardNo);
 		model.addAttribute("dataMap", dataMap);
+		System.out.println(boardNo);
 		return "board/attraction/attractionUpdate";
 	}
 	
@@ -365,6 +360,7 @@ public class AttractionController {
 				removeList.add(atList.get(i));
 			}
 		}
+		System.out.println("오냐구");
 		Attachment at = new Attachment();
 		if(!upfile.getOriginalFilename().equals("")){
 			String originName = upfile.getOriginalFilename();
@@ -388,7 +384,6 @@ public class AttractionController {
 			mv.addObject("errorMsg", "수정 실패").setViewName("common/errorPage");
 		}
 		return mv;
-		
 	}
 		
 	// 게시물 삭제 

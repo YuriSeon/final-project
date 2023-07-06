@@ -51,20 +51,6 @@ public class FestivalDao {
 		return sqlSession.selectOne("festivalMapper.mouCount", nowDay);
 	}
 	
-	//게시글 검색시 게시글 수
-	public int searchCount(SqlSession sqlSession, HashMap<String, String> keyword) {
-		return sqlSession.selectOne("festivalMapper.searchCount", keyword);
-	}
-	//게시글 검색시 게시글 리스트
-	public ArrayList<Festival> searchList(SqlSession sqlSession, HashMap<String, String> keyword, PageInfo pi) {
-		int limit = pi.getBoardLimit();
-		int offset = (pi.getCurrentPage()-1)*limit;
-		
-		RowBounds rowBounds = new RowBounds(offset, limit);
-		
-		return (ArrayList)sqlSession.selectList("festivalMapper.searchList", keyword, rowBounds);
-	}
-
 	//보드(게시글) 등록
 	public int insertBoard(SqlSession sqlSession, Board b) {
 		return sqlSession.insert("festivalMapper.insertBoard",b);
