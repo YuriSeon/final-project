@@ -96,6 +96,11 @@ public class ScheduleDao {
 		return (ArrayList)sqlSession.selectList("scheduleMapper.planList", sort
 												, new RowBounds(((pi.getCurrentPage()-1) * pi.getBoardLimit()), pi.getBoardLimit()));
 	}
+
+	// 함께가치 연결위한 board 조회
+	public ArrayList<Board> boardList(SqlSession sqlSession) {
+		return (ArrayList)sqlSession.selectList("scheduleMapper.boardList");
+	}
 	
 	
 	

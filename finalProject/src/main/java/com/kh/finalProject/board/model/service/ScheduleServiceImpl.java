@@ -151,6 +151,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public HashMap<String, Object> mainSelectList(PageInfo pi, String sort) {
 		HashMap<String, Object> dataMap = new HashMap<>();
 		ArrayList<Plan> pList= scDao.planList(sqlSession, pi, sort);
+		ArrayList<Board> together= scDao.boardList(sqlSession);
 		ArrayList<Attachment> at = new ArrayList<>();
 		for(Plan p : pList) {
 			// 조회해온 infoNo에 들어있는 구분자 제거해서 배열로 만든 뒤 조회 요청보내기
@@ -175,6 +176,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 			}
 		}
 		dataMap.put("plan", pList);
+		dataMap.put("together", together);
 		dataMap.put("attachment", at);
 		return dataMap;
 	}

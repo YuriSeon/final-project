@@ -46,6 +46,7 @@
 	                <div class="boardList">
 	            		<input type="hidden" name="boardNo" value="${i.boardNo}">
 	            		<input type="hidden" name="writer" value="${i.writer }">
+	            		<input type="hidden" name="startDate" value="${i.startDate }">
 	                    <div class="left-content">
 	                        <div class="list-title">
 	                            <h5>${i.boardTitle }</h5>
@@ -63,7 +64,7 @@
 	                        <!-- 동행하러가는 보드넘버 조회해와서 연결하기 인원수 가득찼다면 비활성화시키기 -->
 	                        <!-- 작성자 시작일 종료일만 맞춰서 조회 -->
 	                        <c:if test="${i.together eq 0}">
-	                        	<div class="main-dark-button"><a href="">동행하러가기</a></div>
+	                        	<div class="main-dark-button"><a class="with">동행하러가기</a></div>
 	                        </c:if>
 	                    </div>
 	                </div>
@@ -102,6 +103,9 @@
    </div>
 	<%@include file="../../common/footer.jsp" %>
 	<script>
+		$(function(){
+			
+		});
 		/* 페이지 이동 이벤트 */
         function pageLoad(num){
         	if(num==1){ // 등록하기 페이지
@@ -116,12 +120,19 @@
         	}
         }
 		$(".boardList").each(function(){
-			var bno = $(this).children().eq(1).val();
 			var writer = $(this).children().eq(1).next().val();
-			var startDate = ${dataMap.plan}
+			var startDate = $(this).children().eq(1).siblings().eq(2).val();
+			console.log(startDate);
+			var button = $(this).children().eq(1).children().eq(2);
+			var plan = "${dataMap.plan}"
 			var togetherList = "${dataMap.together}";
-			for(var i=0; i<togetherList.size(); i++){
-				if(bno==togetherList)
+			for(var i=0; i<togetherList.length; i++){
+				if(writer==togetherList[i].writer && startDate==together[i].startDate){
+					button.attr("href","togetherDetail.bo?boardNo="+together[i].boardNo);
+					if(together[i].together==together[i].togetherCount){
+						button.attr("href","javascript:void(0)");
+					}
+				}
 			}
 		});
 	</script>
