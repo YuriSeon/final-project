@@ -16,6 +16,11 @@
 }
   #themeOuter{
   	height:700px;
+  	background-image:linear-gradient(
+        rgba(255, 255, 255, 0.7),
+        rgba(255, 255, 255, 1)
+      ), url("resources/images/자연.jpg");
+  	background-size: cover;
   }
   #attractionOuter{
   height:700px;
