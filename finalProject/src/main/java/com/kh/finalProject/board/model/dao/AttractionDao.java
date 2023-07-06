@@ -104,45 +104,25 @@ public class AttractionDao {
 	public int choiceSearch(SqlSession sqlSession, choice choice) {
 		return sqlSession.selectOne("attractionMapper.choiceSearch", choice);
 	}
-
+	
 	// 좋아요 취소
 	public int deleteGood(SqlSession sqlSession, Good good) {
-		int result = sqlSession.delete("attractionMapper.deleteGood", good);
-		result *= sqlSession.update("attractionMapper.deletegoodcount", good);
-		if(result>0) {
-			result = sqlSession.selectOne("attractionMapper.goodCount",good);
-		} 
-		return result;
+		return sqlSession.delete("attractionMapper.deleteGood", good);
 	}
 
 	// 찜 취소
 	public int deletechoice(SqlSession sqlSession, choice choice) {
-		int result = sqlSession.delete("attractionMapper.deletechoice", choice);
-		result *= sqlSession.update("attractionMapper.deletechoicecount", choice);
-		if(result>0) {
-			result = sqlSession.selectOne("attractionMapper.choiceCount",choice);
-		}
-		return result;
+		return sqlSession.delete("attractionMapper.deletechoice", choice);
 	}
 
 	// 좋아요 등록
 	public int insertGood(SqlSession sqlSession, Good good) {
-		int result = sqlSession.insert("attractionMapper.insertGood", good);
-		result *= sqlSession.update("attractionMapper.updategoodcount", good);
-		if(result>0) {
-			result = sqlSession.selectOne("attractionMapper.goodCount",good);
-		}
-		return result;
+		return sqlSession.insert("attractionMapper.insertGood", good);
 	}
 
 	// 찜 등록
 	public int insertchoice(SqlSession sqlSession, choice choice) {
-		int result = sqlSession.insert("attractionMapper.insertchoice", choice);
-		result *= sqlSession.update("attractionMapper.updatechiocecount", choice);
-		if(result>0) {
-			result = sqlSession.selectOne("attractionMapper.choiceCount",choice);
-		}
-		return result;
+		return sqlSession.insert("attractionMapper.insertchoice", choice);
 	}
 	// 좋아요 수
 	public int goodCount(SqlSession sqlSession, Good good) {
@@ -152,6 +132,22 @@ public class AttractionDao {
 	// 찜 수
 	public int choiceCount(SqlSession sqlSession, choice choice) {
 		return sqlSession.selectOne("attractionMapper.choiceCount",choice);
+	}
+	// board 좋아요 수 줄이기
+	public int deletegoodcount(SqlSession sqlSession, Good good) {
+		return sqlSession.delete("attractionMapper.deletegoodcount", good);
+	}
+	// board 좋아요 수 추가
+	public int updategoodcount(SqlSession sqlSession, Good good) {
+		return sqlSession.update("attractionMapper.updategoodcount", good);
+	}
+	// board 찜 수 줄이기
+	public int deletechoicecount(SqlSession sqlSession, choice choice) {
+		return sqlSession.delete("attractionMapper.deletechoicecount", choice);
+	}
+	// board 찜 수 추가
+	public int updatechiocecount(SqlSession sqlSession, choice choice) {
+		return sqlSession.update("attractionMapper.updatechiocecount", choice);
 	}
 
 	// 신고등록
@@ -223,6 +219,8 @@ public class AttractionDao {
 	public ArrayList<Info> selectInfo(SqlSession sqlSession, String keyword) {
 		return (ArrayList)sqlSession.selectList("attractionMapper.selectInfoList", keyword);
 	}
+
+	
 	
 
 	
