@@ -12,7 +12,7 @@
   	</resultMap>
   	<resultMap type="plan" id="planResultSet" extends="boardMapper.boardResultSet">
   		<result column="BOARD_NO" property="boardNo"/>
-  		<result column="INFO_NO" property="infoNo"/>
+  		<result column="INFO_NO" property="pathList"/>
   		<result column="USER_NO" property="writer"/>
   		<result column="TOGETHER" property="together"/>
   		<result column="TOGETHER_COUNT" property="togetherCount"/>
@@ -58,5 +58,39 @@
   		SET INFO_NO = INFO_NO||'/'||#{infoNo}
   		WHERE BOARD_NO = #{boardNo}
   	</update>
+  	<!-- plan과 board조회 -->
+  	<select id="selectBoard" resultMap="planResultSet">
+	  	SELECT *
+	  	FROM BOARD 
+	  	JOIN PLAN USING(BOARD_NO)
+		WHERE BOARD_NO = #{board_no}  	
+  	</select>
+  	<select id="selectInfo" resultMap="adminMapper.infoResultSet">
+  		SELECT *
+  		FROM INFO
+  		WHERE INFO_NO = #{infoNo}
+  	</select>
+  	<select id="selectAttachList" resultMap="adminMapper.attachmentResultSet">
+  		SELECT FILE_NO, FILE_PATH, FILE_LEVEL, CHANGE_NAME
+  		FROM ATTACHMENT
+  		WHERE BOARD_NO = #{infoNo}
+  	</select>
+  	<select id="selectPathList" resultMap="pathResultSet">
+  		SELECT *
+  		FROM PATH
+  		WHERE BOARD_NO = #{boardNo}
+  	</select>
+  	<delete id="deletePath">
+  		DELETE FROM PATH
+  		WHERE BOARD_NO = #{boardNo}
+  	</delete>
+  	<delete id="deletePlan">
+  		DELETE FROM PLAN
+  		WHERE BOARD_NO = #{boardNo}
+  	</delete>
+  	<delete id="deleteBoard">
+  		DELETE FROM BOARD
+  		WHERE BOARD_NO = #{boardNo}
+  	</delete>
   </mapper>
   

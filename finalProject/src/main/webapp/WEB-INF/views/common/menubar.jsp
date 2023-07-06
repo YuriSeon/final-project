@@ -151,6 +151,9 @@
       	#nicknameHover:hover{
       		cursor:pointer;
       	}
+      	#bannerImg:hover{
+      		cursor:pointer;
+      	}
     </style>
 
 </head>
@@ -219,7 +222,7 @@
 	                         </c:choose>
 		                    	${loginUser.nickname }님 환영합니다!&nbsp;&nbsp;&nbsp;
 		                        <button onclick="location.href='mypage.me'">마이페이지</button>
-		                        <button type="button" onclick="location.href='logout.me'">로그아웃</button>
+		                        <button type="button" onclick="removeRecentSession();">로그아웃</button>
 		                    </div>
                 		</c:when>
 						<c:otherwise>
@@ -242,7 +245,12 @@
                 <div class="col-12">
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
-                        <a href="main.bo" class="logo">여행<em>가보자고</em></a>
+                        <img src="/finalProject/resources/images/koreaMap.jpeg" id="bannerImg" onclick="goMain();" style="width:96px; height:80px; position:relative; right:240px;"><a href="main.bo" class="logo">여행<em>가보자고</em></a>
+                        <script>
+                        	function goMain(){
+                        		location.href="main.bo";
+                        	}
+                        </script>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
@@ -490,6 +498,12 @@
         		
 				$("#profile").modal('show');
     	};
+    	
+    	//로그아웃 최근 글 세션 삭제
+    	function removeRecentSession() {
+    		sessionStorage.removeItem('recentPages');
+    		location.href='logout.me';
+		}
     </script>
     
 </body>

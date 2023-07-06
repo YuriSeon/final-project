@@ -205,6 +205,7 @@
     display: flex;
     flex-wrap: wrap;
     margin: 0 10px;
+    justify-content: center;
 }
 .mapage_subscribe .active ul li {
     width: 25%;
@@ -213,6 +214,7 @@
     position: relative;
     left: 0px;
     top: 20px;
+    flex-basis: 30%;
 }
 .mapage_subscribe .active ul li span:hover{
     cursor: pointer;
@@ -915,7 +917,8 @@ caption, .blind, .hidden, .ir {
     padding: 20px 10px;
     border-bottom: 1px solid #e6e6e6;
     box-sizing: border-box;
-    height: 150px;
+    height: auto;
+    display: flex;
 }
 .wrap_reply .list_reply .profile {
     position: relative;

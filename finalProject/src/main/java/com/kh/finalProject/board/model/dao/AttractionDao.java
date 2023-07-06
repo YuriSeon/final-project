@@ -218,11 +218,11 @@ public class AttractionDao {
 	}
 	// 게시글 
 	public ArrayList<Board> selectBoardList(SqlSession sqlSession, String keyword) {
-		return (ArrayList)sqlSession.selectList("attractionMapper.selectBoard", keyword);
+		return (ArrayList)sqlSession.selectList("attractionMapper.selectBoardList", keyword);
 	}
 	//info 정보
 	public ArrayList<Info> selectInfo(SqlSession sqlSession, String keyword) {
-		return (ArrayList)sqlSession.selectList("attractionMapper.selectInfo", keyword);
+		return (ArrayList)sqlSession.selectList("attractionMapper.selectInfoList", keyword);
 	}
 	
 

@@ -112,6 +112,7 @@ public class Selenium {
 		} finally {
 			quitDriver();
 		}
+		System.out.println("sel :   "+in);
 		return in;
 	}
 	
