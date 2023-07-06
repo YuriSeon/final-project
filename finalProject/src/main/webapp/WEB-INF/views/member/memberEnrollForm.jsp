@@ -642,7 +642,7 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		</div>
 		
 		<!-- 추가 입력사항 -->
-		<div class="container_3" style="box-shadow: 0px 0px 10px 10px rgb(199, 199, 199); height:420px;">
+		<div class="container_3" style="box-shadow: 0px 0px 10px 10px rgb(199, 199, 199); height:360px;">
 			<div style="color:#598c93; font-size:14px; position:relative; top:-30px;">※선택 입력사항입니다.<br>(마이페이지에서 추가로 작성 하실 수 있습니다.)</div>
 			<!-- 관심사 -->
 			<div class="field-wrapper" style="position:relative; top: -15px;">
@@ -741,13 +741,6 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 			      <label for="MBTI" class="float-label">MBTI</label>
 			      <div class="field-bar"></div>
 			</div>
-		  	<!-- 여행 MBTI -->
-		  	<div class="field-wrapper">
-		    	<input type="text" name="survey"  placeholder="MBTI 테스트를 진행해주세요!" class="float-field" style="position:relative; left:170px; top:8px; width: 365px;" readonly/>
-		    	<label for="survey" class="float-label" style="position:relative; top:-48px;">여행 MBTI<img src="resources/images/question.png" alt="" style="height:11px; width:11px; position:relative; left:2px; top:-1px; background-color:rgb(239, 239, 239);"></label>
-		    	<!-- <div class="field-bar"></div> -->
-		  		<button type="" style="position:relative; left:-75px; top:-20px; font-size: 9px;">여행 MBTI</button>
-		  	</div>
 			<button type="submit" id="insertGo2" style="position:relative; top:-25px; width:530px;" onclick="return joinChk();">회원가입</button>
 			<!-- 카카오인증 후 탈퇴시 필요한 카카오 정보 -->
 			<input type="hidden" name="kakaoId" id="kakaoId" value="0">
@@ -763,7 +756,6 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		
 		/* 아이디 중복 및 유효성 검사 */
 		var $userId = $("#insertForm input[name=userId2]");
-		//console.log($userId.val());
 		
 		$userId.keyup(function(){
 			if($userId.val().trim().length>=5){
