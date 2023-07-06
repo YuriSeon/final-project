@@ -3,12 +3,42 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 	<meta charset="UTF-8">
     <title>메인</title>
+    <style>
+     	@font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+  #themeOuter{
+  	height:700px;
+  }
+  #attractionOuter{
+  height:700px;
+  }
+  #festivalOuter{
+  height:700px;
+  }
+  #togetherOuter{
+  height:700px;
+  }
+.swiper {
+  width: 600px;
+  height: 300px;
+} 
+.swiper-slide{
+	width:300px;
+	height:400px;
+	border: 1px solid black;
+}
+    </style>
 </head>
     
     <body>
-    <!-- ***** Preloader Start ***** -->
     <div id="js-preloader" class="js-preloader">
       <div class="preloader-inner">
         <span class="dot"></span>
@@ -19,10 +49,8 @@
         </div>
       </div>
     </div>
-    <!-- ***** Preloader End ***** -->
     <%@include file="WEB-INF/views/common/menubar.jsp" %>
     
-    <!-- ***** Pre HEader ***** -->
  	<script>
 		$(function(){
 			$(".nav>li>a").each(function(){
@@ -32,9 +60,7 @@
 			});
 		});
 	</script>
-    <!-- ***** Header Area End ***** -->
-
-    <!-- ***** Main Banner Area Start ***** -->
+	
     <div class="main-banner">
         <div class="counter-content">
         	<p id="festivalName">&lt;보령 머드 축제&gt;</p>
@@ -56,44 +82,7 @@
                         <h6>여행을 가고싶은 당신!</h6>
                         <h2>여행 정보가 필요한 당신!</h2>
                         <div class="main-white-button">
-                            <a href="ticket-details.html">가보자고</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ***** Main Banner Area End ***** -->
-
-    <!-- *** Owl Carousel Items ***-->
-    <div class="show-events-carousel">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="owl-show-events owl-carousel">
-                        <div class="item">
-                            <a href="event-details.html"><img src="/finalProject/resources/images/show-events-01.jpg" alt=""></a>
-                        </div>
-                        <div class="item">
-                            <a href="event-details.html"><img src="/finalProject/resources/images/show-events-02.jpg" alt=""></a> 
-                        </div>
-                        <div class="item">
-                            <a href="event-details.html"><img src="/finalProject/resources/images/show-events-03.jpg" alt=""></a> 
-                        </div>
-                        <div class="item">
-                            <a href="event-details.html"><img src="/finalProject/resources/images/show-events-04.jpg" alt=""></a> 
-                        </div>
-                        <div class="item">
-                            <a href="event-details.html"><img src="/finalProject/resources/images/show-events-01.jpg" alt=""></a> 
-                        </div>
-                        <div class="item">
-                            <a href="event-details.html"><img src="/finalProject/resources/images/show-events-02.jpg" alt=""></a> 
-                        </div>
-                        <div class="item">
-                            <a href="event-details.html"><img src="/finalProject/resources/images/show-events-03.jpg" alt=""></a> 
-                        </div>
-                        <div class="item">
-                            <a href="event-details.html"><img src="/finalProject/resources/images/show-events-04.jpg" alt=""></a> 
+                            <a class="btn btn-outline-secondary">가보자고</a>
                         </div>
                     </div>
                 </div>
@@ -101,212 +90,188 @@
         </div>
     </div>
 
-    
-    <!-- *** Amazing Venus ***-->
-    <div class="amazing-venues">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-9">
-                    <div class="left-content">
-                        <h4>파이널이 시작되었습니다.</h4>
-                        <p>선유리는 바보입니다... 
-                        These are <a href="index.html">Homepage</a>, <a href="about.html">About</a>, 
-                        <a href="rent-venue.html">Rent a venue</a>, <a href="shows-events.html">shows &amp; events</a>, 
-                        <a href="event-details.html">event details</a>, <a href="tickets.html">tickets</a>, and <a href="ticket-details.html">ticket details</a>. 
-                        You can feel free to modify any page as you like. If you have any question, please visit our <a href="https://www.tooplate.com/contact" target="_blank">Contact page</a>.</p>
-                        <br>
-                        <p>You can use this event template for your commercial or business website. You are not permitted to redistribute this template ZIP file on any template download website. If you need the latest HTML templates, you may visit <a href="https://www.toocss.com/" target="_blank">Too CSS</a> website that features a great collection of templates in different categories.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="right-content">
-                        <h5><i class="fa fa-map-marker"></i> Visit Us</h5>
-                        <span>5 College St NW, <br>Norcross, GA 30071<br>United States</span>
-                        <div class="text-button"><a href="show-events-details.html">Need Directions? <i class="fa fa-arrow-right"></i></a></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<br>
 
+	<div id="mainContentOuter">
+			<div id="themeOuter" >
+					   <div class="themeTextOuter" style="position:absolute; width:100%;">
+		                	<p style="padding:0; margin:16px; font-size: 40px; font-weight: 500; font-family: 'GmarketSansMedium';">다채로운 추천 테마 여행!</p>
+		                	<a style="position:relative; left:1700px; bottom:50px;" class="btn" href="theme.bo" >더 알아보기 ></a>
+		                </div>
+				  <div class="swiper mySwiper" style="width:100%; height:500px; margin-top : 100px; position:absolute;">
+				    <div class="swiper-wrapper">
+				      <div class="swiper-slide"><img src="resources/images/icon_kakao.png"></div>
+				      <div class="swiper-slide">Slide 2</div>
+				      <div class="swiper-slide">Slide 3</div>
+				      <div class="swiper-slide">Slide 4</div>
+				      <div class="swiper-slide">Slide 5</div>
+				      <div class="swiper-slide">Slide 6</div>
+				      <div class="swiper-slide">Slide 7</div>
+				      <div class="swiper-slide">Slide 8</div>
+				    </div>
+				  </div>
+				    <div class="swiper-pagination" style="position:relative; height:50px; top:550px;"></div>
+				    <div class="swiper-button-next" style="position:relative; height:100px; top:220px; left:1850px;"></div>
+				    <div class="swiper-button-prev" style="position:relative; height:100px; top:150px; "></div>
+				    
+			<script>
+					var swiper = new Swiper(".mySwiper", {
+					    slidesPerView: 4,
+					    spaceBetween: 30,
+					    loop : true,
+					    autoplay: {
+					        delay: 1500,
+					        disableOnInteraction: false,
+					    },
+					    navigation: {
+					      nextEl: ".swiper-button-next",
+					      prevEl: ".swiper-button-prev",
+					    },
+					    pagination: {
+					      el: ".swiper-pagination",
+					      clickable: true,
+					    }
+					  });
+			</script>
 
-    <!-- *** Map ***-->
-    <div class="map-image">
-        <img src="/finalProject/resources/images/map-image.jpg" alt="Maps of 3 Venues">
-    </div>
+			</div>
+			
+			<br>
+			
+<div id="festivalOuter" >
+					   <div class="festivalTextOuter" style="position:absolute; width:100%;">
+		                	<p style="padding:0; margin:16px; font-size: 40px; font-weight: 500; font-family: 'GmarketSansMedium';">구석구석 축제가는 날</p>
+		                	<a style="position:relative; left:1700px; bottom:50px;" class="btn" href="festival.bo" >더 알아보기 ></a>
+		                </div>
+				  <div class="swiper mySwiper" style="width:100%; height:500px; margin-top : 100px; position:absolute;">
+				    <div class="swiper-wrapper">
+				      <div class="swiper-slide"><img src="resources/images/icon_kakao.png"></div>
+				      <div class="swiper-slide">Slide 2</div>
+				      <div class="swiper-slide">Slide 3</div>
+				      <div class="swiper-slide">Slide 4</div>
+				      <div class="swiper-slide">Slide 5</div>
+				      <div class="swiper-slide">Slide 6</div>
+				      <div class="swiper-slide">Slide 7</div>
+				      <div class="swiper-slide">Slide 8</div>
+				    </div>
+				  </div>
+				    <div class="swiper-pagination" style="position:relative; height:50px; top:550px; background-color:red;"></div>
+				    <div class="swiper-button-next" style="position:relative; height:100px; top:220px; left:1850px;"></div>
+				    <div class="swiper-button-prev" style="position:relative; height:100px; top:150px; "></div>
+				    
+			<script>
+					var swiper = new Swiper(".mySwiper", {
+					    slidesPerView: 4,
+					    spaceBetween: 30,
+					    loop : true,
+					    autoplay: {
+					        delay: 1500,
+					        disableOnInteraction: false,
+					    },
+					    navigation: {
+					      nextEl: ".swiper-button-next",
+					      prevEl: ".swiper-button-prev",
+					    },
+					    pagination: {
+					      el: ".swiper-pagination",
+					      clickable: true,
+					    }
+					  });
+			</script>
 
+			</div>
+			
+			<br>
+<div id="attractionOuter" >
+					   <div class="attractionTextOuter" style="position:absolute; width:100%;">
+		                	<p style="padding:0; margin:16px; font-size: 40px; font-weight: 500; font-family: 'GmarketSansMedium';">전국 방방곡곡 관광 명소</p>
+		                	<a style="position:relative; left:1700px; bottom:50px;" class="btn" href="attraction.bo" >더 알아보기 ></a>
+		                </div>
+				  <div class="swiper mySwiper" style="width:100%; height:500px; margin-top : 100px; position:absolute;">
+				    <div class="swiper-wrapper">
+				      <div class="swiper-slide"><img src="resources/images/icon_kakao.png"></div>
+				      <div class="swiper-slide">Slide 2</div>
+				      <div class="swiper-slide">Slide 3</div>
+				      <div class="swiper-slide">Slide 4</div>
+				      <div class="swiper-slide">Slide 5</div>
+				      <div class="swiper-slide">Slide 6</div>
+				      <div class="swiper-slide">Slide 7</div>
+				      <div class="swiper-slide">Slide 8</div>
+				    </div>
+				  </div>
+				    <div class="swiper-pagination" style="position:relative; height:50px; top:550px;"></div>
+				    <div class="swiper-button-next" style="position:relative; height:100px; top:220px; left:1850px;"></div>
+				    <div class="swiper-button-prev" style="position:relative; height:100px; top:150px; "></div>
+				    
+			<script>
+					var swiper = new Swiper(".mySwiper", {
+					    slidesPerView: 4,
+					    spaceBetween: 30,
+					    loop : true,
+					    autoplay: {
+					        delay: 1500,
+					        disableOnInteraction: false,
+					    },
+					    navigation: {
+					      nextEl: ".swiper-button-next",
+					      prevEl: ".swiper-button-prev",
+					    },
+					    pagination: {
+					      el: ".swiper-pagination",
+					      clickable: true,
+					    }
+					  });
+			</script>
 
-    <!-- *** Venues & Tickets ***-->
-    <div class="venue-tickets">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-heading">
-                        <h2>Our Venues & Tickets</h2>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="venue-item">
-                        <div class="thumb">
-                            <img src="/finalProject/resources/images/venue-01.jpg" alt="">
-                        </div>
-                        <div class="down-content">
-                            <div class="left-content">
-                                <div class="main-white-button">
-                                    <a href="ticket-details.html">Purchase Tickets</a>
-                                </div>
-                            </div>
-                            <div class="right-content">
-                                <h4>Radio City Musical Hall</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur vinzi iscing elit, sed doers kontra.</p>
-                                <ul>
-                                    <li><i class="fa fa-sitemap"></i>250</li>
-                                    <li><i class="fa fa-user"></i>500</li>
-                                </ul>
-                                <div class="price">
-                                    <span>1 ticket<br>from <em>$45</em></span>
-                                </div>
-                            </div> 
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="venue-item">
-                        <div class="thumb">
-                            <img src="/finalProject/resources/images/venue-02.jpg" alt="">
-                        </div>
-                        <div class="down-content">
-                            <div class="left-content">
-                                <div class="main-white-button">
-                                    <a href="ticket-details.html">Purchase Tickets</a>
-                                </div>
-                            </div>
-                            <div class="right-content">
-                                <h4>Madison Square Garden</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur vinzi iscing elit, sed doers kontra.</p>
-                                <ul>
-                                    <li><i class="fa fa-sitemap"></i>450</li>
-                                    <li><i class="fa fa-user"></i>650</li>
-                                </ul>
-                                <div class="price">
-                                    <span>1 ticket<br>from <em>$55</em></span>
-                                </div>
-                            </div> 
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="venue-item">
-                        <div class="thumb">
-                            <img src="/finalProject/resources/images/venue-03.jpg" alt="">
-                        </div>
-                        <div class="down-content">
-                            <div class="left-content">
-                                <div class="main-white-button">
-                                    <a href="ticket-details.html">Purchase Tickets</a>
-                                </div>
-                            </div>
-                            <div class="right-content">
-                                <h4>Royce Hall</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur vinzi iscing elit, sed doers kontra.</p>
-                                <ul>
-                                    <li><i class="fa fa-sitemap"></i>450</li>
-                                    <li><i class="fa fa-user"></i>750</li>
-                                </ul>
-                                <div class="price">
-                                    <span>1 ticket<br>from <em>$65</em></span>
-                                </div>
-                            </div> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+			</div>
+			
+			<br>
+<div id="togetherOuter" >
+					   <div class="togetherTextOuter" style="position:absolute; width:100%;">
+		                	<p style="padding:0; margin:16px; font-size: 40px; font-weight: 500; font-family: 'GmarketSansMedium';">혼자 여행하기 적적할 때는 ?</p>
+		                	<a style="position:relative; left:1700px; bottom:50px;" class="btn" href="together.bo" >더 알아보기 ></a>
+		                </div>
+				  <div class="swiper mySwiper" style="width:100%; height:500px; margin-top : 100px; position:absolute;">
+				    <div class="swiper-wrapper">
+				      <div class="swiper-slide"><img src="resources/images/icon_kakao.png"></div>
+				      <div class="swiper-slide">Slide 2</div>
+				      <div class="swiper-slide">Slide 3</div>
+				      <div class="swiper-slide">Slide 4</div>
+				      <div class="swiper-slide">Slide 5</div>
+				      <div class="swiper-slide">Slide 6</div>
+				      <div class="swiper-slide">Slide 7</div>
+				      <div class="swiper-slide">Slide 8</div>
+				    </div>
+				  </div>
+				    <div class="swiper-pagination" style="position:relative; height:50px; top:550px;"></div>
+				    <div class="swiper-button-next" style="position:relative; height:100px; top:220px; left:1850px;"></div>
+				    <div class="swiper-button-prev" style="position:relative; height:100px; top:150px; "></div>
+				    
+			<script>
+					var swiper = new Swiper(".mySwiper", {
+					    slidesPerView: 4,
+					    spaceBetween: 30,
+					    loop : true,
+					    autoplay: {
+					        delay: 1500,
+					        disableOnInteraction: false,
+					    },
+					    navigation: {
+					      nextEl: ".swiper-button-next",
+					      prevEl: ".swiper-button-prev",
+					    },
+					    pagination: {
+					      el: ".swiper-pagination",
+					      clickable: true,
+					    }
+					  });
+			</script>
 
-
-    <!-- *** Coming Events ***-->
-    <div class="coming-events">
-        <div class="left-button">
-            <div class="main-white-button">
-                <a href="shows-events.html">Discover More</a>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="event-item">
-                        <div class="thumb">
-                            <a href="event-details.html"><img src="/finalProject/resources/images/event-01.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <a href="event-details.html"><h4>Radio City Musical Hall</h4></a>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> Tuesday: 15:30-19:30</li>
-                                <li><i class="fa fa-map-marker"></i> Copacabana Beach, Rio de Janeiro</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="event-item">
-                        <div class="thumb">
-                            <a href="event-details.html"><img src="/finalProject/resources/images/event-02.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <a href="event-details.html"><h4>Madison Square Garden</h4></a>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> Wednesday: 08:00-14:00</li>
-                                <li><i class="fa fa-map-marker"></i> Copacabana Beach, Rio de Janeiro</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="event-item">
-                        <div class="thumb">
-                            <a href="event-details.html"><img src="/finalProject/resources/images/event-03.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <a href="event-details.html"><h4>Royce Hall</h4></a>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> Thursday: 09:00-23:00</li>
-                                <li><i class="fa fa-map-marker"></i> Copacabana Beach, Rio de Janeiro</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- *** Subscribe *** -->
-    <div class="subscribe">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <h4>Subscribe Our Newsletter:</h4>
-                </div>
-                <div class="col-lg-8">
-                    <form id="subscribe" action="" method="get">
-                        <div class="row">
-                          <div class="col-lg-9">
-                            <fieldset>
-                              <input name="email" type="text" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your Email Address" required="">
-                            </fieldset>
-                          </div>
-                          <div class="col-lg-3">
-                            <fieldset>
-                              <button type="submit" id="form-submit" class="main-dark-button">Submit</button>
-                            </fieldset>
-                          </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+			</div>
+			
+			<br>
+			
+</div>
 	
 	<%@include file="WEB-INF/views/common/footer.jsp" %>
     <script src="resources/js/custom.js"></script>

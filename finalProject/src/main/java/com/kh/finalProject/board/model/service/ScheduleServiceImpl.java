@@ -2,6 +2,7 @@ package com.kh.finalProject.board.model.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -18,7 +19,6 @@ import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Info;
 import com.kh.finalProject.board.model.vo.Path;
 import com.kh.finalProject.board.model.vo.Plan;
-import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -46,18 +46,18 @@ public class ScheduleServiceImpl implements ScheduleService {
 		// 방금 등록한 bno와 infoNo 조회해와서 사용
 		Board b = scDao.checkBno(sqlSession, plan);
 		// 3. 가져온 장소 정보안에 img url 추출 (이미지 다운)후 등록
-		// imgsrc 리스트에 담기(infoList의 boardContent ||구분자로 [0] -> 이 안에 url |구분자로 들어있음
+		// imgsrc 리스트에 담기(infoList의 boardContent $$$구분자로 [0] -> 이 안에 url $$구분자로 들어있음
+		System.out.println(infoList.get(0).getBoardContent());
 		for(int i=0; i<infoList.size(); i++) {
 			ArrayList<String> imgURL = new ArrayList<>();
-			if(infoList.get(i).getBoardContent()!=null) {
+			if(infoList.get(i).getBoardContent()!=null || infoList.get(i).getBoardContent().equals("")||infoList.get(i).getBoardContent().equals(" ")) {
 				// 기존에 사용하던 메소드 사용해서 json의 형태로 받았기에 한글자씩 문자열의 배열로넘어옴. 원하는 형태로 가공하기 위해 문자열로 합쳐줌
-				String urlString = String.join(infoList.get(i).getBoardContent()); 
-				String[] str = urlString.split("||");
-				if(str[0].contains("|")) { //이미지가 여러개
-					System.out.println("str1 :   "+str[1]);
+				String urlString = String.join(infoList.get(i).getBoardContent());
+				System.out.println(urlString);
+				String[] str = urlString.split("$$$");
+				if(str[0].contains("$$")) { //이미지가 여러개
 					infoList.get(i).setBoardContent(str[1]);
-					String[] url = str[0].split("|"); // info 하나의 url들
-					System.out.println("구분자 제거한 url들 : "+ Arrays.toString(url));
+					String[] url = str[0].split("$$"); // info 하나의 url들
 					for(int j=0; j<url.length; j++) {
 						imgURL.add(url[j]);
 						atList = AttractionController.imgTool(session, imgURL);
@@ -86,7 +86,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 			Path path = Path.builder().boardNo(b.getBoardNo())
 									.infoName(pathArr[i][0])
 									.daily(Integer.parseInt(pathArr[i][1]))
-									.pathNo(Integer.parseInt(pathArr[i][2])).build();
+									.pathNo(Integer.parseInt(pathArr[i][2]))
+									.address(pathArr[i][3]).build();
 			if(pathArr[i].length==5 && pathArr[i][4]!=null) { // 해당 인덱스 존재 여부와 문자열로 보낸값이기에 null ck
 				path.builder().pay(Integer.parseInt(pathArr[i][4]));
 			} else {
@@ -100,18 +101,45 @@ public class ScheduleServiceImpl implements ScheduleService {
 		}
 		return result;
 	}
-	
-	
-	
+
+	// 디테일뷰 조회
 	@Override
-	public int selectListCount(String sort) {
-		// TODO Auto-generated method stub
-		return 0;
+	@Transactional
+	public HashMap<String, Object> selectSchedule(int boardNo) {
+		HashMap<String, Object> dataMap = new HashMap<>();
+		// Plan+board조회
+		Plan p = scDao.selectBoard(sqlSession, boardNo);
+		// 게시물 안에 들어있는 infoNo 추출해서 사용
+		String[] pathList = p.getPathList().split("/");
+		// info+ attachment 조회
+		ArrayList<Info> info = new ArrayList<>();
+		HashMap<Integer, ArrayList<Attachment>> atList = new HashMap<>();
+		for(int i =1; i<=pathList.length; i++) { // 맨앞에 /가 있어서 1번부터 길이까지 조회
+			info.add(scDao.selectInfo(sqlSession,Integer.parseInt(pathList[i])));
+			atList.put(Integer.parseInt(pathList[i]), scDao.selectAttachList(sqlSession, Integer.parseInt(pathList[i])));
+		}
+		// path 조회 
+		ArrayList<Path> pList = scDao.selectPathList(sqlSession,boardNo);
+		dataMap.put("plan", p);
+		dataMap.put("info", info);
+		dataMap.put("atList", atList);
+		dataMap.put("pList", pList);
+		return dataMap;
 	}
+
+	// 게시물 삭제 (board, path, plan)
 	@Override
-	public ArrayList<Board> selectBoardList(PageInfo pi, String sort) {
-		// TODO Auto-generated method stub
-		return null;
+	public int deleteSchedule(Plan plan) {
+		// path 삭제
+		int result = scDao.deletePath(sqlSession, plan);
+		// plan 삭제
+		int result2 =  scDao.deletePlan(sqlSession, plan);
+		// board 삭제
+		int result3 = scDao.deleteBoard(sqlSession, plan);
+		return result*result2*result3;
 	}
+	
+	
+	
 
 }

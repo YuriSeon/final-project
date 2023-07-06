@@ -7,6 +7,7 @@ import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Plan;
 import com.kh.finalProject.board.model.vo.TogetherApplyVO;
 import com.kh.finalProject.board.model.vo.TogetherVO;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 
 public interface TogetherService {
@@ -24,5 +25,17 @@ public interface TogetherService {
 	int togetherApply(TogetherApplyVO ta);
 
 	TogetherVO togetherDetail(int boardNo);
+
+	ArrayList<TogetherApplyVO> applyParticipate(int boardNo);
+
+	int applyParticipateAccept(TogetherApplyVO ta);
+
+	int applyParticipateReject(TogetherApplyVO ta);
+
+	int togetherChoiceCheck(choice c);
+
+	int choiceYes(choice c);
+
+	int choiceNo(choice c);
 
 }

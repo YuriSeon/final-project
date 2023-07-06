@@ -73,7 +73,7 @@
                     <tr>
                         <th>이미지</th>
                         <td id="img-area" colspan="3">
-                        <input type="file" name="fileUpload" id="upfile">
+                        <input type="file" name="fileUpload" id="upfile"> <!-- 여기 수정하거나 빼거나 하면 됨 -->
 	                        <div id="wrapSlide">
 		                        <div id="float">
 		                            <div class="float-img">

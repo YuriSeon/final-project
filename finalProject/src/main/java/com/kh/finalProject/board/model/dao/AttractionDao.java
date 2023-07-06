@@ -42,7 +42,6 @@ public class AttractionDao {
 		case "제주특별자치도" : strArr[0] = "제주";
 		}
 		zoneName = strArr[0]+" "+strArr[1];
-		System.out.println(zoneName);
 		return sqlSession.selectOne("attractionMapper.selectZoneNo", zoneName);
 	}
 
@@ -218,11 +217,11 @@ public class AttractionDao {
 	}
 	// 게시글 
 	public ArrayList<Board> selectBoardList(SqlSession sqlSession, String keyword) {
-		return (ArrayList)sqlSession.selectList("attractionMapper.selectBoard", keyword);
+		return (ArrayList)sqlSession.selectList("attractionMapper.selectBoardList", keyword);
 	}
 	//info 정보
 	public ArrayList<Info> selectInfo(SqlSession sqlSession, String keyword) {
-		return (ArrayList)sqlSession.selectList("attractionMapper.selectInfo", keyword);
+		return (ArrayList)sqlSession.selectList("attractionMapper.selectInfoList", keyword);
 	}
 	
 

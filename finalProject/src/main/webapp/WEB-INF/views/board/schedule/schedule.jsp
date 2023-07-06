@@ -20,7 +20,7 @@
  			});
  		});
 	</script>
-    <a href="detail.sc">상세페이지로</a>
+    <a href="detail.sc?boardNo=103">상세페이지로</a>
    <div class="main-schedule"></div>
    <div class="schedule">
         <div class="title-area">

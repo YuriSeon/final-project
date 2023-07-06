@@ -129,6 +129,40 @@
 		#etcImg:hover{
 			cursor: pointer;
 		}
+		#participateTable{
+			text-align:center;
+		}
+		#participateTable>tbody tr:hover{
+			background-color: lightgray;
+		}
+		#togetherApplyAlertDiv{
+			width:400px;
+			height:500px;
+			border:3px solid #7c838b;
+			border-radius: 20px;
+			background-color: #7c838b;
+		}
+		#applyContent{
+			margin:20px;
+			width:360px;
+			height:460px;
+			border-radius: 20px;
+			background-color: white;
+		}
+		#applyTitle{
+			padding: 15px 0px 0px 20px;
+		}
+		#applyMessage{
+			width: 320px;
+			height: 150px;
+			resize: none;
+		}
+		#applyDate{
+			margin-bottom: 10px;
+		}
+		#applyBtnArea>button{
+			margin:0px 10px;
+		}
 </style>
 </head>
 <body>
@@ -182,7 +216,7 @@
 							                            				    			<p>참여하려면 본인 인증을 해주세요.</p>
 							                            						</c:when>
 							                            						<c:otherwise>
-													                            	    <button type="button" class="togetherBtn btn btn-outline-secondary">참여하기</button>
+													                            	    <button type="button" id="detailApplyBtn" class="togetherBtn btn btn-outline-secondary">참여하기</button>
 							                            						</c:otherwise>
 							                            				</c:choose>
 							                            			</c:when>
@@ -201,7 +235,7 @@
 												<c:choose>
 														<c:when test="${loginUser.nickname eq t.boardWriter }">
 																<th style="width:90px;">동행 신청자</th>
-																 <td colspan="3">&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-outline-info">신청자 보기</button></td>
+																 <td colspan="3">&nbsp;&nbsp;&nbsp;<button type="button" id="applyParticipateListBtn" class="btn btn-outline-info">신청자 보기</button></td>
 														</c:when>
 														<c:otherwise>
 																<td colspan="4"></td>
@@ -214,14 +248,185 @@
 										</tr>				
 						</table>
 				</div>
+				
+							<c:if test="${not empty loginUser and not empty cookie.applyCheck }">
+									<script>
+											$(function(){
+												var applyCheck = "${cookie.applyCheck.value}";
+												var applyBoardNo = applyCheck.split("/")[0];
+												var applyWriter = applyCheck.split("/")[1];
+												var loginUser = "${loginUser.nickname}";
+												
+												var $btn = $("#detailContentTable").find("button");
+												
+														if(loginUser == applyWriter){
+																if("${t.boardNo}"== applyBoardNo){
+// 																	var $applyBtn = $(this).siblings().eq(0).children().eq(1).children("div").children("button");
+																	$btn.text("작성자 승인 대기중").attr("disabled",true).css("color","white").css("background-color","lightgreen");																
+																}else{
+// 																	var $elseBtns = $(this).siblings().eq(0).children().eq(1).children("div").children("button");
+																		if($btn.text() != "마감되었습니다."){
+																			$btn.text("중복 참여 불가").attr("disabled",true).css("color","black").css("background-color","lightgray");
+																		}
+																}														
+														}
+											});
+									</script>
+							</c:if>					
+				
+				
+				<script>
+							
+						$("#detailApplyBtn").on("click",function(){
+							$("#detailApplyModal").modal('show');
+						});
+				
+						$("#applyParticipateListBtn").on("click",function(){
+							var boardNo = "${t.boardNo}";
+							
+							$("#participateTable>tbody").children().remove();
+							
+							$.ajax({
+								url : "applyParticipate.bo",
+								data : {boardNo : boardNo},
+								success : function(result){
+									
+									var str = "";
+									
+									if(result.length != 0){
+											for(var i in result){
+												str += "<tr style='height:50px;'><td><input type='checkbox' class='participateCheckBox'><input type='hidden' id='indexInput"+i+"' value='"+result[i].nickname+"'></td><td>"+result[i].nickname+"</td><td>"+result[i].message+"</td><td>"
+														+result[i].applyDate+"</td></tr>"
+											};
+									}else{
+												str += "<tr><td colspan='4'>신청자가 없습니다.</td></tr>";										
+									}
+									$("#participateTable>tbody").append(str);
+								},
+								error : function(){
+									console.log("신청자 리스트 갱신 실패");
+								}
+							});
+							
+							$("#applyParticipateListModal").modal('show');
+						});
+				</script>
+				
+		<div class="modal fade" id="applyParticipateListModal">
+		  <div class="modal-dialog" style="width:520px; height: 500px; ">
+			<div class="modal-content" style="width:520px; border-radius: 23px; border: 1px solid #7c838b;">
+			  <!-- Modal body -->
+			  <div style="width:520px ;padding: 0;" align="center">
+			  		<br>
+						<table id="participateTable" style="width:520px;">
+								<thead>
+										<tr style="height:40px;">
+												<th style="width:40px;">선택</th>
+												<th style="width:60px;">닉네임</th>
+												<th style="width:200px;">지원 동기</th>
+												<th style="width:220px;">지원 날짜</th>
+										</tr>
+								</thead>
+								<tbody>
+									
+								</tbody>
+						</table>
+						<br>
+						<div id="participateBtnArea">
+								<button type="button" class="btn btn-outline-success" id="participateAcceptBtn">참여 수락</button>
+								<button type="button" class="btn btn-outline-warning"id="participateRejectBtn">참여 거절</button>
+								<button type="button" class="btn btn-outline-danger" data-dismiss="modal">창 닫기</button>
+						</div>
+						<br>
+			  </div> <!--modal-body-->
+			</div>
+		  </div>
+		</div>
+		
+		<script>
+		
+				$("#participateAcceptBtn").on("click",function(){
+						var str = "";
+						$("input[class=participateCheckBox]").each(function(){
+							if($(this).prop("checked")){
+								str += $(this).siblings().val()+" ";
+							}
+						});
+						location.href="applyParticipateResult.bo?boardNo=${t.boardNo}&type=accept&nickname="+str						
+				});
+				
+				$("#participateRejectBtn").on("click",function(){
+					var str = "";
+					$("input[class=participateCheckBox]").each(function(){
+						if($(this).prop("checked")){
+							str += $(this).siblings().val()+" ";
+						}
+					});
+					location.href="applyParticipateResult.bo?boardNo=${t.boardNo}&type=reject&nickname="+str						
+			});
+		</script>
+		
+		
+	<div class="modal fade" id="detailApplyModal">
+		  <div class="modal-dialog" style="width:400px; height: 500px; ">
+			<div class="modal-content" style=" border-radius: 23px; border: 1px solid #7c838b;">
+			  <!-- Modal body -->
+			  <div id="applyModalBody" style="padding: 0;">
+				<div id="togetherApplyAlertDiv" >
+					<div id="applyContent">
+							<div id="applyTitle">
+								<h5 id="applyTermText">[${t.totalDate}박 ${t.totalDate +1}일]</h5>
+								<h4 align="center" id="applyTitleText">&lt; ${t.boardTitle} &gt;</h4>
+							</div>
+							<div id="applyDate" align="center">${t.startDate } ~ ${t.endDate }</div>
+							<div id="applyPay" align="center">${t.totalPay }원 이하</div>
+							<br>
+						<form action="togetherApply.bo" method="post">
+							<input type="hidden" name="writer" id="writer" value="${loginUser.nickname }">
+							<input type="hidden" name="boardNo" id="applyBoardNo" value="${t.boardNo }">
+							<div id="applyMessageDiv" align="center">
+								<textarea name="applyMessage" id="applyMessage" placeholder="글 작성자에게 하실 말을 적어주세요. (최대 70자)"></textarea>
+							</div>
+							<br>
+							<div id="applyBtnArea" align="center">
+								<button type="submit" id="applySubmitBtn" class="btn btn-outline-info">참여하기</button>
+								<button type="button" id="applyOutBtn" class="btn btn-outline-danger" data-dismiss="modal">취소하기</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			  </div> <!--modal-body-->
+			</div>
+		  </div>
+		</div>			
+					
 				<br><br>
 				<div id="detailBtnArea" align="center">
-						<button type="button" class="btn btn-outline-success" id="choiceBtn">찜하기</button>
-					<c:if test="${loginUser.nickname eq t.boardWriter }">
-						<button type="button" class="btn btn-outline-warning" id="updateBtn">수정하기</button>
-						<button type="button" class="btn btn-outline-danger" id="deleteBtn">삭제하기</button>
+					<c:if test="${not empty loginUser }">
+						<c:choose>
+								<c:when test="${choiceCheck eq 1 }">
+										<button type="button" class="btn btn-success choiceBtn">찜 취소하기</button>
+								</c:when>
+								<c:otherwise>
+										<button type="button" class="btn btn-outline-success choiceBtn" >찜하기</button>
+								</c:otherwise>
+						</c:choose>
+						<c:if test="${loginUser.nickname eq t.boardWriter }">
+							<button type="button" class="btn btn-outline-warning" id="updateBtn">수정하기</button>
+							<button type="button" class="btn btn-outline-danger" id="deleteBtn">삭제하기</button>
+						</c:if>
 					</c:if>
 				</div>
+				
+			<script>
+					$(".choiceBtn").on("click",function(){
+							location.href="togetherChoice.bo?boardNo=${t.boardNo}&writer=${loginUser.nickname}&choiceCheck=${choiceCheck}";
+					});
+					
+					$("#updateBtn").on("click",function(){
+							location.href="togetherUpdate.bo?boardNo=${t.boardNo}";
+					});
+			</script>
 				
 	<div id="togetherReplyArea">
 		<br>

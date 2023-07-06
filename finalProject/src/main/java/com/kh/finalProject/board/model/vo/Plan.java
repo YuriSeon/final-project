@@ -40,4 +40,6 @@ public class Plan extends Board{
 	private int totalPay;
 	private String complete;
 	
+	private String pathList; // infoNo에 들어있는 구분자때문에 string 필요해서 만들게요 name으로 하면 헷갈릴거같아요
+	
 }

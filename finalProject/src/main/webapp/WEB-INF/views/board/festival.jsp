@@ -204,6 +204,23 @@
 		background-color: rgb(142, 195, 142) !important;
 		border-radius: 50%;
 	}
+	
+	#festi_go{
+		border: 2px solid rgb(111, 207, 135);;
+		width: 80px;
+		height: 40px;
+		display: flex;
+		justify-content: center;
+		line-height: 2.5;
+		position: absolute;
+		z-index: 10;
+		top: 10px;
+		left: 10px;
+		background-color: red;
+		border-radius: 7px;
+		color: white;
+		font-weight: 600;
+	}
     </style>
 
     <!-- Additional CSS Files -->
@@ -246,6 +263,7 @@
 					<span class="img"></span>
 					<div class="list">
 						<!-- ***** 달력 ***** -->
+						<input type="hidden" name="nowDay" id="nowDay">
 						<br>
 						<div class="fes_container calendar" id="fes_con">
 					        <header>
@@ -271,7 +289,7 @@
         <!-- 검색 -->
         <div class="search_slide_wrap">
             <div class="inner">
-                <form action="search.fe" name="festivalSearch" id="festivalSearch" class="festival_search">
+                <form action="festival.fe?currentPage=1&date=${date }&searchArea=${area }&searchCate=${cate}" name="festivalSearch" id="festivalSearch" class="festival_search">
                     <fieldset>
                         <div class="search_box_wrap">
                             <div class="select_box select_date" id="date">
@@ -318,7 +336,7 @@
                                     <option value="1">공연</option>
                                     <option value="2">문화관광</option>
                                     <option value="3">자연</option>
-                                    <option value="4">먹거리</option>
+                                    <option value="4">환경</option>
                                     <option value="5">꽃</option>
                                     <option value="6">가족과함께</option>
                                 </select>
@@ -360,11 +378,18 @@
 	    <div class="container">
 	        <div class="row">
 	        	<c:forEach var="b" items="${list }">
-		            <div class="col-lg-4" id="fes_div" onclick="location.href='fesDetail.fe?boardNo=${b.boardNo}'" style="height: 508px;">
+		            <div class="col-lg-4" id="fes_div" onclick="handlePostClick(this);" style="height: 508px;">
 		                <div class="ticket-item">
 		                    <div class="thumb">
 		                    	<input type="hidden" class="boardNo" name="boardNo" value="${b.boardNo }">
 		                        <img src="${b.attachment.filePath }" alt="" style="height: 300px;">
+		                        <c:choose>
+		                        	<c:when test="${b.status eq 'Y' }">
+				                    	<div id="festi_go">개최중</div>		                        	
+		                        	</c:when>
+		                        	<c:otherwise>
+		                        	</c:otherwise>
+		                        </c:choose>
 		                    </div>
 		                    <div id="good_div"><img src="/finalProject/resources/images/Like-before.png" id="good_img" onclick="goodCk(event, '${b.boardNo}', this)"></div>
 		                    <div class="down-content">
@@ -594,6 +619,7 @@
 	        }
 	        var nowDay = nowYear+'-'+nowMonth+'-'+clickDate;
 	        
+	        //클릭시
 	        $.ajax({
 	        	url : "mouCount.fe",
 	        	data :	{nowDay : nowDay},
@@ -602,7 +628,8 @@
 	        		$(this).text(count+'개의 축제보기').css({"font-size":"13px","width":"115px","height":"90px","cursor":"pointer",
 	        											"transition":"0.5s","background-color":"#93dda4"});
 	        		$(this).on('click',function(){
-	        			location.href="search.fe?nowDay="+nowDay;
+	        			$("#nowDay").val(nowDay);
+	        			location.href="festival.fe?nowDay="+nowDay+"&date=${date }&searchArea=${area }&searchCate=${cate}";
 	        		})
 	        		
 	        	}.bind(this),
@@ -656,6 +683,48 @@
 	    	$("#searchCate").val("0").prop("selected",true);
 	    };
 	    
+		//최근 본 페이지 세션에 저장
+		function setRecentPageInfo(thumbnail, title, url) {
+			// 세션에서 이전에 저장된 최근 페이지 정보 배열 가져오기
+			var recentPages = sessionStorage.getItem('recentPages');
+
+			if (recentPages) {
+				// 이미 저장된 최근 페이지 정보 배열이 있을 경우 파싱하여 가져옴
+			    recentPages = JSON.parse(recentPages);
+			} else {
+			    // 저장된 최근 페이지 정보 배열이 없을 경우 빈 배열로 초기화
+			    recentPages = [];
+			}
+
+			// 새로운 페이지 정보 객체 생성
+			var pageInfo = {
+			    thumbnail: thumbnail,
+			    title: title,
+			    url: url
+			};
+
+			// 배열 맨 앞에 새로운 페이지 정보 추가
+			recentPages.unshift(pageInfo);
+
+			// 최대 5개까지만 유지하기 위해 배열 길이 조정
+			if (recentPages.length > 5) {
+			    recentPages = recentPages.slice(0, 5);
+			}
+
+			// 최근 페이지 정보 배열을 세션에 저장
+			sessionStorage.setItem('recentPages', JSON.stringify(recentPages));
+		}
+
+		//게시물 클릭시 저장 후 이동
+		function handlePostClick(e) {
+			var thumbnail = $(e).find("img").attr("src");
+			var title = $(e).find("h4").text();
+			var bno = $(e).find("input").val();
+			var url = "http://localhost:8888/finalProject/fesDetail.fe?boardNo="+bno;
+			
+			setRecentPageInfo(thumbnail, title, url);
+			location.href = url;
+		}
 	    
 	</script>
 	

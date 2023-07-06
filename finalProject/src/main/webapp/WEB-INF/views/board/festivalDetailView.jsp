@@ -158,6 +158,7 @@
 	  text-align: center;
 	  margin-left: .8em;
 	  margin-right: .8em;
+	  cursor: pointer;
 	}
 	
 	#photo-list h2 {
@@ -293,6 +294,15 @@
 		background-color: #f8f8f8;
 		border: 1px solid rgb(202, 202, 202);
 		border-radius: 3px;
+	}
+	
+	#no_myung{
+		color: #757575;
+		border-bottom: 1px solid #757575;
+		width: 1100px;
+		margin-bottom: 80px;
+		padding-bottom: 50px;
+		text-align: center;
 	}
 	</style>
 
@@ -447,25 +457,35 @@ ${b.boardContent }
 				<header id="M-header">
 				  <h1 id="M-name">주변 추천 명소</h1>
 				</header>
-				
 				<div id="M-list-wrap">
-				  <div id="photo-list">
-				    <img src="https://res.cloudinary.com/olti/image/upload/v1463520654/1_xdyhpf.jpg" alt="Big Sur">
-				    <h2>알파카 월드</h2>
-				    <p>1200여년 전 시작되어 오늘날까지 이어지고 있는 전통축제. 연등행렬에는 자신이 직접 만든 등을 만들어 참여하는데, 이 등에는 자신과 가족</p>
-				  </div>
-				
-				  <div id="photo-list">
-				    <img src="https://res.cloudinary.com/olti/image/upload/v1463520653/2_keuljm.jpg" alt="Turquoise waters">
-				    <h2>서울숲</h2>
-				    <p>1200여년 전 시작되어 오늘날까지 이어지고 있는 전통축제. 연등행렬에는 자신이 직접 만든 등을 만들어 참여하는데, 이 등에는 자신과 가족</p>
-				  </div>
-				
-				  <div id="photo-list">
-				    <img src="https://res.cloudinary.com/olti/image/upload/v1463520654/3_yn1nie.jpg" alt="The retro van">
-				    <h2>대천 해수욕장</h2>
-				    <p>1200여년 전 시작되어 오늘날까지 이어지고 있는 전통축제. 연등행렬에는 자신이 직접 만든 등을 만들어 참여하는데, 이 등에는 자신과 가족</p>
-				  </div> 
+					<c:choose>
+						<c:when test="${not empty m }">
+							<c:forEach var="m" items="${m }">
+								<div id="photo-list" onclick="location.href='attraction.bo?board_no=${m.boardNo}'">
+									<img src="${m.attachment.filePath }" alt="Big Sur" style="width: 350px; height: 220px;">
+									<c:choose>
+										<c:when test="${fn:length(m.boardTitle  ) < 10 }">
+											<h2>${m.boardTitle   }</h2>									
+										</c:when>
+										<c:otherwise>
+											<h2>${fn:substring (m.boardTitle  , 0,10) }...</h2>
+										</c:otherwise>
+									</c:choose>
+									<c:choose>
+										<c:when test="${fn:length(m.boardContent ) < 70 }">
+											<p>${m.boardContent  }</p>									
+										</c:when>
+										<c:otherwise>
+											<p>${fn:substring (m.boardContent , 0,70) }...</p>
+										</c:otherwise>
+									</c:choose>
+								</div>
+							</c:forEach>						
+						</c:when>
+						<c:otherwise>
+						  <div id="no_myung">등록된 주변 명소가 없습니다.</div>						
+						</c:otherwise>
+					</c:choose>
 				</div>
 			</div>
         	

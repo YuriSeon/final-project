@@ -120,36 +120,74 @@
             <div id="pagingArea" align="center">
                 <ul class="pagination">
                 	<c:choose>
-                		<c:when test="${pi.currentPage eq 1}">
-                   			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
+                		<c:when test="${keyword != null}">
+		                	<c:choose>
+		                		<c:when test="${pi.currentPage eq 1}">
+		                   			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
+		                		</c:when>
+		                		<c:otherwise>
+		                			 <li class="page-item"><a class="page-link" href="feedSearch.ad?currentPage=${pi.currentPage - 1}&type=${type}&keyword=${keyword}">&lt;</a></li>
+		                		</c:otherwise>
+		                	</c:choose>
+		                	
+		                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
+		                    	<c:choose>
+		                    		<c:when test="${p eq pi.currentPage}">
+		                   				<li class="page-item disabled"><a class="page-link" href="feedSearch.ad?currentPage=${p}&type=${type}&keyword=${keyword}">${p}</a></li>
+			                		</c:when>
+			                		<c:otherwise>
+			                			<li class="page-item"><a class="page-link" href="feedSearch.ad?currentPage=${p}&type=${type}&keyword=${keyword}">${p}</a></li>
+			                		</c:otherwise>
+		                    	</c:choose>
+		                    </c:forEach>
+		                    
+		                    <c:choose>
+		                    	<c:when test="${pi.currentPage eq pi.maxPage}">
+				                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
+		                    	</c:when>
+		                    	<c:when test="${pi.listCount eq 0}">
+				                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
+		                    	</c:when>
+		                    	<c:otherwise>
+		                    		<li class="page-item"><a class="page-link" href="feedSearch.ad?currentPage=${pi.currentPage + 1}&type=${type}&keyword=${keyword}">&gt;</a></li>
+		                    	</c:otherwise>
+		                    </c:choose>
                 		</c:when>
+                		
                 		<c:otherwise>
-                			 <li class="page-item"><a class="page-link" href="feed.ad?currentPage=${pi.currentPage - 1 }">&lt;</a></li>
+		                	<c:choose>
+		                		<c:when test="${pi.currentPage eq 1}">
+		                   			 <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
+		                		</c:when>
+		                		<c:otherwise>
+		                			 <li class="page-item"><a class="page-link" href="feed.ad?currentPage=${pi.currentPage - 1 }">&lt;</a></li>
+		                		</c:otherwise>
+		                	</c:choose>
+		                	
+		                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
+		                    	<c:choose>
+		                    		<c:when test="${p eq pi.currentPage}">
+		                   				<li class="page-item disabled"><a class="page-link" href="feed.ad?currentPage=${p}">${p}</a></li>
+			                		</c:when>
+			                		<c:otherwise>
+			                			<li class="page-item"><a class="page-link" href="feed.ad?currentPage=${p}">${p}</a></li>
+			                		</c:otherwise>
+		                    	</c:choose>
+		                    </c:forEach>
+		                    
+		                    <c:choose>
+		                    	<c:when test="${pi.currentPage eq pi.maxPage}">
+				                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
+		                    	</c:when>
+		                    	<c:when test="${pi.listCount eq 0}">
+				                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
+		                    	</c:when>
+		                    	<c:otherwise>
+		                    		<li class="page-item"><a class="page-link" href="feed.ad?currentPage=${pi.currentPage + 1}">&gt;</a></li>
+		                    	</c:otherwise>
+		                    </c:choose>
                 		</c:otherwise>
                 	</c:choose>
-                	
-                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage}">
-                    	<c:choose>
-                    		<c:when test="${p eq pi.currentPage}">
-                   				<li class="page-item disabled"><a class="page-link" href="feed.ad?currentPage=${p}">${p}</a></li>
-	                		</c:when>
-	                		<c:otherwise>
-	                			<li class="page-item"><a class="page-link" href="feed.ad?currentPage=${p}">${p}</a></li>
-	                		</c:otherwise>
-                    	</c:choose>
-                    </c:forEach>
-                    
-                    <c:choose>
-                    	<c:when test="${pi.currentPage eq pi.maxPage}">
-		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
-                    	</c:when>
-                    	<c:when test="${pi.listCount eq 0}">
-		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
-                    	</c:when>
-                    	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="feed.ad?currentPage=${pi.currentPage + 1}">&gt;</a></li>
-                    	</c:otherwise>
-                    </c:choose>
                 </ul>
             </div> 
             <!-- 페이징 끝 -->
@@ -173,6 +211,7 @@
 					    <div class="swiper-button-prev"></div>
 					    <div class="swiper-button-next"></div>
 					</div>
+					<div class="content-box" style="text-align: center; font-size: 16px; color: #313131; margin-top: 20px;"></div>
 				</div>
 				<div class="modal-footer">
 <!-- 					<button type="button" class="btn btn-primary">Save changes</button> -->
@@ -217,9 +256,11 @@
 				success: function(list) {
 					var str = "";
 					for(var i in list){
-						str +='<div class="swiper-slide"><img src="'+list[i].filePath+'" width="95%;" height="580px;"></div>';
+						str +='<div class="swiper-slide"><img src="'+list[i].filePath+'" width="55%;" height="15%;"></div>';
+							
 					}
-					$(".modal-title").text(content);
+					$(".modal-title").text("피드");
+					$(".content-box").text(content);
 					$(".swiper-wrapper").html(str);
 					$("#exampleModal").modal("show");			
 				},

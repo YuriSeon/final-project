@@ -361,7 +361,6 @@
 			$userPwd.keyup(function(){
 				
 				if($userPwd.val().trim().length>=1){//비밀번호 입력시 1자리보다 크면 유효성 검사 진행
-					//console.log($inputPwd.val().trim().length);
 					$("#pwd_check").show();
 					
 					var regExp = /^[a-zA-Z0-9]+$/;
@@ -381,42 +380,6 @@
 				$("#pwdCk_check").text("");
 			});
 		});
-		
-		/* 비밀번호 확인(onblur이벤트로 포커스 해지시 발동... 비번,비번확인 일치하는지 ck) */
-		/* function pwdChEvent(){
-			if($("#search_Pwd_Modal input[name=memPwd]").val()!=$("#memPwdCk").val()){
-				$("#pwdCk_check").show();
-				$("#pwdCk_check").text("비밀번호가 일치하지 않습니다.");
-			}
-		} */
-		
-		//버튼 클릭시 회원가입 진행
-		/* function joinChk(){
-			
-			//비밀번호
-			var $userPwd = $("#insertForm input[name=userPwd]");
-			//유효성 검사 포커스
-			var regExp = /^[a-zA-Z0-9!.,~]+$/;
-			if(!(regExp.test($userPwd.val()))){
-				$userPwd.focus();
-				return false;
-			}
-			//8자리 아래시 포커스 맞춰주기
-			if($userPwd.val().trim().length<8){
-				$("#pwd_check").css({"color":"red","font-size":"12px"}).text("8글자 이상 입력해주세요.");
-				$("#pwd_check").show();
-				$userPwd.focus();
-				return false;
-			}
-			
-			//비밀번호 확인 != 비밀번호시
-			if($userPwd.val()!=$("#checkPwd").val()){
-				$("#pwdCk_check").css({"color":"red","font-size":"12px"}).text("비밀번호와 일치하지 않습니다.");
-				$("#pwdCk_check").show();
-				$("#checkPwd").focus();
-				return false;
-			}
-		} */
 	</script>
 	
 </body>

@@ -133,4 +133,47 @@
 				AND B.STATUS = 'Y'
 				AND B.BOARD_NO = #{boardNo} 				
   		</select>
+  		
+  		<select id="applyParticipate" resultMap="togetherApplyResultSet">
+  				SELECT REF_BNO,NICKNAME,MESSAGE,STATUS,APPLY_DATE
+  				FROM TOGETHER_APPLY
+  				WHERE STATUS = 'Y'
+  				AND REF_BNO = #{boardNo}
+  				ORDER BY APPLY_DATE DESC
+  		</select>
+  		
+  		<resultMap type="ta" id="togetherApplyResultSet">
+  				<result column="REF_BNO" property="refBno"/>
+  				<result column="NICKNAME" property="nickname"/>
+  				<result column="MESSAGE" property="message"/>
+  				<result column="STATUS" property="status"/>
+  				<result column="APPLY_DATE" property="applyDate"/>
+  		</resultMap>
+  		
+  		<update id="applyParticipateAccept">
+  				UPDATE TOGETHER_APPLY SET STATUS = 'C' WHERE REF_BNO=#{refBno} AND NICKNAME=#{nickname}
+  		</update>
+  		
+  		<update id="applyParticipateAcceptPlan">
+  				UPDATE PLAN SET TOGETHER_COUNT = TOGETHER_COUNT+1 WHERE BOARD_NO = #{refBno}
+  		</update>
+  		
+  		<update id="applyParticipateReject">
+  				UPDATE TOGETHER_APPLY SET STATUS = 'N' WHERE REF_BNO=#{refBno} AND NICKNAME=#{nickname}
+  		</update>
+  		
+		<select id="togetherChoiceCheck" resultType="_int">
+				SELECT COUNT(*)
+				FROM CHOICE
+				WHERE WRITER = #{writer}
+				AND BOARD_NO = #{boardNo}
+		</select>  		
+		
+		<insert id="togetherYes">
+				INSERT INTO CHOICE VALUES(#{boardNo},#{writer})
+		</insert>
+		
+		<delete id="togetherNo">
+				DELETE FROM CHOICE WHERE BOARD_NO = #{boardNo} AND WRITER = #{writer}
+		</delete>
   </mapper>

@@ -13,6 +13,7 @@ import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Plan;
 import com.kh.finalProject.board.model.vo.TogetherApplyVO;
 import com.kh.finalProject.board.model.vo.TogetherVO;
+import com.kh.finalProject.board.model.vo.choice;
 import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Service
@@ -61,6 +62,39 @@ public class TogetherServiceImpl  implements TogetherService{
 	@Override
 	public TogetherVO togetherDetail(int boardNo) {
 		return togetherDao.togetherDetail(sqlSession,boardNo);
+	}
+
+	@Override
+	public ArrayList<TogetherApplyVO> applyParticipate(int boardNo) {
+		return togetherDao.applyParticipate(sqlSession,boardNo);
+	}
+
+	@Override
+	@Transactional
+	public int applyParticipateAccept(TogetherApplyVO ta) {
+		int result1 = sqlSession.update("togetherMapper.applyParticipateAccept",ta);
+		int result2 = sqlSession.update("togetherMapper.applyParticipateAcceptPlan",ta);
+		return result1*result2;
+	}
+
+	@Override
+	public int applyParticipateReject(TogetherApplyVO ta) {
+		return togetherDao.applyParticipateReject(sqlSession,ta);
+	}
+
+	@Override
+	public int togetherChoiceCheck(choice c) {
+		return togetherDao.togetherChoiceCheck(sqlSession,c);
+	}
+
+	@Override
+	public int choiceYes(choice c) {
+		return togetherDao.togetherYes(sqlSession,c);
+	}
+
+	@Override
+	public int choiceNo(choice c) {
+		return togetherDao.togetherNo(sqlSession,c);
 	}
 
 

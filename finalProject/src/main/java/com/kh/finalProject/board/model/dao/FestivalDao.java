@@ -32,18 +32,18 @@ public class FestivalDao {
 	}
 
 	//축제 총 게시글
-	public int fesCount(SqlSession sqlSession) {
-		return sqlSession.selectOne("festivalMapper.fesCount");
+	public int fesCount(SqlSession sqlSession, HashMap<String, String> keyword) {
+		return sqlSession.selectOne("festivalMapper.fesCount", keyword);
 	}
 	
 	//축제 리스트
-	public ArrayList<Board> fesList(SqlSession sqlSession, PageInfo pi) {
+	public ArrayList<Board> fesList(SqlSession sqlSession, HashMap<String, String> keyword, PageInfo pi) {
 		int limit = pi.getBoardLimit();
 		int offset = (pi.getCurrentPage()-1)*limit;
 		
 		RowBounds rowBounds = new RowBounds(offset,limit);
 		
-		return (ArrayList)sqlSession.selectList("festivalMapper.fesList", null, rowBounds);
+		return (ArrayList)sqlSession.selectList("festivalMapper.fesList", keyword, rowBounds);
 	}
 	
 	//마우스 올렸을시 축제 개수
@@ -51,20 +51,6 @@ public class FestivalDao {
 		return sqlSession.selectOne("festivalMapper.mouCount", nowDay);
 	}
 	
-	//게시글 검색시 게시글 수
-	public int searchCount(SqlSession sqlSession, HashMap<String, String> keyword) {
-		return sqlSession.selectOne("festivalMapper.searchCount", keyword);
-	}
-	//게시글 검색시 게시글 리스트
-	public ArrayList<Festival> searchList(SqlSession sqlSession, HashMap<String, String> keyword, PageInfo pi) {
-		int limit = pi.getBoardLimit();
-		int offset = (pi.getCurrentPage()-1)*limit;
-		
-		RowBounds rowBounds = new RowBounds(offset, limit);
-		
-		return (ArrayList)sqlSession.selectList("festivalMapper.searchList", keyword, rowBounds);
-	}
-
 	//보드(게시글) 등록
 	public int insertBoard(SqlSession sqlSession, Board b) {
 		return sqlSession.insert("festivalMapper.insertBoard",b);
@@ -119,5 +105,10 @@ public class FestivalDao {
 	//게시글의 총 찜 수 조회
 	public int choiAllCount(SqlSession sqlSession, HashMap<String, String> info) {
 		return sqlSession.selectOne("festivalMapper.choiAllCount", info);
+	}
+
+	//축제 디테일 페이지 로드시 주변 명소 불러오기
+	public ArrayList<Board> myungList(SqlSession sqlSession, int boardNo) {
+		return (ArrayList)sqlSession.selectList("festivalMapper.myungList", boardNo);
 	}
 }

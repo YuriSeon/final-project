@@ -41,6 +41,7 @@
 .attracDetail #reply-area button {
 	width: 90px;
 	height: 34px;
+	text-align: center;
 }
 
 .attracDetail #reply-content {
@@ -51,6 +52,7 @@
 	width: 100%;
 	height: auto;
     min-height: 120px;
+    display: inline-block;
 }
 .attracDetail .reply *{
     text-align: left;
@@ -80,7 +82,7 @@
 }
 /* 여기 나중에 확인해서 수정 필요함  */
 .attracDetail .reply .date, .attracDetail .reply-btn {
-	width: 90%;
+	width: 100%;
 	height: 20%;
 }
 
@@ -108,6 +110,17 @@
     text-align: center;
 }
 
+#test{
+	width: 100%;
+}
+#test2{
+	width: 91.8%;
+}
+.replycontent {
+    width: 99%;
+    resize: none;
+}
+
 </style>
 <body>
 <%@include file="../../common/menubar.jsp" %>
@@ -123,7 +136,7 @@
                 </div>
                 <div class="titTypeWrap">
                     <span>
-                    	${fn:split(dataMap.board.boardContent, '||')[1] }
+                    	${fn:split(dataMap.board.boardContent, '$$')[1] }
                     </span>
                 </div>
                 <div class="board-area">
@@ -178,7 +191,7 @@
                         <hr>
                         <div class="inr_wrap">
                             <div class="inr text">
-                                ${fn:split(dataMap.board.boardContent, '||')[0] }
+                                ${fn:split(dataMap.board.boardContent, '$$')[0] }
                             </div>
                         </div>
                     </div>
@@ -488,11 +501,11 @@
                             report : makeTag("span",{"class":"ico"}).append(makeTag("img",{"id":"reply","class":"report","src":"resources/images/bell-after.png"})),
                             recon : makeTag("div", {"class": "con"}).append(makeTag("textarea",{"class":"replycontent"}).text(result[i].content)),
                             redate : makeTag("div",{"class":"date"}).text(result[i].createDate),
-                            reReplyinput : makeTag("input",{"type":"text","class":"reReplyContent","placeholder":"이 댓글에 대한 생각을 적어주세요!"}),
+                            reReplyinput : makeTag("input",{"type":"text","id":"test2","class":"reReplyContent","placeholder":"이 댓글에 대한 생각을 적어주세요!"}),
                             reReplyBtn : makeTag("button", {"class":"replyInsert"}).text("작성")
                         }
                         var nickName = r.nick.append(r.name.append(makeTag("img",{"src":result[i].profileImg})), r.report);
-                        var replyarea = r.reply.append(r.replyNo, r.pro, nickName, r.recon, r.redate, $("<div>").append(r.reReplyinput, r.reReplyBtn));
+                        var replyarea = r.reply.append(r.replyNo, r.pro, nickName, r.recon, r.redate, makeTag("div",{"id":"test"}).append(r.reReplyinput, r.reReplyBtn));
                         replyDiv.append(replyarea);
                         if(result[i].refRno!= 0){
                         	$(".reply").each(function(){

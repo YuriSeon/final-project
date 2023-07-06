@@ -151,6 +151,9 @@
       	#nicknameHover:hover{
       		cursor:pointer;
       	}
+      	#bannerImg:hover{
+      		cursor:pointer;
+      	}
     </style>
 
 </head>
@@ -219,7 +222,7 @@
 	                         </c:choose>
 		                    	${loginUser.nickname }님 환영합니다!&nbsp;&nbsp;&nbsp;
 		                        <button onclick="location.href='mypage.me'">마이페이지</button>
-		                        <button type="button" onclick="location.href='logout.me'">로그아웃</button>
+		                        <button type="button" onclick="removeRecentSession();">로그아웃</button>
 		                    </div>
                 		</c:when>
 						<c:otherwise>
@@ -242,7 +245,12 @@
                 <div class="col-12">
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
-                        <a href="main.bo" class="logo">여행<em>가보자고</em></a>
+                        <img src="/finalProject/resources/images/koreaMap.jpeg" id="bannerImg" onclick="goMain();" style="width:96px; height:80px; position:relative; right:240px;"><a href="main.bo" class="logo">여행<em>가보자고</em></a>
+                        <script>
+                        	function goMain(){
+                        		location.href="main.bo";
+                        	}
+                        </script>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
@@ -325,7 +333,7 @@
 	          <!-- Modal Header -->
 	          <div class="modal-header">
 	            <img src="" alt="" style="width: 200px; height:70px; display: block; margin:auto; position: relative; left: 48px;">
-	            <button type="button" id="loginModal_close" class="close" data-dismiss="modal">&times;</button>
+	            <button type="button" id="loginModal_close" onclick="closeMo();" class="close" data-dismiss="modal">&times;</button>
 	          </div>
 	    
 	          <!-- Modal body -->
@@ -343,9 +351,7 @@
 	              <label for="saveId">아이디 저장</label>
 	            </div>
 	            <div id="login-fales">
-	              		<!-- *아이디 또는 비밀번호를 잘못 입력했습니다.<br>
-	              		&nbsp;&nbsp;입력하신 내용을 다시 확인해주세요. -->
-	            </div>
+	     		</div>
 	            <div>
 	              <button type="button" id="login-button" onclick="return loginGo();">로그인</button>
 	            </div>
@@ -408,6 +414,10 @@
   				}
   			});
   			return false;
+  		}
+  		
+  		function closeMo(){
+  			$("#loginModal_close").hide();
   		}
   		
   	</script>
@@ -488,6 +498,12 @@
         		
 				$("#profile").modal('show');
     	};
+    	
+    	//로그아웃 최근 글 세션 삭제
+    	function removeRecentSession() {
+    		sessionStorage.removeItem('recentPages');
+    		location.href='logout.me';
+		}
     </script>
     
 </body>

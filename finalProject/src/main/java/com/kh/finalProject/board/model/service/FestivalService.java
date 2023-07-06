@@ -21,18 +21,13 @@ public interface FestivalService {
 	int FesIng();
 
 	//축제 총 게시글 수
-	int fesCount();
+	int fesCount(HashMap<String, String> keyword);
 
 	//축제 리스트
-	ArrayList<Board> fesList(PageInfo pi);
+	ArrayList<Board> fesList(HashMap<String, String> keyword, PageInfo pi);
 	
 	//마우스 올렸을시 축제 개수
 	int mouCount(String nowDay);
-
-	//게시글 검색 시 게시글 수
-	int selectSearchCount(HashMap<String, String> keyword);
-	//게시글 검색시 게시글 리스트
-	ArrayList<Festival> selectSearchList(HashMap<String, String> keyword, PageInfo pi);
 
 	/* 축제 등록 */
 	int insertFes(Board b, Info in, ArrayList<Attachment> list, Festival f);
@@ -53,4 +48,7 @@ public interface FestivalService {
 	int choiceDel(HashMap<String, String> info);
 	//게시글의 총 찜 수 조회
 	int choiAllCount(HashMap<String, String> info);
+
+	////축제 디테일 페이지 로드시 주변 명소 불러오기
+	ArrayList<Board> myungList(int boardNo);
 }
