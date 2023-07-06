@@ -34,18 +34,16 @@ public class ScheduleController {
 		return "board/schedule/enrollPage";
 	}
 
+	// 
 	public Info infoDataGet(String[] pathArr) {
 		Info info = null;
 		// 매개변수로 전달받은 배열에서 사용할 값 추출
 		String infoName = pathArr[0];
 		String[] infoAddress = pathArr[3].split(" ");
 		String zone = infoAddress[0] + " " + infoAddress[1]; // 주소에서 지역명 추출
-		int result = scService.checkInfo(zone);
-		System.out.println("infoDataGet  " + result);
+		int result = scService.checkInfo(pathArr[3]);
 		if (result == 0) {
-			System.out.println("들어옴");
 			info = new Selenium().searchData(infoName, infoAddress[0]);
-			System.out.println("나감");
 		}
 		return info;
 	}
@@ -65,17 +63,17 @@ public class ScheduleController {
 		// 전달받은 path 가공해 selenium으로 데이터 찾아오기
 		for (int i = 0; i < path.length; i++) {
 			String[] str = path[i].split(","); // 구분자로 구분해서 배열에 넣기
+			System.out.println(Arrays.toString(str));
 			pathArr[i] = new String[str.length]; // 이차배열 길이 설정
 			for (int j = 0; j < str.length; j++) {
-				System.out.println(Arrays.toString(pathArr[i]));
 				pathArr[i][j] = str[j];
-				plan.setAddress(pathArr[0][3]); // 가장처음경로의 주소set(지역코드 조회 예정)
+				if(pathArr[i].length<4 || pathArr[i][3]!=null) {
+					plan.setAddress(pathArr[0][3]); // 비어있지않으면 set
+				}
 			}
 			Info in = infoDataGet(pathArr[i]); // 기존정보가 있는지를 확인하고 조회해옴
-			System.out.println("가져온 데이터 " + in);
 			if (in != null) { // 이미 기존에 등록된 정보가 없을때만 리스트에 담기
 				infoList.add(in);
-				System.out.println("찾은 데이터 " + in);
 			}
 		}
 		// plan 현재날짜와 비교해서 완료된 일정인지 체크
@@ -92,7 +90,6 @@ public class ScheduleController {
 		}
 		// 2. 등록하러 이동
 		int result = scService.insertSchedule(session, plan, infoList, pathArr);
-
 		if (result != 0) { // 모든 데이터 등록 성공
 			session.setAttribute("alertMsg", "일정 등록 성공");
 			if (plan.getTogether() == 0) { // 동행 안구함

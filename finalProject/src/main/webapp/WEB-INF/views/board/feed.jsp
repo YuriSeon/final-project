@@ -914,7 +914,7 @@ var loginUser =  "${loginUser}";
 		/*  console.log($(tg).parents("#reply-text")); */
 		
 		 var form ="";
-			 form +="<b>"+replyWriter+"</b>"
+			 form +="<b style='color:blue;top:-55px;position: relative;right:-30px;'>"+replyWriter+"</b>"
 				  +"<textarea rows='2' cols='50' style='margin-left: 20px' id='upcontent' style='resize: none;''>"+content+"</textarea>"
    		          +"<button class='btn btn-warning' style='margin-left: 200px' onclick='updateReply("+replyNo+")'>수정</button>"
 				  		    

@@ -136,7 +136,7 @@
                 </div>
                 <div class="titTypeWrap">
                     <span>
-                    	${fn:split(dataMap.board.boardContent, '||')[1] }
+                    	${fn:split(dataMap.board.boardContent, '$$')[1] }
                     </span>
                 </div>
                 <div class="board-area">
@@ -191,7 +191,7 @@
                         <hr>
                         <div class="inr_wrap">
                             <div class="inr text">
-                                ${fn:split(dataMap.board.boardContent, '||')[0] }
+                                ${fn:split(dataMap.board.boardContent, '$$')[0] }
                             </div>
                         </div>
                     </div>
