@@ -64,8 +64,8 @@
 .schedule-detail #content-area {
 	width: 85%;
 	height: 600px;
- 	padding-top: 60px; 
- 	padding-left: 50px; 
+ 	padding-top: 3%; 
+ 	padding-left: 2%; 
 }
 
 .schedule-detail #content-area div {

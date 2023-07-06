@@ -109,9 +109,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 		HashMap<String, Object> dataMap = new HashMap<>();
 		// Plan+board조회
 		Plan p = scDao.selectBoard(sqlSession, boardNo);
-		// 게시물 안에 들어있는 infoNo 추출해서 사용
+//		 게시물 안에 들어있는 infoNo 추출해서 사용
 		String[] pathList = p.getPathList().split("/");
-		// info+ attachment 조회
+//		 info+ attachment 조회
 		ArrayList<Info> info = new ArrayList<>();
 		HashMap<Integer, ArrayList<Attachment>> atList = new HashMap<>();
 		for(int i =1; i<=pathList.length; i++) { // 맨앞에 /가 있어서 1번부터 길이까지 조회
