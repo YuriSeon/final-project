@@ -59,7 +59,7 @@ public class Selenium {
 			for(int i=0; i<imgEl.size(); i++) {
 				imgPath += imgEl.get(i).getAttribute("src"); // 이미지 경로 변수에 담기
 				if(i != imgEl.size()-1) {
-					imgPath += "|"; // String타입에 담아서 전달하기위해서 구분자 넣음
+					imgPath += "$$"; // String타입에 담아서 전달하기위해서 구분자 넣음
 				}
 			}
 			for (int i = 0; i < culomnList.size(); i++) {
@@ -67,18 +67,7 @@ public class Selenium {
 				String value = valueList.get(i).getText();
 				switch (culomn) { // culomn에 맞는 value값으로 set
 				case "주소": in.setInfoAddress(value); break;
-				case "이용시간": 
-					if(value.contains(":")) {	
-						String str[] = value.split(":");
-						if(str[2].contains(" ,/")){
-							str[2]= str[2].split(" /,")[0];
-							in.setInfoTime(str[0]+":"+str[1]+":"+str[2]); break;
-						}
-					}else if(value.contains("/,")) { // 데이터 크기에 맞춰서 조정
-						in.setInfoTime(value.split("/,")[0]); break;
-					} else {
-						in.setInfoTime(value);break;
-					}
+				case "이용시간": in.setInfoTime(value);break;
 				case "휴무일": in.setDayOff(value); break;
 				case "홈페이지": in.setInfoHomepage(value); break;
 				case "전화번호": in.setInfoCall(value); break;
@@ -90,7 +79,7 @@ public class Selenium {
 					}
 				case "개요": 
 					if(imgPath!="") {
-						in.setBoardContent(imgPath+"||"+value); break;
+						in.setBoardContent(imgPath+"$$$"+value); break;
 					} else {
 						in.setBoardContent(value); break;
 					}
@@ -105,14 +94,17 @@ public class Selenium {
 				}
 			}
 			in.setInfoName(infoName);
+			if(in.getInfoType()==0) {
+				in.setInfoType(1);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			in.setBoardContent("오류"); // 오류 확인하기 위해 임의로 값 넣음
 			return in;
 		} finally {
 			quitDriver();
+			in.setInfoName(infoName); // 오류가 나더라도 경로는 저장해둬야하니 FINALLY에 작성
 		}
-		System.out.println("sel :   "+in);
 		return in;
 	}
 	

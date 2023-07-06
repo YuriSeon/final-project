@@ -77,7 +77,7 @@
         	background-color: white;
         }
         #contentImg3{
-        	margin-left: 106px;
+        	margin-left: 96px;
         }
 </style>
 </head>
