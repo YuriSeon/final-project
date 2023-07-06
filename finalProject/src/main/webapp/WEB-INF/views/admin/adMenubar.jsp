@@ -50,7 +50,7 @@
     </div>
     <div id="top-bar">
         <span>ADMINISTRATOR</span>
-        <button class="btn btn-primary" onclick="location.href='custom.ad'">사용자</button>
+        <button class="btn btn-primary" onclick="location.href='main.bo'">사용자</button>
     </div>
 </header>
 <!-- Header - End  -->

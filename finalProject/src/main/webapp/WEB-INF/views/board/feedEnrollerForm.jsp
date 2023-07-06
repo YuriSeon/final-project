@@ -41,7 +41,7 @@
 	}
 	#enroll-form textarea{
 		 white-space: pre;
-		
+		margin-left: -60px;
 	}
 	/* #enroll-form img{
 		border: 1px solid black;

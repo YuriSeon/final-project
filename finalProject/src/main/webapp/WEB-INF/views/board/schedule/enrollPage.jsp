@@ -26,16 +26,12 @@
 </head>
 <body>
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-<!-- 동행구하는거 작성하는거 체크시 해당 게시물 작성완료시 모달창으로 바로 연결할까요 물어보기 , 모달 배경색 수정 -->
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <nav class="main-nav">
-                    <!-- ***** Logo Start ***** -->
                     <img class="logo" src="resources/images/menu.png">
                     <span id="t">여행</span><span id="g">가보자고</span>
-                    <!-- ***** Logo End ***** -->
-                    <!-- ***** Menu Start ***** -->
                     <ul class="nav">
                         <li><a href="main.bo">메인</a></li>
                         <li><a href="theme.bo">테마</a></li>
@@ -48,7 +44,6 @@
                     <a class='menu-trigger'>
                         <span>Menu</span>
                     </a>
-                    <!-- ***** Menu End ***** -->
                 </nav>
             </div>
         </div>
@@ -162,20 +157,10 @@
     </div>
     
     <!-- 작성해둔 함수 넣은 파일 불러와서 사용 -->
-    <script type="text/javascript" src="resources/js/function.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3f6edea42e65caf1e4e0b7f49028f282&libraries=services"></script>
-    <script type="text/javascript" src="resources/js/listmap.js"></script> 
+    <script type="text/javascript" src="resources/js/function.js"></script>
+    <script type="text/javascript" src="resources/js/listmap.js?after"></script> 
     <script>
-    	// 동행구하지않으면 버튼 생기지 않도록 처리
-    	$(function(){
-			$("#together-yes").on("change", function(){
-				var btn = makeTag("button",{"id":"with","onclick": "togetherEnroll.bo"});
-	    		if($(this).val() != 0){
-	    			$($(this).parent()).append(btn.text("바로 작성하러가기"));
-	    		}
-    		});
-    	});
-    
         // 달력에 날짜 체크시 일정추가하는 영역 생기는 함수
         function total(){
             var plan = $("#plan-area *").remove(); // 함수 재실행시 기존 생성된 영역 지워주기
@@ -210,9 +195,15 @@
         $(function(){
             $("#modal").css("display","none"); // 클릭전까지 모달 숨기기
             $(document).on("click",".plus", function(){
-               var daily = $(this).attr("class").slice(-1); // 클릭이벤트 대상의 class name 마지막 번호 추출(N일차)
+            	var sort = $(this).text();
+               	var daily = $(this).attr("class").slice(-1); // 클릭이벤트 대상의 class name 마지막 번호 추출(N일차)
                 // 모달 생성 후 지도 띄워주기
                 $(document).ready(function(){
+                	if(sort=='일정추가'){
+                		$("#keyword").attr("value","여행추천");
+                	} else {
+                		$("#keyword").attr("value","숙박");
+                	}
                     $("#modal").css("display", "block");
                     window.setTimeout(function() {
                     	relayout();
@@ -243,6 +234,7 @@
                     }
                     daily = ""; // 추가하고 나면 변수 비워줘야 다시 호출되었을때 누적이 안됨
                     $("#modal").css("display","none"); // 선택시 모달 닫기
+                    $("#keyword").attr("value"," ");// 인풋창 비워주기
                  });
             });
         });
@@ -277,7 +269,7 @@
 	    		// pathVO(infoName, daily, pathNo, infoAddress, pay) 순서로 담음
 		    	path.prop("value",($($(day[i]).children()).eq(1).text()
 			    					+","+$(day[i]).attr("name")
-			    					+","+i
+			    					+","+i+1
 			    					+","+$($(day[i]).children()).eq(2).text()
 			    					+","+$($(day[i]).children()).eq(3).val()));
 	    		console.log(path);
@@ -294,19 +286,20 @@
 			var concept = makeTag("input",{"type":"hidden","name":"concept","value":concepts.slice(0,-1)}); 
 			formTag.append(concept);
 			// 동행 구하는지 confirm 받아서 컬럼명에 맞게 태그 생성
-			var withConfirm= confirm('동행을 구하시겠습니까? 확인을 누르시면 작성 후 함께가치 작성 페이지로 넘어갑니다');
 			var count = $("#count option:selected").val();
 			var together = makeTag("input", {"name":"together"});
 			var togetherCount = makeTag("input", {"name":"togetherCount"});
-			if(confirm){
-				formTag.append(together.attr("value", count), togetherCount.attr("value",0));
-			} else {
-				formTag.append(together.attr("value", 0), togetherCount.attr("value",count));
+			if(confirm('작성을 완료하셨습니까?')){
+			var withConfirm= confirm('동행을 구하시겠습니까? 확인을 누르시면 작성 후 함께가치 작성 페이지로 넘어갑니다');
+				if(confirm){
+					formTag.append(together.attr("value", count), togetherCount.attr("value",0));
+				} else {
+					formTag.append(together.attr("value", 0), togetherCount.attr("value",count));
+				}
 			}
 	    	formTag.submit(); // 제출
 	    }	
-	    
-	   
+	 	
 		
     </script>
 </body>

@@ -563,71 +563,69 @@
    <jsp:include page="../common/footer.jsp"></jsp:include>
  
   </body>
- <script >
- 
+ <script>
    
-    var slides = document.querySelector('.slides'); //전체 슬라이드 컨테이너
-   var slideImg = document.querySelectorAll('.slides>li'); //모든 슬라이드들
-   let currentIdx = 0; //현재 슬라이드 index
-   const slideCount = slideImg.length; // 슬라이드 개수
-   const slideWidth = 500; //한개의 슬라이드 넓이
+var slides = document.querySelector('.slides'); //전체 슬라이드 컨테이너
+var slideImg = document.querySelectorAll('.slides>li'); //모든 슬라이드들
+let currentIdx = 0; //현재 슬라이드 index
+const slideCount = slideImg.length; // 슬라이드 개수
+const slideWidth = 500; //한개의 슬라이드 넓이
 
-   //전체 슬라이드 컨테이너 넓이 설정
-   slides.style.width = slideWidth * slideCount + 'px';
+//전체 슬라이드 컨테이너 넓이 설정
+slides.style.width = slideWidth * slideCount + 'px';
 
-  //이미지 넣는 메소드
+//이미지 넣는 메소드
 $(function(){
 	
-	 var size = ${size};
-	 var alist = ${alist};
+	var size = ${size};
+	var alist = ${alist};
 	var blist = ${blist};
 	var bsize = ${bsize};
 	 
-	 for(var i=0; i<bsize; i++){
-		 for(var j=0; j<size; j++){
+	for(var i=0; i<bsize; i++){
+		for(var j=0; j<size; j++){
 			 
-			 if(alist[j].boardNo == blist[i].boardNo){
-				 $("#slides"+alist[j].boardNo).append("<li><img src='"+alist[j].filePath+"' alt=''></li>");
+			if(alist[j].boardNo == blist[i].boardNo){
+				$("#slides"+alist[j].boardNo).append("<li><img src='"+alist[j].filePath+"' alt=''></li>");
 				
-			 }
-		 }
-	 }
+			}
+		}
+	}
 	 
 	   
-			// 사진 오른쪽버튼
-			$(document).on("click",".controller .next",function(){		
-				  
-				var slideContainer = $(this).parents("#slideShow").children("ul");
-				  var currentLeft = parseInt(slideContainer.css('left'));
-				  /* var newLeft = currentLeft - 600; */
-				  var images = $(this).parents(".thumb").children().eq(1).children().eq(0).children().children("img"); //이미지 위치
-				  var imageCount = images.length;
-				  var slideWidth = 600; // Assuming each slide has a fixed width of 600 pixels
-				  var newLeft = currentLeft - slideWidth;
-	
-				    if (newLeft > -slideWidth * (imageCount-1)) {
-				        slideContainer.css('left', newLeft + 'px');
-				    } else {
-				        slideContainer.css('left', -slideWidth * (imageCount-1) + 'px');
-				    }			
-			})
-				 
-			//사진 왼쪽 버튼
-			$(document).on("click",".controller .prev",function(){
-				
-				 var slideContainer = $(this).parents("#slideShow").children("ul");
-				  var currentLeft = parseInt(slideContainer.css('left'));
-				  var newLeft = currentLeft + 600;
-				  
-				  if (newLeft < 0) {
-				    slideContainer.css('left', newLeft + 'px');
-				  } else {
-				    slideContainer.css('left', '0px');
-				  }
-			})
+	// 사진 오른쪽버튼
+	$(document).on("click",".controller .next",function(){		
+		  
+		var slideContainer = $(this).parents("#slideShow").children("ul");
+		var currentLeft = parseInt(slideContainer.css('left'));
+		/* var newLeft = currentLeft - 600; */
+		var images = $(this).parents(".thumb").children().eq(1).children().eq(0).children().children("img"); //이미지 위치
+		var imageCount = images.length;
+		var slideWidth = 600; // Assuming each slide has a fixed width of 600 pixels
+		var newLeft = currentLeft - slideWidth;
+		
+		if (newLeft > -slideWidth * (imageCount-1)) {
+			slideContainer.css('left', newLeft + 'px');
+		} else {
+			slideContainer.css('left', -slideWidth * (imageCount-1) + 'px');
+		}			
+	});
+		 
+	//사진 왼쪽 버튼
+	$(document).on("click",".controller .prev",function(){
+		
+		var slideContainer = $(this).parents("#slideShow").children("ul");
+		var currentLeft = parseInt(slideContainer.css('left'));
+		var newLeft = currentLeft + 600;
+			  
+		if (newLeft < 0) {
+			slideContainer.css('left', newLeft + 'px');
+		} else {
+			slideContainer.css('left', '0px');
+		}
+	});
 			
-
- });
+});
 
 //스크롤
  $(window).scroll(function(){
@@ -914,7 +912,7 @@ var loginUser =  "${loginUser}";
 		/*  console.log($(tg).parents("#reply-text")); */
 		
 		 var form ="";
-			 form +="<b>"+replyWriter+"</b>"
+			 form +="<b style='color:blue;top:-55px;position: relative;right:-30px;'>"+replyWriter+"</b>"
 				  +"<textarea rows='2' cols='50' style='margin-left: 20px' id='upcontent' style='resize: none;''>"+content+"</textarea>"
    		          +"<button class='btn btn-warning' style='margin-left: 200px' onclick='updateReply("+replyNo+")'>수정</button>"
 				  		    

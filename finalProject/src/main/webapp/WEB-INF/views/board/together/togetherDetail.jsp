@@ -430,7 +430,7 @@
 				
 	<div id="togetherReplyArea">
 		<br>
-		<p style="font-size: 25px; margin-left: 15px;">댓글(2)</p>
+		<p style="font-size: 25px; margin-left: 15px;">댓글(1)</p>
 		<div id="replyEnrollArea">
 			<textarea id="replyContentText" placeholder="댓글 내용을 입력해주세요." style="width: 700px; height: 80px; margin-left: 155px; resize: none;"></textarea>
 			<button type="button" id="replyEnrollBtn" class="btn btn-outline-dark" style="width:100px; height:80px;">댓글 작성</button>
@@ -439,8 +439,8 @@
 			<div class="replyDiv">
 				<img src="/finalProject/resources/images/기본프로필.png">
 				<ul id="replyUL">
-					<li id="replyWriter">한성</li> <br>
-					<li id="replyContent">그러게 말이에요 훠훠</li> <br>
+					<li id="replyWriter">${t.boardWriter }<p>작성자</p></li> <br>
+					<li id="replyContent">함께 하실분 댓글 남겨주세요.</li> <br>
 					<li id="replyCreateDate">2023-06-23</li>
 				</ul>
 				<div id="etcImgDiv">

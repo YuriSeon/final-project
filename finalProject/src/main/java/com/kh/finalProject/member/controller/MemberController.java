@@ -367,7 +367,6 @@ public class MemberController {
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		ArrayList<Board> list = memberService.myChoiceList(pi,nick);
-		
 		int writingCount = memberService.myWritingCount(nick);
 		int replyCount = memberService.myReplyCount(nick);
 		int requestCount = memberService.myRequestCount(nick);
