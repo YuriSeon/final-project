@@ -183,6 +183,7 @@
 	.경남:hover,
 	.제주:hover{
 		fill: #242779;
+		background-color: #242779;
 		transform: translateY(-10px);
 	}
 	
@@ -285,7 +286,7 @@ height: 270px;
 				</svg>
 			</div>
 			<div id="zone-area">
-				<div class="zone" id="first"><span class="OUTLINE서울">서울</span></div>
+				<div class="zone" id="first"><span class="OUTLINE 서울">서울</span></div>
 				<div class="zone"><span class="OUTLINE 부산">부산</span></div>
 				<div class="zone"><span class="OUTLINE 대구">대구</span></div>
 				<div class="zone"><span class="OUTLINE 인천">인천</span></div>
@@ -347,7 +348,7 @@ height: 270px;
 		// 지도지역 클릭시 관광정보 조회해오는 API
 		$(document).on("click","svg path", function(){
 			var map = $("#main-map svg"); // 지도 태그
-			// 지도 선택시 위치 변경하며 리스트 보여주기
+			// 지도 선택시 위치 변경하며 리스트 보여줌
 			$("svg path").css("fill","#e9eaea").css("transform", "translateY(0px)"); // 재호출시 css 초기화
 			$("#main-map").parent().remove(); // 원래 들어있던 영역 지우기
 			$(map).css("padding","0");
