@@ -13,9 +13,11 @@ import com.kh.finalProject.common.model.vo.PageInfo;
 
 public interface ScheduleService {
 
-	int insertSchedule(HttpSession session, Plan plan, ArrayList<Info> infoList, String[][] pathArr);
+	int insertSchedule(HttpSession session, Plan plan, ArrayList<String[]> path);
 
-	int checkInfo(String address);
+	int checkInfo(String infoName);
+
+	int increaseCount(int boardNo);
 
 	HashMap<String, Object> selectSchedule(int boardNo);
 
@@ -24,6 +26,13 @@ public interface ScheduleService {
 	int mainListCount();
 
 	HashMap<String, Object> mainSelectList(PageInfo pi, String sort);
+
+	int insertInfoFile(HttpSession session, Plan plan, ArrayList<String[]> path, ArrayList<Info> infoList);
+
+	Board checkBno(Plan plan);
+
+	int insertPath(ArrayList<String[]> path, Plan plan);
+
 
 
 

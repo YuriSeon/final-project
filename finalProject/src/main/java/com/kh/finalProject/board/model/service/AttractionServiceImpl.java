@@ -14,9 +14,9 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Good;
 import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.board.model.vo.choice;
-import com.kh.finalProject.common.model.vo.PageInfo;
 
 @Service
 public class AttractionServiceImpl implements AttractionService {
@@ -91,8 +91,16 @@ public class AttractionServiceImpl implements AttractionService {
 	}
 	// 댓글조회
 	@Override
-	public ArrayList<Rereply> selectReplyList(int boardNo) {
-		return atDao.selectReplyList(sqlSession, boardNo);
+	@Transactional
+	public HashMap<String, Object>  selectReplyList(int boardNo) {
+		ArrayList<Rereply> replyList =  atDao.selectReplyList(sqlSession, boardNo);
+		ArrayList<Reply> profileReply = atDao.profileReply(sqlSession, boardNo);
+		ArrayList<Rereply> profileRereply = atDao.profileRereply(sqlSession, boardNo);
+		HashMap<String, Object> replyMap = new HashMap<>();
+		replyMap.put("replyList", replyList);
+		replyMap.put("profileReply", profileReply);
+		replyMap.put("profileRereply", profileRereply);
+		return replyMap;
 	}
 
 	// 좋아요, 찜 조회
@@ -149,8 +157,8 @@ public class AttractionServiceImpl implements AttractionService {
 
 	// 기존 정보 있는지 체크
 	@Override
-	public int checkInfo(String address) {
-		return AttractionDao.checkInfo(sqlSession, address);
+	public int checkInfo(String infoName) {
+		return AttractionDao.checkInfo(sqlSession, infoName);
 	}
 
 	// 내용 수정 요청 페이지 이동 전 조회

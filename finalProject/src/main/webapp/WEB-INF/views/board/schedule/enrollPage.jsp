@@ -26,28 +26,7 @@
 </head>
 <body>
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <nav class="main-nav">
-                    <img class="logo" src="resources/images/menu.png">
-                    <span id="t">여행</span><span id="g">가보자고</span>
-                    <ul class="nav">
-                        <li><a href="main.bo">메인</a></li>
-                        <li><a href="theme.bo">테마</a></li>
-                        <li><a href="festival.fe">축제</a></li>
-                        <li><a href="attraction.bo?currentPage=1">명소</a></li> 
-                        <li><a href="feed.bo">피드</a></li> 
-                        <li><a href="schedule.bo">일정 자랑</a></li> 
-                        <li><a href="#" onclick="mbtiQuestion();">함께 가치</a></li> 
-                    </ul>        
-                    <a class='menu-trigger'>
-                        <span>Menu</span>
-                    </a>
-                </nav>
-            </div>
-        </div>
-    </div>
+    <img alt="" src="resources/images/mm.png" style="width:100%">
 	<div class="enroll-sc" >
 		<form action="insert.sc" method="post" id="insertForm">
 	        <div>
@@ -267,11 +246,18 @@
 	    	for(var i=0; i<day.length; i++){
 			    var path = makeTag("input", {"type":"hidden", "name":"path"});
 	    		// pathVO(infoName, daily, pathNo, infoAddress, pay) 순서로 담음
-		    	path.prop("value",($($(day[i]).children()).eq(1).text()
-			    					+","+$(day[i]).attr("name")
-			    					+","+i+1
-			    					+","+$($(day[i]).children()).eq(2).text()
-			    					+","+$($(day[i]).children()).eq(3).val()));
+	    		if($(day[i]).attr("name")!=null){
+			    	path.prop("value",($($(day[i]).children()).eq(1).text()
+				    					+","+$(day[i]).attr("name")
+				    					+","+i
+				    					+","+$($(day[i]).children()).eq(2).text()
+				    					+","+$($(day[i]).children()).eq(3).val()));
+// 	    		} else {
+// 	    			path.prop("value", $($(day[i]).children()).eq(1).text()
+// 	    								+","+1
+// 	    								+","+$(day[i]).attr("name")
+// 	    								+","+
+	    		}
 	    		console.log(path);
 		    	// 담은 정보 폼태그에 넣어주기
 		    	formTag.append(path);

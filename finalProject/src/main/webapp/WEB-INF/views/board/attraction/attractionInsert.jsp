@@ -31,6 +31,7 @@
         </div>
         <hr>
         <form action="insert.attr" method="post" id="insert-form" enctype="multipart/form-data" onsubmit="submitForm();">
+        	<input type="hidden" name="boardWriter" value="${loginUser.nickname }">
             <table>
                 <thead>
                     <tr>
@@ -171,8 +172,8 @@
                         if(result.boardContent=='오류'){ // 셀레니움 정보 조회 오류시 ck 위해 값 넣어둠
                         	alert("오류로 정보를 가져오지 못했습니다 직접 작성해서 게시물을 작성해주세요");
                         } else if(result != null) {
-                        	var boardContent = result.boardContent.split("||"); // img src와 boardContent분리
-                        	var img = boardContent[0].split("|"); // img src배열
+                        	var boardContent = result.boardContent.split("★★★"); // img src와 boardContent분리
+                        	var img = boardContent[0].split("★★"); // img src배열
                             $("#infoName").prop("value",result.infoName);
                             $("#boardContent").prop("value",boardContent[1]);
                             $("#infoAddress").prop("value", result.infoAddress);
@@ -260,7 +261,7 @@
 	            	}
 				}
 				// boardConten에 소개문구 더해넣어주기(상세설명||소개문구)
-				var boardContent = $("#boardContent2").text()+'||'+$("boardContent1").val();
+				var boardContent = $("#boardContent2").text()+'★★★'+$("boardContent1").val();
 				$("#boardContent2").attr("value", boardContent);
             }
         </script>

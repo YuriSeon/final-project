@@ -53,6 +53,11 @@ public class ScheduleDao {
 	public int updatePlanInfoNo(SqlSession sqlSession, Path path) {
 		return sqlSession.update("scheduleMapper.updatePlanInfoNo", path);
 	}
+	
+	// 조회수 증가
+	public int increaseCount(SqlSession sqlSession, int boardNo) {
+		return sqlSession.update("scheduleMapper.increaseCount", boardNo);
+	}
 
 	// 디테일뷰 info랑 plan 조회
 	public Plan selectBoard(SqlSession sqlSession, int boardNo) {
@@ -101,6 +106,7 @@ public class ScheduleDao {
 	public ArrayList<Board> boardList(SqlSession sqlSession) {
 		return (ArrayList)sqlSession.selectList("scheduleMapper.boardList");
 	}
+
 	
 	
 	

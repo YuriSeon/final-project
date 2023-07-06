@@ -22,7 +22,7 @@ public interface AttractionService {
 
 	int insertReply(Rereply r);
 
-	ArrayList<Rereply> selectReplyList(int boardNo);
+	HashMap<String, Object> selectReplyList(int boardNo);
 
 	HashMap<String, Object> iconCheck(int boardno, String writer);
 
