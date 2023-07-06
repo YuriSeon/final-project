@@ -160,9 +160,6 @@
 		//카카오 버튼 클릭시 카카오 로그인 페이지로
 		function kakao(){
 			
- 			/* $("#certification").val('1');
-			console.log($("#certification").val()); */
-			
 			//앱키
 			appKey = "04c77a2f5ca75a521a0d0e08cbb740b3";
 			
