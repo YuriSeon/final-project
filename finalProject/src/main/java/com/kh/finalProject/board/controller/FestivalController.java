@@ -62,7 +62,7 @@ public class FestivalController {
 		int listCount = festivalService.fesCount(keyword);
 		int pageLimit = 10;
 		int boardLimit = 6;
-		
+		System.out.println(listCount);
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		
 		ArrayList<Board> list = festivalService.fesList(keyword, pi);

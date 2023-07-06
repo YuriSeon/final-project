@@ -21,48 +21,8 @@
 			  }
 		  }
 	  })
-	  
-	const second = 1000,
-      minute = second * 60,
-      hour = minute * 60,
-      day = hour * 24;
+	 
 
-	let countDown = new Date('Mar 31, 2022 09:30:00').getTime(),
-    x = setInterval(function() {    
-
-	
-		// 여기쯤 수정함 innerText 값이 있을때만 찾는 조건문 넣음
-      let daysElement = document.getElementById('days'),
-          hoursElement = document.getElementById('hours'),
-          minutesElement = document.getElementById('minutes'),
-          secondsElement = document.getElementById('seconds');
-
-      let now = new Date().getTime(),
-          distance = countDown - now;
-          
-      if (daysElement) {
-        daysElement.innerText = Math.floor(distance / (day));
-      }
-
-      if (hoursElement) {
-        hoursElement.innerText = Math.floor((distance % (day)) / (hour));
-      }
-
-      if (minutesElement) {
-        minutesElement.innerText = Math.floor((distance % (hour)) / (minute));
-      }
-
-      if (secondsElement) {
-        secondsElement.innerText = Math.floor((distance % (minute)) / second);
-      }
-
-      //do something later when date is reached
-      //if (distance < 0) {
-      //  clearInterval(x);
-      //  'IT'S MY BIRTHDAY!;
-      //}
-
-    }, second)
 	
 
 	$(function() {
