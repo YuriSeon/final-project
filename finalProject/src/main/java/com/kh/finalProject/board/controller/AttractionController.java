@@ -223,7 +223,7 @@ public class AttractionController {
 		String infoName = in.getInfoName();
 		String[] infoAddress = in.getInfoAddress().split(" ");
 		String zone = infoAddress[0]+" "+infoAddress[1]; // 주소에서 지역명 추출
-		int result = atService.checkInfo(zone);
+		int result = atService.checkInfo(in.getInfoAddress());//주소로 등록된 곳인지 확인
 		if(result==0) { //이미 등록된게 없다면 검색진행
 			info = new Selenium().searchData(infoName, infoAddress[0]);
 		}
@@ -346,10 +346,9 @@ public class AttractionController {
 	public ModelAndView updateAttr(HttpSession session, ModelAndView mv, Info info, MultipartFile upfile, 
 									@RequestParam("introduce")String introduce,
 									@RequestParam("changeImg")String changeImg) {
-		System.out.println("오니?");
 		String savePath = session.getServletContext().getRealPath("/resources/infoImg/");
 		if(introduce!="") {
-			info.setBoardContent(info.getBoardContent()+"||"+introduce);
+			info.setBoardContent(info.getBoardContent()+"$$"+introduce);
 		}
 		ArrayList<Attachment> atList = atService.selectAttachment(info.getBoardNo()); // 원래 있던 이미지 리스트
 		ArrayList<Attachment> removeList = new ArrayList<>(); // 제거된 항목만 담을 배열

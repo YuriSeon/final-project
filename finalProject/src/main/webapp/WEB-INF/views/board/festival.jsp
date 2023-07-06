@@ -717,12 +717,16 @@
 
 		//게시물 클릭시 저장 후 이동
 		function handlePostClick(e) {
+			var loginUser = '${loginUser}';
 			var thumbnail = $(e).find("img").attr("src");
 			var title = $(e).find("h4").text();
 			var bno = $(e).find("input").val();
 			var url = "http://localhost:8888/finalProject/fesDetail.fe?boardNo="+bno;
 			
-			setRecentPageInfo(thumbnail, title, url);
+			//로그인한 경우에만 세션스토리지 생성
+			if (loginUser) {
+				setRecentPageInfo(thumbnail, title, url);
+			}
 			location.href = url;
 		}
 	    

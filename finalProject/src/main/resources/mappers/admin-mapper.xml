@@ -43,6 +43,7 @@
   		<result column="STATUS" property="status"/>
   		<result column="BOARD_WRITER" property="boardWriter"/>
   		<result column="TOTAL_VIEW_COUNT" property="totalViewCount"/>
+  		<result column="CHOICE" property="choice"/>
   	</resultMap>
   	
   	<!-- THEME RESULT MAP -->
@@ -280,11 +281,11 @@
   		SELECT BOARD_NO,ZONE_NO,INFO_NO,CATEGORY,BOARD_TITLE,BOARD_CONTENT
   			  ,TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE
 			  ,TO_CHAR(MODIFY_DATE, 'YYYY-MM-DD') MODIFY_DATE
-  			  ,GOOD,REPORT,COUNT,STATUS,BOARD_WRITER 
+  			  ,CHOICE,REPORT,COUNT,STATUS,BOARD_WRITER 
   		FROM BOARD
 		WHERE STATUS = 'Y'
 		AND CATEGORY = 1
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, BOARD_NO ASC
   	</select>
 	
 	<!-- 게시글 테마 검색 개수-->
@@ -320,7 +321,7 @@
 			</otherwise>
 		</choose>
 		LIKE '%'||#{keyword}||'%'
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, BOARD_NO ASC
 	</select>
 	
 	<!-- 게시글 테마 보드 삭제 -->
@@ -410,10 +411,10 @@
   		SELECT BOARD_NO,ZONE_NO,INFO_NO,CATEGORY,BOARD_TITLE,BOARD_CONTENT
   			  ,TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE
 			  ,TO_CHAR(MODIFY_DATE, 'YYYY-MM-DD') MODIFY_DATE
-  			  ,GOOD,REPORT,COUNT,STATUS,BOARD_WRITER 
+  			  ,CHOICE,REPORT,COUNT,STATUS,BOARD_WRITER 
   		FROM BOARD
 		WHERE CATEGORY = 2
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, BOARD_NO ASC
   	</select>
 	
 	<!-- 게시글 축제 검색 개수-->
@@ -447,7 +448,7 @@
 			</otherwise>
 		</choose>
 		LIKE '%'||#{keyword}||'%'
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, BOARD_NO ASC
 	</select>
 	
 	<!-- 게시글 축제 수정 보드 조회 -->
@@ -528,7 +529,7 @@
   		FROM BOARD
 		WHERE STATUS = 'Y'
 		AND CATEGORY = 3
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, BOARD_NO ASC
   	</select>
 	
 	<!-- 게시글 명소 검색 개수-->
@@ -564,7 +565,7 @@
 			</otherwise>
 		</choose>
 		LIKE '%'||#{keyword}||'%'
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, BOARD_NO ASC
 	</select>
 
 	<!-- =====================게시글 피드========================= -->
@@ -586,7 +587,7 @@
   		FROM BOARD
 		WHERE STATUS = 'Y'
 		AND CATEGORY = 4
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, BOARD_NO ASC
   	</select>
   	
   	<!-- 게시글 피드 검색 개수-->
@@ -654,7 +655,7 @@
 		<if test="status == 'writer'">
 		AND BOARD_WRITER LIKE '%'||#{keyword}||'%'
 		</if>
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, BOARD_NO ASC
 	</select>
   	
   	<!-- =====================게시글 일정자랑========================= -->
@@ -676,7 +677,7 @@
   		FROM BOARD
 		WHERE STATUS = 'Y'
 		AND CATEGORY = 6 
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, BOARD_NO ASC
   	</select>
 
 	<!-- =====================게시글 함께가치========================= -->
@@ -694,11 +695,11 @@
   		SELECT BOARD_NO,ZONE_NO,INFO_NO,CATEGORY,BOARD_TITLE,BOARD_CONTENT
   			  ,TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE
 			  ,TO_CHAR(MODIFY_DATE, 'YYYY-MM-DD') MODIFY_DATE
-  			  ,GOOD,REPORT,COUNT,STATUS,BOARD_WRITER 
+  			  ,CHOICE,REPORT,COUNT,STATUS,BOARD_WRITER 
   		FROM BOARD
 		WHERE STATUS = 'Y'
 		AND CATEGORY = 5
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, BOARD_NO ASC
   	</select>
   		
 <!-- ===========================================회원관리============================================= -->
@@ -882,7 +883,7 @@
 		FROM SERVICE
 		WHERE STATUS = 'Y'
         AND CATEGORY = 1
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, SERVICE_NO ASC
   	</select>
   	
 	<!-- 공지사항 수정 조회 -->
@@ -991,7 +992,7 @@
 			</otherwise>
 		</choose>
 		LIKE '%'||#{keyword}||'%'
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, SERVICE_NO ASC
 	</select>
 	
 	<!-- ===========================================FAQ============================================= -->
@@ -1010,7 +1011,7 @@
 		FROM SERVICE
 		WHERE STATUS = 'Y'
         AND CATEGORY = 2
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, SERVICE_NO ASC
   	</select>
 	
 	<!-- FAQ 검색 개수-->
@@ -1047,7 +1048,7 @@
 			</otherwise>
 		</choose>
 		LIKE '%'||#{keyword}||'%'
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, SERVICE_NO ASC
 	</select>
 	
 	<!-- ===========================================FAQ============================================= -->
@@ -1066,7 +1067,7 @@
 		FROM SERVICE
 		WHERE STATUS = 'Y'
         AND CATEGORY = 3
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, SERVICE_NO ASC
   	</select>
   	
   	<!-- Q&A 검색 개수-->
@@ -1109,7 +1110,7 @@
 			</otherwise>
 		</choose>
 		LIKE '%'||#{keyword}||'%'
-		ORDER BY CREATE_DATE DESC
+		ORDER BY CREATE_DATE DESC, SERVICE_NO ASC
 	</select>
   	
   	<!-- 마이페이지 Q&A 수정 조회 -->

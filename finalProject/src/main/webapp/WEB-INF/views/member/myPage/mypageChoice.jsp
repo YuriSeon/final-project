@@ -87,7 +87,11 @@
 									<div class="dim">
 										<span class="txt_mid">여행지</span>
 									</div>
-									<img src="${c.filePath}" alt="${c.boardTitle}">
+									<c:choose>
+										<c:when test="${c.category==5}"><img src="/finalProject${c.filePath}${c.changeName}" alt="${c.boardTitle}"></c:when>
+										<c:otherwise><img src="${c.filePath}" alt="${c.boardTitle}"></c:otherwise>
+									</c:choose>
+									
 								</a>
 							</div>
 							<div class="area_txt">
@@ -181,7 +185,6 @@
 	                    		<li><a href="myQna.me" id="qna">Q&amp;A(${q})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
-	                    <li id="stampEnabled"><a href="myFoot.me" id="stamp">발도장</a></li>
 	                </ul>
 	            </div>
 	            <!-- //snb -->
@@ -219,7 +222,8 @@
 				}else if (cate == 3) {
 // 					location.href = '?boardNo='+bno;
 				}else if (cate == 5) {
-// 					location.href = '?boardNo='+bno;
+					location.href = 'togetherDetail.bo?boardNo='+bno;
+					
 				}else{
 // 					location.href = 'boardNo='+bno;
 				}

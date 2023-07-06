@@ -11,11 +11,22 @@
   	</select>
   	<!-- 게시물과 장소 등록 -->
   	<insert id="insertInfo">
-  		INSERT ALL
+  	<choose>
+  		<when test="infoType==1 or infoType==2">
+  			INSERT ALL
   			INTO BOARD(BOARD_NO, ZONE_NO, INFO_NO, BOARD_WRITER, CATEGORY, BOARD_TITLE, BOARD_CONTENT)
   				VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, SEQ_INO.NEXTVAL, '관리자', 3, #{infoName}, #{boardContent})
   			INTO INFO VALUES(SEQ_INO.CURRVAL, SEQ_BNO.CURRVAL, #{zoneNo}, #{infoAddress}, #{infoTime}, #{infoHomepage}, #{infoCall}, #{parking}, #{infoName}, #{infoType}, #{dayOff})
-  		SELECT * FROM DUAL
+  			SELECT * FROM DUAL
+  		</when>
+  		<otherwise>
+  			INSERT ALL
+  			INTO BOARD(BOARD_NO, ZONE_NO, INFO_NO, BOARD_WRITER, CATEGORY, BOARD_TITLE, BOARD_CONTENT)
+  				VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, SEQ_INO.NEXTVAL, '관리자', 3, #{infoName}, #{boardContent})
+  			INTO INFO VALUES(SEQ_INO.CURRVAL, SEQ_BNO.CURRVAL, #{zoneNo}, #{infoAddress}, #{infoTime}, #{infoHomepage}, #{infoCall}, #{parking}, #{infoName}, 3, #{dayOff})
+  			SELECT * FROM DUAL
+  		</otherwise>
+  	</choose>
   	</insert>
   	<!-- 첨부파일 등록 -->
   	<insert id="insertAttachment">

@@ -51,4 +51,8 @@ public interface FestivalService {
 
 	////축제 디테일 페이지 로드시 주변 명소 불러오기
 	ArrayList<Board> myungList(int boardNo);
+
+	Festival mainFestivalBanner();
+
+	ArrayList<Festival> mainFestivalCalendar();
 }

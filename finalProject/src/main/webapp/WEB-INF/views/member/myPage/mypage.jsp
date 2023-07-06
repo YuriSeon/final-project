@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="resources/css/mypage.css?after">
+    <link rel="stylesheet" type="text/css" href="resources/css/mypage.css?v=1?after">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -361,6 +361,7 @@
     			}, 1000);
     	}
     	
+    	//최근 본 페이지 세션에서 불러오기
 		function getRecentPageInfo() {
     		var recentPages = sessionStorage.getItem('recentPages');
 
@@ -382,7 +383,7 @@
 			  	var title = pageInfo.title;
 			  	var url = pageInfo.url;
 	
-				// 최근 페이지 정보 사용 예시
+				// 최근 페이지 정보 스와이퍼에 넣기
 				str += '<div class="swiper-slide" style="margin-right: 20px;">' 
 				    + '<a href="' + url + '">'
 				    + '<img src="' + thumbnail + '" alt="" width="200px" height="200px"><br>'
@@ -397,7 +398,7 @@
 			mySwiper.update();
 		});
 		
-		//로그아웃 최근 글 세션 삭제
+		//로그아웃시 최근 글 세션 삭제
     	function removeRecentSession() {
     		sessionStorage.removeItem('recentPages');
     		location.href='logout.me';

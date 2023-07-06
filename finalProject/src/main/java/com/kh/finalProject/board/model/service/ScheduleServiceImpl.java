@@ -46,33 +46,28 @@ public class ScheduleServiceImpl implements ScheduleService {
 		int result = scDao.insertSchedule(sqlSession, plan);
 		// 방금 등록한 bno와 infoNo 조회해와서 사용
 		Board b = scDao.checkBno(sqlSession, plan);
-		System.out.println("조회한 board  " + b);
 		// 3. 가져온 장소 정보안에 img url 추출 (이미지 다운)후 등록
-		// imgsrc 리스트에 담기(infoList의 boardContent ||구분자로 [0] -> 이 안에 url |구분자로 들어있음
+		// imgsrc 리스트에 담기(infoList의 boardContent $$$구분자로 [0] -> 이 안에 url $$구분자로 들어있음
+		System.out.println(infoList.get(0).getBoardContent());
 		for(int i=0; i<infoList.size(); i++) {
 			ArrayList<String> imgURL = new ArrayList<>();
 			if(infoList.get(i).getBoardContent()!=null || infoList.get(i).getBoardContent().equals("")||infoList.get(i).getBoardContent().equals(" ")) {
 				// 기존에 사용하던 메소드 사용해서 json의 형태로 받았기에 한글자씩 문자열의 배열로넘어옴. 원하는 형태로 가공하기 위해 문자열로 합쳐줌
-				String urlString = String.join(infoList.get(i).getBoardContent()); 
-				System.out.println("urlString :  "+urlString);
-				String[] str = urlString.split("||");
-				System.out.println("str배열 || : "+Arrays.toString(str));
-				if(str[0].contains("|")) { //이미지가 여러개
-					System.out.println("str1 :   "+str[1]);
+				String urlString = String.join(infoList.get(i).getBoardContent());
+				System.out.println(urlString);
+				String[] str = urlString.split("$$$");
+				if(str[0].contains("$$")) { //이미지가 여러개
 					infoList.get(i).setBoardContent(str[1]);
-					String[] url = str[0].split("|"); // info 하나의 url들
-					System.out.println("구분자 제거한 url들 : "+ Arrays.toString(url));
+					String[] url = str[0].split("$$"); // info 하나의 url들
 					for(int j=0; j<url.length; j++) {
 						imgURL.add(url[j]);
 						atList = AttractionController.imgTool(session, imgURL);
 					}
 				} else if(str[0].contains("http")){ // 이미지가 하나
-					System.out.println("이미지 하나인 url : "+str[0]);
 					imgURL.add(str[0]);
 					infoList.get(i).setBoardContent(str[1]);
 					atList = AttractionController.imgTool(session, imgURL);
 				} else { // 이미지 정보가 없을때
-					System.out.println("여기로 빠지니?");
 					atList = null;
 				}
 				// 4. info와 해당하는 img등록 (기존 attraction에서 사용한 메소드 static으로 사용)
@@ -92,7 +87,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 			Path path = Path.builder().boardNo(b.getBoardNo())
 									.infoName(pathArr[i][0])
 									.daily(Integer.parseInt(pathArr[i][1]))
-									.pathNo(Integer.parseInt(pathArr[i][2])).build();
+									.pathNo(Integer.parseInt(pathArr[i][2]))
+									.address(pathArr[i][3]).build();
 			if(pathArr[i].length==5 && pathArr[i][4]!=null) { // 해당 인덱스 존재 여부와 문자열로 보낸값이기에 null ck
 				path.builder().pay(Integer.parseInt(pathArr[i][4]));
 			} else {
@@ -114,9 +110,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 		HashMap<String, Object> dataMap = new HashMap<>();
 		// Plan+board조회
 		Plan p = scDao.selectBoard(sqlSession, boardNo);
-		// 게시물 안에 들어있는 infoNo 추출해서 사용
+//		 게시물 안에 들어있는 infoNo 추출해서 사용
 		String[] pathList = p.getPathList().split("/");
-		// info+ attachment 조회
+//		 info+ attachment 조회
 		ArrayList<Info> info = new ArrayList<>();
 		HashMap<Integer, ArrayList<Attachment>> atList = new HashMap<>();
 		for(int i =1; i<=pathList.length; i++) { // 맨앞에 /가 있어서 1번부터 길이까지 조회

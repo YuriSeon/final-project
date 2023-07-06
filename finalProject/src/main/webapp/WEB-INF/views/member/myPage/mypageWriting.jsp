@@ -154,7 +154,7 @@
 												<c:when test="${w.category == 5}"><strong><a href="javascript:void(0);">[함께가치] ${w.boardTitle}</a></strong></c:when>
 												<c:otherwise><strong><a href="javascript:void(0);">[일정자랑] ${w.boardTitle}</a></strong></c:otherwise>
 											</c:choose>
-											<p><a href="">${w.boardContent }</a></p>
+											<p><a href="javascript:void(0);" style="cursor: default;">${w.boardContent }</a></p>
 											<div class="date">
 												<em class="name">${w.boardWriter}</em><span>${w.createDate}</span>
 											</div>
@@ -319,7 +319,6 @@
 	                    		<li><a href="myQna.me" id="qna">Q&amp;A(${q})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
-	                    <li id="stampEnabled"><a href="myFoot.me" id="stamp">발도장</a></li>
 	                </ul>
 	            </div>
 	            <!-- //snb -->

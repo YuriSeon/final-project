@@ -1,6 +1,8 @@
 #contents{
     width: 1400px;
-    margin-left: 400px;
+	position: relative;
+	left: 50%;
+	transform: translate(-40%,0);
     
 }
 .tit_my{

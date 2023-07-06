@@ -540,8 +540,12 @@
 						var str = "";
 							str += '<div class="comment-main-level">' 
 								+ '<div class="comment-avatar" id="p_img">'
-								+ '<img src="'+reply.profileImg+'" style="border-radius: 50%;">'
-								+ '</div>'
+								if (reply.profileImg == null) {
+									str += '<img src="resources/images/blackperson.png" style="border-radius: 50%;">';
+								}else {
+									str += '<img src="'+reply.profileImg+'" style="border-radius: 50%;">';
+								}
+							str += '</div>'
 								+ '<div class="comment-box">'
 								+ '<div class="comment-head">'
 								+ '<h6 class="comment-name">'+reply.replyWriter+'</h6>'

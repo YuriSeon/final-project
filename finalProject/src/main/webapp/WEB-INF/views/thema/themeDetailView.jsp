@@ -11,7 +11,7 @@
 <title>Insert title here</title>
 <style>
 	.images{
-		/*  border: 1px solid;  */
+		 /* border: 1px solid;  */ 
 		height: 700px;
 		background: linear-gradient(to bottom, rgb(241, 230, 70), #ffffff);
 		
@@ -19,7 +19,7 @@
 	.images>img{
 		margin-top: 100px;
 		float: left;
-		width: 400px;
+		width: 350px;
 		height: 400px;
 		padding: 0;
 		
@@ -44,8 +44,7 @@
 		padding: 70px;
 	}
 	.info{
-		margin-left: 300px;
-
+		margin-left: 260px;
 		margin-top: 50px;
 		padding-bottom: 200px;
 	}
@@ -84,10 +83,10 @@
 		margin-right: 400px;
 		padding: 70px;
 	}
-	.reply-area button{transform: translateY(-45%);}
+	.reply-area button{transform: translateY(-105%) translateX(640px);} 
 	#replyBox{
 		margin-left: 50px;
-		margin-right: 100px;
+		margin-right: 50px;
 	}
 	#content {
       	margin-left: 20px;
@@ -106,7 +105,7 @@
 <body>
 	<%@include file="../common/menubar.jsp" %>
 	<div class="images">		
-		<img alt="" src="${at[0].filePath}" style="margin-left: 150px;">
+		<img alt="" src="${at[0].filePath}" style="margin-left: 110px;">
 		<img alt="" src="${at[1].filePath}" style="margin-top: 200px;">
 		<img alt="" src="${at[2].filePath}">
 		<img alt="" src="${at[3].filePath}" style="margin-top: 200px;">
@@ -129,6 +128,10 @@
 	<div class="info">
 		<ul>
 			<li>
+				<strong>장소이름</strong>
+				<span>${b.info.getInfoName() }</span>
+			</li>
+			<li>
 				<strong>문의 및 안내</strong>
 				<span>${b.info.getInfoCall() }</span>
 			</li>
@@ -141,13 +144,13 @@
 				<span>${b.info.getInfoTime() }</span>
 			</li>
 			<li>
-				<strong>휴일</strong>
-				<span>${b.info.getDayOff() }</span>
-			</li>
-			<li>
 				<strong>홈페이지</strong>
 				<a href="${b.info.getInfoHomepage() }" style="color: black;">${b.info.getInfoHomepage() }</a>		
 			</li>			
+			<li>
+				<strong>휴일</strong>
+				<span>${b.info.getDayOff() }</span>
+			</li>
 		</ul>
 	
 	</div>
@@ -175,11 +178,11 @@
 		<div style="margin: 10px;">
 		 <c:choose>
 		 	<c:when test="${empty loginUser }">
-			 	<textarea rows="3" cols="100" id="replyContent" placeholder="로그인 후 이용가능합니다." style="resize: none;"></textarea>
+			 	<textarea rows="3" cols="80" id="replyContent" placeholder="로그인 후 이용가능합니다." style="resize: none;"></textarea>
 				<button id="btn" class="btn btn-warning" style="height: 80px;">댓글</button>
 		 	</c:when>
 		 	<c:otherwise>
-		 		<textarea rows="3" cols="100" id="replyContent" style="resize: none;"></textarea>
+		 		<textarea rows="3" cols="80" id="replyContent" style="resize: none;"></textarea>
 				<button id="btn" class="btn btn-warning" style="height: 80px;">댓글</button>
 		 	</c:otherwise>
 		 </c:choose>
@@ -320,12 +323,12 @@
 		    		 }
                		     str+="<b style='margin-bottom: 3px;'>"+list[i].replyWriter+"</b>"
              			 +"<button style='border: solid white; float: right;background-color: white;' onclick='report(\"" + list[i].replyWriter + "\",\"" + list[i].replyNo + "\")'>"
-             			 +"<img alt='' src='resources/images/980829.png' style='width:17px; height:17px; float: right;'>"
+             			 +"<img alt='' src='resources/images/980829.png' style='width:17px; height:17px; transform: translateX(-650px) translateY(30px)'>"
              			 +"</button>"
              			 +"<p style='font-size: 20px;'>"+list[i].content+"</p>"   
              		if (nickname === list[i].replyWriter) {	 
-             		 str +="<button  onclick='deleteReply(\"" + list[i].replyNo + "\")' style='color: black;font-size: 11px;padding: 3px;float: right;border: solid white;'>삭제</button>"
-						 +"<button onclick='updateReplyForm(\"" + list[i].replyNo + "\",\"" + list[i].content + "\",\"" + list[i].replyWriter + "\",this)' style='color: black;font-size: 11px;padding: 3px;float: right;border-right: 1px solid;border: solid white;'>수정</button>"
+             		 str +="<button  onclick='deleteReply(\"" + list[i].replyNo + "\")' style='color: black;font-size: 11px;padding: 3px;border: solid white;transform: translateX(518px) translateY(20px)'>삭제</button>"
+						 +"<button onclick='updateReplyForm(\"" + list[i].replyNo + "\",\"" + list[i].content + "\",\"" + list[i].replyWriter + "\",this)' style='color: black;font-size: 11px;padding: 3px;border-right: 1px solid;border: solid white;transform: translateX(520px) translateY(20px)'>수정</button>"
              		   }
 					 str +="<p style='font-size: 15px; margin-top: 5px;'>"+list[i].createDate+"</p>"					 	 	
 					 	 +"</div>"	

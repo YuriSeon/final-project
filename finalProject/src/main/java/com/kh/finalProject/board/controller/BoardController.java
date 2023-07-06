@@ -15,14 +15,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.kh.finalProject.board.model.service.FeedService;
+import com.kh.finalProject.board.model.service.FestivalService;
 import com.kh.finalProject.board.model.service.ScheduleService;
 import com.kh.finalProject.board.model.service.TogetherService;
 import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
+import com.kh.finalProject.board.model.vo.Festival;
 import com.kh.finalProject.board.model.vo.Good;
 import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.board.model.vo.TogetherVO;
@@ -42,6 +45,8 @@ public class BoardController {
 	@Autowired
 	private TogetherService togetherService;
 	
+	@Autowired
+	public FestivalService festivalService;
 	
 	@RequestMapping("main.bo")
 	public String goMain() {
@@ -186,5 +191,24 @@ public class BoardController {
 	public String survey() {
 		return "member/myPage/survey";
 	}
+	
+	@ResponseBody
+	@GetMapping(value="mainFesBanner.do",produces="application/json; charset=utf-8")
+	public String mainFestivalBanner() {
+			
+		Festival f = festivalService.mainFestivalBanner();
+		
+		return new Gson().toJson(f);
+	}
+	
+	@ResponseBody
+	@GetMapping(value="mainFesCalendar.do",produces="application/json; charset=utf-8")
+	public String mainFestivalCalendar() {
+		
+		ArrayList<Festival> list = festivalService.mainFestivalCalendar();
+		
+		return new Gson().toJson(list);
+	}
+	
 	
 }

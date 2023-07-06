@@ -18,10 +18,10 @@ public class AdminInterceptor extends HandlerInterceptorAdapter {
 		
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
-		if ("A".equals(loginUser.getStatus())) {
+		if (loginUser != null && "A".equals(loginUser.getStatus())) {
 			return true;
 		}else {
-			session.setAttribute("alertMsg", "관리자 계정이 아닙니다.");
+			session.setAttribute("alertMsg2", "관리자 계정이 아닙니다.");
 			
 			response.sendRedirect(request.getContextPath());
 			return false;

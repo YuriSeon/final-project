@@ -32,7 +32,7 @@ public class AttractionDao {
 		case "울산광역시" : strArr[0] =  "울산"; break;
 		case "세종특별자치시" : strArr[0] = "세종"; break;
 		case "경기도" : strArr[0] =  "경기"; break;
-		case "강원도" : strArr[0] =  "강원"; break;
+		case "강원특별자치도" : strArr[0] =  "강원"; break;
 		case "충청북도" : strArr[0] = "충북"; break; 
 		case "충청남도" : strArr[0] = "충남"; break; 
 		case "전라북도" : strArr[0] = "전북"; break; 
@@ -42,7 +42,6 @@ public class AttractionDao {
 		case "제주특별자치도" : strArr[0] = "제주";
 		}
 		zoneName = strArr[0]+" "+strArr[1];
-		System.out.println(zoneName);
 		return sqlSession.selectOne("attractionMapper.selectZoneNo", zoneName);
 	}
 

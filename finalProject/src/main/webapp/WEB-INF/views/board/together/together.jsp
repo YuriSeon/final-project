@@ -530,7 +530,7 @@
                 		    thumbnail: thumbnail,
                 		    title: title,
                 		    url: url
-                		};
+                		}
 
                 		// 배열 맨 앞에 새로운 페이지 정보 추가
                 		recentPages.unshift(pageInfo);
@@ -545,27 +545,20 @@
                 	}
 
                 	//게시물 클릭시 저장 후 이동
-                	function handlePostClick(bno, post) {
-                		var thumbnail = post.querySelector('img').src;
-                		var title = post.querySelector('b').innerText;
-                		var url = "http://localhost:8888/finalProject/detailTheme.bo?boardNo=" + bno;
-
-                		setRecentPageInfo(thumbnail, title, url);
-
-                		location.href = url;
-                	}
-                	
                 	function goTogetherDetail(boardNo,e){
                			if(event.target.className != 'togetherBtn' || event.target.className != 'profileLink'){
+               				var loginUser = '${loginUser}';
 	                		var thumbnail = $(e).find("img").attr("src");
 	                		var title = $(e).find("h4").text();
 	                		var url = "http://localhost:8888/finalProject/togetherDetail.bo?boardNo=" + boardNo;
 	                		
-	                		setRecentPageInfo(thumbnail, title, url);
-                		
+	                		//로그인한 경우에만 세션스토리지 생성
+	                		if (loginUser) {
+		                		setRecentPageInfo(thumbnail, title, url);
+							}
 							location.href = url;
                			}
-                	};
+                	}
                 </script>
                 
                 <div class="col-lg-12">

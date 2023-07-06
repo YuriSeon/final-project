@@ -7,19 +7,6 @@
 <title>Insert title here</title>
 
 	<style>
-		/* @import url("https://fonts.googleapis.com/css?family=Lato:300,400,700");
- 		.container_1 *{
-			box-sizing: border-box;
-			display : inline-block;
-			height:auto;
-		} */
-
-		/* .container_1 *, .container_1 *::after, .container_1 *::before,
-		.container_2 *, .container_2 *::after, .container_2 *::before,
-		.container_3 *, .container_3 *::after, .container_3 *::before{
-  			box-sizing: inherit;
-		} */
-
 		div.fancy-select ul.options li, div.fancy-select ul.options.overflowing.open, div.fancy-select ul.options.overflowing, div.fancy-select ul.options.open, div.fancy-select ul.options, div.fancy-select div.trigger, [type=checkbox]:not(:checked) + label:before,
 		[type=checkbox]:checked + label:before, .container_1 button, .container_2 button, .container_3 button, .auto-textarea, .field-bar, .float-label, input[type=text],
 		input[type=email],input[type=password], input[type=number],
@@ -28,12 +15,6 @@
   			-moz-transition: all 0.25s ease-out;
   			transition: all 0.25s ease-out;
 		}
-		/* body {
-  			background: #efefef;
-  			box-sizing: border-box;
-  			font-family: "Lato";
-		} */
-		
 		.container_1, .container_2, .container_3 {
   			max-width: 600px;
   			margin-left: auto;
@@ -43,12 +24,6 @@
  			padding: 3rem 2rem;
   			border-radius: 1rem;
 			}
-		/* .::after {
-  			clear: both;
-  			content: "";
-  			display: block;
-		} */
-
 		.field-wrapper {
   			float: left;
   			display: block;
@@ -58,33 +33,12 @@
   			margin-bottom: 2.5rem;
   			height: 35px;
 		}
-		/* .field-wrapper:last-child {
-  			margin-right: 0;
-		} */
-
 		.field-wrapper-half {
   			float: left;
   			display: block;
   			margin-right: 2.3576520234%;
 			width: 48.8211739883%;
 		}
-		/* .field-wrapper-half:last-child {
-  			margin-right: 0;
-		} */
-		/* .field-wrapper-half:nth-child(2n+1) {
-  			margin-right: 0;
-		} */
-
-		/* .button-wrapper {
-  			float: left;
-  			display: block;
-  			margin-right: 2.3576520234%;
-  			width: 100%;
-		} */
-		/* .button-wrapper:last-child {
-  			margin-right: 0;
-		} */
-
 		input[type=text],
 		input[type=email],
 		input[type=password],
@@ -101,13 +55,6 @@
   			vertical-align: middle;
   			width: 100%;
 		}
-		/* input[type=text]::placeholder,
-		input[type=email]::placeholder,
-		input[type=password]::placeholder,
-		input[type=number]::placeholder,
-		textarea::placeholder {
-  			opacity: 0;
-		} */
 		input[type=text]::-webkit-input-placeholder,
 		input[type=email]::-webkit-input-placeholder,
 		input[type=password]::-webkit-input-placeholder,
@@ -128,7 +75,6 @@
 		textarea:valid {
 		  	outline: 0;
 		}
-		/* ======================================================================================여기까지 확인========== */
 		input[type=text]:focus::placeholder, input[type=text]:valid::placeholder,
 		input[type=email]:focus::placeholder,
 		input[type=password]:focus::placeholder,
@@ -177,7 +123,6 @@
 			top: -1px;
 			z-index: 1;
 		}
-		
 		/* active state */
 		.float-field:focus ~ label,
 		.float-field:valid ~ label,
@@ -392,8 +337,6 @@
 		  	visibility: visible;
 		  	top: 32px;
 		  	opacity: 1;
-		  	/* have to use a non-visibility transition to prevent this iOS issue (bug?): */
-		  	/*http://stackoverflow.com/questions/10736478/css-animation-visibility-visible-works-on-chrome-and-safari-but-not-on-ios*/
 		}
 		
 		div.fancy-select ul.options.overflowing {
@@ -437,7 +380,6 @@
 		  	text-transform: uppercase;
 		  	font-size: 0.75rem;
 		  	font-weight: bold;
-		  	/* pointer-events: none; */
 		  	display: inline-block;
 		  	margin-right: 1rem;
 		}
@@ -700,7 +642,7 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		</div>
 		
 		<!-- 추가 입력사항 -->
-		<div class="container_3" style="box-shadow: 0px 0px 10px 10px rgb(199, 199, 199); height:420px;">
+		<div class="container_3" style="box-shadow: 0px 0px 10px 10px rgb(199, 199, 199); height:360px;">
 			<div style="color:#598c93; font-size:14px; position:relative; top:-30px;">※선택 입력사항입니다.<br>(마이페이지에서 추가로 작성 하실 수 있습니다.)</div>
 			<!-- 관심사 -->
 			<div class="field-wrapper" style="position:relative; top: -15px;">
@@ -799,13 +741,6 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 			      <label for="MBTI" class="float-label">MBTI</label>
 			      <div class="field-bar"></div>
 			</div>
-		  	<!-- 여행 MBTI -->
-		  	<div class="field-wrapper">
-		    	<input type="text" name="survey"  placeholder="MBTI 테스트를 진행해주세요!" class="float-field" style="position:relative; left:170px; top:8px; width: 365px;" readonly/>
-		    	<label for="survey" class="float-label" style="position:relative; top:-48px;">여행 MBTI<img src="resources/images/question.png" alt="" style="height:11px; width:11px; position:relative; left:2px; top:-1px; background-color:rgb(239, 239, 239);"></label>
-		    	<!-- <div class="field-bar"></div> -->
-		  		<button type="" style="position:relative; left:-75px; top:-20px; font-size: 9px;">여행 MBTI</button>
-		  	</div>
 			<button type="submit" id="insertGo2" style="position:relative; top:-25px; width:530px;" onclick="return joinChk();">회원가입</button>
 			<!-- 카카오인증 후 탈퇴시 필요한 카카오 정보 -->
 			<input type="hidden" name="kakaoId" id="kakaoId" value="0">
@@ -821,13 +756,10 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		
 		/* 아이디 중복 및 유효성 검사 */
 		var $userId = $("#insertForm input[name=userId2]");
-		//console.log($userId.val());
 		
 		$userId.keyup(function(){
 			if($userId.val().trim().length>=5){
-				//console.log($idInput.val().trim().length);
 				$("#id_check").show();
-				//console.log($userId.val().trim().length);
 				$.ajax({
 					url : "idCheck.me",
 					data : {checkId : $userId.val()},
@@ -835,14 +767,12 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 						if(result=="NNNNN"){//중복 존재						
 							$("#id_check").css({"color":"red","font-size":"12px"}).text("중복된 아이디가 존재합니다. 다시 입력해주세요.");
 							idResult = result;
-							//console.log(result);
 						}else{//아이디 중복 없을때
 							$("#id_check").css({"color":"green","font-size":"12px"}).text("사용 가능한 아이디 입니다.");
 							idResult = result;
 
 							//아이디 유효성 검사
 							var regExp = /^[a-zA-Z0-9]+$/;
-							//console.log($idInput.val());
 							if(!(regExp.test($userId.val()))){
 								$("#id_check").css({"color":"red","font-size":"12px"}).text("아이디 형식이 올바르지 않습니다.");
 							}
@@ -858,7 +788,6 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		$("#nickname").keyup(function(){
 			
 			if($("#nickname").val().trim().length>=2){
-				//console.log($inputNick.val().trim().length);
 				$("#nick_check").show();
 				
 				$.ajax({
@@ -891,7 +820,6 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		$userPwd.keyup(function(){
 			
 			if($userPwd.val().trim().length>=1){//비밀번호 입력시 1자리보다 크면 유효성 검사 진행
-				//console.log($inputPwd.val().trim().length);
 				$("#pwd_check").show();
 				
 				var regExp = /^[a-zA-Z0-9!.,~]+$/;
@@ -915,7 +843,6 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		$("#userName").keyup(function(){
 			
 			if($("#userName").val().trim().length>=1){
-				//console.log($inputName.val().trim().length);
 				$("#name_check").show();
 					
 				var regExp = /^[가-힣a-zA-Z]+$/;
@@ -960,10 +887,6 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		$("#emailNumCk").keyup(function(){
 			$("#email_check").hide();
 		});
-		
-		//console.log('${naverInfo.certification}');
-		//console.log('${kakaoInfo.certification}');
-		//console.log($("#certification").val());
 		
 		//카카오 회원번호 넘어오면 정보 담아주기
 		if('${kakaoInfo.certification}'!=""){
@@ -1049,7 +972,6 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
 		
 		var chkBox = document.getElementsByName("style");
 		var count = 0;
-		//console.log(chkBox)
 		
 		for(var i=0; i<chkBox.length; i++){
 			if(chkBox[i].checked){

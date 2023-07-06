@@ -52,8 +52,15 @@
   	<!-- 경로 등록 -->
   	<insert id="insertPath">
   		INSERT INTO PATH VALUES(#{boardNo},
-  								(SELECT INFO_NO FROM INFO WHERE INFO_NAME = #{infoName}),
-  								#{daily}, #{pathNo}, #{pay})
+  	<choose>
+  		<when test="address!=null">
+  			(SELECT INFO_NO FROM INFO WHERE INFO_ADDRESS = #{address}),
+  		</when>
+  		<otherwise>
+			(SELECT INFO_NO FROM INFO WHERE INFO_NAME = #{infoName}),
+  		</otherwise>
+  	</choose>
+		#{daily}, #{pathNo}, #{pay})
   	</insert>
   	<!-- plan에 infoNo 추가업데이트 조회시 사용위한 작업 -->
   	<!-- 기본으로 처음에 /가 들어있으니 제거하고 구분자로 구분해야 인덱스 맞음 잊지말기-->
