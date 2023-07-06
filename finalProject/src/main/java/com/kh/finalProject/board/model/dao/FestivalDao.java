@@ -111,4 +111,13 @@ public class FestivalDao {
 	public ArrayList<Board> myungList(SqlSession sqlSession, int boardNo) {
 		return (ArrayList)sqlSession.selectList("festivalMapper.myungList", boardNo);
 	}
+
+	//메인 페이지 가장 가까운 축제 찾아주
+	public Festival mainFestivalBanner(SqlSession sqlSession) {
+		return sqlSession.selectOne("festivalMapper.mainFestivalBanner");
+	}
+
+	public ArrayList<Festival> mainFestivalCalendar(SqlSession sqlSession) {
+		return (ArrayList)sqlSession.selectList("festivalMapper.mainFestivalCalendar");
+	}
 }

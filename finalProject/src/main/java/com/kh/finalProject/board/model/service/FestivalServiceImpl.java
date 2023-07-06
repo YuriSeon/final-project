@@ -135,4 +135,14 @@ public class FestivalServiceImpl implements FestivalService{
 	public ArrayList<Board> myungList(int boardNo) {
 		return festivalDao.myungList(sqlSession, boardNo);
 	}
+
+	@Override
+	public Festival mainFestivalBanner() {
+		return festivalDao.mainFestivalBanner(sqlSession);
+	}
+
+	@Override
+	public ArrayList<Festival> mainFestivalCalendar() {
+		return festivalDao.mainFestivalCalendar(sqlSession);
+	}
 }

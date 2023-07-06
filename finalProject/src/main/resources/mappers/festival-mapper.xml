@@ -233,4 +233,32 @@
 		    ORDER BY DBMS_RANDOM.RANDOM)
 		<![CDATA[WHERE ROWNUM < 4]]>
 	</select>
+
+	<resultMap type="festival" id="mainFesResultSet">
+		<result property="startDate" column="START_DATE"/>
+		<result property="endDate" column="END_DATE"/>
+		<result property="boardTitle" column="BOARD_TITLE"/>
+		<result property="filePath" column="FILE_PATH"/>
+	</resultMap>
+	
+	<select id="mainFestivalBanner" resultMap="mainFesResultSet">
+			SELECT *
+			FROM (SELECT BOARD_TITLE,TO_CHAR(START_DATE,'YYYY-MM-DD') "START_DATE"
+			        FROM BOARD
+			        JOIN FESTIVAL USING(BOARD_NO)
+			        WHERE CATEGORY = 2
+			        ORDER BY TO_DATE(START_DATE) - SYSDATE DESC)
+			WHERE ROWNUM = 1		
+	</select>
+	
+	<select id="mainFestivalCalendar" resultMap="mainFesResultSet">
+			SELECT BOARD_TITLE,TO_CHAR(START_DATE,'YYYY-MM-DD') "START_DATE",TO_CHAR(END_DATE,'YYYY-MM-DD') "END_DATE",FILE_PATH
+			FROM BOARD
+			JOIN FESTIVAL USING(BOARD_NO)
+			JOIN ATTACHMENT USING(BOARD_NO)
+			WHERE CATEGORY = 2
+			AND SYSDATE BETWEEN START_DATE AND END_DATE
+			AND FILE_LEVEL = 1
+			ORDER BY START_DATE
+	</select>
 </mapper>
