@@ -127,7 +127,6 @@
 	                    		<li class="on"><a href="myQna.me" id="qna">Q&amp;A(${q})</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
-	                    <li id="stampEnabled"><a href="myFoot.me" id="stamp">발도장</a></li>
 	                </ul>
 	            </div>
 	            <!-- //snb -->

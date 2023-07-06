@@ -89,17 +89,17 @@
 	                            <td>
 	                            	<c:choose>
 	                            		<c:when test="${m.certification == 1}">
-	                            			카카오인증
+	                            			<img src="resources/images/icon_kakao.png" alt="" width="30px" height="30px">
 	                            		</c:when>
 	                            		<c:when test="${m.certification == 2}">
-	                            			네이버인증
+	                            			<img src="resources/images/icon_naver.png" alt="" width="30px" height="30px">
 	                            		</c:when>
 	                            		<c:otherwise>
 	                            			비인증
 	                            		</c:otherwise>
 	                            	</c:choose>
 	       	                    </td>
-	                            <td><button class="btn btn-default manage" style="width: 150px;">관리</button><button class="btn btn-default admin" style="width: 150px;">관리자전환</button></td>
+	                            <td style="white-space: normal;"><button class="btn btn-default manage" style="width: 80%;">관리</button><button class="btn btn-default admin" style="width: 80%;">관리자전환</button></td>
                         	</tr>
                     	</c:forEach>
 <!--                         <tr> -->

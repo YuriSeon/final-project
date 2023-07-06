@@ -61,7 +61,7 @@
                             <th style="width: 10%">작성자</th>
                             <th style="width: 10%">작성시각</th>
                             <th style="width: 10%">수정시각</th>
-                            <th style="width: 10%">좋아요</th>
+                            <th style="width: 10%">찜하기</th>
                             <th style="width: 10%">조회수</th>
                         </tr>
                     </thead>
@@ -74,8 +74,8 @@
 	                            <td>${b.boardWriter}</td>
 	                            <td>${b.createDate}</td>
 	                            <td>${b.modifyDate}</td>
+	                            <td>${b.choice}</td>
 	                            <td>${b.count}</td>
-	                            <td>${b.good}</td>
                         	</tr>
                     	</c:forEach>
 <!--                <tr> -->
