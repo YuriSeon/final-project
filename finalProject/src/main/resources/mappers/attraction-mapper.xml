@@ -185,16 +185,16 @@
   	<insert id="sendReport">
   		<choose>
   			<when test="rereplyNo==0 and replyNo==0">
-  				INSERT INTO REPORT(BOARD_NO, WRITER, REPORT_REASON)
-  						VALUES(#{boardNo}, #{writer}, #{reportReason})
+  				INSERT INTO REPORT(BOARD_NO, WRITER, REPORT_REASON, REPORT_NO)
+  						VALUES(#{boardNo}, #{writer}, #{reportReason}, SEQ_RPO.NEXTVAL)
   			</when>
   			<when test="replyNo!=0 and rereplyNo==0">
-  				INSERT INTO REPORT(BOARD_NO, REPLY_NO, WRITER, REPORT_REASON)
-  							VALUES(#{boardNo}, #{replyNo}, #{writer}, #{reportReason})
+  				INSERT INTO REPORT(BOARD_NO, REPLY_NO, WRITER, REPORT_REASON, REPORT_NO)
+  							VALUES(#{boardNo}, #{replyNo}, #{writer}, #{reportReason}, SEQ_RPO.NEXTVAL)
   			</when>
   			<when test="rereplyNo!=0 and replyNo==0">
-  				INSERT INTO REPORT(BOARD_NO, REREPLY_NO, WRITER, REPORT_REASON)
-  						VALUES(#{boardNo}, #{rereplyNo}, #{writer}, #{reportReason})
+  				INSERT INTO REPORT(BOARD_NO, REREPLY_NO, WRITER, REPORT_REASON, REPORT_NO)
+  						VALUES(#{boardNo}, #{rereplyNo}, #{writer}, #{reportReason}, SEQ_RPO.NEXTVAL)
   			</when>
   		</choose>
   	</insert>

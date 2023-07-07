@@ -142,7 +142,7 @@
                     </tr>
                     <tr>
                         <th>핵심 소개 문구</th>
-                        <td colspan="3"><input type="text" name="introduce" id="introduce" placeholder="30자까지만 작성해주세요" value="${fn:split(dataMap.board.boardContent, '★★★')[1] }"></td>
+                        <td colspan="3"><input type="text" name="introduce" id="introduce" placeholder="30자까지만 작성해주세요" value="${fn:split(dataMap.board.boardContent, '~~~~')[1] }"></td>
                     </tr>
                     <tr>
                         <th>주소 (도로명 주소)</th>

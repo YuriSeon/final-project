@@ -113,9 +113,7 @@
 	<%@include file="../../common/footer.jsp" %>
 	<script>
 	
-		$(function(){
-			
-		});
+		
 		/* 페이지 이동 이벤트 */
         function pageLoad(num){
         	if(${not empty loginUser}){
@@ -134,6 +132,7 @@
 			var button = $(this).children().eq(3).children().eq(2);
 			var plan = "${dataMap.plan}";
 			var togetherList = "${dataMap.together}";
+			console.log(togetherList)
 			console.log(button)
 			for(var i=0; i<togetherList.length; i++){
 				if(writer==togetherList[i].writer && startDate==together[i].startDate){

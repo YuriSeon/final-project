@@ -31,9 +31,9 @@
   	<insert id="insertSchedule">
   		INSERT ALL
   			INTO BOARD (BOARD_NO, ZONE_NO, BOARD_WRITER, CATEGORY, BOARD_TITLE, BOARD_CONTENT)
-  				 VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, #{boardWriter}, 6, #{boardTitle}, #{boardContent})
+  				 VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, #{writer}, 6, #{boardTitle}, #{boardContent})
   			INTO PLAN (BOARD_NO, WRITER, TOGETHER, TOGETHER_COUNT, CONCEPT, START_DATE, END_DATE, TRANSPORT ,TOTAL_DATE, TOTAL_PAY, COMPLETE)
-  				VALUES(SEQ_BNO.CURRVAL, #{boardWriter}, #{together}, #{togetherCount}, #{concept}, #{startDate}, #{endDate}, #{transport}, #{totalDate}, #{totalPay}, #{complete})
+  				VALUES(SEQ_BNO.CURRVAL, #{writer}, #{together}, #{togetherCount}, #{concept}, #{startDate}, #{endDate}, #{transport}, #{totalDate}, #{totalPay}, #{complete})
   		SELECT * FROM DUAL
   	</insert>
   	<!-- insert시 다른테이블에 맞춰서 넣기위해 조회 -->
@@ -125,6 +125,7 @@
   		FROM PLAN P
   		JOIN BOARD B USING(BOARD_NO)
   		JOIN ZONE Z ON(Z.ZONE_NO=B.ZONE_NO)
+  		WHERE B.CATEGORY = 6
   	</select>
   	<select id="boardList" resultMap="togetherMapper.togetherResultSet">
   		SELECT B.BOARD_NO,ZONE_NAME,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,(FILE_PATH || CHANGE_NAME) FILE_PATH,TOGETHER,TOGETHER_COUNT,CONCEPT
