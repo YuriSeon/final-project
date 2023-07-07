@@ -262,7 +262,7 @@
         	font-size:25px;
          	padding : 5px 0px; 
         }
-        .attractionMenuText:hover{
+        .attractionMenuText:hover, .attractionMenuText.active{
 			border : 2px solid blue;
 			color : blue;
 			height:80%;
@@ -646,7 +646,7 @@
 		<br><br><br>
 		<div id="attractionDiv">
 				<div id="attractionMenu">
-						<div class="attractionMenuText" style="color:blue; border-radius:30px; border:2px solid blue; height:80%; margin : 5px 0px;"><input type="checkbox" name="attrChk" style="display:none;" checked>전체</div>
+						<div class="attractionMenuText active"><input type="checkbox" name="attrChk" style="display:none;" checked>전체</div>
 						<div class="attractionMenuText"><input type="checkbox" name="attrChk" style="display:none;">서울</div>
 						<div class="attractionMenuText"><input type="checkbox" name="attrChk" style="display:none;">인천</div>
 						<div class="attractionMenuText"><input type="checkbox" name="attrChk" style="display:none;">대전</div>
@@ -690,27 +690,24 @@
 				</div>
 				
 				<script>
-
-					$(".attrChk").on("change",function(){
-						if($(this).prop("checked")){
-							$(this).parent().css("color","blue").css("border-radius","30px").css("border","2px solid blue").css("height","80%").css("margin","5px 0px");
-						}else{
-							$(this).parent().css("color","black").css("border-radius","0px").css("border","none").css("height","100%").css("margin","0px");
-						}
-					});
-				
 						$(".attractionMenuText").on("click",function(){
-							if($(this).children().eq(0).prop("checked") == true){
-									$(this).children().eq(0).click();
+							$("#attractionMenu div").each(function(){
+									$(this).removeClass('active');
+							});
+							console.log($(this).prop("class"));
+							if($(this).prop("class") == "attractionMenuText active"){
+								$(this).removeClass('active');								
 							}else{
-									$('input[type="checkbox"][name="attrChk"]').each(function(){
-										$(this).prop("checked",false);
-									});
-									$(this).children().eq(0).click();
+								$(this).addClass('active');
 							}
 							var location = $(this).text();
 							
 							switch(location){
+							case "전체" : $(".attImg1").prop("src","resources/images/mainImgs/남한산성.jpeg"); $(".attP1").html("남한 산성");
+													$(".attImg2").prop("src","resources/images/mainImgs/롯데월드.jpeg"); $(".attP2").html("롯데 월드");
+													$(".attImg3").prop("src","resources/images/mainImgs/석굴암.jpeg"); $(".attP3").html("석굴암");
+													$(".attImg4").prop("src","resources/images/mainImgs/남산타워.jpeg"); $(".attP4").html("남산 타워");
+													break;
 							case "제주" :  $(".attImg1").prop("src","resources/images/mainImgs/스누피가든.jpeg"); $(".attP1").html("스누피 가든");
 													$(".attImg2").prop("src","resources/images/mainImgs/만장굴.jpeg"); $(".attP2").html("만장굴");
 													$(".attImg3").prop("src","resources/images/mainImgs/제주카트.jpeg"); $(".attP3").html("윈드 1947 카트");
