@@ -85,6 +85,18 @@ public class ScheduleDao {
 	public int deletePath(SqlSession sqlSession, Plan plan) {
 		return sqlSession.delete("scheduleMapper.deletePlan", plan);
 	}
+
+	// 메인의 전체 리스트 수 
+	public int mainListCount(SqlSession sqlSession) {
+		return sqlSession.selectOne("scheduleMapper.mainListCount");
+	}
+
+	// 메인 전체 리스트 페이징처리+조회
+	public ArrayList<Plan> planList(SqlSession sqlSession, PageInfo pi, String sort) {
+		return (ArrayList)sqlSession.selectList("scheduleMapper.planList", sort
+												, new RowBounds(((pi.getCurrentPage()-1) * pi.getBoardLimit()), pi.getBoardLimit()));
+	}
+	
 	
 	
 

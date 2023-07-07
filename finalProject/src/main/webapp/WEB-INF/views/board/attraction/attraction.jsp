@@ -183,7 +183,6 @@
 	.경남:hover,
 	.제주:hover{
 		fill: #242779;
-		background-color: #242779;
 		transform: translateY(-10px);
 	}
 	
@@ -213,9 +212,7 @@ height: 270px;
   </head>
    <body>
 	<%@include file="../../common/menubar.jsp" %>
-	<!-- D3 CDN -->
-   <script src="https://d3js.org/d3.v7.min.js"></script>
-   
+   <!-- 페이징처리랑 버튼 위치 설정 -->
 	<script>
 		/* 현재 페이지에 해당하는 메뉴바 체크되도록 설정 */
 		$(function(){
@@ -226,10 +223,6 @@ height: 270px;
 			});
 		});
 	</script>
-	<!-- 먼저 상세페이지로 이동하기위해 만들어놓은 태그 나중에 지우기 -->
-	<a href="detail.attr?boardNo=62">상세페이지로이동태그</a>
-	<a href="insert.attr">insert page</a>
-	<a href="update.attr?boardNo=62">수정페이지로이동태그</a>
     <div class="attr">
 		<div id="mainPhoto"></div>
 		<div class="float">
@@ -285,7 +278,7 @@ height: 270px;
 					</g>
 				</svg>
 			</div>
-			<div id="zone-area">
+			<div id="zone-area" style="width: 150px; position: relative; top: 20%;">
 				<div class="zone" id="first"><span class="OUTLINE 서울">서울</span></div>
 				<div class="zone"><span class="OUTLINE 부산">부산</span></div>
 				<div class="zone"><span class="OUTLINE 대구">대구</span></div>
@@ -330,6 +323,9 @@ height: 270px;
 				<!-- 페이징바 크기수정하기 -->
 				<div class="pagination">
 				</div>
+				<c:if test="${loginUser.status eq 'A' }">
+					<button onclick="location.href='insert.attr'">게시물 작성하기</button>
+				</c:if>
 			</div>
 		</div>
 	</div>
@@ -372,13 +368,17 @@ height: 270px;
 					if(zoneName=='서울'||zoneName=='부산'){
 						totalCount = result.count;
 						for(var i in result.info){
-							$(".list-area").append($("<div>").prop("class","containers")
+							$(".list-area").append($("<div>").prop("class","containers").prop("id",result.info[i].boardNo)
 											.append($("<div>").prop("class","rows")
 													.append($("<div>").prop("class","col-sm-6 col-md-4")
 															,$("<div>").prop("class","thumbnail").append($("<img>")
 															, $("<div>").prop("class","caption"), $("<h3>").text(result.info[i].infoName)
 															, $("<p>").text(result.info[i].infoAddress)))));
 						}
+						$(".containers").each(function(){ // 이미지 넣어주기
+							var boardNo = $(this).attr("id");
+							$(this).attr("src",result.attachment[boardNo].filePath);
+						});
 					} else {
 						totalCount = result.response.body.totalCount; //// 게시물 총 수
 						data = result.response.body.items.item; // 게시글
@@ -442,8 +442,32 @@ height: 270px;
 			  }
 			  str += '</ul>';
 			  return str;
-
 		}
+		
+		//지도에 호버이벤트
+		$(function() {
+			$("path").hover(
+				function() {
+					var location = $(this).attr("class");
+					location = location.substring(8,10);
+					location = "."+location;
+					var $span = $(this).closest("#main-map").next().find(location).parent();
+					$span.css({"background":"#242779","color":"white"});
+				},
+				function() {
+					var location = $(this).attr("class");
+					location = location.substring(8,10);
+					location = "."+location;
+					var $span = $(this).closest("#main-map").next().find(location).parent();
+					$span.css({"background":"#fff","color":"black"});
+				}
+			);
+		});
+		// 게시물 클릭시 상세페이지로 이동 
+		$(document).on("click",".containers", function(){
+			var boardNo = $(this).attr("id");
+			location.href="detail.attr?boardNo="+boardNo;
+		})
 	</script>
   </body>
 </html>

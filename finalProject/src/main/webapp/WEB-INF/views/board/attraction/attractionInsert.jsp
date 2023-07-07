@@ -8,7 +8,11 @@
 <link rel="stylesheet" href="resources/css/attraction.css?after">
 <title>Insert title here</title>
 </head>
-<style type="text/css"></style>
+<style type="text/css">
+	#upfile{
+		height: 28px;
+	}
+</style>
 <body>
     <%@include file="../../common/menubar.jsp" %>
     <div class="attrInsert">
