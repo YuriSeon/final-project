@@ -15,7 +15,7 @@ public class Selenium {
 	
 	private WebDriver wd;
 	private static String WEB_DRIVER_ID = "webdriver.chrome.driver"; // Properties 설정(정해져있는 키값)
-	private static String WEB_DRIVER_PATH = (Selenium.class.getResource("/").getPath()).replace("target/classes/", "src/main/webapp/WEB-INF/lib/chromedriver");
+	private static String WEB_DRIVER_PATH = (Selenium.class.getResource("/").getPath()).replace("target/classes/", "src/main/webapp/WEB-INF/lib/chromedriver.exe");
 	
 	// chrome driver연결
 	private void chrome() {
@@ -55,7 +55,7 @@ public class Selenium {
 			for(int i=0; i<imgEl.size(); i++) {
 				imgPath += imgEl.get(i).getAttribute("src"); // 이미지 경로 변수에 담기
 				if(i != imgEl.size()-1) {
-					imgPath += "★★"; // String타입에 담아서 전달하기위해서 구분자 넣음
+					imgPath += "~~~"; // String타입에 담아서 전달하기위해서 구분자 넣음
 				}
 			}
 			for (int i = 0; i < culomnList.size(); i++) {
@@ -76,7 +76,7 @@ public class Selenium {
 					}
 				case "개요": 
 					if(imgPath!="") {
-						in.setBoardContent(imgPath+"★★★"+value); break;
+						in.setBoardContent(imgPath+"~~~~"+value); break;
 					} else {
 						in.setBoardContent(value); break;
 					}

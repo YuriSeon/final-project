@@ -164,7 +164,7 @@
             // 조회해온 값 넣어주기위해 객체 생성
             var sort = {
                 infoName : "${info.infoName}",
-                introduce : "${fn:split(dataMap.board.boardContent,'★★★')[1] }",
+                introduce : "${fn:split(dataMap.board.boardContent,'~~~~')[1] }",
                 infoAddress : "${info.infoAddress}",
                 infoHomepage : "${info.infoHomepage}",
                 infoTime : "${info.infoTime}",

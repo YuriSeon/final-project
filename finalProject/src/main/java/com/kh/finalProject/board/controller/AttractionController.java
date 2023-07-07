@@ -363,6 +363,7 @@ public class AttractionController {
 	
 	
 	// 게시물 수정페이지 이동
+	
 	@GetMapping("update.attr")
 	public String updateAttr(Model model, int boardNo) {
 		HashMap<String, Object> dataMap = atService.attrDetail(boardNo);
@@ -380,7 +381,7 @@ public class AttractionController {
 									@RequestParam("changeImg")String changeImg) {
 		String savePath = session.getServletContext().getRealPath("/resources/infoImg/");
 		if(introduce!="") {
-			info.setBoardContent(info.getBoardContent()+"★★"+introduce);
+			info.setBoardContent(info.getBoardContent()+"~~~~"+introduce);
 		}
 		ArrayList<Attachment> atList = atService.selectAttachment(info.getBoardNo()); // 원래 있던 이미지 리스트
 		ArrayList<Attachment> removeList = new ArrayList<>(); // 제거된 항목만 담을 배열

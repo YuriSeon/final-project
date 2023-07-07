@@ -103,7 +103,7 @@
 	        <div class="enroll" id="plan-area"></div>
 	        <input type="hidden" name="totalDate">
 			<input type="hidden" name="totalPay">
-			<input type="hidden" name="boardWriter" value="${loginUser.nickname }">
+			<input type="hidden" name="writer" value="${loginUser.nickname }">
 	        <div class="btn-area">
 	            <button type="button" onclick="history.back();">돌아가기</button>
 	            <button type="button" onclick="insertForm();">작성완료</button>

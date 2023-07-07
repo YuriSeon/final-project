@@ -121,6 +121,10 @@
 .reply {
 	border : 1px solid;
 }
+.nick a img {
+	width: 20px;
+	border-radius: 50%;
+}
 </style>
 <body>
 <%@include file="../../common/menubar.jsp" %>
@@ -136,7 +140,7 @@
                 </div>
                 <div class="titTypeWrap">
                     <span>
-                    	${fn:split(dataMap.board.boardContent, '★★★')[1] }
+                    	${fn:split(dataMap.board.boardContent, '~~~~')[1] }
                     </span>
                 </div>
                 <div class="board-area">
@@ -191,7 +195,7 @@
                         <hr>
                         <div class="inr_wrap">
                             <div class="inr text">
-                                ${fn:split(dataMap.board.boardContent, '★★★')[0] }
+                                ${fn:split(dataMap.board.boardContent, '~~~~')[0] }
                             </div>
                         </div>
                     </div>
@@ -498,22 +502,22 @@
                             reReplyinput : makeTag("input",{"type":"text","id":"test2","class":"reReplyContent","placeholder":"이 댓글에 대한 생각을 적어주세요!"}),
                             reReplyBtn : makeTag("button", {"class":"replyInsert"}).text("작성")
                         }
-                        var nickName = r.nick.append(r.name.append(makeTag("img"/*,{"src": result.profileReply[i].profileImg }*/)), r.report);
-                        var replyarea = r.reply.append(r.replyNo, r.pro, nickName, r.recon, r.redate, makeTag("div",{"id":"test"}).append(r.reReplyinput, r.reReplyBtn));
+                        var nickName = r.nick.append(r.name, r.report);
+                        var replyarea = r.reply.append(r.replyNo, r.pro.append(makeTag("img",{"src": result.profileReply[i].profileImg })), nickName, r.recon, r.redate, makeTag("div",{"id":"test"})/*.append(r.reReplyinput, r.reReplyBtn)*/);
                         replyDiv.append(replyarea);
                         r= null;
-	                for(var j in result){
-                        if(result.replyList[j].refRno!= 0){
-                        	$(".reply").each(function(){
-                        			console.log($(this).children().eq(0).val())
-                        			console.log(result[j].refRno)
-                        		if($(this).children().eq(0).val() == result[j].refRno){
-		                            nickName = r.nick.append(r.name.append(makeTag("img"/*,{"src": result.profileRereply[j].profileImg }*/)));
-		                            r.reReply.append(r.replyNo.attr("value",result.replyList[i].refRno), r.pro, nickName, r.recon,r.redate);
-                        		}
-                        	});
-                        }
-	                }
+// 	                for(var j in result){
+//                         if(result.replyList[j].refRno!= 0){
+//                         	$(".reply").each(function(){
+//                         			console.log($(this).children().eq(0).val())
+//                         			console.log(result[j].refRno)
+//                         		if($(this).children().eq(0).val() == result[j].refRno){
+// 		                            nickName = r.nick.append(r.name);
+// 		                            r.reReply.append(r.replyNo.attr("value",result.replyList[i].refRno), r.pro.append(makeTag("img",{"src": result.profileRereply[j].profileImg })), nickName, r.recon,r.redate);
+//                         		}
+//                         	});
+//                         }
+// 	                }
 	                }
                         
                 }

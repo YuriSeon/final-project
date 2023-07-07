@@ -421,9 +421,9 @@ height: 270px;
 		        currentPage: currentPage,
 		        boardLimit: "6",
 		        pageLimit: "5",
-		        maxPage : "Math.ceil(totalCount / boardLimit)",
-				startPage : "(currentPage-1)/pageLimit * pageLimit +1",
-				endPage : "startPage+pageLimit-1"
+		        maxPage : Math.ceil(totalCount / boardLimit),
+				startPage : (currentPage-1)/pageLimit * pageLimit +1,
+				endPage : startPage+pageLimit-1
 		    };
 		    
 		    pi.endPage = pi.startPage + pi.pageLimit - 1;

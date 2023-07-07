@@ -82,6 +82,7 @@ public class ScheduleController {
 		} else {
 			plan.setComplete("Y");
 		}
+		System.out.println(plan);
 		// 서비스로 한번에 보내서 트랜잭션처리하면 등록후 조회해서 사용하는 값들을 꺼낼 수 없기에 따로 메소드 만들어서 진행
 		// 2. plan board 등록
 		int result = scService.insertSchedule(session, plan, path);

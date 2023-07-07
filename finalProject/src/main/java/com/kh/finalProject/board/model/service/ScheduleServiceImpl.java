@@ -66,11 +66,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 			if(infoList.get(i).getBoardContent()!=null || infoList.get(i).getBoardContent().equals("")||infoList.get(i).getBoardContent().equals(" ")) {
 				// 기존에 사용하던 메소드 사용해서 json의 형태로 받았기에 한글자씩 문자열의 배열로넘어옴. 원하는 형태로 가공하기 위해 문자열로 합쳐줌
 				String urlString = infoList.get(i).getBoardContent();
-				String[] str = urlString.split("★★★");
+				System.out.println(urlString);
+				String[] str = urlString.split("~~~~");
 				infoList.get(i).setBoardContent(str[1]);
 				System.out.println(Arrays.toString(str));
-				if(str[0].contains("★★")) { //이미지가 여러개
-					String[] url = str[0].split("★★"); // info 하나의 url들
+				if(str[0].contains("~~~")) { //이미지가 여러개
+					String[] url = str[0].split("~~~"); // info 하나의 url들
 					for(int j=0; j<url.length; j++) {
 						imgURL.add(url[j]);
 						atList = AttractionController.imgTool(session, imgURL);
