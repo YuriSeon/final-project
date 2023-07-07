@@ -4,9 +4,18 @@
 <html>
   <head>
   <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="resources/css/schedule.css?v=1">
+    <link rel="stylesheet" type="text/css" href="resources/css/schedule.css?after">
     <title>일정 자랑</title>
-    <style type="text/css"></style>
+    <style type="text/css">
+    .schedule .list .boardList {
+	width: 35%;
+	height: 100%;
+	margin-right: 1%;
+}
+.list {
+	margin-bottom : 20px;
+}
+    </style>
    </head>
    <body>
    <!-- 페이징처리 -->
@@ -21,11 +30,12 @@
  			});
  		});
 	</script>
+	<a href="detail.sc?"></a>
    <div class="main-schedule"></div>
    <div class="schedule">
         <div class="title-area">
             <div><span>일정자랑</span></div>
-            <div><button onclick="pageLoad(1);">게시물 등록</button></div>
+            <div><button onclick="pageLoad(0);">게시물 등록</button></div>
         </div>
         <hr>
         <div class="sidebar-area">
@@ -35,17 +45,17 @@
                 </div>
                 <div class="col-lg-12"><br>
                     <a href="schedule.bo?sort=recently">Recently</a><br>
-                    <a href="schedule.bo?sort=recommend">Recommend</a><br>
                     <a href="schedule.bo?sort=views">Views</a><br>
                 </div>  
             </div>
         </div>
         <div class="content-area">
       		<c:forEach var="i" items="${dataMap.plan}">
-            	<div class="list" onclick="pageLoad(2)">
+            	<div class="list" onclick="pageLoad('${i.boardNo }')">
 	                <div class="boardList">
 	            		<input type="hidden" name="boardNo" value="${i.boardNo}">
 	            		<input type="hidden" name="writer" value="${i.writer }">
+	            		<input type="hidden" name="startDate" value="${i.startDate }">
 	                    <div class="left-content">
 	                        <div class="list-title">
 	                            <h5>${i.boardTitle }</h5>
@@ -63,7 +73,7 @@
 	                        <!-- 동행하러가는 보드넘버 조회해와서 연결하기 인원수 가득찼다면 비활성화시키기 -->
 	                        <!-- 작성자 시작일 종료일만 맞춰서 조회 -->
 	                        <c:if test="${i.together eq 0}">
-	                        	<div class="main-dark-button"><a href="">동행하러가기</a></div>
+	                        	<div class="main-dark-button"><a class="with">동행하러가기</a></div>
 	                        </c:if>
 	                    </div>
 	                </div>
@@ -102,26 +112,36 @@
    </div>
 	<%@include file="../../common/footer.jsp" %>
 	<script>
+	
+		$(function(){
+			
+		});
 		/* 페이지 이동 이벤트 */
         function pageLoad(num){
-        	if(num==1){ // 등록하기 페이지
-        		if("${empty loginUser}"){
-        			alert("로그인이 필요한 서비스입니다.");
-        		} else {
+        	if(${not empty loginUser}){
+        		if(num==0){ // 등록하기 페이지
 	        		location.href="insert.sc";
+        		} else {// 디테일뷰 페이지
+					location.href="detail.sc?boardNo="+num;
         		}
-        	} else { // 디테일뷰 페이지
-        		var bno = $(this).children().eq(1).children().eq(0).val(); // 이벤트 해당 게시물번호
-				location.href="detail.sc?boardNo="+bno;
+        	} else { 
+        		alert("로그인이 필요한 서비스입니다.");
         	}
         }
 		$(".boardList").each(function(){
-			var bno = $(this).children().eq(1).val();
-			var writer = $(this).children().eq(1).next().val();
-			var startDate = ${dataMap.plan}
+			var startDate = $(this).children().eq(2).val();
+			var writer = $(this).children().eq(1).val();
+			var button = $(this).children().eq(3).children().eq(2);
+			var plan = "${dataMap.plan}";
 			var togetherList = "${dataMap.together}";
-			for(var i=0; i<togetherList.size(); i++){
-				if(bno==togetherList)
+			console.log(button)
+			for(var i=0; i<togetherList.length; i++){
+				if(writer==togetherList[i].writer && startDate==together[i].startDate){
+					button.attr("href","togetherDetail.bo?boardNo="+together[i].boardNo);
+					if(together[i].together==together[i].togetherCount){
+						button.attr("href","javascript:void(0)");
+					}
+				}
 			}
 		});
 	</script>

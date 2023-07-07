@@ -9,6 +9,8 @@
   		<result column="DAILY" property="daily"/>
   		<result column="PATH_NO" property="pathNo"/>
   		<result column="PAY" property="pay"/>
+  		<result column="INFO_NAME" property="infoName"/>
+  		
   	</resultMap>
   	<resultMap type="plan" id="planResultSet" extends="boardMapper.boardResultSet">
   		<result column="BOARD_NO" property="boardNo"/>
@@ -36,7 +38,7 @@
   	</insert>
   	<!-- insert시 다른테이블에 맞춰서 넣기위해 조회 -->
   	<select id="checkBno" resultMap="adminMapper.boardResultSet">
-  		SELECT BOARD_NO, INFO_NO
+  		SELECT DISTINCT BOARD_NO
   		FROM BOARD
   		WHERE BOARD_WRITER = #{boardWriter}
   		AND CATEGORY = 6
@@ -52,15 +54,8 @@
   	<!-- 경로 등록 -->
   	<insert id="insertPath">
   		INSERT INTO PATH VALUES(#{boardNo},
-  	<choose>
-  		<when test="address!=null">
-  			(SELECT INFO_NO FROM INFO WHERE INFO_ADDRESS = #{address}),
-  		</when>
-  		<otherwise>
-			(SELECT INFO_NO FROM INFO WHERE INFO_NAME = #{infoName}),
-  		</otherwise>
-  	</choose>
-		#{daily}, #{pathNo}, #{pay})
+								(SELECT INFO_NO FROM INFO WHERE INFO_NAME = #{infoName}),
+								#{daily}, #{pathNo}, #{pay})
   	</insert>
   	<!-- plan에 infoNo 추가업데이트 조회시 사용위한 작업 -->
   	<!-- 기본으로 처음에 /가 들어있으니 제거하고 구분자로 구분해야 인덱스 맞음 잊지말기-->
@@ -69,12 +64,19 @@
   		SET INFO_NO = INFO_NO||'/'||#{infoNo}
   		WHERE BOARD_NO = #{boardNo}
   	</update>
+  	<!-- 조회수 증가 -->
+  	<update id="increaseCount">
+  		UPDATE BOARD
+  		SET COUNT = COUNT +1
+  		WHERE BOARD_NO = #{boardNo}
+  	</update>
   	<!-- plan과 board조회 -->
   	<select id="selectBoard" resultMap="planResultSet">
-	  	SELECT *
-	  	FROM BOARD 
-	  	JOIN PLAN USING(BOARD_NO)
-		WHERE BOARD_NO = #{board_no}  	
+	  	SELECT BOARD_NO ,P.INFO_NO "INFONO" ,WRITER ,TOGETHER ,TOGETHER_COUNT ,CONCEPT
+        		,START_DATE ,END_DATE ,TRANSPORT ,TOTAL_DATE ,TOTAL_PAY ,COMPLETE ,BOARD_TITLE ,BOARD_CONTENT, COUNT
+		FROM BOARD 
+		JOIN PLAN P USING(BOARD_NO)
+		WHERE BOARD_NO = #{boardNo} 	
   	</select>
   	<select id="selectInfo" resultMap="adminMapper.infoResultSet">
   		SELECT *
@@ -89,9 +91,10 @@
   	</select>
   	<!-- 경로조회 -->
   	<select id="selectPathList" resultMap="pathResultSet">
-  		SELECT *
-  		FROM PATH
-  		WHERE BOARD_NO = #{boardNo}
+  		SELECT INFO_NAME, DAILY, PATH_NO, PAY
+  		FROM PATH P
+  		JOIN INFO USING(INFO_NO)
+  		WHERE P.BOARD_NO = #{boardNo}
   	</select>
   	<!-- 경로 삭제 -->
   	<delete id="deletePath">
@@ -117,10 +120,23 @@
   	</select>
   	<!-- 메인 리스트 조회 -->
   	<select id="planList" resultMap="planResultSet">
-  		SELECT BOARD_NO, B.BOARD_TITLE, P.INFO_NO "INFONO", P.WRITER, TOGETHER, TOGETHER_COUNT, CONCEPT, START_DATE, END_DATE, TOTAL_DATE, COMPLETE, ZONE_NAME
+  		SELECT BOARD_NO, B.BOARD_TITLE, P.INFO_NO "INFONO", P.WRITER, TOGETHER, TOGETHER_COUNT, CONCEPT
+  				, TO_CHAR(START_DATE,'YY/MM/DD') START_DATE, TO_CHAR(END_DATE,'YY/MM/DD') END_DATE, TOTAL_DATE, COMPLETE, ZONE_NAME
   		FROM PLAN P
   		JOIN BOARD B USING(BOARD_NO)
   		JOIN ZONE Z ON(Z.ZONE_NO=B.ZONE_NO)
+  	</select>
+  	<select id="boardList" resultMap="togetherMapper.togetherResultSet">
+  		SELECT B.BOARD_NO,ZONE_NAME,BOARD_TITLE,BOARD_CONTENT,BOARD_WRITER,(FILE_PATH || CHANGE_NAME) FILE_PATH,TOGETHER,TOGETHER_COUNT,CONCEPT
+  				,TO_CHAR(START_DATE,'YY/MM/DD') START_DATE,TO_CHAR(END_DATE,'YY/MM/DD') END_DATE,TOTAL_DATE,TOTAL_PAY
+				
+		FROM BOARD B
+		JOIN ZONE USING (ZONE_NO)
+		JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
+		JOIN PLAN P ON (B.BOARD_NO = P.BOARD_NO)
+		LEFT JOIN MEMBER ON (BOARD_WRITER = NICKNAME)
+		WHERE B.CATEGORY = 5
+		AND B.STATUS = 'Y'
   	</select>
   </mapper>
   

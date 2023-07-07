@@ -15,14 +15,14 @@
   		<when test="infoType==1 or infoType==2">
   			INSERT ALL
   			INTO BOARD(BOARD_NO, ZONE_NO, INFO_NO, BOARD_WRITER, CATEGORY, BOARD_TITLE, BOARD_CONTENT)
-  				VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, SEQ_INO.NEXTVAL, '관리자', 3, #{infoName}, #{boardContent})
+  				VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, SEQ_INO.NEXTVAL, #{boardWriter}, 3, #{infoName}, #{boardContent})
   			INTO INFO VALUES(SEQ_INO.CURRVAL, SEQ_BNO.CURRVAL, #{zoneNo}, #{infoAddress}, #{infoTime}, #{infoHomepage}, #{infoCall}, #{parking}, #{infoName}, #{infoType}, #{dayOff})
   			SELECT * FROM DUAL
   		</when>
   		<otherwise>
   			INSERT ALL
   			INTO BOARD(BOARD_NO, ZONE_NO, INFO_NO, BOARD_WRITER, CATEGORY, BOARD_TITLE, BOARD_CONTENT)
-  				VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, SEQ_INO.NEXTVAL, '관리자', 3, #{infoName}, #{boardContent})
+  				VALUES(SEQ_BNO.NEXTVAL, #{zoneNo}, SEQ_INO.NEXTVAL, #{boardWriter}, 3, #{infoName}, #{boardContent})
   			INTO INFO VALUES(SEQ_INO.CURRVAL, SEQ_BNO.CURRVAL, #{zoneNo}, #{infoAddress}, #{infoTime}, #{infoHomepage}, #{infoCall}, #{parking}, #{infoName}, 3, #{dayOff})
   			SELECT * FROM DUAL
   		</otherwise>
@@ -89,6 +89,18 @@
         WHERE R.REF_QNO = #{refRno}
   		AND R.STATUS = 'Y'
   		ORDER BY R.CREATE_DATE DESC
+  	</select>
+  	<select id="profileReply" resultMap="boardMapper.replyResultSet" >
+  		SELECT (FILE_PATH || CHANGE_NAME) PROFILEIMG, REPLY_NO, REPLY_WRITER
+  		FROM REPLY
+        JOIN ATTACHMENT ON(WRITER=REPLY_WRITER)
+  		WHERE REF_QNO = #{boardNo}
+  	</select>
+  	<select id="profileRereply" resultMap="boardMapper.rereplyResultSet">
+  		SELECT (FILE_PATH || CHANGE_NAME) PROFILEIMG, REPLY_NO, REPLY_WRITER
+  		FROM REREPLY
+        JOIN ATTACHMENT ON(WRITER=REPLY_WRITER)
+  		WHERE REF_QNO = #{boardNo}
   	</select>
   	<!-- 댓글 삭제 -->
   	<update id="deleteReply">
@@ -173,11 +185,11 @@
   	<insert id="sendReport">
   		<choose>
   			<when test="rereplyNo==0 and replyNo==0">
-  				INSERT INTO REPORT(BOARD_NO WRITER, REPORT_REASON)
+  				INSERT INTO REPORT(BOARD_NO, WRITER, REPORT_REASON)
   						VALUES(#{boardNo}, #{writer}, #{reportReason})
   			</when>
   			<when test="replyNo!=0 and rereplyNo==0">
-  				INSERT INTO REPORT(BOARD_NO, REPLY_NO. WRITER, REPORT_REASON)
+  				INSERT INTO REPORT(BOARD_NO, REPLY_NO, WRITER, REPORT_REASON)
   							VALUES(#{boardNo}, #{replyNo}, #{writer}, #{reportReason})
   			</when>
   			<when test="rereplyNo!=0 and replyNo==0">
@@ -195,7 +207,7 @@
   	<select id="checkInfo" resultType="_int">
   		SELECT COUNT(*)
   		FROM INFO
-  		WHERE INFO_ADDRESS LIKE '%'||#{address}||'%'
+  		WHERE INFO_NAME LIKE '%'||#{infoName}||'%'
   	</select>
   	<select id="modifyRequestAttr"  resultMap="adminMapper.infoResultSet" resultType="info">
   		SELECT I.INFO_NO , I.BOARD_NO ,I.ZONE_NO ,INFO_ADDRESS ,INFO_TIME ,INFO_HOMEPAGE ,INFO_CALL ,PARKING ,INFO_NAME ,INFO_TYPE ,DAY_OFF, B.BOARD_CONTENT

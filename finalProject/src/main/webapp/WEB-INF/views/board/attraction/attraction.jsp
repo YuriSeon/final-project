@@ -10,9 +10,6 @@
 			box-sizing: border-box;
 			text-align: center;
 		}
-		.attr div {
-			border: 1px solid;
-		}
    		.attr #mainPhoto {
 			background-image: url('resources/images/main-attraction.jpg');
 			background-size: cover;
@@ -41,7 +38,7 @@
 			padding-left:250px;
 			padding-top : 30px;
 		}
-		/* .attr #zone-area {
+		.attr #zone-area {
 			width: 20%;
 			height: 100%;
 			margin-right: 5%;
@@ -55,7 +52,7 @@
 			font-size: 18px;
 			font-weight: 450;
 			border: 2px solid rgb(138, 138, 138);
-		} */
+		} 
 		/* .attr #zone-area>div:hover {
 			cursor: pointer;
 		}
@@ -93,23 +90,23 @@
 		.attr .content-title {
 			width: 100%;
 			height: 80%;
-			font-size: 20px;
 		}
 		.attr .content-title #p {
+			font-size : 30px;
 		}
-		.attr .content-search {
+		.attr #content-search {
 			width: 100%;
 			height: 20%;
 		}
-		.attr .search-input {
+		.attr #search-input {
 			width: 80%;
 			height: 100%;
 		}
-		.attr .search-icon {
+		.attr #search-icon {
 			width: 20%;
 			height: 100%;
 		}
-		.attr .search-icon img, .attr .search-icon button {
+		.attr #search-icon img, .attr #search-icon button {
 			width: 100%;
 			height: 100%;
 			max-height: 100px;
@@ -182,7 +179,7 @@
 	.경북:hover,
 	.경남:hover,
 	.제주:hover{
-		fill: #242779;
+		fill: #508edf;
 		transform: translateY(-10px);
 	}
 	
@@ -193,7 +190,7 @@
 	    text-anchor: middle;
 	}
 	.hover-class {
-	background-color: #242779;
+	background-color: #508edf;
 	}
 	.thumbnail { 
   transition: all .2s ease-in-out; 
@@ -207,7 +204,11 @@
 height: 270px;
 } 
 .rows img{ width:300px; height: 150px;}
-
+#btn{
+	float:right;
+	margin-right : 30px;
+	
+}
    	</style>
   </head>
    <body>
@@ -278,7 +279,7 @@ height: 270px;
 					</g>
 				</svg>
 			</div>
-			<div id="zone-area" style="width: 150px; position: relative; top: 20%;">
+			<div id="zone-area" style="width: 150px; position: relative;">
 				<div class="zone" id="first"><span class="OUTLINE 서울">서울</span></div>
 				<div class="zone"><span class="OUTLINE 부산">부산</span></div>
 				<div class="zone"><span class="OUTLINE 대구">대구</span></div>
@@ -307,15 +308,15 @@ height: 270px;
 					<div class="search-area">
 						<form action="" method="get">
 							<div class="content_title">
-								<p id="p"><b></b>으로 떠나볼까요?</p>
+								<p id="p" style="font-size : 27px; font-weight: 600"><b></b>으로 떠나볼까요?</p>
 							</div>
-							<div class="content_search">
-								<div class="search-input">
+							<!-- <div id="content_search">
+								<div id="search-input">
 									<input type="text" id="search-bar" placeholder="What can I help you with today?">
 									<button type="button">검색</button>
 								</div>
-								<div class="search-icon"><!--<button type="submit"><img  src="resources/images/fes_search.png"></button>--></div>
-							</div>
+								<div class="search-icon"><button type="submit"><img  src="resources/images/fes_search.png"></button></div>
+							</div> -->
 						</form>
 					</div>
 					<div class="list-area"></div>
@@ -323,11 +324,11 @@ height: 270px;
 				<!-- 페이징바 크기수정하기 -->
 				<div class="pagination">
 				</div>
+				</div>
 				<c:if test="${loginUser.status eq 'A' }">
-					<button onclick="location.href='insert.attr'">게시물 작성하기</button>
+					<button id="btn" class="btn btn-success" onclick="location.href='insert.attr'">게시물 작성하기</button>
 				</c:if>
 			</div>
-		</div>
 	</div>
 	<%@include file="../../common/footer.jsp" %>
 	<script type="text/javascript" src="resources/js/function.js"></script> 
@@ -349,7 +350,7 @@ height: 270px;
 			$("#main-map").parent().remove(); // 원래 들어있던 영역 지우기
 			$(map).css("padding","0");
 			$("#content #mini-map").append(map); // 지도 옮기기
-			$(this).css("fill","#242779").css("transform", "translateY(-10px)").css("box-shadow","4px 6px 6px 8px rgba(0, 0, 0, 0.5)"); // css 효과
+			$(this).css("fill","#508edf").css("transform", "translateY(-10px)").css("box-shadow","4px 6px 6px 8px rgba(0, 0, 0, 0.5)"); // css 효과
 			$("#content").show();
 			var zoneName = $(this).attr("class").split(' ')[1];
 			$("#p b").text(zoneName);
@@ -384,9 +385,9 @@ height: 270px;
 						data = result.response.body.items.item; // 게시글
 						dataPrint(data); // 데이터출력
 					}
-					var pi = pagination(totalCount); // 페이징바 처리 위한 객체 생성
+					var pi = pagination(totalCount,currentPage); // 페이징바 처리 위한 객체 생성
 					var area = $(".pagination"); // 페이징처리 담을 영역
-					$(area).html(pi);
+					$(area).html(pagination(totalCount));
 				}
 			});
 		});
@@ -414,34 +415,43 @@ height: 270px;
 			dataPrint(list);
 		});
 		
-		function pagination(totalCount, currentPage){
-			var pi = {
-					totalCount : totalCount,
-					currentPage : currentPage,
-					boardLimit : "6",
-					pageLimit : "5",
-					maxPage : "Math.ceil(totalCount / boardLimit)",
-					startPage : "(currentPage-1)/pageLimit * pageLimit +1",
-					endPage : "startPage+pageLimit-1"
-				}
-			if(pi.endPage>pi.maxPage) {
-				pi.endPage = pi.maxPage;
-			}
-			// 페이징처리해서 태그 생성
-			var str = '<ul class="pagination">';
-			if (pi.currentPage > 1) {
-			    str += `<li><a href="attraction.bo?currentPage=${pi.currentPage - 1}">이전</a></li>`;
-			  }
-			  // 페이지 번호 링크
-			  for (var i = pi.startPage; i <= pi.endPage; i++) {
-			    str += `<li><a href="attraction.bo?currentPage=${i}">${i}</a></li>`;
-			  }
-			  // 다음 페이지 링크
-			  if (pi.currentPage < pi.maxPage) {
-			    str += `<li><a href="attraction.bo?currentPage=${pi.currentPage + 1}">다음</a></li>`;
-			  }
-			  str += '</ul>';
-			  return str;
+		function pagination(totalCount, currentPage) {
+		    var pi = {
+		        totalCount: totalCount,
+		        currentPage: currentPage,
+		        boardLimit: "6",
+		        pageLimit: "5",
+		        maxPage : "Math.ceil(totalCount / boardLimit)",
+				startPage : "(currentPage-1)/pageLimit * pageLimit +1",
+				endPage : "startPage+pageLimit-1"
+		    };
+		    
+		    pi.endPage = pi.startPage + pi.pageLimit - 1;
+		    
+		    if (pi.endPage > pi.maxPage) {
+		        pi.endPage = pi.maxPage;
+		    }
+		    
+		    // 페이징 처리해서 태그 생성
+		    var str = '<ul class="pagination">';
+		    
+		    if (pi.currentPage > 1) {
+		        str += '<li><a href="attraction.bo?currentPage=' + (pi.currentPage - 1) + '">이전</a></li>';
+		    }
+		    
+		    // 페이지 번호 링크
+		    for (var i = pi.startPage; i <= pi.endPage; i++) {
+		        str += '<li><a href="attraction.bo?currentPage=' + i + '">' + i + '</a></li>';
+		    }
+		    
+		    // 다음 페이지 링크
+		    if (pi.currentPage < pi.maxPage) {
+		        str += '<li><a href="attraction.bo?currentPage=' + (pi.currentPage + 1) + '">다음</a></li>';
+		    }
+		    
+		    str += '</ul>';
+		    
+		    return str;
 		}
 		
 		//지도에 호버이벤트
@@ -452,7 +462,7 @@ height: 270px;
 					location = location.substring(8,10);
 					location = "."+location;
 					var $span = $(this).closest("#main-map").next().find(location).parent();
-					$span.css({"background":"#242779","color":"white"});
+					$span.css({"background":"#508edf","color":"white"});
 				},
 				function() {
 					var location = $(this).attr("class");
