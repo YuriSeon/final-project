@@ -298,7 +298,6 @@
 </style>
 </head>
 <body>
-<!-- 지도, 마커 반복문 추가, 마커 클릭시 데일리 일정 나오도록하고 그 후에... 지도 마커 클릭시 info 보여주기 나중에 대댓글 넣는거 하기 -->
 <%@ include file="../../common/menubar.jsp" %>
 <div class="main-schedule">
   <div class="container">
@@ -311,17 +310,16 @@
 <div class="schedule-detail">
 	<div id="title-area">
 		<div id="main-title">
-			<div id="title1">title</div>
+			<div id="title1">${dataMap.plan.boardTitle }</div>
 			<div id="title2">
 				<!-- 여행기간 -->
-				<img src="resources/images/calendar.png"> <span><%-- ${plan.startDate } ~ ${plan.endDate } (${plan.totalDate }) --%></span>
+				<img src="resources/images/calendar.png"> <span>${dataMap.plan.startDate } ~ ${dataMap.plan.endDate } (${dataMap.plan.totalDate })</span>
 				<!-- 여행스타일 -->
-				<img src="resources/images/ticket.png"> <span><%-- ${plan.concept } --%></span>
+				<img src="resources/images/ticket.png"> <c:forTokens var="concept" items="${dataMap.plan.concept }" delims="/"></c:forTokens> 
+				<span> <c:out value="${concept}"/> </span>
 				<!-- 조회수 -->
-				<img src="resources/images/view.png"> <span><%-- ${board.count } --%></span>
+				<img src="resources/images/view.png"> <span>${dataMap.plan.count }</span>
 				<div id="btn-type">
-					<span class="icon"><img src="resources/images/view.png"></span>
-                    <span class="num">${dataMap.board.count }</span>
                     <span class="ico">
                         <img class="good" src="resources/images/Like-before.png" onclick="iconChange('good');">
                     </span>
@@ -339,6 +337,16 @@
 		<hr>
 		<!-- 총 여행경로 -->
 		<div id="total-path">
+		<%-- <c:forEach var="path" items="${dataMap.pList.infoName }" varStatus="status">
+			<c:choose>
+				<c:when test="status.last">
+					<c:out value="path"/>
+				</c:when>
+				<c:otherwise>
+					<c:out value="path"/> ➙
+				</c:otherwise>
+			</c:choose>
+		</c:forEach> --%>
 		</div>
 	</div>
 	<div id="content-area">
@@ -411,17 +419,8 @@
 		<div id="reply-content"></div>
 		<div id="btn">
 			<button type="button" onclick="history.back();">목록</button>
-				<!-- 로그인유저가 관리자가 아니거나 작성가자 아닐때 동행버튼 활성  -->
-			<c:choose>
-				<c:when test="${!(loginUser.userId eq board.writer) or !(loginUser.status eq 'A') }">
-					<!-- 동행버튼 클릭시 이동하도록 연결하기 -->
-					<button type="button" onclick="form(3)">동행하러가기</button>
-				</c:when>
-				<c:otherwise>
-					<button type="button" onclick="form(1)">수정</button>
-					<button type="button" onclick="form(2);">삭제</button>
-				</c:otherwise>
-			</c:choose>
+			<button type="button" onclick="form(1)">수정</button>
+			<button type="button" onclick="form(2);">삭제</button>
 		</div>
 	</div>
   </div>

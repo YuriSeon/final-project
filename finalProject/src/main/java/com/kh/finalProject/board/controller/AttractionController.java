@@ -193,6 +193,38 @@ public class AttractionController {
 		}
 	}
 	
+	//맛집
+		@ResponseBody
+		@RequestMapping(value="foodSearch.attr", produces = "application/json; charset=UTF-8")
+		public String ListSelectApi(@RequestParam(value="zoneName")String zoneName,
+									@RequestParam(value="searchType", defaultValue ="39") int searchType) throws IOException {
+				// 검색내역변수처리
+				String rowBounds = "&numOfRows=2"; // 한페이지당 보이는 게시물 수 
+				String page = "&pageNo=1"; // currentPage넣어주기
+				String arr = "&arrange=O"; // 정렬기준 (O=제목순, Q=수정일순, R=생성일순)
+				String key = "&keyword="+URLEncoder.encode(zoneName,"UTF-8"); // 검색지역 넣기
+				String type = "&contentTypeId="+searchType; // 검색유형 (12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 38:쇼핑, 39:음식점)
+				String etc = "&MobileOS=ETC&MobileApp=AppTest&_type=json&listYN=Y";
+				
+				// 검색해서 보여줄 url 완성
+				String url = BASEURL + SERVICEKEY + rowBounds + page  + arr + key + type + etc;
+				// url 연결 후 값 읽어오기
+				URL requestUrl = new URL(url);
+				HttpURLConnection urlCon = (HttpURLConnection)requestUrl.openConnection();
+				urlCon.setRequestMethod("GET");
+				BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+				String responseText = "";
+				String line;
+				while((line=br.readLine())!=null) { // 조건문 영역에서 바로 확인시 결과 누락할 수 있어서 변수에 담으며 확인
+					responseText += line;
+				}
+				// 사용 끝나면 닫아주기
+				br.close();
+				urlCon.disconnect(); 
+				
+				return responseText;
+		}
+	
 	// 디테일뷰 페이지로 이동
 	@GetMapping("detail.attr")
 	public String detailAttr(int boardNo, Model model) {
@@ -223,7 +255,7 @@ public class AttractionController {
 		String infoName = in.getInfoName();
 		String[] infoAddress = in.getInfoAddress().split(" ");
 		String zone = infoAddress[0]+" "+infoAddress[1]; // 주소에서 지역명 추출
-		int result = atService.checkInfo(in.getInfoAddress());//주소로 등록된 곳인지 확인
+		int result = atService.checkInfo(infoName);//주소로 등록된 곳인지 확인
 		if(result==0) { //이미 등록된게 없다면 검색진행
 			info = new Selenium().searchData(infoName, infoAddress[0]);
 		}
@@ -291,7 +323,7 @@ public class AttractionController {
 	@ResponseBody
 	@RequestMapping(value="selectReplyList.attr", produces ="application/json; charset=UTF-8")
 	public String selectReplyList(int boardNo) {
-		ArrayList<Rereply> rList = atService.selectReplyList(boardNo);
+		HashMap<String, Object> rList = atService.selectReplyList(boardNo);
 		return new Gson().toJson(rList);
 	}
 	
@@ -348,7 +380,7 @@ public class AttractionController {
 									@RequestParam("changeImg")String changeImg) {
 		String savePath = session.getServletContext().getRealPath("/resources/infoImg/");
 		if(introduce!="") {
-			info.setBoardContent(info.getBoardContent()+"$$"+introduce);
+			info.setBoardContent(info.getBoardContent()+"★★"+introduce);
 		}
 		ArrayList<Attachment> atList = atService.selectAttachment(info.getBoardNo()); // 원래 있던 이미지 리스트
 		ArrayList<Attachment> removeList = new ArrayList<>(); // 제거된 항목만 담을 배열

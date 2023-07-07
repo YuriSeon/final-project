@@ -55,12 +55,13 @@ public class Selenium {
 			for(int i=0; i<imgEl.size(); i++) {
 				imgPath += imgEl.get(i).getAttribute("src"); // 이미지 경로 변수에 담기
 				if(i != imgEl.size()-1) {
-					imgPath += "$$"; // String타입에 담아서 전달하기위해서 구분자 넣음
+					imgPath += "★★"; // String타입에 담아서 전달하기위해서 구분자 넣음
 				}
 			}
 			for (int i = 0; i < culomnList.size(); i++) {
 				String culomn = culomnList.get(i).getText();
 				String value = valueList.get(i).getText();
+				in.setInfoName(infoName); //조회에 오류가 나더라도 경로에 저장하기 위해서 infoName 먼저 저장
 				switch (culomn) { // culomn에 맞는 value값으로 set
 				case "주소": in.setInfoAddress(value); break;
 				case "이용시간": in.setInfoTime(value);break;
@@ -75,7 +76,7 @@ public class Selenium {
 					}
 				case "개요": 
 					if(imgPath!="") {
-						in.setBoardContent(imgPath+"$$$"+value); break;
+						in.setBoardContent(imgPath+"★★★"+value); break;
 					} else {
 						in.setBoardContent(value); break;
 					}
@@ -89,7 +90,6 @@ public class Selenium {
 					}
 				}
 			}
-			in.setInfoName(infoName);
 			if(in.getInfoType()==0) {
 				in.setInfoType(1);
 			}
@@ -99,7 +99,6 @@ public class Selenium {
 			return in;
 		} finally {
 			quitDriver();
-			in.setInfoName(infoName); // 오류가 나더라도 경로는 저장해둬야하니 FINALLY에 작성
 		}
 		return in;
 	}

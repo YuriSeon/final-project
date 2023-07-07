@@ -10,6 +10,7 @@ import com.kh.finalProject.board.model.vo.Attachment;
 import com.kh.finalProject.board.model.vo.Board;
 import com.kh.finalProject.board.model.vo.Good;
 import com.kh.finalProject.board.model.vo.Info;
+import com.kh.finalProject.board.model.vo.Reply;
 import com.kh.finalProject.board.model.vo.Rereply;
 import com.kh.finalProject.board.model.vo.choice;
 
@@ -19,35 +20,34 @@ public class AttractionDao {
 
 	// 지역번호 조회
 	public static int selectZoneNo(SqlSession sqlSession, String address) {
-		// 매개변수로 전달받은 주소로 시군구영역 뒤부터 찾아서 조회
 		String zoneName = "";
 		String[] strArr = address.split(" ");
 		switch(strArr[0]) {
-		case "서울특별시" : strArr[0] = "서울"; break;
-		case "부산광역시" : strArr[0] =  "부산"; break;
-		case "대구광역시" : strArr[0] =  "대구"; break;
-		case "인천광역시" : strArr[0] =  "인천"; break;
-		case "광주광역시" : strArr[0] =  "광주"; break;
-		case "대전광역시" : strArr[0] =  "대전"; break;
-		case "울산광역시" : strArr[0] =  "울산"; break;
-		case "세종특별자치시" : strArr[0] = "세종"; break;
-		case "경기도" : strArr[0] =  "경기"; break;
-		case "강원특별자치도" : strArr[0] =  "강원"; break;
-		case "충청북도" : strArr[0] = "충북"; break; 
-		case "충청남도" : strArr[0] = "충남"; break; 
-		case "전라북도" : strArr[0] = "전북"; break; 
-		case "전라남도" : strArr[0] = "전남"; break;
-		case "경상북도" : strArr[0] = "경북"; break;
-		case "경상남도" : strArr[0] = "경남"; break;
-		case "제주특별자치도" : strArr[0] = "제주";
+		case "서울특별시" : case "서울" : strArr[0] = "서울"; break;
+		case "부산광역시" : case "부산" : strArr[0] =  "부산"; break;
+		case "대구광역시" : case "대구" : strArr[0] =  "대구"; break;
+		case "인천광역시" : case  "인천" : strArr[0] =  "인천"; break;
+		case "광주광역시" : case "광주" : strArr[0] =  "광주"; break;
+		case "대전광역시" : case  "대전" : strArr[0] =  "대전"; break;
+		case "울산광역시" : case "울산" : strArr[0] =  "울산"; break;
+		case "세종특별자치시" : case "세종" : strArr[0] = "세종"; break;
+		case "경기도" : case  "경기" : strArr[0] =  "경기"; break;
+		case "강원특별자치도" : case "강원" : strArr[0] =  "강원"; break;
+		case "충청북도" : case "충북" : strArr[0] = "충북"; break; 
+		case "충청남도" : case  "충남" : strArr[0] = "충남"; break; 
+		case "전라북도" : case "전북" : strArr[0] = "전북"; break; 
+		case "전라남도" : case "전남" : strArr[0] = "전남"; break;
+		case "경상북도" : case "경북" : strArr[0] = "경북"; break;
+		case "경상남도" : case "경남" : strArr[0] = "경남"; break;
+		case "제주특별자치도" : case "제주" : strArr[0] = "제주";
 		}
 		zoneName = strArr[0]+" "+strArr[1];
 		return sqlSession.selectOne("attractionMapper.selectZoneNo", zoneName);
 	}
 
 	// 이미 등록된 장소인지 체크
-	public static int checkInfo(SqlSession sqlSession, String infoAddress) {
-		return sqlSession.selectOne("attractionMapper.checkInfo", infoAddress);
+	public static int checkInfo(SqlSession sqlSession, String infoName) {
+		return sqlSession.selectOne("attractionMapper.checkInfo", infoName);
 	}
 
 	// board, info 등록
@@ -218,6 +218,14 @@ public class AttractionDao {
 	//info 정보
 	public ArrayList<Info> selectInfo(SqlSession sqlSession, String keyword) {
 		return (ArrayList)sqlSession.selectList("attractionMapper.selectInfoList", keyword);
+	}
+
+	public ArrayList<Reply> profileReply(SqlSession sqlSession, int boardNo) {
+		return (ArrayList)sqlSession.selectList("attractionMapper.profileReply", boardNo);
+	}
+
+	public ArrayList<Rereply> profileRereply(SqlSession sqlSession, int boardNo) {
+		return (ArrayList)sqlSession.selectList("attractionMapper.profileRereply", boardNo);
 	}
 
 	

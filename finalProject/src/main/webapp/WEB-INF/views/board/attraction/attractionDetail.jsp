@@ -118,7 +118,9 @@
     width: 99%;
     resize: none;
 }
-
+.reply {
+	border : 1px solid;
+}
 </style>
 <body>
 <%@include file="../../common/menubar.jsp" %>
@@ -134,7 +136,7 @@
                 </div>
                 <div class="titTypeWrap">
                     <span>
-                    	${fn:split(dataMap.board.boardContent, '$$')[1] }
+                    	${fn:split(dataMap.board.boardContent, '★★★')[1] }
                     </span>
                 </div>
                 <div class="board-area">
@@ -189,7 +191,7 @@
                         <hr>
                         <div class="inr_wrap">
                             <div class="inr text">
-                                ${fn:split(dataMap.board.boardContent, '$$')[0] }
+                                ${fn:split(dataMap.board.boardContent, '★★★')[0] }
                             </div>
                         </div>
                     </div>
@@ -269,16 +271,6 @@
                         <div class="info-area">
                             <div class="float">
                                 <h4 id="topTitle">장소이름</h4>
-                                <div class="board-food-area">
-                                    <span class="ico">
-                                        <img class="good" src="resources/images/Like-before.png">
-                                    </span>
-                                    <span class="ico">
-                                        <c:if test="${choice.userNo eq loginUser.userNo }">
-                                            <img class="choice" src="resources/images/star-before.png">
-                                        </c:if>
-                                    </span>
-                                </div>
                             </div>
                             <div class="area_address" id="topAddr">
                                 <span>지역정보</span>
@@ -336,16 +328,18 @@
             // 3. 좋아요 신고 아이콘 조회
             iconCheck();
             // 4. 로그인 확인 후 댓글 비활성화
-//             if("${empty loginUser}"){
-//                 $("#reply-back").children().siblings().attr("disabled", "true"); // 비활성화 시키기
-//             	$("#reply-back input").attr("placeholder", "로그인하셔야 댓글작성이 가능합니다.");
-//             }
+            if(${empty loginUser}){
+                $("#reply-back").children().siblings().attr("disabled", "true"); // 비활성화 시키기
+            	$("#reply-back input").attr("placeholder", "로그인하셔야 댓글작성이 가능합니다.");
+                
+            }
             // 5. 장소 상세정보 출력
             var list = ['infoAddress','infoTime','infoHomepage','infoCall','parking','infoType','dayOff']; // 출력할 내용 배열에 담기
             	// key로 꺼내 사용할 수 있도록 객체형식으로 변경
             	// 처음과 마지막 ()만 변경되도록/ =은 :로 변경/ :의 앞 뒤 ""로 감싸주는데 http:는 추가로 감싸지 않도록 설정
-           	var info =("${dataMap.info}").replace(/Info/g, '').replace(/^./, '{').replace(/.$/, '}').replace(/=/g, ':')
+           	var info ="${dataMap.info}".replace(/Info/g, '').replace(/^./, '{').replace(/.$/, '}').replace(/=/g, ':')
 										.replace(/(\w+):/g, '"$1":').replace(/:([^,{}\[\]]+)/g, ':"$1"').replace('"http"', 'http');
+           	console.log(info);
             var infoObj = JSON.parse(info);
             for(var i in list){
             	switch(list[i]){
@@ -389,7 +383,9 @@
                     zoneName : $("#topAddr").children().text()
                 },
                 success : function(list){
+                	console.log(list)
                     var boardAddr = $("#detailinfoview span[name=infoAddress]").text(); // 게시물의 주소
+                    console.log(boardAddr)
                     var boardCoord = coordCalculator(boardAddr);
                     var listCoords = {} // 좌표계산한것 담을 변수
                    
@@ -488,32 +484,36 @@
 	                        </div>
 	                    </div>
 	                */
-	                for(var i in result){
+	                for(var i in result.replyList){
                         var r = {
                             reply : makeTag("div",{"class":"reply"}),
                             reReply : makeTag("div",{"class":"rereply"}),
-                            replyNo : makeTag("input",{"type":"hidden", "id":"replyNo","value":result[i].replyNo}),
+                            replyNo : makeTag("input",{"type":"hidden", "id":"replyNo","value":result.replyList[i].replyNo}),
                             pro : makeTag("div",{"class":"pro"}),
                            	nick : makeTag("div",{"class":"nick"}),
-                            name : makeTag("a",{"id":"nicknameHover","onclick":"whoareyou();"}).text(result[i].replyWriter),
+                            name : makeTag("a",{"id":"nicknameHover","onclick":"whoareyou();"}).text(result.replyList[i].replyWriter),
                             report : makeTag("span",{"class":"ico"}).append(makeTag("img",{"id":"reply","class":"report","src":"resources/images/bell-after.png"})),
-                            recon : makeTag("div", {"class": "con"}).append(makeTag("textarea",{"class":"replycontent"}).text(result[i].content)),
-                            redate : makeTag("div",{"class":"date"}).text(result[i].createDate),
+                            recon : makeTag("div", {"class": "con"}).append(makeTag("textarea",{"class":"replycontent"}).text(result.replyList[i].content)),
+                            redate : makeTag("div",{"class":"date"}).text(result.replyList[i].createDate),
                             reReplyinput : makeTag("input",{"type":"text","id":"test2","class":"reReplyContent","placeholder":"이 댓글에 대한 생각을 적어주세요!"}),
                             reReplyBtn : makeTag("button", {"class":"replyInsert"}).text("작성")
                         }
-                        var nickName = r.nick.append(r.name.append(makeTag("img",{"src":result[i].profileImg})), r.report);
+                        var nickName = r.nick.append(r.name.append(makeTag("img"/*,{"src": result.profileReply[i].profileImg }*/)), r.report);
                         var replyarea = r.reply.append(r.replyNo, r.pro, nickName, r.recon, r.redate, makeTag("div",{"id":"test"}).append(r.reReplyinput, r.reReplyBtn));
                         replyDiv.append(replyarea);
-                        if(result[i].refRno!= 0){
+                        r= null;
+	                for(var j in result){
+                        if(result.replyList[j].refRno!= 0){
                         	$(".reply").each(function(){
-                        		if($(this).children().eq(0).val() == result[i].refRno){
-		                            nickName = r.nick.append(r.name.append(makeTag("img",{"src":result[i].profileImg})));
-		                            r.reReply.append(r.replyNo.attr("value",result[i].refRno), r.pro, nickName, r.recon,r.redate);
+                        			console.log($(this).children().eq(0).val())
+                        			console.log(result[j].refRno)
+                        		if($(this).children().eq(0).val() == result[j].refRno){
+		                            nickName = r.nick.append(r.name.append(makeTag("img"/*,{"src": result.profileRereply[j].profileImg }*/)));
+		                            r.reReply.append(r.replyNo.attr("value",result.replyList[i].refRno), r.pro, nickName, r.recon,r.redate);
                         		}
                         	});
                         }
-                        r= null;
+	                }
 	                }
                         
                 }
@@ -632,7 +632,20 @@
         			writer : "${loginUser.nickname}"
         		},
         		success : function(result){
-        			changeSrc(result);
+        			var goodSrc = $(".good").attr("src");
+                	var choiceSrc = $(".choice").attr("src");
+                	if(result.goodCheck>0){
+                		$(".good").attr("src",goodSrc.replace("before","after"));
+                	}else{
+                		$(".good").attr("src",goodSrc.replace("after","before"));
+                	}
+                	if(result.choiceCheck>0){
+                		$(".choice").attr("src",choiceSrc.replace("before","after"));
+                	}else{
+                		$(".choice").attr("src",choiceSrc.replace("after","before"));
+                	}
+                	$(".goodNum").text(result.goodCount);
+                	$(".choiceNum").text(result.choiceCount);
         		}
         	});
         }
@@ -653,29 +666,11 @@
                 	} else {
                 		result[type] = 1;
                 	}
-                	changeSrc(result);
+                	iconCheck(result);
                 }
             });
         }
         
-        // 아이콘 src 변경 함수
-        function changeSrc(result){
-        	
-        	var goodSrc = $(".good").attr("src");
-        	var choiceSrc = $(".choice").attr("src");
-        	if(result.goodCheck>0){
-        		$(".good").attr("src",goodSrc.replace("before","after"));
-        	}else{
-        		$(".good").attr("src",goodSrc.replace("after","before"));
-        	}
-        	if(result.choiceCheck>0){
-        		$(".choice").attr("src",choiceSrc.replace("before","after"));
-        	}else{
-        		$(".choice").attr("src",choiceSrc.replace("after","before"));
-        	}
-        	$(".goodNum").text(result.goodCount);
-        	$(".choiceNum").text(result.choiceCount);
-        }
 
         /* kakao map api 내 주소 좌표로 바꾸는 부분 호출해 사용하기위해 함수처리 */
         function coordCalculator(address){

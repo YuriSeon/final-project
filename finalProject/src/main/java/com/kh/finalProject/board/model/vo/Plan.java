@@ -20,7 +20,6 @@ public class Plan extends Board{
 //	CONCEPT	VARCHAR2(50 BYTE)
 //	START_DATE	DATE
 //	END_DATE	DATE
-//	STAY	VARCHAR2(1 BYTE)
 //	TRANSPORT	NUMBER
 //	TOTAL_DATE	NUMBER
 //	TOTAL_PAY	NUMBER
@@ -34,7 +33,6 @@ public class Plan extends Board{
 	private String concept;
 	private String startDate;
 	private String endDate;
-	private String stay;
 	private int transport;
 	private int totalDate;
 	private int totalPay;
